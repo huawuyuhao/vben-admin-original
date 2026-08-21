@@ -1468,7 +1468,13 @@
   height: 100%;
   background: rgba(255, 255, 255, 0.85);
   transform-origin: left center;
-  animation: portal-banner-progress 5.2s linear;
+  /* 时长须与首页 SLIDE_DURATION_MS（5200）一致 */
+  animation: portal-banner-progress 5.2s linear forwards;
+}
+
+/* 悬停暂停时进度条同步停住，避免条已走完却还在等计时器 */
+.portal-banner-section:hover .portal-banner-progress span {
+  animation-play-state: paused;
 }
 
 @keyframes portal-banner-spin {

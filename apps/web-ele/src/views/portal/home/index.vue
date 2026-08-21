@@ -1,5 +1,5 @@
-<script lang="ts" setup>
-import { computed, onMounted, onUnmounted, ref } from 'vue';
+﻿<script lang="ts" setup>
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
@@ -56,14 +56,22 @@ const serviceSlides = [
   },
 ];
 
+const SLIDE_DURATION_MS = 5200;
+
 const slideIndex = ref(0);
 const slidePaused = ref(false);
-let slideTimer: ReturnType<typeof setInterval> | null = null;
+/** 进度条重播令牌：换页 / 恢复播放时递增，避免与计时器脱节 */
+const progressToken = ref(0);
+let slideTimer: ReturnType<typeof setTimeout> | null = null;
 
 const activeSlide = computed(() => serviceSlides[slideIndex.value]!);
 
 function goSlide(i: number) {
   slideIndex.value = (i + serviceSlides.length) % serviceSlides.length;
+  progressToken.value += 1;
+  if (!slidePaused.value) {
+    startSlideTimer();
+  }
 }
 
 function nextSlide() {
@@ -76,17 +84,33 @@ function prevSlide() {
 
 function startSlideTimer() {
   stopSlideTimer();
-  slideTimer = setInterval(() => {
-    if (!slidePaused.value) nextSlide();
-  }, 5200);
+  slideTimer = setTimeout(() => {
+    slideTimer = null;
+    if (!slidePaused.value) {
+      // 先翻页；goSlide 内部会再次启动计时并刷新进度条
+      slideIndex.value = (slideIndex.value + 1) % serviceSlides.length;
+      progressToken.value += 1;
+      startSlideTimer();
+    }
+  }, SLIDE_DURATION_MS);
 }
 
 function stopSlideTimer() {
   if (slideTimer) {
-    clearInterval(slideTimer);
+    clearTimeout(slideTimer);
     slideTimer = null;
   }
 }
+
+watch(slidePaused, (paused) => {
+  if (paused) {
+    stopSlideTimer();
+    return;
+  }
+  // 恢复时从当前页重新计时，进度条同步重播
+  progressToken.value += 1;
+  startSlideTimer();
+});
 
 onMounted(startSlideTimer);
 onUnmounted(stopSlideTimer);
@@ -210,7 +234,7 @@ const newsTech = [
           ></button>
         </div>
         <div class="portal-banner-progress" aria-hidden="true">
-          <span :key="activeSlide.id"></span>
+          <span :key="`${activeSlide.id}-${progressToken}`"></span>
         </div>
       </div>
     </section>
