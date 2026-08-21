@@ -3,7 +3,6 @@ import type { Recordable, UserInfo } from '@vben/types';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { LOGIN_PATH } from '@vben/constants';
 import { preferences } from '@vben/preferences';
 import { resetAllStores, useAccessStore, useUserStore } from '@vben/stores';
 
@@ -12,6 +11,7 @@ import { defineStore } from 'pinia';
 
 import { getAccessCodesApi, getUserInfoApi, loginApi, logoutApi } from '#/api';
 import { $t } from '#/locales';
+import { PORTAL_LOGIN_PATH } from '#/router/routes/core';
 
 export const useAuthStore = defineStore('auth', () => {
   const accessStore = useAccessStore();
@@ -89,7 +89,7 @@ export const useAuthStore = defineStore('auth', () => {
 
     // 回登录页带上当前路由地址
     await router.replace({
-      path: LOGIN_PATH,
+      path: PORTAL_LOGIN_PATH,
       query: redirect
         ? {
             redirect: encodeURIComponent(router.currentRoute.value.fullPath),

@@ -8,6 +8,7 @@ import '@vben/styles';
 import '@vben/styles/ele';
 
 import { useTitle } from '@vueuse/core';
+import ElementPlus from 'element-plus';
 import { ElLoading } from 'element-plus';
 
 import { $t, setupI18n } from '#/locales';
@@ -24,17 +25,12 @@ async function bootstrap(namespace: string) {
   // 初始化表单组件
   await initSetupVbenForm();
 
-  // // 设置弹窗的默认配置
-  // setDefaultModalProps({
-  //   fullscreenButton: false,
-  // });
-  // // 设置抽屉的默认配置
-  // setDefaultDrawerProps({
-  //   zIndex: 2000,
-  // });
   const app = createApp(App);
 
-  // 注册Element Plus提供的v-loading指令
+  // 业务页大量使用 ElTable/ElCard 等，需全局注册，否则插槽 props 为 undefined 导致白屏
+  app.use(ElementPlus);
+
+  // 注册 Element Plus 的 v-loading 指令
   app.directive('loading', ElLoading.directive);
 
   // 注册Vben提供的v-loading和v-spinning指令

@@ -1,26 +1,53 @@
-<script lang="ts" setup>
+﻿<script lang="ts" setup>
 import type { NotificationItem } from '@vben/layouts';
 
 import { computed, ref, watch } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 import { AuthenticationLoginExpiredModal } from '@vben/common-ui';
-import { VBEN_DOC_URL, VBEN_GITHUB_URL } from '@vben/constants';
 import { useWatermark } from '@vben/hooks';
-import { BookOpenText, CircleHelp, SvgGithubIcon } from '@vben/icons';
 import {
   BasicLayout,
   LockScreen,
   Notification,
   UserDropdown,
 } from '@vben/layouts';
-import { preferences, usePreferences } from '@vben/preferences';
+import {
+  preferences,
+  updatePreferences,
+  usePreferences,
+} from '@vben/preferences';
 import { useAccessStore, useUserStore } from '@vben/stores';
-import { openWindow } from '@vben/utils';
 
 import { $t } from '#/locales';
 import { useAuthStore } from '#/store';
-import LoginForm from '#/views/_core/authentication/login.vue';
+
+import '#/views/_shared/styles/portal.css';
+
+const route = useRoute();
+
+/** 门户首页 / 登录：隐藏侧栏与标签栏，顶栏直接用 Vben（与业务页一致） */
+const isPublicPage = computed(() => {
+  const path = route.path.replace(/\/$/, '') || '/';
+  return path === '/portal' || path === '/login';
+});
+
+watch(
+  isPublicPage,
+  (isPublic) => {
+    // 公开页与业务页共用 Vben 顶栏（Logo + 一级菜单 + 右侧工具）
+    // 仅隐藏侧栏 / 标签栏 / 面包屑，避免营销页被后台壳挤占
+    updatePreferences({
+      app: { enablePreferences: !isPublic },
+      breadcrumb: { enable: !isPublic, showIcon: true },
+      header: { enable: true, hidden: false },
+      logo: { enable: true },
+      sidebar: { enable: true, hidden: isPublic },
+      tabbar: { enable: !isPublic },
+    });
+  },
+  { immediate: true },
+);
 
 const notifications = ref<NotificationItem[]>([
   {
@@ -88,37 +115,10 @@ const showDot = computed(() =>
 const menus = computed(() => [
   {
     handler: () => {
-      router.push({ name: 'Profile' });
+      router.push('/service/profile');
     },
     icon: 'lucide:user',
     text: $t('page.auth.profile'),
-  },
-  {
-    handler: () => {
-      openWindow(VBEN_DOC_URL, {
-        target: '_blank',
-      });
-    },
-    icon: BookOpenText,
-    text: $t('ui.widgets.document'),
-  },
-  {
-    handler: () => {
-      openWindow(VBEN_GITHUB_URL, {
-        target: '_blank',
-      });
-    },
-    icon: SvgGithubIcon,
-    text: 'GitHub',
-  },
-  {
-    handler: () => {
-      openWindow(`${VBEN_GITHUB_URL}/issues`, {
-        target: '_blank',
-      });
-    },
-    icon: CircleHelp,
-    text: $t('ui.widgets.qa'),
   },
 ]);
 
@@ -128,6 +128,16 @@ const avatar = computed(() => {
 
 async function handleLogout() {
   await authStore.logout(false);
+}
+
+/** 点击左上角 Logo / 标题回到门户首页 */
+function handleClickLogo() {
+  if (route.path === '/portal' || route.name === 'PortalHome') {
+    return;
+  }
+  router.push({ name: 'PortalHome' }).catch(() => {
+    router.push('/portal');
+  });
 }
 
 function handleNoticeClear() {
@@ -217,45 +227,236 @@ watch(
 </script>
 
 <template>
-  <BasicLayout
-    :avatar
-    :text="userStore.userInfo?.realName"
-    @clear-preferences-and-logout="handleLogout"
-    @logout="handleLogout"
+  <!-- 始终挂载 BasicLayout，只用偏好隐藏侧栏；禁止 v-if 切换 RouterView，否则进出门户会空白 -->
+  <div
+    class="portal-app site-admin-shell"
+    :class="{ 'is-public-page': isPublicPage }"
+    :style="{
+      '--admin-vben-header-height': `${preferences.header.height}px`,
+    }"
   >
-    <template #user-dropdown>
-      <UserDropdown
+    <div class="site-admin-body">
+      <BasicLayout
         :avatar
-        :menus
         :text="userStore.userInfo?.realName"
-        description="ann.vben@gmail.com"
-        tag-text="Pro"
         @clear-preferences-and-logout="handleLogout"
+        @click-logo="handleClickLogo"
         @logout="handleLogout"
-      />
-    </template>
-    <template #notification>
-      <Notification
-        :dot="showDot"
-        :notifications="notifications"
-        @clear="handleNoticeClear"
-        @read="(item) => item.id && markRead(item.id)"
-        @remove="(item) => item.id && remove(item.id)"
-        @make-all="handleMakeAll"
-        @on-click="handleClick"
-        @view-all="viewAll"
-      />
-    </template>
-    <template #extra>
-      <AuthenticationLoginExpiredModal
-        v-model:open="accessStore.loginExpired"
-        :avatar
       >
-        <LoginForm />
-      </AuthenticationLoginExpiredModal>
-    </template>
-    <template #lock-screen>
-      <LockScreen :avatar @to-login="handleLogout" />
-    </template>
-  </BasicLayout>
+        <template #user-dropdown>
+          <UserDropdown
+            :avatar
+            :menus
+            :text="userStore.userInfo?.realName"
+            description="ann.vben@gmail.com"
+            tag-text="Pro"
+            @clear-preferences-and-logout="handleLogout"
+            @logout="handleLogout"
+          />
+        </template>
+        <template #notification>
+          <Notification
+            :dot="showDot"
+            :notifications="notifications"
+            @clear="handleNoticeClear"
+            @read="(item) => item.id && markRead(item.id)"
+            @remove="(item) => item.id && remove(item.id)"
+            @make-all="handleMakeAll"
+            @on-click="handleClick"
+            @view-all="viewAll"
+          />
+        </template>
+        <template #extra>
+          <AuthenticationLoginExpiredModal
+            v-model:open="accessStore.loginExpired"
+            :avatar
+          >
+            <div class="flex flex-col items-center gap-3 p-6">
+              <p class="text-muted-foreground text-sm">登录已过期，请重新登录</p>
+              <button
+                class="bg-primary rounded-md px-4 py-2 text-sm text-white"
+                type="button"
+                @click="
+                  accessStore.setLoginExpired(false);
+                  router.push('/login');
+                "
+              >
+                前往登录
+              </button>
+            </div>
+          </AuthenticationLoginExpiredModal>
+        </template>
+        <template #lock-screen>
+          <LockScreen :avatar @to-login="handleLogout" />
+        </template>
+      </BasicLayout>
+    </div>
+  </div>
 </template>
+
+<style>
+/*
+ * 布局原则：
+ * 1) html/body 不滚动，避免双滚动条
+ * 2) 业务页：由 Vben 内容区 [data-layout-region=scroll] 单独滚动（侧栏 fixed 不受影响）
+ * 3) 不改 Vben 根节点 flex 方向，避免侧栏盖住主内容
+ * 4) 全站顶栏统一走 Vben；公开页只藏侧栏/标签，内容全宽
+ */
+html,
+body,
+#app {
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
+.portal-app.site-admin-shell,
+.site-admin-shell {
+  --portal-header-height: 50px;
+  --portal-admin-gap: 0px;
+  --admin-offset-top: 0px;
+  --admin-vben-header-height: 50px;
+
+  box-sizing: border-box !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  padding-top: 0 !important;
+  overflow: hidden !important;
+}
+
+.site-admin-shell .site-admin-body {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+}
+
+/* 保持 Vben 根布局为横向 flex，勿强制 column */
+.site-admin-shell .site-admin-body > div {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+.site-admin-shell [data-layout-region='sidebar'],
+.site-admin-shell aside.fixed.left-0 {
+  top: var(--admin-offset-top) !important;
+  height: calc(100vh - var(--admin-offset-top)) !important;
+  margin-top: 0 !important;
+}
+
+.site-admin-shell [data-layout-region='header'] {
+  top: var(--admin-offset-top) !important;
+}
+
+/* 左上角 Logo / 标题可点回首页 */
+.site-admin-shell [data-layout-region='logo'] a {
+  cursor: pointer;
+}
+
+/*
+ * 混合垂直(mixed-nav) / 侧边顶部混合(header-sidebar-nav)：
+ * Vben 顶栏通栏，侧栏本应在顶栏下方（靠 margin-top: headerHeight）。
+ * 上面统一 margin-top:0 会让侧栏盖住面包屑，这里单独把侧栏再下移一截。
+ */
+.site-admin-shell [data-layout='mixed-nav'] aside.fixed.left-0,
+.site-admin-shell [data-layout='header-sidebar-nav'] aside.fixed.left-0,
+.site-admin-shell [data-layout='mixed-nav'] [data-layout-region='sidebar'],
+.site-admin-shell [data-layout='header-sidebar-nav'] [data-layout-region='sidebar'] {
+  top: calc(var(--admin-offset-top) + var(--admin-vben-header-height)) !important;
+  height: calc(
+    100vh - var(--admin-offset-top) - var(--admin-vben-header-height)
+  ) !important;
+  margin-top: 0 !important;
+}
+
+.site-admin-shell [data-layout='mixed-nav'] [data-layout-region='header'],
+.site-admin-shell [data-layout='header-sidebar-nav'] [data-layout-region='header'] {
+  top: var(--admin-offset-top) !important;
+  z-index: 300 !important;
+  /*
+   * 开启 Tab 后，header 容器高度 = 顶栏 + 标签栏，且 mixed-nav 下 left:0 通栏。
+   * 标签栏本身有 margin-left 避开侧栏，但容器空白区仍会挡住侧栏第一项点击。
+   * 容器不接事件，子元素（顶栏/标签栏）照常可点。
+   */
+  pointer-events: none !important;
+}
+
+.site-admin-shell [data-layout='mixed-nav'] [data-layout-region='header'] > *,
+.site-admin-shell [data-layout='header-sidebar-nav'] [data-layout-region='header'] > * {
+  pointer-events: auto !important;
+}
+
+/* 业务页：只让内容区滚动（一根滚动条）
+ * 注意：不要清 margin-top，Vben 用它给 fixed 面包屑顶栏让位，清掉会把大标题盖住 */
+.site-admin-shell:not(.is-public-page) [data-layout-region='scroll'],
+.site-admin-shell:not(.is-public-page) #__vben_layout_scroll {
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  background: var(--portal-bg, #f8f9fc) !important;
+}
+
+/* 公开页：只藏侧栏；顶栏继续用 Vben，内容全宽 */
+.is-public-page [data-layout-region='sidebar'],
+.is-public-page aside.fixed.left-0 {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  border: none !important;
+}
+
+.is-public-page [data-layout-region='main'] {
+  width: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.is-public-page [data-layout-region='scroll'],
+.is-public-page #__vben_layout_scroll {
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  background: transparent !important;
+}
+
+.is-public-page #__vben_main_content,
+.is-public-page main.relative,
+.is-public-page .page-route-container,
+.is-public-page .portal-page-wrap {
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  min-height: 0 !important;
+}
+
+/* 业务页内容区内边距 */
+.site-admin-shell:not(.is-public-page) #__vben_main_content,
+.site-admin-shell:not(.is-public-page) [data-layout-region='main'] > main,
+.site-admin-shell:not(.is-public-page) main.relative {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  max-width: none !important;
+  padding: 12px 16px 20px !important;
+  margin: 0 !important;
+  background: transparent !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.site-admin-shell:not(.is-public-page) .page-route-container,
+.site-admin-shell:not(.is-public-page) .portal-inner-page {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: none;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+</style>

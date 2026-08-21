@@ -19,6 +19,9 @@ const sidebarCollapsedShowTitle = defineModel<boolean>(
 const sidebarAutoActivateChild = defineModel<boolean>(
   'sidebarAutoActivateChild',
 );
+const sidebarAutoActivateChildVertical = defineModel<boolean>(
+  'sidebarAutoActivateChildVertical',
+);
 const sidebarDraggable = defineModel<boolean>('sidebarDraggable');
 const sidebarCollapsed = defineModel<boolean>('sidebarCollapsed');
 const sidebarExpandOnHover = defineModel<boolean>('sidebarExpandOnHover');
@@ -82,6 +85,19 @@ const handleCheckboxChange = () => {
     :tip="$t('preferences.sidebar.autoActivateChildTip')"
   >
     {{ $t('preferences.sidebar.autoActivateChild') }}
+  </SwitchItem>
+  <SwitchItem
+    v-model="sidebarAutoActivateChildVertical"
+    :disabled="
+      !sidebarEnable ||
+      !['sidebar-mixed-nav', 'mixed-nav', 'header-mixed-nav'].includes(
+        currentLayout as string,
+      ) ||
+      disabled
+    "
+    :tip="$t('preferences.sidebar.autoActivateChildVerticalTip')"
+  >
+    {{ $t('preferences.sidebar.autoActivateChildVertical') }}
   </SwitchItem>
   <CheckboxItem
     :items="[

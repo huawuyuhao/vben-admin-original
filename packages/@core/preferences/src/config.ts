@@ -86,6 +86,7 @@ const defaultPreferences: Preferences = {
   },
   sidebar: {
     autoActivateChild: false,
+    autoActivateChildVertical: false,
     collapsed: false,
     collapsedButton: true,
     collapsedShowTitle: false,

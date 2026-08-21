@@ -9,6 +9,29 @@ import { findRootMenuByPath } from '@vben/utils';
 
 import { useNavigation } from './use-navigation';
 
+/**
+ * 门户首页会离开业务壳（/service/home → /portal）。
+ * 这类路径不能记作顶栏一级菜单的「上次子路由」，
+ * 否则从首页再点「门户服务」会一直跳回首页。
+ */
+function isMenuResumeExcludedPath(path: string) {
+  return path === '/portal' || path === '/service/home';
+}
+
+function resolveAutoActivatePath(
+  rootMenu: MenuRecordRaw,
+  defaultSubMap: Map<string, string>,
+) {
+  const remembered = defaultSubMap.get(rootMenu.path);
+  if (remembered && !isMenuResumeExcludedPath(remembered)) {
+    return remembered;
+  }
+  const firstBusinessChild = rootMenu.children?.find(
+    (child) => !isMenuResumeExcludedPath(child.path),
+  );
+  return firstBusinessChild?.path ?? rootMenu.path;
+}
+
 function useMixedMenu() {
   const { navigation, willOpenedByWindow } = useNavigation();
   const accessStore = useAccessStore();
@@ -101,11 +124,7 @@ function useMixedMenu() {
     if (_splitSideMenus.length === 0) {
       navigation(key);
     } else if (rootMenu && preferences.sidebar.autoActivateChild) {
-      navigation(
-        defaultSubMap.has(rootMenu.path)
-          ? (defaultSubMap.get(rootMenu.path) as string)
-          : rootMenu.path,
-      );
+      navigation(resolveAutoActivatePath(rootMenu, defaultSubMap));
     }
   };
 
@@ -115,9 +134,18 @@ function useMixedMenu() {
    * @param parentsPath 父级路径
    */
   const handleMenuOpen = (key: string, parentsPath: string[]) => {
-    if (parentsPath.length <= 1 && preferences.sidebar.autoActivateChild) {
+    // 与顶栏 autoActivateChild 拆开：侧栏展开父级时是否强制跳子页
+    if (
+      parentsPath.length <= 1 &&
+      preferences.sidebar.autoActivateChildVertical
+    ) {
+      const rootMenu = menus.value.find((item) => item.path === key);
       navigation(
-        defaultSubMap.has(key) ? (defaultSubMap.get(key) as string) : key,
+        rootMenu
+          ? resolveAutoActivatePath(rootMenu, defaultSubMap)
+          : defaultSubMap.has(key)
+            ? (defaultSubMap.get(key) as string)
+            : key,
       );
     }
   };
@@ -146,8 +174,10 @@ function useMixedMenu() {
         return;
       }
       calcSideMenus(currentPath);
-      if (rootMenuPath.value)
+      // 门户首页路径不要记成顶栏一级菜单的恢复地址
+      if (rootMenuPath.value && !isMenuResumeExcludedPath(currentPath)) {
         defaultSubMap.set(rootMenuPath.value, currentPath);
+      }
     },
     { immediate: true },
   );

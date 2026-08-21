@@ -61,7 +61,9 @@
     "collapsed": "Collpase Menu",
     "collapsedShowTitle": "Show Menu Title",
     "autoActivateChild": "Auto Activate SubMenu",
-    "autoActivateChildTip": "`Enabled` to automatically activate the submenu while click menu.",
+    "autoActivateChildTip": "When clicking the top-level menu in the header, automatically activate the first submenu or the last activated submenu.",
+    "autoActivateChildVertical": "Auto Activate SubMenu in Vertical Mode",
+    "autoActivateChildVerticalTip": "When clicking the top-level menu on the left, automatically activate the first submenu or the last activated submenu.",
     "expandOnHover": "Expand On Hover",
     "expandOnHoverTip": "When the mouse hovers over menu, \n `Enabled` to expand children menus \n `Disabled` to expand whole sidebar."
   },

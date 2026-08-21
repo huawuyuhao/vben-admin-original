@@ -250,8 +250,10 @@ interface NavigationPreferences {
 }
 
 interface SidebarPreferences {
-  /** 点击目录时自动激活子菜单   */
+  /** 点击顶部顶层菜单时自动激活子菜单 */
   autoActivateChild: boolean;
+  /** 纵向菜单点击目录时自动激活子菜单 */
+  autoActivateChildVertical: boolean;
   /** 侧边栏是否折叠 */
   collapsed: boolean;
   /** 侧边栏折叠按钮是否可见 */

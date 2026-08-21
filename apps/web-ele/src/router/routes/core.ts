@@ -1,15 +1,13 @@
 import type { RouteRecordRaw } from 'vue-router';
 
-import { LOGIN_PATH } from '@vben/constants';
-import { preferences } from '@vben/preferences';
-
-import { $t } from '#/locales';
-
 const BasicLayout = () => import('#/layouts/basic.vue');
-const AuthPageLayout = () => import('#/layouts/auth.vue');
+
+/** 登录路径 */
+export const PORTAL_LOGIN_PATH = '/login';
+
 /** 全局404页面 */
 const fallbackNotFoundRoute: RouteRecordRaw = {
-  component: () => import('#/views/_core/fallback/not-found.vue'),
+  component: () => import('#/views/fallback/not-found.vue'),
   meta: {
     hideInBreadcrumb: true,
     hideInMenu: true,
@@ -20,13 +18,12 @@ const fallbackNotFoundRoute: RouteRecordRaw = {
   path: '/:path(.*)*',
 };
 
-/** 基本路由，这些路由是必须存在的 */
+/**
+ * 核心路由
+ * 门户首页 / 登录与后台业务页共用 Root（basic.vue），
+ * 由布局按路由切换「全屏门户」与「侧栏后台」，避免跨 Layout 切换导致空白页。
+ */
 const coreRoutes: RouteRecordRaw[] = [
-  /**
-   * 根路由
-   * 使用基础布局，作为所有页面的父级容器，子级就不必配置BasicLayout。
-   * 此路由必须存在，且不应修改
-   */
   {
     component: BasicLayout,
     meta: {
@@ -35,62 +32,39 @@ const coreRoutes: RouteRecordRaw[] = [
     },
     name: 'Root',
     path: '/',
-    redirect: preferences.app.defaultHomePath,
-    children: [],
-  },
-  {
-    component: AuthPageLayout,
-    meta: {
-      hideInTab: true,
-      title: 'Authentication',
-    },
-    name: 'Authentication',
-    path: '/auth',
-    redirect: LOGIN_PATH,
+    redirect: '/portal',
     children: [
       {
+        name: 'PortalHome',
+        path: '/portal',
+        component: () => import('#/views/portal/home/index.vue'),
+        meta: {
+          hideInMenu: true,
+          hideInTab: true,
+          title: '门户首页',
+        },
+      },
+      {
         name: 'Login',
-        path: 'login',
-        component: () => import('#/views/_core/authentication/login.vue'),
+        path: '/login',
+        component: () => import('#/views/login/index.vue'),
         meta: {
-          title: $t('page.auth.login'),
-        },
-      },
-      {
-        name: 'CodeLogin',
-        path: 'code-login',
-        component: () => import('#/views/_core/authentication/code-login.vue'),
-        meta: {
-          title: $t('page.auth.codeLogin'),
-        },
-      },
-      {
-        name: 'QrCodeLogin',
-        path: 'qrcode-login',
-        component: () =>
-          import('#/views/_core/authentication/qrcode-login.vue'),
-        meta: {
-          title: $t('page.auth.qrcodeLogin'),
-        },
-      },
-      {
-        name: 'ForgetPassword',
-        path: 'forget-password',
-        component: () =>
-          import('#/views/_core/authentication/forget-password.vue'),
-        meta: {
-          title: $t('page.auth.forgetPassword'),
-        },
-      },
-      {
-        name: 'Register',
-        path: 'register',
-        component: () => import('#/views/_core/authentication/register.vue'),
-        meta: {
-          title: $t('page.auth.register'),
+          hideInMenu: true,
+          hideInTab: true,
+          title: '登录',
         },
       },
     ],
+  },
+  {
+    meta: {
+      hideInMenu: true,
+      hideInTab: true,
+      title: 'AuthRedirect',
+    },
+    name: 'AuthRedirect',
+    path: '/auth/:path(.*)*',
+    redirect: PORTAL_LOGIN_PATH,
   },
 ];
 
