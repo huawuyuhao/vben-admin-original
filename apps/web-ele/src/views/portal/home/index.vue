@@ -2,7 +2,13 @@
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
+import { portalCases } from '#/views/_shared/data/cases';
+
 const router = useRouter();
+
+/** 首页案例区：前 4 个机房节点 + 后 2 个网络能力 */
+const homeCaseNodes = portalCases.slice(0, 4);
+const homeCaseNetworks = portalCases.slice(4);
 
 function go(path: string) {
   router.push(path);
@@ -490,8 +496,103 @@ const newsTech = [
       </div>
     </section>
 
-    <!-- News -->
+    <!-- Cases -->
     <section class="portal-section alt">
+      <div class="portal-section-tag">CASE STUDIES</div>
+      <h2 class="portal-section-title">落地案例 · 电碳算协同实践</h2>
+      <p class="portal-section-subtitle">
+        接入南方区域数据中心与算力网络，用真实部署呈现绿电智算与跨域调度能力
+      </p>
+
+      <div class="portal-cases-overview">
+        <div
+          v-for="(item, index) in homeCaseNodes"
+          :key="item.title"
+          class="portal-cases-node"
+          :class="item.iconClass"
+        >
+          <div class="portal-cases-node-index">
+            {{ String(index + 1).padStart(2, '0') }}
+          </div>
+          <div class="portal-cases-node-main">
+            <span class="portal-cases-node-region">{{ item.region }}</span>
+            <strong>{{ item.shortName }}</strong>
+            <em>{{
+              item.badges.find((b) => b.type === 'info')?.text ??
+              item.badges[0]?.text
+            }}</em>
+          </div>
+        </div>
+      </div>
+
+      <div class="portal-cases-layout">
+        <div class="portal-cases-featured">
+          <article
+            v-for="item in homeCaseNodes"
+            :key="item.title"
+            class="portal-cases-card"
+            @click="go('/service/case')"
+          >
+            <div class="portal-cases-card-top">
+              <div class="portal-feature-icon" :class="item.iconClass">
+                {{ item.icon }}
+              </div>
+              <span class="portal-cases-card-region">{{ item.region }}</span>
+            </div>
+            <h3>{{ item.title }}</h3>
+            <p>{{ item.desc }}</p>
+            <div class="portal-cases-card-badges">
+              <span
+                v-for="badge in item.badges"
+                :key="badge.text"
+                class="portal-badge"
+                :class="`portal-badge-${badge.type}`"
+              >
+                {{ badge.text }}
+              </span>
+            </div>
+          </article>
+        </div>
+
+        <aside class="portal-cases-aside">
+          <div class="portal-cases-aside-title">网络能力</div>
+          <div
+            v-for="item in homeCaseNetworks"
+            :key="item.title"
+            class="portal-cases-aside-item"
+            @click="go('/service/case')"
+          >
+            <div class="portal-feature-icon" :class="item.iconClass">
+              {{ item.icon }}
+            </div>
+            <div>
+              <h4>{{ item.title }}</h4>
+              <p>{{ item.desc }}</p>
+              <div class="portal-cases-card-badges">
+                <span
+                  v-for="badge in item.badges"
+                  :key="badge.text"
+                  class="portal-badge"
+                  :class="`portal-badge-${badge.type}`"
+                >
+                  {{ badge.text }}
+                </span>
+              </div>
+            </div>
+          </div>
+          <button
+            class="portal-btn-cta-outline portal-cases-more"
+            type="button"
+            @click="go('/service/case')"
+          >
+            进入案例中心 →
+          </button>
+        </aside>
+      </div>
+    </section>
+
+    <!-- News -->
+    <section class="portal-section">
       <div class="portal-section-tag">INDUSTRY NEWS</div>
       <h2 class="portal-section-title">行业资讯</h2>
       <p class="portal-section-subtitle">电碳算相关政策与技术进展</p>
@@ -582,7 +683,7 @@ const newsTech = [
     </section>
 
     <!-- Pricing -->
-    <section class="portal-section">
+    <section class="portal-section alt">
       <div class="portal-section-tag">PRICING</div>
       <h2 class="portal-section-title">计费说明</h2>
       <p class="portal-section-subtitle">灵活计费模式，按需使用，经济高效</p>
@@ -690,7 +791,7 @@ const newsTech = [
     </section>
 
     <!-- About -->
-    <section class="portal-section alt">
+    <section class="portal-section">
       <div class="portal-section-tag">ABOUT US</div>
       <div class="portal-about-section">
         <div class="portal-about-text">
