@@ -2,7 +2,7 @@ import type { RouteRecordRaw } from 'vue-router';
 
 const BasicLayout = () => import('#/layouts/basic.vue');
 
-/** 登录路径 */
+/** 登录路径（门户公开页，与首页同壳：有顶栏、无侧栏） */
 export const PORTAL_LOGIN_PATH = '/login';
 
 /** 全局404页面 */
@@ -20,8 +20,8 @@ const fallbackNotFoundRoute: RouteRecordRaw = {
 
 /**
  * 核心路由
- * 门户首页 / 登录与后台业务页共用 Root（basic.vue），
- * 由布局按路由切换「全屏门户」与「侧栏后台」，避免跨 Layout 切换导致空白页。
+ * 门户首页 / 登录注册与后台业务共用 Root（basic.vue），
+ * 由布局按路由切换「公开壳」与「侧栏后台」。
  */
 const coreRoutes: RouteRecordRaw[] = [
   {
@@ -54,15 +54,35 @@ const coreRoutes: RouteRecordRaw[] = [
           title: '登录',
         },
       },
+      {
+        name: 'Register',
+        path: '/register',
+        component: () => import('#/views/login/index.vue'),
+        meta: {
+          hideInMenu: true,
+          hideInTab: true,
+          title: '注册',
+        },
+      },
+      {
+        name: 'ForgotPassword',
+        path: '/forgot-password',
+        component: () => import('#/views/login/index.vue'),
+        meta: {
+          hideInMenu: true,
+          hideInTab: true,
+          title: '找回密码',
+        },
+      },
     ],
   },
   {
     meta: {
       hideInMenu: true,
       hideInTab: true,
-      title: 'AuthRedirect',
+      title: 'AuthCompatRedirect',
     },
-    name: 'AuthRedirect',
+    name: 'AuthCompatRedirect',
     path: '/auth/:path(.*)*',
     redirect: PORTAL_LOGIN_PATH,
   },

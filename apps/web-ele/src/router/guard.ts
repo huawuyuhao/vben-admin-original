@@ -32,6 +32,15 @@ function setupCommonGuard(router: Router) {
   });
 }
 
+function isAuthPath(path: string) {
+  return (
+    path === PORTAL_LOGIN_PATH ||
+    path === '/register' ||
+    path === '/forgot-password' ||
+    path.startsWith('/auth/')
+  );
+}
+
 /** generateAccess 会 remove/add Root，兜底保证门户/登录子路由仍在 */
 function ensurePublicRoutes(router: Router) {
   if (!router.hasRoute('PortalHome')) {
@@ -55,6 +64,30 @@ function ensurePublicRoutes(router: Router) {
         hideInMenu: true,
         hideInTab: true,
         title: '登录',
+      },
+    });
+  }
+  if (!router.hasRoute('Register')) {
+    router.addRoute('Root', {
+      name: 'Register',
+      path: '/register',
+      component: () => import('#/views/login/index.vue'),
+      meta: {
+        hideInMenu: true,
+        hideInTab: true,
+        title: '注册',
+      },
+    });
+  }
+  if (!router.hasRoute('ForgotPassword')) {
+    router.addRoute('Root', {
+      name: 'ForgotPassword',
+      path: '/forgot-password',
+      component: () => import('#/views/login/index.vue'),
+      meta: {
+        hideInMenu: true,
+        hideInTab: true,
+        title: '找回密码',
       },
     });
   }
@@ -90,7 +123,7 @@ function setupAccessGuard(router: Router) {
 
     // 门户首页 / 登录等核心路由
     if (coreRouteNames.includes(to.name as string)) {
-      if (to.path === PORTAL_LOGIN_PATH && accessStore.accessToken) {
+      if (isAuthPath(to.path) && accessStore.accessToken) {
         await ensureAccess(router, userStore.userInfo?.roles ?? []);
         return decodeURIComponent(
           (to.query?.redirect as string) ||

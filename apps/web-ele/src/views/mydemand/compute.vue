@@ -2,12 +2,13 @@
 import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
+/** 兼容旧路径：重定向到算力需求列表 */
 const router = useRouter();
 onMounted(() => {
-  router.replace('/portal');
+  router.replace('/service/mydemand/compute');
 });
 </script>
 
 <template>
-  <div></div>
+  <div class="portal-inner-page">正在进入我的算力需求…</div>
 </template>

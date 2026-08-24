@@ -1,136 +1,19 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
+import { useRouter } from 'vue-router';
 
-interface ProductItem {
-  icon: string;
-  name: string;
-  desc: string;
-  region: string;
-  type: string;
-  green: string;
-  price: string;
-}
+import { portalProducts } from '#/views/_shared/data/products';
+
+const router = useRouter();
 
 const keyword = ref('');
 const regionFilter = ref('all');
 const typeFilter = ref('all');
 const currentPage = ref(1);
 const pageSize = 6;
-const toast = ref('');
-
-const allProducts: ProductItem[] = [
-  {
-    icon: '🖥️',
-    name: 'GPU 智算服务 - 贵州A区',
-    desc: 'NVIDIA A100 × 8卡集群，支持大模型分布式训练，绿电占比 85%。',
-    region: '贵州',
-    type: 'GPU 智算',
-    green: '绿电 85%',
-    price: '¥2.8/小时',
-  },
-  {
-    icon: '🖥️',
-    name: 'GPU 智算服务 - 广州B区',
-    desc: 'NVIDIA H100 × 4卡集群，高性能推理，低延迟响应，绿电占比 72%。',
-    region: '广州',
-    type: 'GPU 智算',
-    green: '绿电 72%',
-    price: '¥3.5/小时',
-  },
-  {
-    icon: '☁️',
-    name: '通用算力服务 - 贵州C区',
-    desc: 'AMD EPYC 64核实例，适合通算类任务，大内存高带宽，绿电占比 90%。',
-    region: '贵州',
-    type: 'CPU 通算',
-    green: '绿电 90%',
-    price: '¥0.8/小时',
-  },
-  {
-    icon: '☁️',
-    name: '通用算力服务 - 惠州D区',
-    desc: 'Intel Xeon 32核实例，企业级稳定性，适合后台批处理任务。',
-    region: '惠州',
-    type: 'CPU 通算',
-    green: '绿电 68%',
-    price: '¥0.6/小时',
-  },
-  {
-    icon: '🔗',
-    name: '边缘算力服务 - 华南节点',
-    desc: '200+ 边缘节点覆盖，毫秒级延迟，适合实时推理与物联网场景。',
-    region: '边缘节点',
-    type: '边缘算力',
-    green: '绿电 90%',
-    price: '¥1.5/小时',
-  },
-  {
-    icon: '💾',
-    name: '分布式存储服务',
-    desc: '高可用对象存储，支持冷热数据分层，多副本冗余，数据持久性 99.999%。',
-    region: '贵州',
-    type: '存储服务',
-    green: 'SSD 存储',
-    price: '¥0.12/GB·月',
-  },
-  {
-    icon: '🖥️',
-    name: 'GPU 智算服务 - 惠州E区',
-    desc: 'NVIDIA L40S × 8卡推理集群，面向在线推理与批处理混合场景。',
-    region: '惠州',
-    type: 'GPU 智算',
-    green: '绿电 70%',
-    price: '¥2.2/小时',
-  },
-  {
-    icon: '☁️',
-    name: '通用算力服务 - 广州F区',
-    desc: '高主频 CPU 实例，适合实时交易风控与低延迟业务系统。',
-    region: '广州',
-    type: 'CPU 通算',
-    green: '绿电 75%',
-    price: '¥1.1/小时',
-  },
-  {
-    icon: '🔗',
-    name: '边缘算力服务 - 西南节点',
-    desc: '覆盖贵州及周边城市边缘节点，支持视频分析与本地推理。',
-    region: '边缘节点',
-    type: '边缘算力',
-    green: '绿电 88%',
-    price: '¥1.3/小时',
-  },
-  {
-    icon: '💾',
-    name: '高性能块存储服务',
-    desc: '低延迟块存储，适配训练数据集读写与模型 checkpoint 落盘。',
-    region: '广州',
-    type: '存储服务',
-    green: 'NVMe',
-    price: '¥0.35/GB·月',
-  },
-  {
-    icon: '🖥️',
-    name: 'GPU 智算服务 - 贵州B区',
-    desc: 'A800 × 16卡训练池，支持多租户队列与弹性扩缩。',
-    region: '贵州',
-    type: 'GPU 智算',
-    green: '绿电 92%',
-    price: '¥3.0/小时',
-  },
-  {
-    icon: '☁️',
-    name: '通用算力服务 - 惠州G区',
-    desc: '内存优化型实例，适合大数据 ETL 与内存计算任务。',
-    region: '惠州',
-    type: 'CPU 通算',
-    green: '绿电 66%',
-    price: '¥0.9/小时',
-  },
-];
 
 const filtered = computed(() => {
-  let list = [...allProducts];
+  let list = [...portalProducts];
   const key = keyword.value.trim().toLowerCase();
   if (key) {
     list = list.filter(
@@ -172,11 +55,8 @@ watch([keyword, regionFilter, typeFilter], () => {
   currentPage.value = 1;
 });
 
-function showToast(msg: string) {
-  toast.value = msg;
-  window.setTimeout(() => {
-    if (toast.value === msg) toast.value = '';
-  }, 2000);
+function goDetail(id: string) {
+  router.push(`/service/product/${id}`);
 }
 </script>
 
@@ -218,9 +98,9 @@ function showToast(msg: string) {
     <div v-else class="portal-product-grid">
       <div
         v-for="item in paged"
-        :key="item.name"
+        :key="item.id"
         class="portal-product-card"
-        @click="showToast(`查看产品：${item.name}`)"
+        @click="goDetail(item.id)"
       >
         <div class="portal-product-img">{{ item.icon }}</div>
         <div class="portal-product-body">
@@ -260,13 +140,10 @@ function showToast(msg: string) {
         下一页
       </button>
     </div>
-
-    <div v-if="toast" class="portal-toast">{{ toast }}</div>
   </div>
 </template>
 
 <style scoped>
-
 .portal-empty {
   padding: 48px 16px;
   font-size: 14px;
@@ -277,21 +154,12 @@ function showToast(msg: string) {
   border-radius: 12px;
 }
 
-.portal-toast {
-  position: fixed;
-  bottom: 32px;
-  left: 50%;
-  z-index: 2000;
-  padding: 10px 20px;
-  font-size: 13px;
-  color: #fff;
-  background: rgb(33 33 33 / 88%);
-  border-radius: 8px;
-  transform: translateX(-50%);
-}
-
 .portal-pagination button:disabled {
   cursor: not-allowed;
   opacity: 0.45;
+}
+
+.portal-product-card {
+  cursor: pointer;
 }
 </style>

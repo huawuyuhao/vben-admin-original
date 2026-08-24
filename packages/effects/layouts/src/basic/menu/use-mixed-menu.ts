@@ -18,6 +18,20 @@ function isMenuResumeExcludedPath(path: string) {
   return path === '/portal' || path === '/service/home';
 }
 
+/** 取「第一个菜单的第一个子菜单」——递归到叶子页，避免停在仅有 redirect 的目录路由 */
+function findFirstLeafPath(menu: MenuRecordRaw): string {
+  const firstChild = menu.children?.find(
+    (child) => !isMenuResumeExcludedPath(child.path),
+  );
+  if (!firstChild) {
+    return menu.path;
+  }
+  if (firstChild.children && firstChild.children.length > 0) {
+    return findFirstLeafPath(firstChild);
+  }
+  return firstChild.path;
+}
+
 function resolveAutoActivatePath(
   rootMenu: MenuRecordRaw,
   defaultSubMap: Map<string, string>,
@@ -26,10 +40,7 @@ function resolveAutoActivatePath(
   if (remembered && !isMenuResumeExcludedPath(remembered)) {
     return remembered;
   }
-  const firstBusinessChild = rootMenu.children?.find(
-    (child) => !isMenuResumeExcludedPath(child.path),
-  );
-  return firstBusinessChild?.path ?? rootMenu.path;
+  return findFirstLeafPath(rootMenu);
 }
 
 function useMixedMenu() {

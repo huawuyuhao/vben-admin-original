@@ -2,6 +2,7 @@ import type { RouteRecordRaw } from 'vue-router';
 
 /**
  * 门户服务（Vben 后台侧栏）
+ * 顺序：产品服务 → 模型服务 → 案例中心 → 企业服务 → 我的需求
  */
 const routes: RouteRecordRaw[] = [
   {
@@ -12,17 +13,28 @@ const routes: RouteRecordRaw[] = [
     },
     name: 'PortalService',
     path: '/service',
-    redirect: '/service/model',
+    redirect: '/service/product',
     children: [
       {
-        name: 'ServiceGoPortal',
-        path: '/service/home',
-        component: () => import('#/views/portal/redirect.vue'),
+        name: 'ServiceProduct',
+        path: '/service/product',
+        component: () => import('#/views/product/index.vue'),
         meta: {
-          hideInTab: true,
-          icon: 'ep:home-filled',
-          // 进入门户首页后不要作为「门户服务」顶栏点击的恢复路径
-          title: '门户首页',
+          icon: 'ep:goods',
+          order: 1,
+          title: '产品服务',
+        },
+      },
+      {
+        name: 'ServiceProductDetail',
+        path: '/service/product/:id',
+        component: () => import('#/views/product/detail.vue'),
+        meta: {
+          // 详情页不进侧栏，但激活态仍落在「产品服务」
+          activePath: '/service/product',
+          hideInMenu: true,
+          hideInTab: false,
+          title: '产品详情',
         },
       },
       {
@@ -30,18 +42,9 @@ const routes: RouteRecordRaw[] = [
         path: '/service/model',
         component: () => import('#/views/model/index.vue'),
         meta: {
-          affixTab: true,
           icon: 'ep:cpu',
+          order: 2,
           title: '模型服务',
-        },
-      },
-      {
-        name: 'ServiceProduct',
-        path: '/service/product',
-        component: () => import('#/views/product/index.vue'),
-        meta: {
-          icon: 'ep:goods',
-          title: '产品服务',
         },
       },
       {
@@ -50,53 +53,103 @@ const routes: RouteRecordRaw[] = [
         component: () => import('#/views/case/index.vue'),
         meta: {
           icon: 'ep:collection',
+          order: 3,
           title: '案例中心',
         },
       },
       {
-        name: 'ServiceMyDemand',
-        path: '/service/mydemand',
-        component: () => import('#/views/mydemand/index.vue'),
-        meta: {
-          icon: 'ep:document',
-          title: '我的需求',
-        },
-      },
-      {
-        name: 'ServiceEnterprise',
-        path: '/service/enterprise',
-        component: () => import('#/views/enterprise/index.vue'),
         meta: {
           icon: 'ep:office-building',
+          order: 4,
           title: '企业服务',
         },
+        name: 'ServiceEnterprise',
+        path: '/service/enterprise',
+        redirect: '/service/enterprise/supply',
+        children: [
+          {
+            name: 'ServiceEnterpriseSupply',
+            path: '/service/enterprise/supply',
+            component: () => import('#/views/enterprise/supply.vue'),
+            meta: {
+              icon: 'ep:upload-filled',
+              order: 1,
+              title: '我的算力供给',
+            },
+          },
+          {
+            name: 'ServiceEnterpriseProducts',
+            path: '/service/enterprise/products',
+            component: () => import('#/views/enterprise/products.vue'),
+            meta: {
+              icon: 'ep:box',
+              order: 2,
+              title: '我的算力产品',
+            },
+          },
+        ],
       },
       {
-        name: 'ServiceRegister',
-        path: '/service/register',
-        component: () => import('#/views/register/index.vue'),
         meta: {
-          icon: 'ep:key',
-          title: '注册认证',
+          icon: 'ep:document',
+          order: 5,
+          title: '我的需求',
         },
-      },
-      {
-        name: 'ServiceMsgNotify',
-        path: '/service/msgnotify',
-        component: () => import('#/views/msgnotify/index.vue'),
-        meta: {
-          icon: 'ep:bell',
-          title: '消息通知',
-        },
-      },
-      {
-        name: 'ServiceProfile',
-        path: '/service/profile',
-        component: () => import('#/views/profile/index.vue'),
-        meta: {
-          icon: 'ep:user',
-          title: '我的信息中心',
-        },
+        name: 'ServiceMyDemand',
+        path: '/service/mydemand',
+        redirect: '/service/mydemand/apps',
+        children: [
+          {
+            name: 'ServiceMyDemandApps',
+            path: '/service/mydemand/apps',
+            component: () => import('#/views/mydemand/apps/index.vue'),
+            meta: {
+              icon: 'ep:menu',
+              order: 1,
+              title: '我的应用',
+            },
+          },
+          {
+            name: 'ServiceMyDemandAppConfig',
+            path: '/service/mydemand/apps/config',
+            component: () => import('#/views/mydemand/apps/config.vue'),
+            meta: {
+              activePath: '/service/mydemand/apps',
+              hideInMenu: true,
+              title: '应用配置',
+            },
+          },
+          {
+            name: 'ServiceMyDemandCompute',
+            path: '/service/mydemand/compute',
+            component: () => import('#/views/mydemand/compute/index.vue'),
+            meta: {
+              icon: 'ep:cpu',
+              order: 2,
+              title: '我的算力需求',
+            },
+          },
+          {
+            name: 'ServiceMyDemandComputeCreate',
+            path: '/service/mydemand/compute/create',
+            component: () => import('#/views/mydemand/compute/create.vue'),
+            meta: {
+              activePath: '/service/mydemand/compute',
+              hideInMenu: true,
+              title: '新建算力需求',
+            },
+          },
+          {
+            name: 'ServiceMyDemandRuntime',
+            path: '/service/mydemand/runtime',
+            component: () => import('#/views/mydemand/runtime.vue'),
+            meta: {
+              icon: 'ep:monitor',
+              order: 3,
+              title: '应用运行管理',
+            },
+          },
+        ],
       },
     ],
   },

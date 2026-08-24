@@ -4,34 +4,64 @@ export function usePortalServiceMenu(active: string) {
     {
       title: '门户服务',
       items: [
-        { icon: '🏠', label: '门户首页', path: '/portal', active: active === 'portal' },
-        { icon: '🤖', label: '模型服务', path: '/model', active: active === 'model' },
-        { icon: '📦', label: '产品服务', path: '/product', active: active === 'product' },
-        { icon: '📋', label: '案例中心', path: '/case', active: active === 'case' },
-        { icon: '📂', label: '我的需求', path: '/mydemand', active: active === 'mydemand' },
+        {
+          icon: '📦',
+          label: '产品服务',
+          path: '/service/product',
+          active: active === 'product',
+        },
+        {
+          icon: '🤖',
+          label: '模型服务',
+          path: '/service/model',
+          active: active === 'model',
+        },
+        {
+          icon: '📋',
+          label: '案例中心',
+          path: '/service/case',
+          active: active === 'case',
+        },
         {
           icon: '🏢',
           label: '企业服务',
-          path: '/enterprise',
+          path: '/service/enterprise/supply',
           active: active === 'enterprise',
+          children: [
+            {
+              label: '我的算力供给',
+              path: '/service/enterprise/supply',
+              active: active === 'enterprise-supply',
+            },
+            {
+              label: '我的算力产品',
+              path: '/service/enterprise/products',
+              active: active === 'enterprise-products',
+            },
+          ],
         },
         {
-          icon: '🔐',
-          label: '注册认证',
-          path: '/register',
-          active: active === 'register',
-        },
-        {
-          icon: '🔔',
-          label: '消息通知',
-          path: '/msgnotify',
-          active: active === 'msgnotify',
-        },
-        {
-          icon: '👤',
-          label: '我的信息中心',
-          path: '/profile',
-          active: active === 'profile',
+          icon: '📂',
+          label: '我的需求',
+          path: '/service/mydemand/apps',
+          active: active === 'mydemand',
+          children: [
+            {
+              label: '我的应用',
+              path: '/service/mydemand/apps',
+              active: active === 'mydemand-apps',
+            },
+            {
+              label: '我的算力需求',
+              path: '/service/mydemand/compute',
+              active: active === 'mydemand-compute',
+            },
+            {
+              label: '应用运行管理',
+              path: '/service/mydemand/runtime',
+              active: active === 'mydemand-runtime',
+            },
+          ],
         },
       ],
     },

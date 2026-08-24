@@ -2,19 +2,16 @@
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { portalCases } from '#/views/_shared/data/cases';
+import { caseListItems, portalCases } from '#/views/_shared/data/cases';
+import { portalProducts } from '#/views/_shared/data/products';
 
 const router = useRouter();
-
-/** 首页案例区：前 4 个机房节点 + 后 2 个网络能力 */
-const homeCaseNodes = portalCases.slice(0, 4);
-const homeCaseNetworks = portalCases.slice(4);
 
 function go(path: string) {
   router.push(path);
 }
 
-/** 服务轮播：无实图，用主题色块 + 抽象视觉贴合门户风格 */
+/** 服务轮播（保持不动） */
 const serviceSlides = [
   {
     id: 'green-compute',
@@ -25,7 +22,7 @@ const serviceSlides = [
     points: ['绿电消纳优先调度', '任务级碳足迹溯源', '跨域算力协同优化'],
     metric: { value: '85%+', label: '绿电消纳占比' },
     cta: '了解调度能力',
-    link: '/workbench/overview',
+    link: '/workbench/panorama/global',
   },
   {
     id: 'model-route',
@@ -47,7 +44,7 @@ const serviceSlides = [
     points: ['多周期任务编排', '策略校核监控', '资源画像可视化'],
     metric: { value: '24', label: '路由节点在线' },
     cta: '进入工作台',
-    link: '/workbench/overview',
+    link: '/workbench/panorama/global',
   },
   {
     id: 'billing',
@@ -63,10 +60,8 @@ const serviceSlides = [
 ];
 
 const SLIDE_DURATION_MS = 5200;
-
 const slideIndex = ref(0);
 const slidePaused = ref(false);
-/** 进度条重播令牌：换页 / 恢复播放时递增，避免与计时器脱节 */
 const progressToken = ref(0);
 let slideTimer: ReturnType<typeof setTimeout> | null = null;
 
@@ -75,9 +70,7 @@ const activeSlide = computed(() => serviceSlides[slideIndex.value]!);
 function goSlide(i: number) {
   slideIndex.value = (i + serviceSlides.length) % serviceSlides.length;
   progressToken.value += 1;
-  if (!slidePaused.value) {
-    startSlideTimer();
-  }
+  if (!slidePaused.value) startSlideTimer();
 }
 
 function nextSlide() {
@@ -93,7 +86,6 @@ function startSlideTimer() {
   slideTimer = setTimeout(() => {
     slideTimer = null;
     if (!slidePaused.value) {
-      // 先翻页；goSlide 内部会再次启动计时并刷新进度条
       slideIndex.value = (slideIndex.value + 1) % serviceSlides.length;
       progressToken.value += 1;
       startSlideTimer();
@@ -113,7 +105,6 @@ watch(slidePaused, (paused) => {
     stopSlideTimer();
     return;
   }
-  // 恢复时从当前页重新计时，进度条同步重播
   progressToken.value += 1;
   startSlideTimer();
 });
@@ -121,47 +112,109 @@ watch(slidePaused, (paused) => {
 onMounted(startSlideTimer);
 onUnmounted(stopSlideTimer);
 
-const newsPolicy = [
+/** 热门产品推荐 */
+const productTabs = ['智算产品', '通算产品', '边缘算力'] as const;
+const activeProductTab = ref<(typeof productTabs)[number]>('智算产品');
+
+const hotProducts = computed(() => {
+  const list = portalProducts.filter((p) => {
+    if (activeProductTab.value === '智算产品') return p.type.includes('智算');
+    if (activeProductTab.value === '通算产品') return p.type.includes('通算') || p.type.includes('CPU');
+    return p.type.includes('边缘') || p.tags.some((t) => t.includes('边缘'));
+  });
+  const source = list.length >= 6 ? list : portalProducts;
+  return source.slice(0, 6);
+});
+
+/** 业务服务（三卡片，仅介绍） */
+const businessServices = [
   {
-    color: 'var(--portal-primary)',
-    title:
-      '《关于深入实施"东数西算"工程加快构建全国一体化算力网的实施意见》',
-    meta: '2026-07-15 · 发改数据〔2023〕1779号',
+    icon: '🖥️',
+    title: '算力产品',
+    desc: '绿色低碳智算产品，液冷散热与智能能耗管理显著降低 PUE，为模型训练与推理提供可持续绿色算力底座。',
   },
   {
-    color: 'var(--portal-green)',
-    title: '《数据中心绿色低碳发展专项行动计划》',
-    meta: '2026-06-20 · 发改环资〔2024〕970号',
+    icon: '🧱',
+    title: '裸金属',
+    desc: '独占物理服务器，无虚拟化损耗，支持自定义系统与加速卡，适合大规模训练与高性能计算场景。',
   },
   {
-    color: 'var(--portal-blue)',
-    title: '《加快构建新型电力系统行动方案(2024—2027)》',
-    meta: '2026-05-10 · 发改能源〔2024〕1128号',
+    icon: '☁️',
+    title: '云服务',
+    desc: '按需开通、弹性伸缩的云主机与容器算力，覆盖通算、推理与开发测试，支持按量与包月计费。',
   },
 ];
 
-const newsTech = [
+/** 计算说明 */
+const billingCards = [
   {
-    color: 'var(--portal-orange)',
-    title: '南方区域算力调度引擎 V2.0 上线',
-    meta: '2026-08-01 · 支持多周期任务编排',
+    icon: '⏱️',
+    title: '计费透明，统筹细节',
+    points: ['单项计价：按 Token / 时长 / 规格分项计量', '结算方式：按量、包月与企业定制可选'],
   },
   {
-    color: 'var(--portal-primary)',
-    title: '碳排放因子库动态更新机制发布',
-    meta: '2026-07-20 · 任务级碳足迹溯源',
+    icon: '📊',
+    title: '账单清晰，对账便捷',
+    points: ['多维报表：任务、资源、碳排一站汇总', '发票协同：合同、账单与开票流程打通'],
   },
   {
-    color: 'var(--portal-green)',
-    title: '贵州数据中心绿电消纳比例突破 90%',
-    meta: '2026-06-30 · 区域绿电优势凸显',
+    icon: '🍃',
+    title: '绿电溢价，可核可溯',
+    points: ['碳足迹：任务级碳排放因子动态核算', '绿电消纳：消纳占比与溢价分项可查'],
   },
 ];
+
+/** 行业资讯 */
+const newsItems = [
+  {
+    date: '07-15',
+    year: '2026',
+    title: '深入实施“东数西算”工程加快构建全国一体化算力网',
+    summary: '推动算力、电力与碳排数据协同，支撑区域绿电消纳与跨域调度能力建设。',
+  },
+  {
+    date: '06-20',
+    year: '2026',
+    title: '数据中心绿色低碳发展专项行动计划发布',
+    summary: '明确 PUE 约束与绿电使用目标，引导智算中心向低碳高效方向转型。',
+  },
+  {
+    date: '05-10',
+    year: '2026',
+    title: '加快构建新型电力系统行动方案推进落实',
+    summary: '电碳算协同成为负荷侧调节与绿电消纳的重要抓手。',
+  },
+  {
+    date: '04-28',
+    year: '2026',
+    title: '南方区域算力调度引擎能力升级',
+    summary: '支持多周期任务编排、策略校核与任务级碳足迹溯源。',
+  },
+];
+
+/** 业态分布 */
+const bizTiles = [
+  '人工智能',
+  '混合云',
+  '金融行业',
+  '科研教育',
+  '工业制造',
+  '智慧能源',
+  '媒体渲染',
+  '政务服务',
+  '边缘物联',
+];
+
+/** 合作案例 */
+const coopCases = caseListItems.slice(0, 3);
+
+/** 业态分布节点补充文案 */
+const bizHint = portalCases.slice(0, 3);
 </script>
 
 <template>
   <div>
-    <!-- 服务轮播图（需求：门户首页服务轮播） -->
+    <!-- 服务轮播图（保持不动） -->
     <section
       class="portal-banner-section portal-banner-section--hero"
       @mouseenter="slidePaused = true"
@@ -245,569 +298,666 @@ const newsTech = [
       </div>
     </section>
 
-
-    <!-- Hero -->
-    <section class="portal-hero portal-hero-compact">
-      <div class="portal-hero-inner">
-        <div class="portal-hero-left">
-          <div class="portal-hero-tag">⚡ COMPUTE API · MODEL ROUTING</div>
-          <h1 class="portal-hero-title">
-            随电而算 向<span class="portal-gradient-green">绿</span>而行<br />
-            协同调度
-            <span class="portal-gradient-purple">普惠算力</span>
-          </h1>
-          <p class="portal-hero-subtitle">
-            依托绿电追溯与电价感知，按需弹性响应，提供绿色、低碳、普惠的统一
-            Token 服务
-          </p>
-          <div class="portal-hero-cta">
+    <!-- 热门产品推荐 -->
+    <section class="portal-section">
+      <div class="home-block-head">
+        <div>
+          <div class="portal-section-tag">HOT PRODUCTS</div>
+          <h2 class="portal-section-title home-title-left">热门产品推荐</h2>
+        </div>
+        <div class="home-head-actions">
+          <div class="home-filter-tabs">
             <button
-              class="portal-btn-cta-primary"
+              v-for="tab in productTabs"
+              :key="tab"
               type="button"
-              @click="go('/workbench/overview')"
+              class="home-filter-tab"
+              :class="{ active: activeProductTab === tab }"
+              @click="activeProductTab = tab"
             >
-              免费体验 →
-            </button>
-            <button
-              class="portal-btn-cta-outline"
-              type="button"
-              @click="go('/service/model')"
-            >
-              查看模型与定价
+              {{ tab }}
             </button>
           </div>
-          <div class="portal-hero-metrics">
-            <div class="portal-hero-metric">
-              <div class="num">99.9%</div>
-              <div class="label">可用性目标</div>
-            </div>
-            <div class="portal-hero-metric">
-              <div class="num">
-                1<span style="font-size: 18px">个</span>
-              </div>
-              <div class="label">统一 API Key</div>
-            </div>
-            <div class="portal-hero-metric">
-              <div class="num">7 × 24</div>
-              <div class="label">节点状态监控</div>
-            </div>
-          </div>
-        </div>
-        <div class="portal-hero-right">
-          <div class="portal-dashboard-card">
-            <div class="portal-dc-header">
-              <div class="portal-dc-title">智能调度中枢</div>
-              <div class="portal-dc-status">
-                <span class="dot"></span> ONLINE
-              </div>
-            </div>
-            <div class="portal-dc-stats">
-              <div class="portal-dc-stat">
-                <div class="val">
-                  2.48<span style="font-size: 14px; color: var(--portal-gray-500)">
-                    M
-                  </span>
-                </div>
-                <div class="lbl">今日已调度请求</div>
-              </div>
-              <div class="portal-dc-stat">
-                <div class="val">
-                  24<span style="font-size: 14px; color: var(--portal-gray-500)">
-                    个
-                  </span>
-                </div>
-                <div class="lbl">路由节点</div>
-              </div>
-            </div>
-            <div class="portal-dc-mini-cards">
-              <div class="portal-dc-mini-card green">
-                <div class="mc-name">文本推理</div>
-                <div class="mc-status">稳定</div>
-              </div>
-              <div class="portal-dc-mini-card purple">
-                <div class="mc-name">视觉生成</div>
-                <div class="mc-status">可用</div>
-              </div>
-              <div class="portal-dc-mini-card blue">
-                <div class="mc-name">实时语音</div>
-                <div class="mc-status">可用</div>
-              </div>
-            </div>
-            <div class="portal-dc-route-title">模型路由</div>
-            <div class="portal-dc-route-item">
-              <div class="portal-dc-route-row">
-                <span class="portal-dc-route-name">主线路 Qwen3.7-Plus</span>
-                <span class="portal-badge portal-badge-success">低延迟</span>
-              </div>
-              <div class="portal-dc-route-bar">
-                <div class="fill purple" style="width: 85%"></div>
-              </div>
-            </div>
-            <div class="portal-dc-route-item">
-              <div class="portal-dc-route-row">
-                <span class="portal-dc-route-name">备用线路 DeepSeek-V4</span>
-                <span class="portal-dc-route-tag">READY · 自动切换</span>
-              </div>
-              <div class="portal-dc-route-bar">
-                <div class="fill teal" style="width: 62%"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Why -->
-    <section class="portal-section">
-      <div class="portal-section-tag">WHY THIS PLATFORM</div>
-      <h2 class="portal-section-title">用低碳高效的算力，驱动你的 AI 创新</h2>
-      <p class="portal-section-subtitle">
-        融合电力、碳排与算力数据，打造绿色、经济、智能的算力服务基座
-      </p>
-      <div class="portal-feature-grid">
-        <div class="portal-feature-card" @click="go('/workbench/overview')">
-          <div class="portal-feature-icon purple">⚡</div>
-          <h3>电价感知调度</h3>
-          <p>
-            实时感知区域电价与绿电出力状态，自动将计算任务调度至低电价、高绿电占比区域，降低用电综合成本。
-          </p>
-        </div>
-        <div class="portal-feature-card">
-          <div class="portal-feature-icon green">🍃</div>
-          <h3>碳排精准计量</h3>
-          <p>
-            从数据中心到算力任务级，实现全链路碳足迹溯源，碳排放因子动态更新，支撑绿色低碳运营决策。
-          </p>
-        </div>
-        <div class="portal-feature-card">
-          <div class="portal-feature-icon blue">🌐</div>
-          <h3>跨域算力协同</h3>
-          <p>
-            "3+1+X"算力网络架构，覆盖贵州、广州、惠州三大数据中心及超200个边缘节点，弹性复用闲置算力。
-          </p>
-        </div>
-        <div class="portal-feature-card">
-          <div class="portal-feature-icon orange">📊</div>
-          <h3>全景监测看板</h3>
-          <p>
-            算力、电力、碳排放、网络等多维数据实时汇聚，热力图、趋势分析、告警预警一体化展示。
-          </p>
-        </div>
-        <div class="portal-feature-card" @click="go('/service/model')">
-          <div class="portal-feature-icon purple">🤖</div>
-          <h3>模型市场服务</h3>
-          <p>
-            支持主流大模型接入，提供模型对比、评价、调用量统计，一个 API Key
-            统一调用所有模型服务。
-          </p>
-        </div>
-        <div class="portal-feature-card">
-          <div class="portal-feature-icon green">🔒</div>
-          <h3>安全合规运营</h3>
-          <p>
-            遵循国家等保标准与南网安全规范，数据全生命周期管控，保障算力服务安全合规运行。
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Service -->
-    <section class="portal-section alt">
-      <div class="portal-section-tag">SERVICE OVERVIEW</div>
-      <h2 class="portal-section-title">业务服务介绍</h2>
-      <p class="portal-section-subtitle">
-        从需求提交到算力交付，一站式电碳算协同服务
-      </p>
-      <div class="portal-flow-strip">
-        <span>需求接入</span>
-        <i>→</i>
-        <span>策略校核</span>
-        <i>→</i>
-        <span>智能调度</span>
-        <i>→</i>
-        <span>算力供给</span>
-        <i>→</i>
-        <span>结算计量</span>
-        <i>→</i>
-        <span>监测反馈</span>
-      </div>
-      <div class="portal-feature-grid">
-        <div class="portal-feature-card">
-          <div class="portal-feature-icon purple">📝</div>
-          <h3>算力需求管理</h3>
-          <p>
-            支持高性能、低价格、低碳等多维偏好提交算力需求，系统智能匹配最优算力中心。
-          </p>
-        </div>
-        <div class="portal-feature-card">
-          <div class="portal-feature-icon green">🔄</div>
-          <h3>区域算力调度</h3>
-          <p>
-            基于电价、绿电、碳排等因子生成调度策略，支持事前预警与事后归因，实现跨域算力优化。
-          </p>
-        </div>
-        <div class="portal-feature-card">
-          <div class="portal-feature-icon blue">💳</div>
-          <h3>算力结算服务</h3>
-          <p>在线选配、下单、计费全流程管理，支持商务合同、发票、账单与多维报表。</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Products -->
-    <section class="portal-section">
-      <div class="portal-section-tag">PRODUCT</div>
-      <h2 class="portal-section-title">产品推荐</h2>
-      <p class="portal-section-subtitle">精选算力产品，满足多样化计算需求</p>
-      <div class="portal-product-grid">
-        <div class="portal-product-card" @click="go('/service/product')">
-          <div class="portal-product-img">🖥️</div>
-          <div class="portal-product-body">
-            <h4>GPU 智算服务</h4>
-            <p>高性能 GPU 集群，支持大模型训练与推理，按需弹性扩展。</p>
-            <div class="portal-product-tags">
-              <span class="portal-product-tag">绿电占比 85%</span>
-              <span class="portal-product-tag price">¥2.8/小时起</span>
-            </div>
-          </div>
-        </div>
-        <div class="portal-product-card" @click="go('/service/product')">
-          <div class="portal-product-img">☁️</div>
-          <div class="portal-product-body">
-            <h4>通用算力服务</h4>
-            <p>CPU 多核实例，适合通算类任务，低成本高可用。</p>
-            <div class="portal-product-tags">
-              <span class="portal-product-tag">绿电占比 72%</span>
-              <span class="portal-product-tag price">¥0.8/小时起</span>
-            </div>
-          </div>
-        </div>
-        <div class="portal-product-card" @click="go('/service/product')">
-          <div class="portal-product-img">🔗</div>
-          <div class="portal-product-body">
-            <h4>边缘算力服务</h4>
-            <p>200+ 边缘节点，低延迟就近计算，适合实时推理场景。</p>
-            <div class="portal-product-tags">
-              <span class="portal-product-tag">绿电占比 90%</span>
-              <span class="portal-product-tag price">¥1.5/小时起</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Cases -->
-    <section class="portal-section alt">
-      <div class="portal-section-tag">CASE STUDIES</div>
-      <h2 class="portal-section-title">落地案例 · 电碳算协同实践</h2>
-      <p class="portal-section-subtitle">
-        接入南方区域数据中心与算力网络，用真实部署呈现绿电智算与跨域调度能力
-      </p>
-
-      <div class="portal-cases-overview">
-        <div
-          v-for="(item, index) in homeCaseNodes"
-          :key="item.title"
-          class="portal-cases-node"
-          :class="item.iconClass"
-        >
-          <div class="portal-cases-node-index">
-            {{ String(index + 1).padStart(2, '0') }}
-          </div>
-          <div class="portal-cases-node-main">
-            <span class="portal-cases-node-region">{{ item.region }}</span>
-            <strong>{{ item.shortName }}</strong>
-            <em>{{
-              item.badges.find((b) => b.type === 'info')?.text ??
-              item.badges[0]?.text
-            }}</em>
-          </div>
-        </div>
-      </div>
-
-      <div class="portal-cases-layout">
-        <div class="portal-cases-featured">
-          <article
-            v-for="item in homeCaseNodes"
-            :key="item.title"
-            class="portal-cases-card"
-            @click="go('/service/case')"
+          <button
+            class="portal-btn-text"
+            type="button"
+            @click="go('/service/product')"
           >
-            <div class="portal-cases-card-top">
-              <div class="portal-feature-icon" :class="item.iconClass">
-                {{ item.icon }}
-              </div>
-              <span class="portal-cases-card-region">{{ item.region }}</span>
+            全部 >
+          </button>
+        </div>
+      </div>
+
+      <div class="portal-product-grid home-product-grid">
+        <article
+          v-for="item in hotProducts"
+          :key="item.id"
+          class="portal-product-card home-product-card"
+          @click="go(`/service/product/${item.id}`)"
+        >
+          <div class="portal-product-img">{{ item.icon }}</div>
+          <div class="portal-product-body">
+            <h4>{{ item.name }}</h4>
+            <div class="portal-product-tags">
+              <span class="portal-product-tag">{{ item.type }}</span>
+              <span class="portal-product-tag">{{ item.region }}</span>
             </div>
+            <p class="home-product-meta">
+              {{ item.green }} · {{ item.usage }}
+            </p>
+            <p>{{ item.desc }}</p>
+            <div class="home-product-foot">
+              <span class="home-product-price">{{ item.price }}</span>
+              <button
+                class="home-try-btn"
+                type="button"
+                @click.stop="go(`/service/product/${item.id}`)"
+              >
+                立即试用
+              </button>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- 业务服务 -->
+    <section class="portal-section alt home-biz-service">
+      <div class="portal-section-tag">BUSINESS SERVICE</div>
+      <h2 class="portal-section-title">业务服务</h2>
+      <p class="portal-section-subtitle">
+        业务服务，仅展示介绍，不支持点击跳转
+      </p>
+      <div class="home-biz-service-grid">
+        <article
+          v-for="item in businessServices"
+          :key="item.title"
+          class="home-biz-service-card"
+        >
+          <div class="home-biz-service-visual">
+            <span>{{ item.icon }}</span>
+          </div>
+          <div class="home-biz-service-body">
             <h3>{{ item.title }}</h3>
             <p>{{ item.desc }}</p>
-            <div class="portal-cases-card-badges">
-              <span
-                v-for="badge in item.badges"
-                :key="badge.text"
-                class="portal-badge"
-                :class="`portal-badge-${badge.type}`"
-              >
-                {{ badge.text }}
-              </span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- 计算说明 -->
+    <section class="portal-section">
+      <div class="portal-section-tag">BILLING GUIDE</div>
+      <h2 class="portal-section-title">计算说明</h2>
+      <p class="portal-section-subtitle">计费透明、账单可核、绿电可溯</p>
+      <div class="home-billing-grid">
+        <article
+          v-for="item in billingCards"
+          :key="item.title"
+          class="home-billing-card"
+        >
+          <div class="home-billing-icon">{{ item.icon }}</div>
+          <h3>{{ item.title }}</h3>
+          <ul>
+            <li v-for="point in item.points" :key="point">{{ point }}</li>
+          </ul>
+        </article>
+      </div>
+      <div class="home-center-cta">
+        <button
+          class="portal-btn-cta-primary"
+          type="button"
+          @click="go('/service/product')"
+        >
+          完整计算说明
+        </button>
+      </div>
+    </section>
+
+    <!-- 行业资讯 + 业态分布 -->
+    <section class="portal-section alt">
+      <div class="home-split">
+        <div class="home-news">
+          <div class="home-split-head">
+            <h3>行业资讯</h3>
+            <button
+              class="portal-btn-text"
+              type="button"
+              @click="go('/service/case')"
+            >
+              更多 >
+            </button>
+          </div>
+          <article
+            v-for="item in newsItems"
+            :key="item.title"
+            class="home-news-item"
+          >
+            <div class="home-news-date">
+              <strong>{{ item.date }}</strong>
+              <span>{{ item.year }}</span>
             </div>
+            <div class="home-news-main">
+              <h4>{{ item.title }}</h4>
+              <p>{{ item.summary }}</p>
+            </div>
+            <div class="home-news-thumb" aria-hidden="true">📰</div>
           </article>
         </div>
 
-        <aside class="portal-cases-aside">
-          <div class="portal-cases-aside-title">网络能力</div>
-          <div
-            v-for="item in homeCaseNetworks"
-            :key="item.title"
-            class="portal-cases-aside-item"
-            @click="go('/service/case')"
-          >
-            <div class="portal-feature-icon" :class="item.iconClass">
-              {{ item.icon }}
-            </div>
-            <div>
-              <h4>{{ item.title }}</h4>
-              <p>{{ item.desc }}</p>
-              <div class="portal-cases-card-badges">
-                <span
-                  v-for="badge in item.badges"
-                  :key="badge.text"
-                  class="portal-badge"
-                  :class="`portal-badge-${badge.type}`"
-                >
-                  {{ badge.text }}
-                </span>
-              </div>
+        <div class="home-dist">
+          <div class="home-split-head">
+            <h3>业态分布</h3>
+          </div>
+          <div class="home-dist-grid">
+            <div v-for="tile in bizTiles" :key="tile" class="home-dist-tile">
+              {{ tile }}
             </div>
           </div>
           <button
-            class="portal-btn-cta-outline portal-cases-more"
+            class="home-dist-cta"
             type="button"
-            @click="go('/service/case')"
+            @click="go('/service/enterprise/supply')"
           >
-            进入案例中心 →
+            我有算力资源，请进入 >>
           </button>
-        </aside>
-      </div>
-    </section>
-
-    <!-- News -->
-    <section class="portal-section">
-      <div class="portal-section-tag">INDUSTRY NEWS</div>
-      <h2 class="portal-section-title">行业资讯</h2>
-      <p class="portal-section-subtitle">电碳算相关政策与技术进展</p>
-      <div class="portal-two-col">
-        <div class="portal-card">
-          <div class="portal-card-title">政策动态</div>
-          <div style="display: flex; flex-direction: column; gap: 14px">
-            <div
-              v-for="(item, index) in newsPolicy"
-              :key="item.title"
-              style="display: flex; gap: 12px"
-              :style="
-                index < newsPolicy.length - 1
-                  ? {
-                      paddingBottom: '14px',
-                      borderBottom: '1px solid var(--portal-gray-100)',
-                    }
-                  : {}
-              "
-            >
-              <div
-                :style="{
-                  width: '4px',
-                  background: item.color,
-                  borderRadius: '2px',
-                  flexShrink: 0,
-                }"
-              ></div>
-              <div>
-                <div
-                  style="
-                    margin-bottom: 4px;
-                    font-size: 14px;
-                    font-weight: 600;
-                  "
-                >
-                  {{ item.title }}
-                </div>
-                <div style="font-size: 12px; color: var(--portal-gray-500)">
-                  {{ item.meta }}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="portal-card">
-          <div class="portal-card-title">技术进展</div>
-          <div style="display: flex; flex-direction: column; gap: 14px">
-            <div
-              v-for="(item, index) in newsTech"
-              :key="item.title"
-              style="display: flex; gap: 12px"
-              :style="
-                index < newsTech.length - 1
-                  ? {
-                      paddingBottom: '14px',
-                      borderBottom: '1px solid var(--portal-gray-100)',
-                    }
-                  : {}
-              "
-            >
-              <div
-                :style="{
-                  width: '4px',
-                  background: item.color,
-                  borderRadius: '2px',
-                  flexShrink: 0,
-                }"
-              ></div>
-              <div>
-                <div
-                  style="
-                    margin-bottom: 4px;
-                    font-size: 14px;
-                    font-weight: 600;
-                  "
-                >
-                  {{ item.title }}
-                </div>
-                <div style="font-size: 12px; color: var(--portal-gray-500)">
-                  {{ item.meta }}
-                </div>
-              </div>
-            </div>
+          <div class="home-dist-hint">
+            <span v-for="n in bizHint" :key="n.title">{{
+              n.shortName ?? n.title
+            }}</span>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Pricing -->
-    <section class="portal-section alt">
-      <div class="portal-section-tag">PRICING</div>
-      <h2 class="portal-section-title">计费说明</h2>
-      <p class="portal-section-subtitle">灵活计费模式，按需使用，经济高效</p>
-      <div class="portal-three-col">
-        <div class="portal-card" style="text-align: center">
-          <div style="margin-bottom: 12px; font-size: 32px">⏱️</div>
-          <h3 style="margin-bottom: 8px; font-size: 18px; font-weight: 700">
-            按量计费
-          </h3>
-          <p
-            style="
-              margin-bottom: 12px;
-              font-size: 13px;
-              color: var(--portal-gray-500);
-            "
-          >
-            按实际使用时长/算力计量，灵活弹性
-          </p>
-          <div
-            style="
-              font-size: 24px;
-              font-weight: 800;
-              color: var(--portal-primary);
-            "
-          >
-            ¥0.8<span style="font-size: 14px; color: var(--portal-gray-500)"
-              >/小时起</span
-            >
-          </div>
-        </div>
-        <div
-          class="portal-card"
-          style="
-            position: relative;
-            text-align: center;
-            border: 2px solid var(--portal-primary);
-          "
+    <!-- 合作案例 -->
+    <section class="portal-section home-coop">
+      <div class="portal-section-tag">CASES</div>
+      <h2 class="portal-section-title">合作案例</h2>
+      <p class="portal-section-subtitle">电碳算协同落地实践</p>
+      <div class="home-coop-grid">
+        <article
+          v-for="item in coopCases"
+          :key="item.id"
+          class="home-coop-card"
+          @click="go('/service/case')"
         >
-          <div
-            style="
-              position: absolute;
-              top: -12px;
-              left: 50%;
-              padding: 2px 16px;
-              font-size: 12px;
-              font-weight: 600;
-              color: white;
-              background: var(--portal-primary);
-              border-radius: 12px;
-              transform: translateX(-50%);
-            "
-          >
-            推荐
+          <div class="home-coop-top">
+            <span class="home-coop-icon">{{ item.cover }}</span>
+            <h3>{{ item.title }}</h3>
           </div>
-          <div style="margin-bottom: 12px; font-size: 32px">📦</div>
-          <h3 style="margin-bottom: 8px; font-size: 18px; font-weight: 700">
-            包月套餐
-          </h3>
-          <p
-            style="
-              margin-bottom: 12px;
-              font-size: 13px;
-              color: var(--portal-gray-500);
-            "
-          >
-            预付费包月，享更多优惠
-          </p>
-          <div
-            style="
-              font-size: 24px;
-              font-weight: 800;
-              color: var(--portal-primary);
-            "
-          >
-            ¥499<span style="font-size: 14px; color: var(--portal-gray-500)"
-              >/月起</span
-            >
-          </div>
-        </div>
-        <div class="portal-card" style="text-align: center">
-          <div style="margin-bottom: 12px; font-size: 32px">🏢</div>
-          <h3 style="margin-bottom: 8px; font-size: 18px; font-weight: 700">
-            企业定制
-          </h3>
-          <p
-            style="
-              margin-bottom: 12px;
-              font-size: 13px;
-              color: var(--portal-gray-500);
-            "
-          >
-            专属算力资源，SLA 保障
-          </p>
-          <div
-            style="
-              font-size: 24px;
-              font-weight: 800;
-              color: var(--portal-primary);
-            "
-          >
-            联系我们
-          </div>
-        </div>
+          <p>{{ item.desc }}</p>
+          <button class="portal-btn-text" type="button">
+            了解更多产品案例 >>
+          </button>
+        </article>
       </div>
     </section>
 
-    <!-- About -->
-    <section class="portal-section">
-      <div class="portal-section-tag">ABOUT US</div>
-      <div class="portal-about-section">
+    <!-- 关于我们 -->
+    <section class="portal-section alt">
+      <div class="portal-about-section home-about">
         <div class="portal-about-text">
           <h3>关于我们</h3>
           <p>
-            电碳算协同运营平台由南方电网电算科技数字工程（广东）有限公司建设运营，是落实国家"东数西算"战略、服务全国一体化算力网的重要抓手。
+            电碳算协同运营平台由南方电网电算科技数字工程（广东）有限公司建设运营，是落实国家“东数西算”战略、服务全国一体化算力网的重要抓手。
           </p>
           <p>
             平台依托南方五省区完善的电力调度与市场交易体系、充足的绿色电力资源及全量电力数据资产，为算力需求方和供给方提供普惠易用、绿色安全的算力服务。
           </p>
-          <p>
-            以电贯通，探索电碳算产业协同路径，实现南方区域算力最优化配置，引导算力负荷汇聚南方五省，释放区域绿电价值。
-          </p>
+          <button
+            class="portal-btn-cta-primary"
+            type="button"
+            @click="go('/service/case')"
+          >
+            立即了解 →
+          </button>
         </div>
         <div class="portal-about-visual">⚡🍃</div>
       </div>
     </section>
   </div>
 </template>
+
+<style scoped>
+.home-block-head {
+  display: flex;
+  gap: 20px;
+  align-items: flex-end;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto 28px;
+}
+
+.portal-section > .portal-section-tag {
+  display: table;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.home-title-left {
+  margin-bottom: 0;
+  text-align: left;
+}
+
+.home-head-actions {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.home-filter-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  background: var(--portal-gray-100, #f5f6fa);
+  border-radius: 999px;
+}
+
+.home-filter-tab {
+  height: 32px;
+  padding: 0 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--portal-gray-500);
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  border-radius: 999px;
+}
+
+.home-filter-tab.active {
+  color: var(--portal-primary);
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(107, 76, 255, 0.12);
+}
+
+.home-product-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.home-product-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.home-product-meta {
+  margin: 8px 0 6px;
+  font-size: 12px;
+  color: var(--portal-gray-400, #9aa3b5);
+}
+
+.home-product-foot {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 14px;
+}
+
+.home-product-price {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--portal-primary);
+}
+
+.home-try-btn {
+  height: 32px;
+  padding: 0 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  background: var(--portal-green, #00c853);
+  border: 0;
+  border-radius: 8px;
+}
+
+.home-biz-service-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.home-biz-service-card {
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid var(--portal-gray-200);
+  border-radius: var(--portal-radius-lg, 16px);
+  box-shadow: 0 8px 24px rgba(31, 36, 48, 0.04);
+}
+
+.home-biz-service-visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 160px;
+  font-size: 56px;
+  background:
+    radial-gradient(
+      circle at 30% 30%,
+      rgba(255, 255, 255, 0.2),
+      transparent 45%
+    ),
+    linear-gradient(135deg, var(--portal-primary), #4a2fcc 55%, #2f6bff);
+}
+
+.home-biz-service-body {
+  padding: 20px 22px 24px;
+}
+
+.home-biz-service-body h3 {
+  margin: 0 0 10px;
+  font-size: 18px;
+  font-weight: 750;
+  color: var(--portal-gray-900);
+}
+
+.home-biz-service-body p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--portal-gray-500);
+}
+
+.home-billing-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  max-width: 1100px;
+  margin: 0 auto 28px;
+}
+
+.home-billing-card {
+  padding: 28px 24px;
+  background: #fff;
+  border: 1px solid var(--portal-gray-200);
+  border-top: 3px solid var(--portal-primary);
+  border-radius: var(--portal-radius-lg, 16px);
+}
+
+.home-billing-icon {
+  margin-bottom: 14px;
+  font-size: 32px;
+}
+
+.home-billing-card h3 {
+  margin: 0 0 14px;
+  font-size: 17px;
+  font-weight: 750;
+  color: var(--portal-gray-900);
+}
+
+.home-billing-card ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.home-billing-card li {
+  position: relative;
+  padding-left: 14px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--portal-gray-500);
+}
+
+.home-billing-card li::before {
+  position: absolute;
+  top: 8px;
+  left: 0;
+  width: 6px;
+  height: 6px;
+  content: '';
+  background: var(--portal-primary);
+  border-radius: 50%;
+}
+
+.home-center-cta {
+  display: flex;
+  justify-content: center;
+}
+
+.home-split {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 28px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.home-split-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.home-split-head h3 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--portal-gray-900);
+}
+
+.home-news-item {
+  display: grid;
+  grid-template-columns: 64px 1fr 56px;
+  gap: 14px;
+  align-items: start;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--portal-gray-100, #eef0f5);
+}
+
+.home-news-date {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.home-news-date strong {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--portal-primary);
+}
+
+.home-news-date span {
+  font-size: 12px;
+  color: var(--portal-gray-400, #9aa3b5);
+}
+
+.home-news-main h4 {
+  margin: 0 0 6px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--portal-gray-900);
+}
+
+.home-news-main p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--portal-gray-500);
+}
+
+.home-news-thumb {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  font-size: 22px;
+  background: var(--portal-primary-bg, #f0edff);
+  border-radius: 10px;
+}
+
+.home-dist-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.home-dist-tile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 72px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, var(--portal-primary), #4a2fcc);
+  border-radius: 12px;
+}
+
+.home-dist-cta {
+  width: 100%;
+  height: 44px;
+  margin-bottom: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+  background: linear-gradient(90deg, #00c853, #2f6bff);
+  border: 0;
+  border-radius: 12px;
+}
+
+.home-dist-hint {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.home-dist-hint span {
+  padding: 4px 10px;
+  font-size: 12px;
+  color: var(--portal-primary);
+  background: var(--portal-primary-bg, #f0edff);
+  border-radius: 999px;
+}
+
+.home-coop {
+  background:
+    radial-gradient(
+      circle at 10% 20%,
+      rgba(107, 76, 255, 0.08),
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at 90% 80%,
+      rgba(0, 200, 83, 0.08),
+      transparent 40%
+    ),
+    #fff;
+}
+
+.home-coop-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.home-coop-card {
+  padding: 24px;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(107, 76, 255, 0.12);
+  border-radius: 16px;
+  box-shadow: 0 10px 28px rgba(31, 36, 48, 0.06);
+  backdrop-filter: blur(8px);
+  transition: transform 0.2s;
+}
+
+.home-coop-card:hover {
+  transform: translateY(-3px);
+}
+
+.home-coop-top {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.home-coop-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  font-size: 18px;
+  background: var(--portal-primary-bg, #f0edff);
+  border-radius: 10px;
+}
+
+.home-coop-card h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 750;
+  color: var(--portal-gray-900);
+}
+
+.home-coop-card p {
+  margin: 0 0 14px;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--portal-gray-500);
+}
+
+.home-about {
+  padding: 28px;
+  background: #fff;
+  border: 1px solid var(--portal-gray-200);
+  border-radius: 20px;
+  box-shadow: 0 10px 28px rgba(31, 36, 48, 0.05);
+}
+
+@media (max-width: 1100px) {
+  .home-product-grid,
+  .home-biz-service-grid,
+  .home-billing-grid,
+  .home-coop-grid,
+  .home-split {
+    grid-template-columns: 1fr;
+  }
+
+  .home-block-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .home-title-left {
+    text-align: left;
+  }
+
+  .home-dist-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .home-product-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .home-news-item {
+    grid-template-columns: 56px 1fr;
+  }
+
+  .home-news-thumb {
+    display: none;
+  }
+
+  .home-dist-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+</style>

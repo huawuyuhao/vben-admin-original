@@ -7,24 +7,31 @@ const router = useRouter();
 
 const navItems = [
   { key: 'portal', label: '首页', path: '/portal' },
-  { key: 'model', label: '模型', path: '/service/model' },
   { key: 'product', label: '产品', path: '/service/product' },
-  { key: 'case', label: '案例', path: '/service/case' },
-  { key: 'workbench', label: '工作台', path: '/workbench/overview' },
-  { key: 'monitoring', label: '监测', path: '/monitoring/strategy' },
-  { key: 'admin', label: '管理', path: '/admin/user' },
+  { key: 'model', label: '模型', path: '/service/model' },
+  { key: 'workbench', label: '算力调度', path: '/workbench/panorama/global' },
+  { key: 'admin', label: '管理', path: '/monitoring/strategy' },
+  { key: 'mine', label: '我的', path: '/mine/profile/info' },
 ] as const;
 
 const activeKey = computed(() => {
   const path = route.path;
-  if (path === '/portal' || path === '/login') return 'portal';
-  if (path.startsWith('/service/model')) return 'model';
+  if (
+    path === '/portal' ||
+    path === '/login' ||
+    path === '/register' ||
+    path === '/forgot-password'
+  ) {
+    return 'portal';
+  }
   if (path.startsWith('/service/product')) return 'product';
-  if (path.startsWith('/service/case')) return 'case';
+  if (path.startsWith('/service/model')) return 'model';
   if (path.startsWith('/workbench')) return 'workbench';
-  if (path.startsWith('/monitoring')) return 'monitoring';
-  if (path.startsWith('/admin')) return 'admin';
-  if (path.startsWith('/service')) return 'model';
+  if (path.startsWith('/admin') || path.startsWith('/monitoring')) {
+    return 'admin';
+  }
+  if (path.startsWith('/mine')) return 'mine';
+  if (path.startsWith('/service')) return 'product';
   return '';
 });
 
@@ -62,7 +69,7 @@ function go(path: string) {
       <button
         class="portal-btn-trial"
         type="button"
-        @click="go('/workbench/overview')"
+        @click="go('/workbench/panorama/global')"
       >
         免费体验
       </button>

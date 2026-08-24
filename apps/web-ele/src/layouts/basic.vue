@@ -1,4 +1,4 @@
-﻿<script lang="ts" setup>
+<script lang="ts" setup>
 import type { NotificationItem } from '@vben/layouts';
 
 import { computed, ref, watch } from 'vue';
@@ -6,6 +6,7 @@ import { useRoute, useRouter } from 'vue-router';
 
 import { AuthenticationLoginExpiredModal } from '@vben/common-ui';
 import { useWatermark } from '@vben/hooks';
+import { IconifyIcon } from '@vben/icons';
 import {
   BasicLayout,
   LockScreen,
@@ -26,11 +27,19 @@ import '#/views/_shared/styles/portal.css';
 
 const route = useRoute();
 
-/** 门户首页 / 登录：隐藏侧栏与标签栏，顶栏直接用 Vben（与业务页一致） */
+/** 门户首页 / 登录注册：隐藏侧栏与标签栏（未登录也可浏览门户） */
 const isPublicPage = computed(() => {
   const path = route.path.replace(/\/$/, '') || '/';
-  return path === '/portal' || path === '/login';
+  return (
+    path === '/portal' ||
+    path === '/login' ||
+    path === '/register' ||
+    path === '/forgot-password'
+  );
 });
+
+/** 离开门户首页后，顶栏一级菜单左侧显示「首页」快捷入口 */
+const showPortalHomeTab = computed(() => !isPublicPage.value);
 
 watch(
   isPublicPage,
@@ -115,7 +124,7 @@ const showDot = computed(() =>
 const menus = computed(() => [
   {
     handler: () => {
-      router.push('/service/profile');
+      router.push('/mine/profile/info');
     },
     icon: 'lucide:user',
     text: $t('page.auth.profile'),
@@ -130,14 +139,18 @@ async function handleLogout() {
   await authStore.logout(false);
 }
 
-/** 点击左上角 Logo / 标题回到门户首页 */
-function handleClickLogo() {
+function goPortalHome() {
   if (route.path === '/portal' || route.name === 'PortalHome') {
     return;
   }
   router.push({ name: 'PortalHome' }).catch(() => {
     router.push('/portal');
   });
+}
+
+/** 点击左上角 Logo / 标题回到门户首页 */
+function handleClickLogo() {
+  goPortalHome();
 }
 
 function handleNoticeClear() {
@@ -243,6 +256,28 @@ watch(
         @click-logo="handleClickLogo"
         @logout="handleLogout"
       >
+        <!-- index>100：面包屑之后、一级水平菜单之前（紧贴「门户服务」左侧） -->
+        <template #header-left-101>
+          <Transition name="portal-home-tab">
+            <span
+              v-if="showPortalHomeTab"
+              class="portal-home-header-tab-wrap"
+            >
+              <button
+                class="portal-home-header-tab"
+                type="button"
+                aria-label="返回门户首页"
+                @click="goPortalHome"
+              >
+                <IconifyIcon
+                  class="portal-home-header-tab__icon"
+                  icon="ep:home-filled"
+                />
+                首页
+              </button>
+            </span>
+          </Transition>
+        </template>
         <template #user-dropdown>
           <UserDropdown
             :avatar
@@ -458,5 +493,80 @@ body,
   max-width: none;
   padding: 0 !important;
   margin: 0 !important;
+}
+
+/* 业务页顶栏：一级菜单左侧临时「首页」入口（样式对齐 Vben 水平菜单项） */
+.portal-home-header-tab-wrap {
+  display: inline-flex;
+  max-width: 96px;
+  margin-right: 4px;
+  overflow: hidden;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.portal-home-header-tab {
+  box-sizing: border-box;
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 0 12px;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  color: hsl(var(--accent-foreground));
+  white-space: nowrap;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+}
+
+.portal-home-header-tab__icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.portal-home-header-tab:hover {
+  color: hsl(var(--accent-foreground));
+  background: hsl(var(--accent));
+}
+
+.portal-home-header-tab:focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+}
+
+/* 左右滑入 / 滑出，宽度同步收缩避免菜单硬跳 */
+.portal-home-tab-enter-active,
+.portal-home-tab-leave-active {
+  transition:
+    max-width 0.28s ease,
+    margin-right 0.28s ease,
+    opacity 0.24s ease,
+    transform 0.28s ease;
+}
+
+.portal-home-tab-enter-from,
+.portal-home-tab-leave-to {
+  max-width: 0;
+  margin-right: 0;
+  opacity: 0;
+  transform: translateX(-14px);
+}
+
+.portal-home-tab-enter-to,
+.portal-home-tab-leave-from {
+  max-width: 96px;
+  margin-right: 4px;
+  opacity: 1;
+  transform: translateX(0);
 }
 </style>
