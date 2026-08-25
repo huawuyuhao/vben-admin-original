@@ -10,7 +10,10 @@ import type {
 
 import { markRaw, reactive, readonly, watch } from 'vue';
 
-import { StorageManager } from '@vben-core/shared/cache';
+import {
+  LocalStorageDriver,
+  StorageManager,
+} from '@vben-core/shared/cache';
 import {
   isMacOs,
   merge,
@@ -119,14 +122,18 @@ class PreferenceManager {
     namespace,
     overrides,
     extension,
+    storageType = 'localStorage',
   }: InitialOptions<TCustomPreferences>) => {
     // 防止重复初始化
     if (this.isInitialized) {
       return;
     }
 
-    // 使用命名空间初始化存储管理器
-    this.cache = new StorageManager({ prefix: namespace });
+    // 使用命名空间初始化存储管理器（可切换 local / session）
+    this.cache = new StorageManager({
+      prefix: namespace,
+      driver: new LocalStorageDriver({ storageType }),
+    });
 
     // 合并初始偏好设置：前面的对象优先，后面的对象仅补齐缺失字段
     this.initialPreferences = merge({}, overrides, defaultPreferences);

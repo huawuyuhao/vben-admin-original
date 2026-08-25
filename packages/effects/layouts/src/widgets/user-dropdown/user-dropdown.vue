@@ -391,7 +391,10 @@ if (preferences.shortcutKeys.enable) {
                 </Badge>
               </slot>
             </div>
-            <div class="text-xs font-normal text-muted-foreground">
+            <div
+              v-if="description"
+              class="text-xs font-normal text-muted-foreground"
+            >
               {{ description }}
             </div>
           </div>

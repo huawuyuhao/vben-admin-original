@@ -16,12 +16,12 @@ export const overridesPreferences = defineOverridesPreferences({
     // 全站默认：混合垂直（顶栏一级菜单 + 侧栏二级菜单）
     layout: 'mixed-nav',
     name: import.meta.env.VITE_APP_TITLE,
-    // 业务内容区统一边距（避免缓存里旧值导致上下左右缝乱）
-    contentPadding: 0,
-    contentPaddingBottom: 0,
-    contentPaddingLeft: 0,
-    contentPaddingRight: 0,
-    contentPaddingTop: 0,
+    // 业务内容区统一边距（四边一致，全站业务页共用）
+    contentPadding: 10,
+    contentPaddingBottom: 10,
+    contentPaddingLeft: 10,
+    contentPaddingRight: 10,
+    contentPaddingTop: 10,
   },
   // 业务页显示 Vben 面包屑
   breadcrumb: {
@@ -62,10 +62,10 @@ export const overridesPreferences = defineOverridesPreferences({
     logoutButtonPosition: 'user-dropdown',
     timezone: false,
   },
-  // 默认浅色 + 淡紫色主题（与门户首页 #6B4CFF 一致）
+  // 默认浅色 + 内置「紫罗兰」主题色（仅影响按钮 / Tag 等组件色，不影响门户首页品牌色）
   theme: {
-    builtinType: 'custom',
-    colorPrimary: 'hsl(250 100% 65%)',
+    builtinType: 'violet',
+    colorPrimary: 'hsl(245 82% 67%)',
     mode: 'light',
     semiDarkHeader: false,
     semiDarkSidebar: false,

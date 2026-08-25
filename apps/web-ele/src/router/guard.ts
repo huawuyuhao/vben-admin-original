@@ -32,6 +32,10 @@ function setupCommonGuard(router: Router) {
   });
 }
 
+/**
+ * 判断是否为登录 / 注册 / 找回密码等认证页路径
+ * @param path 路由 path
+ */
 function isAuthPath(path: string) {
   return (
     path === PORTAL_LOGIN_PATH ||
@@ -41,7 +45,10 @@ function isAuthPath(path: string) {
   );
 }
 
-/** generateAccess 会 remove/add Root，兜底保证门户/登录子路由仍在 */
+/**
+ * generateAccess 会 remove/add Root，兜底保证门户 / 登录等子路由仍在
+ * @param router 路由实例
+ */
 function ensurePublicRoutes(router: Router) {
   if (!router.hasRoute('PortalHome')) {
     router.addRoute('Root', {
@@ -94,7 +101,10 @@ function ensurePublicRoutes(router: Router) {
 }
 
 /**
- * 生成菜单与动态路由（支持访客，无需登录即可进入后台布局页）
+ * 生成菜单与动态路由
+ * 公开页也需生成，保证顶栏一级菜单可见；业务页访问仍由鉴权拦截
+ * @param router 路由实例
+ * @param roles 用户角色列表
  */
 async function ensureAccess(router: Router, roles: string[] = []) {
   const accessStore = useAccessStore();
@@ -121,14 +131,13 @@ function setupAccessGuard(router: Router) {
     const userStore = useUserStore();
     const authStore = useAuthStore();
 
-    // 门户首页 / 登录等核心路由
+    // 门户首页 / 登录注册等核心公开路由
     if (coreRouteNames.includes(to.name as string)) {
+      // 已登录再进登录页：带 redirect 则回原页，否则进首页
       if (isAuthPath(to.path) && accessStore.accessToken) {
         await ensureAccess(router, userStore.userInfo?.roles ?? []);
-        return decodeURIComponent(
-          (to.query?.redirect as string) ||
-            userStore.userInfo?.homePath ||
-            preferences.app.defaultHomePath,
+        return (
+          userStore.userInfo?.homePath || preferences.app.defaultHomePath
         );
       }
       // 公开页也要生成菜单，否则 Vben 顶栏一级菜单为空
@@ -138,38 +147,54 @@ function setupAccessGuard(router: Router) {
       return true;
     }
 
-    // 未登录：按访客生成后台菜单，可直接访问业务页
+    // 未登录：业务路由兜底拦截（顶栏/首页入口已在点击前校验；此处防直接输 URL）
     if (!accessStore.accessToken) {
-      if (!accessStore.isAccessChecked) {
-        await ensureAccess(router, []);
+      if (to.meta.ignoreAccess) {
+        return true;
+      }
+
+      // 从登录页后退到业务页：直接回门户，避免在登录↔业务间打转
+      if (isAuthPath(from.path) && !isAuthPath(to.path)) {
         return {
-          ...router.resolve(to.fullPath),
+          path: preferences.app.defaultHomePath,
           replace: true,
         };
       }
-      return true;
+
+      // 不带 redirect，登录成功统一回门户；replace 避免业务页留在历史栈
+      return {
+        path: PORTAL_LOGIN_PATH,
+        replace: true,
+      };
     }
 
+    // 已登录且动态路由已生成
     if (accessStore.isAccessChecked) {
       return true;
     }
 
+    // 已登录首次进入：用本地缓存用户信息生成动态路由（不再请求 /user/info）
     const userInfo = userStore.userInfo || (await authStore.fetchUserInfo());
-    const userRoles = userInfo.roles ?? [];
+    const userRoles = userInfo?.roles ?? [];
     await ensureAccess(router, userRoles);
 
-    const redirectPath = (from.query.redirect ??
-      (to.path === preferences.app.defaultHomePath
-        ? userInfo.homePath || preferences.app.defaultHomePath
-        : to.fullPath)) as string;
+    const redirectPath = (
+      to.path === preferences.app.defaultHomePath
+        ? userInfo?.homePath || preferences.app.defaultHomePath
+        : to.fullPath
+    ) as string;
 
     return {
-      ...router.resolve(decodeURIComponent(redirectPath)),
+      ...router.resolve(redirectPath),
       replace: true,
     };
   });
 }
 
+/**
+ * 创建并挂载路由守卫
+ * @param router 路由实例
+ */
 function createRouterGuard(router: Router) {
   setupCommonGuard(router);
   setupAccessGuard(router);

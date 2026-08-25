@@ -1,5 +1,5 @@
 ---
-description: 本仓库 AI 编程规范：复用共享工具、浏览器兼容、中文注释与编码
+description: 本仓库 AI 编程规范：复用共享工具、浏览器兼容、Vue SCSS、功能目录结构、中文注释与编码
 alwaysApply: true
 ---
 
@@ -74,6 +74,55 @@ function isEmpty<T = unknown>(value?: T): value is T {
 - 新增/编辑含中文的文件时，确认编辑器与落盘编码为 UTF-8；禁止用系统默认 ANSI/GBK 覆盖已有 UTF-8 文件。
 - 勿对中文字符串做错误转码（如二次 `escape`/`decode`、错误的 `Buffer` 编码）；HTTP 响应与静态资源声明与 UTF-8 一致。
 - 发现乱码（如 `锟斤拷`、`Ã¤Â¸Â­`）时先修编码再改逻辑，不要把乱码文案当正常内容提交。
+
+## Vue 样式（SCSS 层级）
+
+- Vue 单文件组件（`.vue`）中的样式，**除非任务明确要求其它写法**，否则一律使用 `<style lang="scss" scoped>`（或按需去掉 `scoped`），并用 **SCSS 嵌套层级** 组织选择器，禁止平铺一长串互不嵌套的类名规则。
+- 推荐 BEM / 块级根类 + `&__` / `&--` / `&:hover` 等嵌套写法，保持结构与模板层级一致、便于维护。
+
+```vue
+<!-- ✅ 推荐 -->
+<style lang="scss" scoped>
+.portal-auth {
+  padding: 40px 24px;
+
+  &__card {
+    border-radius: 16px;
+
+    &:hover {
+      filter: brightness(1.02);
+    }
+  }
+}
+</style>
+
+<!-- ❌ 禁止（无要求时不要用普通 CSS 平铺） -->
+<style scoped>
+.portal-auth { padding: 40px 24px; }
+.portal-auth__card { border-radius: 16px; }
+</style>
+```
+
+## 功能目录结构（views 页面）
+
+功能页目录（如 `views/login/`）按需拆分，规则如下：
+
+- **页面拆分的子模块**：放在该功能下的 `modules/`（如从 `index.vue` 拆出的表单、侧栏等）；没有可拆分内容时**不要**空建。
+- **功能内可复用的封装组件**：放在该功能下的 `components/`；没有共用组件时**不要**空建。
+- **共用 SCSS**：抽到该功能下的 `scss/common.scss`；禁止把 `.scss` 与 `.vue` 放在同一目录，以免难维护。
+- **非公共样式**：一律写在对应 `.vue` 的 `<style lang="scss">` 中，不要另起零散 scss 文件。
+
+```text
+views/login/
+├── index.vue          # 页面入口
+├── data.ts            # 页面逻辑
+├── modules/           # 本页拆分出的子模块（无则不建）
+│   ├── sms-form.vue
+│   └── ...
+├── components/        # 本功能内可复用的封装组件（无则不建）
+└── scss/
+    └── common.scss    # 本功能共用样式（无共用则不建）
+```
 
 ## 业务与页面约定
 

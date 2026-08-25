@@ -13,10 +13,11 @@ async function initApplication() {
   const appVersion = import.meta.env.VITE_APP_VERSION;
   const namespace = `${import.meta.env.VITE_APP_NAMESPACE}-${appVersion}-${env}`;
 
-  // app偏好设置初始化
+  // app偏好设置初始化（本门户约定：全部缓存走 sessionStorage）
   await initPreferences({
     namespace,
     overrides: overridesPreferences,
+    storageType: 'sessionStorage',
   });
 
   // 启动应用并挂载

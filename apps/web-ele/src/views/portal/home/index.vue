@@ -1,13 +1,21 @@
-﻿<script lang="ts" setup>
+<script lang="ts" setup>
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { caseListItems, portalCases } from '#/views/_shared/data/cases';
 import { portalProducts } from '#/views/_shared/data/products';
+import { ensureLoggedIn } from '#/store/common';
 
 const router = useRouter();
 
+/**
+ * 门户内跳转：未登录先去登录页，不进入业务路由
+ * @param path 目标路径
+ */
 function go(path: string) {
+  if (!ensureLoggedIn(path)) {
+    return;
+  }
   router.push(path);
 }
 
@@ -568,7 +576,7 @@ const bizHint = portalCases.slice(0, 3);
 
 .home-filter-tab.active {
   color: var(--portal-primary);
-  background: #fff;
+  background: var(--portal-surface, #fff);
   box-shadow: 0 2px 8px rgba(107, 76, 255, 0.12);
 }
 
@@ -625,7 +633,7 @@ const bizHint = portalCases.slice(0, 3);
 
 .home-biz-service-card {
   overflow: hidden;
-  background: #fff;
+  background: var(--portal-surface, #fff);
   border: 1px solid var(--portal-gray-200);
   border-radius: var(--portal-radius-lg, 16px);
   box-shadow: 0 8px 24px rgba(31, 36, 48, 0.04);
@@ -674,7 +682,7 @@ const bizHint = portalCases.slice(0, 3);
 
 .home-billing-card {
   padding: 28px 24px;
-  background: #fff;
+  background: var(--portal-surface, #fff);
   border: 1px solid var(--portal-gray-200);
   border-top: 3px solid var(--portal-primary);
   border-radius: var(--portal-radius-lg, 16px);
@@ -914,7 +922,7 @@ const bizHint = portalCases.slice(0, 3);
 
 .home-about {
   padding: 28px;
-  background: #fff;
+  background: var(--portal-surface, #fff);
   border: 1px solid var(--portal-gray-200);
   border-radius: 20px;
   box-shadow: 0 10px 28px rgba(31, 36, 48, 0.05);

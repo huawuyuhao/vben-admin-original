@@ -27,7 +27,7 @@ const routes: RouteRecordRaw[] = [
           {
             name: 'MineProfileInfo',
             path: '/mine/profile/info',
-            component: () => import('#/views/profile/info.vue'),
+            component: () => import('#/views/mine/profile/info/index.vue'),
             meta: {
               icon: 'ep:postcard',
               order: 1,

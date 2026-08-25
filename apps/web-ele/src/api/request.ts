@@ -71,12 +71,12 @@ function createRequestClient(baseURL: string, options?: RequestClientOptions) {
     },
   });
 
-  // 处理返回的响应数据格式
+  // 处理返回的响应数据格式（门户部分接口成功码为 200，历史接口为 0）
   client.addResponseInterceptor(
     defaultResponseInterceptor({
       codeField: 'code',
       dataField: 'data',
-      successCode: 0,
+      successCode: (code) => code === 0 || code === 200,
     }),
   );
 
@@ -107,6 +107,14 @@ function createRequestClient(baseURL: string, options?: RequestClientOptions) {
 }
 
 export const requestClient = createRequestClient(apiURL, {
+  responseReturn: 'data',
+});
+
+/**
+ * 无 baseURL 前缀的请求客户端。
+ * 用于文档路径本身是否带 `/api` 不一致的接口（须在调用处写全路径）。
+ */
+export const rootRequestClient = createRequestClient('', {
   responseReturn: 'data',
 });
 

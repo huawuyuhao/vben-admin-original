@@ -1,4 +1,5 @@
 /* 电碳算协同运营平台 - 门户样式（独立于后台壳） */
+/* 门户品牌色固定，不随偏好设置里的「主题色」变化；主题色只驱动按钮 / Tag 等组件 */
 .portal-app {
   --portal-primary: #6b4cff;
   --portal-primary-light: #8b7aff;
@@ -22,6 +23,8 @@
   --portal-gray-800: #424242;
   --portal-gray-900: #212121;
   --portal-bg: #f8f9fc;
+  --portal-surface: #ffffff;
+  --portal-nav-bg: rgba(255, 255, 255, 0.92);
   --portal-glass: rgba(255, 255, 255, 0.72);
   --portal-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
   --portal-shadow-md: 0 4px 20px rgba(0, 0, 0, 0.08);
@@ -32,6 +35,17 @@
   --portal-radius-lg: 16px;
   --portal-radius-xl: 24px;
   --portal-sidebar-width: 220px;
+  /* 登录 / 注册页背景光斑 */
+  --portal-auth-bg: #f5f4fb;
+  --portal-auth-card: rgba(255, 255, 255, 0.88);
+  --portal-auth-border: rgba(107, 76, 255, 0.1);
+  --portal-auth-title: #1f2430;
+  --portal-auth-hint: #8a94a6;
+  --portal-auth-orb-a: rgba(107, 76, 255, 0.38);
+  --portal-auth-orb-b: rgba(0, 200, 83, 0.24);
+  --portal-auth-orb-c: rgba(33, 150, 243, 0.18);
+  --portal-auth-grid: rgba(107, 76, 255, 0.045);
+  --portal-hero-bg: linear-gradient(135deg, #fafbff 0%, #f0edff 40%, #e8f5e9 100%);
   /* 与 Vben 顶栏高度对齐（公开页不再使用自定义营销顶栏） */
   --portal-header-height: 50px;
   /* 顶栏与下方侧栏/内容区紧贴，不再留空隙 */
@@ -43,6 +57,40 @@
   color: var(--portal-gray-900);
   font-size: 14px;
   line-height: 1.6;
+}
+
+/* 黑夜模式：门户背景 / 卡片 / 文案跟随全局 dark，品牌主色保持不变 */
+html.dark .portal-app {
+  --portal-primary-bg: rgba(139, 122, 255, 0.16);
+  --portal-green-bg: rgba(0, 200, 83, 0.12);
+  --portal-gray-50: #12141c;
+  --portal-gray-100: #1a1d27;
+  --portal-gray-200: #2a2e3a;
+  --portal-gray-300: #3d4454;
+  --portal-gray-400: #7b8496;
+  --portal-gray-500: #9aa3b5;
+  --portal-gray-600: #c0c6d4;
+  --portal-gray-700: #d5dae6;
+  --portal-gray-800: #e8ebf2;
+  --portal-gray-900: #f2f4f8;
+  --portal-bg: #0b0d12;
+  --portal-surface: #161822;
+  --portal-nav-bg: rgba(18, 20, 28, 0.92);
+  --portal-glass: rgba(22, 24, 34, 0.78);
+  --portal-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.28);
+  --portal-shadow-md: 0 4px 20px rgba(0, 0, 0, 0.32);
+  --portal-shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.4);
+  --portal-shadow-purple: 0 8px 32px rgba(107, 76, 255, 0.22);
+  --portal-auth-bg: #0c0e14;
+  --portal-auth-card: rgba(22, 24, 34, 0.9);
+  --portal-auth-border: rgba(139, 122, 255, 0.22);
+  --portal-auth-title: #f2f4f8;
+  --portal-auth-hint: #9aa3b5;
+  --portal-auth-orb-a: rgba(139, 122, 255, 0.42);
+  --portal-auth-orb-b: rgba(0, 200, 83, 0.22);
+  --portal-auth-orb-c: rgba(66, 165, 245, 0.2);
+  --portal-auth-grid: rgba(139, 122, 255, 0.07);
+  --portal-hero-bg: linear-gradient(135deg, #12141c 0%, #1a1530 45%, #102018 100%);
 }
 
 .portal-app *,
@@ -83,7 +131,7 @@
   align-items: center;
   height: var(--portal-header-height);
   padding: 0 24px;
-  background: rgba(255, 255, 255, 0.92);
+  background: var(--portal-nav-bg);
   border-bottom: 1px solid rgba(0, 0, 0, 0.06);
   backdrop-filter: blur(20px);
 }
@@ -190,7 +238,7 @@
   width: var(--portal-sidebar-width);
   padding: 16px 0;
   overflow-y: auto;
-  background: white;
+  background: var(--portal-surface);
   border-right: 1px solid var(--portal-gray-200);
 }
 
@@ -280,7 +328,7 @@
 /* Cards / stats / tables */
 .portal-card {
   padding: 24px;
-  background: white;
+  background: var(--portal-surface);
   border: 1px solid var(--portal-gray-200);
   border-radius: var(--portal-radius-lg);
   box-shadow: var(--portal-shadow-sm);
@@ -307,7 +355,7 @@
   position: relative;
   padding: 20px;
   overflow: hidden;
-  background: white;
+  background: var(--portal-surface);
   border: 1px solid var(--portal-gray-200);
   border-radius: var(--portal-radius-md);
   box-shadow: var(--portal-shadow-sm);
@@ -461,7 +509,7 @@
 
 .portal-btn-outline {
   color: var(--portal-gray-700);
-  background: white;
+  background: var(--portal-surface);
   border: 1px solid var(--portal-gray-300);
 }
 
@@ -507,7 +555,7 @@
   width: 100%;
   padding: 8px 12px 8px 36px;
   font-size: 13px;
-  background: white;
+  background: var(--portal-surface);
   border: 1px solid var(--portal-gray-300);
   border-radius: var(--portal-radius-sm);
   outline: none;
@@ -525,7 +573,7 @@
   padding: 8px 12px;
   font-size: 13px;
   cursor: pointer;
-  background: white;
+  background: var(--portal-surface);
   border: 1px solid var(--portal-gray-300);
   border-radius: var(--portal-radius-sm);
   outline: none;
@@ -545,7 +593,7 @@
   font-size: 13px;
   color: var(--portal-gray-700);
   cursor: pointer;
-  background: white;
+  background: var(--portal-surface);
   border: 1px solid var(--portal-gray-300);
   border-radius: var(--portal-radius-sm);
 }
@@ -569,7 +617,7 @@
   min-height: calc(100vh - var(--portal-header-height));
   padding: 0 80px;
   overflow: hidden;
-  background: linear-gradient(135deg, #fafbff 0%, #f0edff 40%, #e8f5e9 100%);
+  background: var(--portal-hero-bg);
 }
 
 .portal-hero::before {
@@ -685,7 +733,7 @@
   font-weight: 600;
   color: var(--portal-gray-700);
   cursor: pointer;
-  background: white;
+  background: var(--portal-surface);
   border: 1.5px solid var(--portal-gray-300);
   border-radius: 24px;
   transition: all 0.2s;
@@ -890,7 +938,7 @@
 /* Sections */
 .portal-section {
   padding: 80px;
-  background: white;
+  background: var(--portal-surface);
 }
 
 .portal-section.alt {
@@ -935,7 +983,7 @@
 .portal-feature-card {
   padding: 32px;
   cursor: pointer;
-  background: white;
+  background: var(--portal-surface);
   border: 1px solid var(--portal-gray-200);
   border-radius: var(--portal-radius-lg);
   transition: all 0.3s;
@@ -1001,7 +1049,7 @@
   font-size: 14px;
   font-weight: 600;
   color: var(--portal-gray-700);
-  background: white;
+  background: var(--portal-surface);
   border: 1px solid var(--portal-gray-200);
   border-radius: var(--portal-radius-lg);
   box-shadow: var(--portal-shadow-sm);
@@ -1315,7 +1363,7 @@
   font-weight: 700;
   color: var(--portal-primary-dark);
   cursor: pointer;
-  background: #fff;
+  background: var(--portal-surface);
   border: none;
   border-radius: 999px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
@@ -1449,7 +1497,7 @@
 
 .portal-banner-dot.active {
   width: 22px;
-  background: #fff;
+  background: var(--portal-surface);
 }
 
 .portal-banner-progress {
@@ -1573,7 +1621,7 @@
 .portal-product-card {
   overflow: hidden;
   cursor: pointer;
-  background: white;
+  background: var(--portal-surface);
   border: 1px solid var(--portal-gray-200);
   border-radius: var(--portal-radius-md);
   transition: all 0.2s;
@@ -1641,7 +1689,7 @@
   display: flex;
   gap: 12px;
   padding: 16px 18px;
-  background: #fff;
+  background: var(--portal-surface);
   border: 1px solid var(--portal-gray-200);
   border-radius: var(--portal-radius-md);
   border-top: 3px solid var(--portal-primary);
@@ -1714,7 +1762,7 @@
   flex-direction: column;
   padding: 20px;
   cursor: pointer;
-  background: #fff;
+  background: var(--portal-surface);
   border: 1px solid var(--portal-gray-200);
   border-radius: var(--portal-radius-md);
   transition:
@@ -1834,7 +1882,7 @@
 .portal-model-card {
   padding: 24px;
   cursor: pointer;
-  background: white;
+  background: var(--portal-surface);
   border: 1px solid var(--portal-gray-200);
   border-radius: var(--portal-radius-md);
   transition: all 0.2s;
@@ -2025,7 +2073,7 @@
   justify-content: center;
   width: 90px;
   height: 90px;
-  background: white;
+  background: var(--portal-surface);
   border-radius: 50%;
 }
 
@@ -2127,7 +2175,7 @@
   width: 100%;
   padding: 10px 14px;
   font-size: 14px;
-  background: white;
+  background: var(--portal-surface);
   border: 1px solid var(--portal-gray-300);
   border-radius: var(--portal-radius-sm);
   outline: none;
@@ -2219,7 +2267,7 @@
 .portal-form-card {
   max-width: 600px;
   padding: 24px;
-  background: white;
+  background: var(--portal-surface);
   border: 1px solid var(--portal-gray-200);
   border-radius: var(--portal-radius-lg);
   box-shadow: var(--portal-shadow-sm);
@@ -2268,7 +2316,7 @@
 
 .portal-msg-list {
   overflow: hidden;
-  background: white;
+  background: var(--portal-surface);
   border: 1px solid var(--portal-gray-200);
   border-radius: var(--portal-radius-lg);
   box-shadow: var(--portal-shadow-sm);

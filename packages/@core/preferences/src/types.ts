@@ -442,6 +442,11 @@ interface InitialOptions<
   extension?: PreferencesExtension<TCustomPreferences>;
   namespace: string;
   overrides?: DeepPartial<Preferences>;
+  /**
+   * 偏好设置缓存介质（默认 localStorage）
+   * 门户等「关标签即清」场景可传 sessionStorage
+   */
+  storageType?: 'localStorage' | 'sessionStorage';
 }
 export type {
   AnyCustomPreferencesField,

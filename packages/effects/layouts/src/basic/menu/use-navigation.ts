@@ -4,6 +4,19 @@ import { useRouter } from 'vue-router';
 
 import { isHttpUrl, openRouteInNewWindow, openWindow } from '@vben/utils';
 
+/** 导航前钩子：返回 false 时中止本次导航 */
+type BeforeNavigationHook = (path: string) => boolean | Promise<boolean>;
+
+let beforeNavigationHook: BeforeNavigationHook | null = null;
+
+/**
+ * 注册菜单导航前的全局钩子（应用层可据此做登录校验等）
+ * @param hook 钩子；传 null 可清空
+ */
+function setBeforeNavigationHook(hook: BeforeNavigationHook | null) {
+  beforeNavigationHook = hook;
+}
+
 function useNavigation() {
   const router = useRouter();
   const routeMetaMap = new Map<string, RouteRecordNormalized>();
@@ -39,6 +52,14 @@ function useNavigation() {
 
   const navigation = async (path: string) => {
     try {
+      // 应用层导航前钩子（如未登录拦截）
+      if (beforeNavigationHook) {
+        const ok = await beforeNavigationHook(path);
+        if (!ok) {
+          return;
+        }
+      }
+
       const route = routeMetaMap.get(path);
       const { openInNewWindow = false, query = {}, link } = route?.meta ?? {};
 
@@ -71,4 +92,4 @@ function useNavigation() {
   return { navigation, willOpenedByWindow };
 }
 
-export { useNavigation };
+export { setBeforeNavigationHook, useNavigation };

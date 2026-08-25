@@ -34,6 +34,11 @@ export interface InitStoreOptions {
    * @zh_CN 应用名,由于 @vben/stores 是公用的，后续可能有多个app，为了防止多个app缓存冲突，可在这里配置应用名,应用名将被用于持久化的前缀
    */
   namespace: string;
+  /**
+   * Pinia 持久化 Storage（默认：开发环境 localStorage，生产 SecureLS）
+   * 门户等「关标签即清」场景可传入 sessionStorage
+   */
+  persistStorage?: Storage;
 }
 
 /**
@@ -42,27 +47,31 @@ export interface InitStoreOptions {
 export async function initStores(app: App, options: InitStoreOptions) {
   const { createPersistedState } = await import('pinia-plugin-persistedstate');
   pinia = createPinia();
-  const { namespace } = options;
+  const { namespace, persistStorage } = options;
   const ls = new SecureLSConstructor({
     encodingType: 'aes',
     encryptionSecret: import.meta.env.VITE_APP_STORE_SECURE_KEY,
     isCompression: true,
     metaKey: `${namespace}-secure-meta`,
   });
+  // 优先使用调用方指定的 Storage（如门户 sessionStorage）；否则沿用原默认策略
+  const storage =
+    persistStorage ??
+    (import.meta.env.DEV
+      ? localStorage
+      : {
+          getItem(key: string) {
+            return ls.get(key);
+          },
+          setItem(key: string, value: string) {
+            ls.set(key, value);
+          },
+        });
   pinia.use(
     createPersistedState({
       // key $appName-$store.id
       key: (storeKey) => `${namespace}-${storeKey}`,
-      storage: import.meta.env.DEV
-        ? localStorage
-        : {
-            getItem(key) {
-              return ls.get(key);
-            },
-            setItem(key, value) {
-              ls.set(key, value);
-            },
-          },
+      storage,
     }),
   );
   app.use(pinia);

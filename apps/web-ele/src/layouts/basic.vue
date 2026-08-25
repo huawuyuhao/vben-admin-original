@@ -121,6 +121,28 @@ const showDot = computed(() =>
   notifications.value.some((item) => !item.isRead),
 );
 
+/** 是否已登录（以 accessToken 为准，与 session 中的登录返参一致） */
+const isLoggedIn = computed(() => !!accessStore.accessToken);
+
+/**
+ * 顶栏展示用头像：无自定义头像时用系统默认头像
+ */
+const avatar = computed(() => {
+  const custom = userStore.userInfo?.avatar?.trim();
+  return custom || preferences.app.defaultAvatar;
+});
+
+/**
+ * 顶栏展示用昵称：无真实姓名时回退用户名或「用户」
+ */
+const displayName = computed(() => {
+  return (
+    userStore.userInfo?.realName ||
+    userStore.userInfo?.username ||
+    '用户'
+  );
+});
+
 const menus = computed(() => [
   {
     handler: () => {
@@ -131,12 +153,19 @@ const menus = computed(() => [
   },
 ]);
 
-const avatar = computed(() => {
-  return userStore.userInfo?.avatar ?? preferences.app.defaultAvatar;
-});
-
+/**
+ * 退出登录（接口 + 本地态由 authStore.logout 统一处理）
+ */
 async function handleLogout() {
   await authStore.logout(false);
+}
+
+/**
+ * 跳转登录或注册页
+ * @param mode 可选：register 表示注册
+ */
+function goAuth(mode?: 'register') {
+  router.push({ path: mode === 'register' ? '/register' : '/login' });
 }
 
 function goPortalHome() {
@@ -279,12 +308,29 @@ watch(
           </Transition>
         </template>
         <template #user-dropdown>
+          <!-- 未登录：登录 / 注册入口 -->
+          <div v-if="!isLoggedIn" class="portal-header-auth">
+            <button
+              class="portal-header-auth__login"
+              type="button"
+              @click="goAuth()"
+            >
+              登录
+            </button>
+            <button
+              class="portal-header-auth__register"
+              type="button"
+              @click="goAuth('register')"
+            >
+              注册
+            </button>
+          </div>
+          <!-- 已登录：隐藏 Pro / 邮箱，无头像用默认图 -->
           <UserDropdown
-            :avatar
-            :menus
-            :text="userStore.userInfo?.realName"
-            description="ann.vben@gmail.com"
-            tag-text="Pro"
+            v-else
+            :avatar="avatar"
+            :menus="menus"
+            :text="displayName"
             @clear-preferences-and-logout="handleLogout"
             @logout="handleLogout"
           />
@@ -472,14 +518,14 @@ body,
   min-height: 0 !important;
 }
 
-/* 业务页内容区内边距 */
+/* 业务页内容区内边距（全站统一：四边一致） */
 .site-admin-shell:not(.is-public-page) #__vben_main_content,
 .site-admin-shell:not(.is-public-page) [data-layout-region='main'] > main,
 .site-admin-shell:not(.is-public-page) main.relative {
   box-sizing: border-box !important;
   width: 100% !important;
   max-width: none !important;
-  padding: 12px 16px 20px !important;
+  padding: 10px !important;
   margin: 0 !important;
   background: transparent !important;
   border-radius: 0 !important;
@@ -568,5 +614,60 @@ body,
   margin-right: 4px;
   opacity: 1;
   transform: translateX(0);
+}
+
+/* 顶栏未登录：登录 / 注册入口 */
+.portal-header-auth {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  margin-right: 4px;
+}
+
+.portal-header-auth__login,
+.portal-header-auth__register {
+  box-sizing: border-box;
+  height: 32px;
+  padding: 0 14px;
+  margin: 0;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.portal-header-auth__login {
+  color: hsl(var(--foreground));
+  background: transparent;
+  border: 1px solid hsl(var(--border));
+}
+
+.portal-header-auth__login:hover {
+  background: hsl(var(--accent));
+  border-color: hsl(var(--accent));
+}
+
+.portal-header-auth__register {
+  color: #fff;
+  background: var(--portal-primary, #6b4cff);
+  border: 1px solid transparent;
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--portal-primary, #6b4cff) 28%, transparent);
+}
+
+.portal-header-auth__register:hover {
+  filter: brightness(1.06);
+}
+
+.portal-header-auth__login:focus-visible,
+.portal-header-auth__register:focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
 }
 </style>

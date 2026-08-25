@@ -2,6 +2,7 @@ import { createApp, watchEffect } from 'vue';
 
 import { registerAccessDirective } from '@vben/access';
 import { registerLoadingDirective } from '@vben/common-ui';
+import { setBeforeNavigationHook } from '@vben/layouts';
 import { preferences } from '@vben/preferences';
 import { initStores } from '@vben/stores';
 import '@vben/styles';
@@ -12,6 +13,7 @@ import ElementPlus from 'element-plus';
 import { ElLoading } from 'element-plus';
 
 import { $t, setupI18n } from '#/locales';
+import { ensureLoggedIn } from '#/store/common';
 
 import { initComponentAdapter } from './adapter/component';
 import { initSetupVbenForm } from './adapter/form';
@@ -43,7 +45,11 @@ async function bootstrap(namespace: string) {
   await setupI18n(app);
 
   // 配置 pinia-tore
-  await initStores(app, { namespace });
+  await initStores(app, {
+    namespace,
+    // 本门户约定：全部缓存走 sessionStorage，关闭标签页即清
+    persistStorage: sessionStorage,
+  });
 
   // 安装权限指令
   registerAccessDirective(app);
@@ -54,6 +60,9 @@ async function bootstrap(namespace: string) {
 
   // 配置路由及路由守卫
   app.use(router);
+
+  // 顶栏 / 侧栏菜单点击前：未登录则去登录页，不进入业务路由（返回可回公开页）
+  setBeforeNavigationHook((path) => ensureLoggedIn(path));
 
   // 配置Motion插件
   const { MotionPlugin } = await import('@vben/plugins/motion');
