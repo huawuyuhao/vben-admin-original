@@ -62,6 +62,18 @@ function ensurePublicRoutes(router: Router) {
       },
     });
   }
+  if (!router.hasRoute('PortalNewsDetail')) {
+    router.addRoute('Root', {
+      name: 'PortalNewsDetail',
+      path: '/portal/news/:id',
+      component: () => import('#/views/portal/news/detail/index.vue'),
+      meta: {
+        hideInMenu: true,
+        hideInTab: true,
+        title: '资讯详情',
+      },
+    });
+  }
   if (!router.hasRoute('Login')) {
     router.addRoute('Root', {
       name: 'Login',

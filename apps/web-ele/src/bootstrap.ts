@@ -10,7 +10,6 @@ import '@vben/styles/ele';
 
 import { useTitle } from '@vueuse/core';
 import ElementPlus from 'element-plus';
-import { ElLoading } from 'element-plus';
 
 import { $t, setupI18n } from '#/locales';
 import { ensureLoggedIn } from '#/store/common';
@@ -30,14 +29,12 @@ async function bootstrap(namespace: string) {
   const app = createApp(App);
 
   // 业务页大量使用 ElTable/ElCard 等，需全局注册，否则插槽 props 为 undefined 导致白屏
+  // Element Plus 安装时已注册 v-loading，勿再手动 app.directive('loading')
   app.use(ElementPlus);
 
-  // 注册 Element Plus 的 v-loading 指令
-  app.directive('loading', ElLoading.directive);
-
-  // 注册Vben提供的v-loading和v-spinning指令
+  // 仅注册 Vben 的 v-spinning；v-loading 已由 Element Plus 提供
   registerLoadingDirective(app, {
-    loading: false, // Vben提供的v-loading指令和Element Plus提供的v-loading指令二选一即可，此处false表示不注册Vben提供的v-loading指令
+    loading: false,
     spinning: 'spinning',
   });
 

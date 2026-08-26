@@ -254,6 +254,9 @@
           "fileTypeInvalid": "仅支持 jpg / png / jpeg",
           "fileSizeInvalid": "文件大小不能超过 {0}MB",
           "fileReadFail": "文件读取失败，请重试",
+          "uploading": "图片上传中，请稍候…",
+          "uploadBusy": "图片正在上传，请勿重复操作",
+          "uploadFail": "图片上传失败，请重试",
           "validateFail": "请完善必填项后再提交",
           "readonlyHint": "审核中不可修改，请等待审核结果",
           "submitSuccess": "认证材料已提交",
@@ -270,7 +273,6 @@
         "statusTitle": "认证状态",
         "readonlyBanner": "当前处于审核中，表单为只读预览。审核结束后可再次编辑提交。",
         "reapplyBanner": "个人认证已通过。如需更新材料，可继续填写并重新提交申请。",
-        "uploadPendingTip": "材料上传接口待接入：当前仅支持本地预览，正式环境将改为上传后返回的 URL。",
         "sections": {
           "basic": "实名信息",
           "materials": "认证材料上传"
@@ -327,6 +329,9 @@
           "fileTypeInvalid": "仅支持 jpg / png / jpeg",
           "fileSizeInvalid": "文件大小不能超过 {0}MB",
           "fileReadFail": "文件读取失败，请重试",
+          "uploading": "图片上传中，请稍候…",
+          "uploadBusy": "图片正在上传，请勿重复操作",
+          "uploadFail": "图片上传失败，请重试",
           "validateFail": "请完善必填项后再提交",
           "readonlyHint": "审核中不可修改，请等待审核结果",
           "submitSuccess": "认证材料已提交",
@@ -334,6 +339,67 @@
           "refreshDone": "认证进度已更新",
           "resetDone": "已重置表单"
         }
+      }
+    }
+  },
+  "portal": {
+    "home": {
+      "banner": {
+        "loading": "轮播加载中…",
+        "empty": "暂无轮播内容",
+        "learnMore": "了解更多",
+        "slideLabel": "首页轮播"
+      },
+      "product": {
+        "tag": "HOT PRODUCTS",
+        "title": "热门产品推荐",
+        "subtitle": "精选上架算力产品，按推荐度排序",
+        "viewAll": "全部 >",
+        "loading": "产品加载中…",
+        "empty": "暂无推荐产品",
+        "tryNow": "立即试用",
+        "pricePending": "价格面议",
+        "greenPower": "绿电占比 {0}",
+        "recommendLevel": "荐 {0}"
+      },
+      "service": {
+        "tag": "BUSINESS SERVICE",
+        "title": "业务服务",
+        "subtitle": "业务服务介绍，仅展示内容，不支持跳转",
+        "loading": "服务介绍加载中…",
+        "empty": "暂无业务服务介绍"
+      },
+      "billing": {
+        "tag": "BILLING GUIDE",
+        "title": "计费说明",
+        "subtitle": "套餐与计费规则一目了然",
+        "loading": "计费说明加载中…",
+        "empty": "暂无计费说明"
+      },
+      "about": {
+        "tag": "ABOUT US",
+        "title": "关于我们",
+        "subtitle": "平台定位与能力介绍",
+        "loading": "关于我们加载中…",
+        "empty": "暂无关于我们内容"
+      },
+      "news": {
+        "tag": "INDUSTRY NEWS",
+        "title": "行业资讯",
+        "subtitle": "政策动态与行业观察，点击阅读全文",
+        "prev": "上一页",
+        "next": "下一页",
+        "loading": "资讯加载中…",
+        "empty": "暂无行业资讯"
+      }
+    },
+    "news": {
+      "detail": {
+        "eyebrow": "Industry News",
+        "loading": "资讯详情加载中…",
+        "empty": "资讯不存在或已下线",
+        "noContent": "暂无正文内容",
+        "views": "阅读 {0}"
       }
     }
   }

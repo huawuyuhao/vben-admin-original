@@ -45,6 +45,16 @@ const coreRoutes: RouteRecordRaw[] = [
         },
       },
       {
+        name: 'PortalNewsDetail',
+        path: '/portal/news/:id',
+        component: () => import('#/views/portal/news/detail/index.vue'),
+        meta: {
+          hideInMenu: true,
+          hideInTab: true,
+          title: '资讯详情',
+        },
+      },
+      {
         name: 'Login',
         path: '/login',
         component: () => import('#/views/login/index.vue'),

@@ -254,6 +254,9 @@
           "fileTypeInvalid": "Only jpg / png / jpeg are supported",
           "fileSizeInvalid": "File size must not exceed {0}MB",
           "fileReadFail": "Failed to read file. Please try again",
+          "uploading": "Uploading image, please wait…",
+          "uploadBusy": "Upload in progress. Please do not retry",
+          "uploadFail": "Image upload failed. Please try again",
           "validateFail": "Please complete required fields before submitting",
           "readonlyHint": "Cannot edit while under review",
           "submitSuccess": "Certification materials submitted",
@@ -270,7 +273,6 @@
         "statusTitle": "Verification Status",
         "readonlyBanner": "Under review. The form is read-only until the review finishes.",
         "reapplyBanner": "Verification passed. You can update materials and submit another application.",
-        "uploadPendingTip": "Upload API pending: local preview only for now; production will use server-returned URLs.",
         "sections": {
           "basic": "Identity Information",
           "materials": "Upload Materials"
@@ -327,6 +329,9 @@
           "fileTypeInvalid": "Only jpg / png / jpeg are supported",
           "fileSizeInvalid": "File size must not exceed {0}MB",
           "fileReadFail": "Failed to read file. Please try again",
+          "uploading": "Uploading image, please wait…",
+          "uploadBusy": "Upload in progress. Please do not retry",
+          "uploadFail": "Image upload failed. Please try again",
           "validateFail": "Please complete required fields before submitting",
           "readonlyHint": "Cannot edit while under review",
           "submitSuccess": "Certification materials submitted",
@@ -334,6 +339,67 @@
           "refreshDone": "Progress updated",
           "resetDone": "Form reset"
         }
+      }
+    }
+  },
+  "portal": {
+    "home": {
+      "banner": {
+        "loading": "Loading banners…",
+        "empty": "No banners available",
+        "learnMore": "Learn more",
+        "slideLabel": "Home banner"
+      },
+      "product": {
+        "tag": "HOT PRODUCTS",
+        "title": "Featured Products",
+        "subtitle": "Curated on-shelf products ranked by recommendation",
+        "viewAll": "All >",
+        "loading": "Loading products…",
+        "empty": "No recommended products",
+        "tryNow": "Try now",
+        "pricePending": "Contact for price",
+        "greenPower": "Green power {0}",
+        "recommendLevel": "Rec {0}"
+      },
+      "service": {
+        "tag": "BUSINESS SERVICE",
+        "title": "Business Services",
+        "subtitle": "Service introductions for browsing only; no navigation",
+        "loading": "Loading services…",
+        "empty": "No business services available"
+      },
+      "billing": {
+        "tag": "BILLING GUIDE",
+        "title": "Billing Guide",
+        "subtitle": "Plans and billing rules at a glance",
+        "loading": "Loading billing guide…",
+        "empty": "No billing information available"
+      },
+      "about": {
+        "tag": "ABOUT US",
+        "title": "About Us",
+        "subtitle": "Who we are and what we deliver",
+        "loading": "Loading about us…",
+        "empty": "No about us content available"
+      },
+      "news": {
+        "tag": "INDUSTRY NEWS",
+        "title": "Industry News",
+        "subtitle": "Policy updates and industry insights — click to read",
+        "prev": "Prev",
+        "next": "Next",
+        "loading": "Loading news…",
+        "empty": "No industry news available"
+      }
+    },
+    "news": {
+      "detail": {
+        "eyebrow": "Industry News",
+        "loading": "Loading article…",
+        "empty": "Article not found or unpublished",
+        "noContent": "No article body",
+        "views": "{0} views"
       }
     }
   }

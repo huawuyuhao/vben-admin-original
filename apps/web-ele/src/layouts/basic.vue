@@ -27,19 +27,26 @@ import '#/views/_shared/styles/portal.css';
 
 const route = useRoute();
 
-/** 门户首页 / 登录注册：隐藏侧栏与标签栏（未登录也可浏览门户） */
+/** 门户首页 / 登录注册 / 资讯详情：隐藏侧栏与标签栏（未登录也可浏览） */
 const isPublicPage = computed(() => {
   const path = route.path.replace(/\/$/, '') || '/';
   return (
     path === '/portal' ||
+    path.startsWith('/portal/news/') ||
     path === '/login' ||
     path === '/register' ||
     path === '/forgot-password'
   );
 });
 
-/** 离开门户首页后，顶栏一级菜单左侧显示「首页」快捷入口 */
-const showPortalHomeTab = computed(() => !isPublicPage.value);
+/** 是否处于门户首页本身 */
+const isPortalHome = computed(() => {
+  const path = route.path.replace(/\/$/, '') || '/';
+  return path === '/portal' || route.name === 'PortalHome';
+});
+
+/** 离开门户首页后（含资讯详情等公开页），顶栏显示「首页」快捷入口 */
+const showPortalHomeTab = computed(() => !isPortalHome.value);
 
 watch(
   isPublicPage,

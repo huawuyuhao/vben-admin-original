@@ -8,7 +8,6 @@ import {
   CERT_IMAGE_TYPES,
   ID_CARD_PATTERN,
   normalizeAuthStatus,
-  readFileAsDataUrl,
   sanitizeAuditRemark,
 } from '../enterprise/data';
 
@@ -17,7 +16,6 @@ export {
   CERT_IMAGE_TYPES,
   ID_CARD_PATTERN,
   normalizeAuthStatus,
-  readFileAsDataUrl,
   sanitizeAuditRemark,
 };
 export type { AuthStatusMeta };
@@ -25,7 +23,7 @@ export type { AuthStatusMeta };
 /** sessionStorage：最近一次个人认证 authId */
 export const PERSONAL_AUTH_ID_KEY = 'portal-personal-auth-id';
 
-/** 个人认证材料上传字段（上传接口待接入） */
+/** 个人认证材料上传字段 */
 export type PersonalCertFileKey = 'idCardBack' | 'idCardFront';
 
 /** 手机号（与 OpenAPI phone pattern 对齐） */

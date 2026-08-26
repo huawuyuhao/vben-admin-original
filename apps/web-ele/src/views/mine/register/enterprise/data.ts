@@ -259,24 +259,6 @@ export function clearCachedAuthId() {
 }
 
 /**
- * 将 File 转为 Base64 Data URL（无独立上传接口时作为材料字段提交）
- * @param file 原始文件
- * @returns Data URL 字符串
- */
-export function readFileAsDataUrl(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.addEventListener('load', () => {
-      resolve(String(reader.result ?? ''));
-    });
-    reader.addEventListener('error', () => {
-      reject(reader.error ?? new Error('read file failed'));
-    });
-    reader.readAsDataURL(file);
-  });
-}
-
-/**
  * 校验认证材料文件类型与大小
  * @param file 原始文件
  * @returns 通过返回 true，否则返回错误文案 key 对应的已翻译文案

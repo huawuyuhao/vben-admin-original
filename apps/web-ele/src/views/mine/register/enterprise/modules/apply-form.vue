@@ -7,6 +7,7 @@ import 'element-plus/es/components/form/style/css';
 import 'element-plus/es/components/form-item/style/css';
 import 'element-plus/es/components/image-viewer/style/css';
 import 'element-plus/es/components/input/style/css';
+import 'element-plus/es/components/loading/style/css';
 import 'element-plus/es/components/upload/style/css';
 
 import type { FormInstance, FormRules, UploadFile } from 'element-plus';
@@ -21,11 +22,9 @@ import { $t } from '@vben/locales';
 import { Delete, UploadFilled, ZoomIn } from '@element-plus/icons-vue';
 import { ElMessage } from 'element-plus';
 
-import {
-  ID_CARD_PATTERN,
-  readFileAsDataUrl,
-  validateCertFile,
-} from '../data';
+import { uploadImageApi } from '#/api/common';
+
+import { ID_CARD_PATTERN, validateCertFile } from '../data';
 
 const props = defineProps<{
   /** 表单初值 */
@@ -45,7 +44,8 @@ const emit = defineEmits<{
 }>();
 
 /**
- * 企业认证申请表单（字段与 POST /api/auth/enterprise-cert 对齐）
+ * 企业认证申请表单（字段与 POST /auth/enterprise-cert 对齐）
+ * 材料先调统一上传接口拿 url，再写入表单供提交
  */
 defineOptions({ name: 'MineRegisterEnterpriseApplyForm' });
 
@@ -58,6 +58,18 @@ const fileLists = reactive<Record<CertFileKey, UploadFile[]>>({
   idCardBack: [],
   businessLicense: [],
 });
+
+/** 各材料字段是否正在上传 */
+const uploadingMap = reactive<Record<CertFileKey, boolean>>({
+  idCardFront: false,
+  idCardBack: false,
+  businessLicense: false,
+});
+
+/** 任一材料上传中（用于全局 loading，防止重复上传） */
+const isUploading = computed(() =>
+  Object.values(uploadingMap).some(Boolean),
+);
 
 /** 图片放大预览 */
 const previewVisible = ref(false);
@@ -214,7 +226,7 @@ function toUploadFile(raw: File): UploadFile {
 }
 
 /**
- * 应用选中的材料文件（同步拖拽区预览 + 异步转 Base64）
+ * 应用选中的材料文件：本地预览 + 调用统一上传接口写入 url
  * @param key 材料字段
  * @param uploadFile Upload 文件对象
  */
@@ -222,6 +234,11 @@ async function applySelectedFile(key: CertFileKey, uploadFile: UploadFile) {
   const raw = uploadFile.raw;
   if (!raw) {
     clearFile(key);
+    return;
+  }
+
+  if (isUploading.value) {
+    ElMessage.warning($t('page.mine.register.enterprise.message.uploadBusy'));
     return;
   }
 
@@ -233,25 +250,40 @@ async function applySelectedFile(key: CertFileKey, uploadFile: UploadFile) {
   }
 
   revokeFileUrls(key);
+  const localUrl = uploadFile.url || URL.createObjectURL(raw);
   const nextFile: UploadFile = {
     ...uploadFile,
-    url: uploadFile.url || URL.createObjectURL(raw),
+    url: localUrl,
   };
   fileLists[key] = [nextFile];
+  // 上传完成前先清空业务 url，避免误提交本地地址
+  form[key] = '';
+  syncModel();
 
+  uploadingMap[key] = true;
   try {
-    const dataUrl = await readFileAsDataUrl(raw);
-    if (isEmpty(dataUrl)) {
-      ElMessage.warning($t('page.mine.register.enterprise.message.fileReadFail'));
+    const result = await uploadImageApi(raw);
+    const url = String(result?.url ?? '').trim();
+    if (isEmpty(url)) {
+      ElMessage.error($t('page.mine.register.enterprise.message.uploadFail'));
       clearFile(key);
       return;
     }
-    form[key] = dataUrl;
+    // 预览优先用服务端 url；无 http 时保留本地 blob
+    if (fileLists[key][0]) {
+      if (localUrl.startsWith('blob:')) {
+        URL.revokeObjectURL(localUrl);
+      }
+      fileLists[key][0] = { ...fileLists[key][0], url };
+    }
+    form[key] = url;
     syncModel();
     formRef.value?.clearValidate(key);
   } catch {
-    ElMessage.warning($t('page.mine.register.enterprise.message.fileReadFail'));
+    // 错误提示由请求拦截器处理
     clearFile(key);
+  } finally {
+    uploadingMap[key] = false;
   }
 }
 
@@ -304,7 +336,7 @@ function onPreviewByKey(key: CertFileKey, event?: Event) {
 function onRemoveByKey(key: CertFileKey, event?: Event) {
   event?.preventDefault();
   event?.stopPropagation();
-  if (props.readonly) {
+  if (props.readonly || isUploading.value) {
     return;
   }
   clearFile(key);
@@ -365,6 +397,10 @@ function handleReset() {
 async function handleSubmit() {
   if (props.readonly) {
     ElMessage.warning($t('page.mine.register.enterprise.message.readonlyHint'));
+    return;
+  }
+  if (isUploading.value) {
+    ElMessage.warning($t('page.mine.register.enterprise.message.uploadBusy'));
     return;
   }
   try {
@@ -459,7 +495,13 @@ async function handleSubmit() {
         {{ $t('page.mine.register.enterprise.sections.materials') }}
       </h4>
 
-      <div class="ent-apply__uploads">
+      <div
+        v-loading="isUploading"
+        class="ent-apply__uploads"
+        :element-loading-text="
+          $t('page.mine.register.enterprise.message.uploading')
+        "
+      >
         <el-form-item
           class="ent-apply__upload"
           :label="$t('page.mine.register.enterprise.form.idCardFront')"
@@ -469,7 +511,7 @@ async function handleSubmit() {
             accept="image/jpeg,image/png,image/jpg,.jpg,.jpeg,.png"
             :auto-upload="false"
             class="ent-apply__uploader"
-            :disabled="readonly"
+            :disabled="readonly || isUploading"
             drag
             :file-list="fileLists.idCardFront"
             :limit="1"
@@ -490,7 +532,7 @@ async function handleSubmit() {
                   <ZoomIn />
                 </el-icon>
                 <el-icon
-                  v-if="!readonly"
+                  v-if="!readonly && !isUploading"
                   class="ent-apply__preview-btn"
                   @click="onRemoveByKey('idCardFront', $event)"
                 >
@@ -522,7 +564,7 @@ async function handleSubmit() {
             accept="image/jpeg,image/png,image/jpg,.jpg,.jpeg,.png"
             :auto-upload="false"
             class="ent-apply__uploader"
-            :disabled="readonly"
+            :disabled="readonly || isUploading"
             drag
             :file-list="fileLists.idCardBack"
             :limit="1"
@@ -543,7 +585,7 @@ async function handleSubmit() {
                   <ZoomIn />
                 </el-icon>
                 <el-icon
-                  v-if="!readonly"
+                  v-if="!readonly && !isUploading"
                   class="ent-apply__preview-btn"
                   @click="onRemoveByKey('idCardBack', $event)"
                 >
@@ -575,7 +617,7 @@ async function handleSubmit() {
             accept="image/jpeg,image/png,image/jpg,.jpg,.jpeg,.png"
             :auto-upload="false"
             class="ent-apply__uploader"
-            :disabled="readonly"
+            :disabled="readonly || isUploading"
             drag
             :file-list="fileLists.businessLicense"
             :limit="1"
@@ -596,7 +638,7 @@ async function handleSubmit() {
                   <ZoomIn />
                 </el-icon>
                 <el-icon
-                  v-if="!readonly"
+                  v-if="!readonly && !isUploading"
                   class="ent-apply__preview-btn"
                   @click="onRemoveByKey('businessLicense', $event)"
                 >
@@ -621,11 +663,14 @@ async function handleSubmit() {
       </div>
 
       <div class="ent-apply__actions">
-        <el-button :disabled="readonly || submitting" @click="handleReset">
+        <el-button
+          :disabled="readonly || submitting || isUploading"
+          @click="handleReset"
+        >
           {{ $t('page.mine.register.enterprise.actions.reset') }}
         </el-button>
         <el-button
-          :disabled="readonly || submitting"
+          :disabled="readonly || submitting || isUploading"
           :loading="submitting"
           type="primary"
           @click="handleSubmit"

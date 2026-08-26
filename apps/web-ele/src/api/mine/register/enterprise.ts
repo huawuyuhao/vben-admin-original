@@ -9,21 +9,19 @@ import { rootRequestClient } from '#/api/request';
 
 /**
  * 提交企业认证材料（需 Bearer Token）
- * 开发态走 Apifox Mock：POST /mock/auth/enterprise-cert（query 传参）
+ * 开发态走 Apifox Mock：POST /mock/auth/enterprise-cert（JSON body）
  * 正式接口：POST /auth/enterprise-cert
- * @param data 企业认证材料（query）
+ * @param data 企业认证材料
  * @returns 含 key（认证 ID）的业务 data
  */
 export async function submitEnterpriseCertApi(data: EnterpriseCertParams) {
   return rootRequestClient.post<EnterpriseCertResult>(
     '/mock/auth/enterprise-cert',
-    null,
-    { params: data },
+    data,
   );
   // return rootRequestClient.post<EnterpriseCertResult>(
   //   '/auth/enterprise-cert',
-  //   null,
-  //   { params: data },
+  //   data,
   // );
 }
 

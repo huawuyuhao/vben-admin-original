@@ -9,21 +9,19 @@ import { rootRequestClient } from '#/api/request';
 
 /**
  * 提交个人认证材料（需 Bearer Token）
- * 开发态走 Apifox Mock：POST /mock/auth/personal-cert（query 传参）
+ * 开发态走 Apifox Mock：POST /mock/auth/personal-cert（JSON body）
  * 正式接口：POST /auth/personal-cert
- * @param data 个人认证材料（query）
+ * @param data 个人认证材料
  * @returns 含 key（认证 ID）的业务 data
  */
 export async function submitPersonalCertApi(data: PersonalCertParams) {
   return rootRequestClient.post<PersonalCertResult>(
     '/mock/auth/personal-cert',
-    null,
-    { params: data },
+    data,
   );
   // return rootRequestClient.post<PersonalCertResult>(
   //   '/auth/personal-cert',
-  //   null,
-  //   { params: data },
+  //   data,
   // );
 }
 

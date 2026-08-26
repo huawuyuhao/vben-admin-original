@@ -5,7 +5,7 @@
 export type PersonalAuthStatus = number | string;
 
 /**
- * 个人认证提交入参（POST /auth/personal-cert，均为 query）
+ * 个人认证提交入参（POST /auth/personal-cert，JSON body）
  */
 export interface PersonalCertParams {
   /** 真实姓名 */
@@ -14,9 +14,9 @@ export interface PersonalCertParams {
   phone: string;
   /** 身份证号 */
   idCardNo: string;
-  /** 身份证正面 URL（待上传接口接入后填入） */
+  /** 身份证正面 URL */
   idCardFront: string;
-  /** 身份证背面 URL（待上传接口接入后填入） */
+  /** 身份证背面 URL */
   idCardBack: string;
 }
 

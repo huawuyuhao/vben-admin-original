@@ -5,7 +5,7 @@
 export type EnterpriseAuthStatus = number | string;
 
 /**
- * 企业认证提交入参（POST /auth/enterprise-cert，均为 query）
+ * 企业认证提交入参（POST /auth/enterprise-cert，JSON body）
  */
 export interface EnterpriseCertParams {
   /** 企业 ID */
