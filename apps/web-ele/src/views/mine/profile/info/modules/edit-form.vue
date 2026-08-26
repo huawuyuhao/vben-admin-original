@@ -13,9 +13,11 @@ import type { FormInstance, FormRules } from 'element-plus';
 
 import type { ProfileEditForm } from '../data';
 
-import { reactive, ref, watch } from 'vue';
+import { computed, reactive, ref, watch } from 'vue';
 
-import { EMAIL_PATTERN, PHONE_PATTERN, SEX_OPTIONS } from '../data';
+import { $t } from '@vben/locales';
+
+import { EMAIL_PATTERN, getSexOptions, PHONE_PATTERN } from '../data';
 
 const props = defineProps<{
   /** 是否正在保存 */
@@ -37,6 +39,7 @@ defineOptions({ name: 'MineProfileEditForm' });
 
 const formRef = ref<FormInstance>();
 const form = reactive<ProfileEditForm>({ ...props.modelValue });
+const sexOptions = computed(() => getSexOptions());
 
 watch(
   () => props.modelValue,
@@ -47,13 +50,17 @@ watch(
 );
 
 /** 表单校验规则（对齐 OpenAPI） */
-const rules: FormRules<ProfileEditForm> = {
+const rules = computed<FormRules<ProfileEditForm>>(() => ({
   nickName: [
-    { required: true, message: '请输入用户昵称', trigger: 'blur' },
+    {
+      required: true,
+      message: $t('page.mine.profile.edit.nickNameRequired'),
+      trigger: 'blur',
+    },
     {
       min: 2,
       max: 30,
-      message: '昵称长度为 2-30 个字符',
+      message: $t('page.mine.profile.edit.nickNameLength'),
       trigger: 'blur',
     },
   ],
@@ -66,7 +73,7 @@ const rules: FormRules<ProfileEditForm> = {
           return;
         }
         if (!PHONE_PATTERN.test(text)) {
-          callback(new Error('请输入正确的手机号'));
+          callback(new Error($t('page.mine.profile.edit.invalidPhone')));
           return;
         }
         callback();
@@ -83,11 +90,11 @@ const rules: FormRules<ProfileEditForm> = {
           return;
         }
         if (text.length > 50) {
-          callback(new Error('邮箱最多 50 个字符'));
+          callback(new Error($t('page.mine.profile.edit.emailMaxLength')));
           return;
         }
         if (!EMAIL_PATTERN.test(text)) {
-          callback(new Error('请输入正确的邮箱'));
+          callback(new Error($t('page.mine.profile.edit.invalidEmail')));
           return;
         }
         callback();
@@ -95,8 +102,14 @@ const rules: FormRules<ProfileEditForm> = {
       trigger: 'blur',
     },
   ],
-  sex: [{ required: true, message: '请选择性别', trigger: 'change' }],
-};
+  sex: [
+    {
+      required: true,
+      message: $t('page.mine.profile.edit.sexRequired'),
+      trigger: 'change',
+    },
+  ],
+}));
 
 /**
  * 校验通过后向父组件抛出保存事件
@@ -128,8 +141,8 @@ function handleCancel() {
   <section class="profile-edit">
     <header class="profile-edit__head">
       <div>
-        <h4>修改个人信息</h4>
-        <p>昵称必填；手机号、邮箱按规则校验后提交</p>
+        <h4>{{ $t('page.mine.profile.edit.title') }}</h4>
+        <p>{{ $t('page.mine.profile.edit.hint') }}</p>
       </div>
     </header>
 
@@ -142,39 +155,46 @@ function handleCancel() {
       :rules="rules"
     >
       <div class="profile-edit__grid">
-        <el-form-item label="用户昵称" prop="nickName" required>
+        <el-form-item
+          :label="$t('page.mine.profile.fields.nickName')"
+          prop="nickName"
+          required
+        >
           <el-input
             v-model="form.nickName"
             maxlength="30"
             show-word-limit
-            placeholder="请输入昵称（2-30 字）"
+            :placeholder="$t('page.mine.profile.edit.nickNamePlaceholder')"
             clearable
           />
         </el-form-item>
 
-        <el-form-item label="手机号码" prop="phonenumber">
+        <el-form-item
+          :label="$t('page.mine.profile.fields.phonenumber')"
+          prop="phonenumber"
+        >
           <el-input
             v-model="form.phonenumber"
             maxlength="14"
-            placeholder="请输入手机号"
+            :placeholder="$t('page.mine.profile.edit.phonePlaceholder')"
             clearable
           />
         </el-form-item>
 
-        <el-form-item label="用户邮箱" prop="email">
+        <el-form-item :label="$t('page.mine.profile.fields.email')" prop="email">
           <el-input
             v-model="form.email"
             maxlength="50"
             show-word-limit
-            placeholder="请输入邮箱"
+            :placeholder="$t('page.mine.profile.edit.emailPlaceholder')"
             clearable
           />
         </el-form-item>
 
-        <el-form-item label="用户性别" prop="sex">
+        <el-form-item :label="$t('page.mine.profile.fields.sex')" prop="sex">
           <el-radio-group v-model="form.sex" class="profile-edit__sex">
             <el-radio
-              v-for="opt in SEX_OPTIONS"
+              v-for="opt in sexOptions"
               :key="opt.value"
               :value="opt.value"
               border
@@ -186,9 +206,11 @@ function handleCancel() {
       </div>
 
       <div class="profile-edit__actions">
-        <el-button @click="handleCancel">取消</el-button>
+        <el-button @click="handleCancel">
+          {{ $t('page.mine.profile.edit.cancel') }}
+        </el-button>
         <el-button type="primary" :loading="saving" @click="handleSubmit">
-          保存修改
+          {{ $t('page.mine.profile.edit.save') }}
         </el-button>
       </div>
     </el-form>

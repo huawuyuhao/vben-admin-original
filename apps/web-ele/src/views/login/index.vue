@@ -19,6 +19,8 @@ import RegisterForm from './modules/register-form.vue';
 import RoleTabs from './modules/role-tabs.vue';
 import SmsForm from './modules/sms-form.vue';
 
+import { $t } from '@vben/locales';
+
 /**
  * 门户登录 / 注册页入口
  */
@@ -68,7 +70,7 @@ const {
             type="primary"
             @click="setMode('account')"
           >
-            账号登录
+            {{ $t('page.login.mode.accountLogin') }}
           </el-button>
           <el-button
             v-else-if="mode === 'account'"
@@ -77,7 +79,7 @@ const {
             type="primary"
             @click="setMode('sms')"
           >
-            短信登录
+            {{ $t('page.login.mode.smsLogin') }}
           </el-button>
           <el-button
             v-else
@@ -86,7 +88,7 @@ const {
             type="primary"
             @click="setMode('sms')"
           >
-            返回登录
+            {{ $t('page.login.mode.backToLogin') }}
           </el-button>
         </div>
 
@@ -144,10 +146,10 @@ const {
             type="primary"
             @click="setMode('register')"
           >
-            立即注册
+            {{ $t('page.login.footer.registerNow') }}
           </el-button>
           <el-button v-else link type="primary" @click="setMode('sms')">
-            已有账号？去登录
+            {{ $t('page.login.footer.hasAccount') }}
           </el-button>
           <el-button
             v-if="mode !== 'forgot'"
@@ -155,10 +157,10 @@ const {
             type="primary"
             @click="setMode('forgot')"
           >
-            找回密码
+            {{ $t('page.login.footer.forgotPassword') }}
           </el-button>
           <el-button v-else link type="primary" @click="setMode('account')">
-            返回账号登录
+            {{ $t('page.login.mode.backToAccountLogin') }}
           </el-button>
         </div>
       </div>

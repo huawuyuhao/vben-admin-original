@@ -12,17 +12,16 @@ import type { FormInstance, FormRules } from 'element-plus';
 
 import type { ResetPasswordForm } from '../data';
 
-import { reactive, ref, watch } from 'vue';
+import { computed, reactive, ref, watch } from 'vue';
+
+import { $t } from '@vben/locales';
 
 import { ElMessage } from 'element-plus';
 
 import { updatePasswordApi } from '#/api/mine/profile/info';
 import { useAuthStore } from '#/store';
 
-import {
-  PASSWORD_PATTERN,
-  createResetPasswordForm,
-} from '../data';
+import { createResetPasswordForm, PASSWORD_PATTERN } from '../data';
 
 const props = defineProps<{
   /** 是否显示弹窗 */
@@ -54,23 +53,29 @@ watch(
 );
 
 /** 表单校验规则 */
-const rules: FormRules<ResetPasswordForm> = {
+const rules = computed<FormRules<ResetPasswordForm>>(() => ({
   oldPassword: [
-    { required: true, message: '请输入旧密码', trigger: 'blur' },
+    {
+      required: true,
+      message: $t('page.mine.profile.resetPwd.oldPasswordRequired'),
+      trigger: 'blur',
+    },
   ],
   newPassword: [
-    { required: true, message: '请输入新密码', trigger: 'blur' },
+    {
+      required: true,
+      message: $t('page.mine.profile.resetPwd.newPasswordRequired'),
+      trigger: 'blur',
+    },
     {
       validator: (_rule, value: string, callback) => {
         const text = String(value ?? '');
         if (!PASSWORD_PATTERN.test(text)) {
-          callback(
-            new Error('至少 8 位，需含大小写字母、数字和特殊字符(@$!%*?&)'),
-          );
+          callback(new Error($t('page.mine.profile.resetPwd.passwordRule')));
           return;
         }
         if (text === form.oldPassword) {
-          callback(new Error('新密码不能与旧密码相同'));
+          callback(new Error($t('page.mine.profile.resetPwd.sameAsOld')));
           return;
         }
         callback();
@@ -79,11 +84,15 @@ const rules: FormRules<ResetPasswordForm> = {
     },
   ],
   confirmPassword: [
-    { required: true, message: '请再次输入新密码', trigger: 'blur' },
+    {
+      required: true,
+      message: $t('page.mine.profile.resetPwd.confirmPasswordRequired'),
+      trigger: 'blur',
+    },
     {
       validator: (_rule, value: string, callback) => {
         if (String(value ?? '') !== form.newPassword) {
-          callback(new Error('两次输入的新密码不一致'));
+          callback(new Error($t('page.mine.profile.resetPwd.confirmMismatch')));
           return;
         }
         callback();
@@ -91,7 +100,7 @@ const rules: FormRules<ResetPasswordForm> = {
       trigger: 'blur',
     },
   ],
-};
+}));
 
 /**
  * 关闭弹窗
@@ -114,7 +123,7 @@ async function handleSubmit() {
       oldPassword: form.oldPassword,
       newPassword: form.newPassword,
     });
-    ElMessage.success('密码已修改，请重新登录');
+    ElMessage.success($t('page.mine.profile.resetPwd.success'));
     closeDialog();
     // 不带 redirect，直接回登录页
     await authStore.logout(false);
@@ -129,7 +138,7 @@ async function handleSubmit() {
 <template>
   <el-dialog
     :model-value="modelValue"
-    title="重置密码"
+    :title="$t('page.mine.profile.resetPwd.title')"
     width="440px"
     align-center
     destroy-on-close
@@ -145,30 +154,42 @@ async function handleSubmit() {
       class="reset-pwd-dialog__form"
       @submit.prevent
     >
-      <el-form-item label="旧密码" prop="oldPassword" required>
+      <el-form-item
+        :label="$t('page.mine.profile.resetPwd.oldPassword')"
+        prop="oldPassword"
+        required
+      >
         <el-input
           v-model="form.oldPassword"
           type="password"
           show-password
-          placeholder="请输入当前密码"
+          :placeholder="$t('page.mine.profile.resetPwd.oldPasswordPlaceholder')"
           autocomplete="current-password"
         />
       </el-form-item>
-      <el-form-item label="新密码" prop="newPassword" required>
+      <el-form-item
+        :label="$t('page.mine.profile.resetPwd.newPassword')"
+        prop="newPassword"
+        required
+      >
         <el-input
           v-model="form.newPassword"
           type="password"
           show-password
-          placeholder="至少 8 位，含大小写、数字与特殊字符"
+          :placeholder="$t('page.mine.profile.resetPwd.newPasswordPlaceholder')"
           autocomplete="new-password"
         />
       </el-form-item>
-      <el-form-item label="确认新密码" prop="confirmPassword" required>
+      <el-form-item
+        :label="$t('page.mine.profile.resetPwd.confirmPassword')"
+        prop="confirmPassword"
+        required
+      >
         <el-input
           v-model="form.confirmPassword"
           type="password"
           show-password
-          placeholder="请再次输入新密码"
+          :placeholder="$t('page.mine.profile.resetPwd.confirmPasswordPlaceholder')"
           autocomplete="new-password"
         />
       </el-form-item>
@@ -176,9 +197,11 @@ async function handleSubmit() {
 
     <template #footer>
       <div class="reset-pwd-dialog__footer">
-        <el-button @click="closeDialog">取消</el-button>
+        <el-button @click="closeDialog">
+          {{ $t('page.mine.profile.resetPwd.cancel') }}
+        </el-button>
         <el-button type="primary" :loading="submitting" @click="handleSubmit">
-          确认修改
+          {{ $t('page.mine.profile.resetPwd.confirm') }}
         </el-button>
       </div>
     </template>
@@ -196,20 +219,20 @@ async function handleSubmit() {
       margin-bottom: 6px;
       font-size: 13px;
       font-weight: 600;
-      color: #3d4659;
+      color: hsl(var(--foreground));
     }
 
     :deep(.el-input__wrapper) {
       min-height: 40px;
       border-radius: 10px;
-      box-shadow: 0 0 0 1px #dde1ec inset;
+      box-shadow: 0 0 0 1px hsl(var(--border)) inset;
 
       &:hover {
-        box-shadow: 0 0 0 1px #c5cbe0 inset;
+        box-shadow: 0 0 0 1px hsl(var(--primary) / 0.35) inset;
       }
 
       &.is-focus {
-        box-shadow: 0 0 0 1px #6b4cff inset;
+        box-shadow: 0 0 0 1px hsl(var(--primary)) inset;
       }
     }
   }

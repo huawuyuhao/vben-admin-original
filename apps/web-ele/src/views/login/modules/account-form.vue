@@ -2,6 +2,7 @@
 import type { AccountLoginForm } from '#/types/login';
 
 import { Lock, User } from '@element-plus/icons-vue';
+import { $t } from '@vben/locales';
 
 /**
  * 账号密码登录表单
@@ -31,7 +32,7 @@ const emit = defineEmits<{
     <el-form-item>
       <el-input
         v-model="form.account"
-        placeholder="请输入账号 / 手机号"
+        :placeholder="$t('page.login.form.accountPlaceholder')"
         size="large"
         clearable
       >
@@ -44,7 +45,7 @@ const emit = defineEmits<{
     <el-form-item>
       <el-input
         v-model="form.password"
-        placeholder="请输入密码"
+        :placeholder="$t('page.login.form.passwordPlaceholder')"
         show-password
         size="large"
         type="password"
@@ -57,8 +58,10 @@ const emit = defineEmits<{
 
     <el-form-item class="login-form__agree">
       <el-checkbox v-model="agreed">
-        我已阅读并同意
-        <a class="login-form__link" href="javascript:void(0)">《用户协议》</a>
+        {{ $t('page.login.form.agreePrefix') }}
+        <a class="login-form__link" href="javascript:void(0)">{{
+          $t('page.login.form.userAgreement')
+        }}</a>
       </el-checkbox>
     </el-form-item>
 

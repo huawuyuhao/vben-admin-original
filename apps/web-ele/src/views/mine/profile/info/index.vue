@@ -4,6 +4,7 @@ import type { ProfileEditForm } from './data';
 import { computed, reactive, ref } from 'vue';
 
 import { isEmpty } from '@vben/utils';
+import { $t, useI18n } from '@vben/locales';
 
 import { ElMessage } from 'element-plus';
 
@@ -24,6 +25,7 @@ import ResetPasswordDialog from './modules/reset-password-dialog.vue';
 defineOptions({ name: 'MineProfileInfo' });
 
 const loginStore = useLoginStore();
+const { locale } = useI18n();
 
 /** 登录后写入 sessionStorage 的个人信息 */
 const profile = computed(() => loginStore.userProfile);
@@ -32,11 +34,14 @@ const profile = computed(() => loginStore.userProfile);
 const hasProfile = computed(() => !isEmpty(profile.value?.user));
 
 /** 分组资料（只读展示） */
-const groups = computed(() => buildProfileFieldGroups(profile.value));
+const groups = computed(() => {
+  void locale.value;
+  return buildProfileFieldGroups(profile.value);
+});
 
 /** 只读分组：组织归属 / 登录轨迹 */
 const readonlyGroups = computed(() =>
-  groups.value.filter((g) => g.title !== '基础资料'),
+  groups.value.filter((g) => g.key !== 'basic'),
 );
 
 /** 头像 URL（仅 http(s) 可展示） */
@@ -49,7 +54,7 @@ const avatarLetter = computed(() => resolveAvatarLetter(profile.value));
 const displayName = computed(() => {
   const user = profile.value?.user;
   const name = String(user?.nickName || user?.userName || '').trim();
-  return isEmpty(name) ? '未命名用户' : name;
+  return isEmpty(name) ? $t('page.mine.profile.unnamedUser') : name;
 });
 
 /** 角色 / 部门标签 */
@@ -113,7 +118,7 @@ async function saveEdit(form: ProfileEditForm) {
     });
     Object.assign(editForm, form);
     editing.value = false;
-    ElMessage.success('个人信息修改成功');
+    ElMessage.success($t('page.mine.profile.updateSuccess'));
   } catch {
     // 错误提示由请求拦截器处理
   } finally {
@@ -134,32 +139,32 @@ async function saveEdit(form: ProfileEditForm) {
       <div class="mine-profile__inner">
         <header class="mine-profile__head">
           <div>
-            <p class="mine-profile__eyebrow">我的信息中心</p>
-            <h2>个人信息</h2>
+            <p class="mine-profile__eyebrow">{{ $t('page.mine.profile.eyebrow') }}</p>
+            <h2>{{ $t('page.mine.profile.title') }}</h2>
             <p class="mine-profile__desc">
               {{
                 editing
-                  ? '正在修改资料，保存后将同步到服务端与本地缓存'
-                  : '基于登录缓存展示；点击修改可编辑昵称、手机、邮箱与性别'
+                  ? $t('page.mine.profile.descEdit')
+                  : $t('page.mine.profile.descView')
               }}
             </p>
           </div>
           <div v-if="hasProfile && !editing" class="mine-profile__head-actions">
             <el-button class="mine-profile__action-btn" @click="openResetPassword">
-              重置密码
+              {{ $t('page.mine.profile.resetPassword') }}
             </el-button>
             <el-button
               class="mine-profile__action-btn mine-profile__action-btn--primary"
               type="primary"
               @click="startEdit"
             >
-              修改资料
+              {{ $t('page.mine.profile.editProfile') }}
             </el-button>
           </div>
         </header>
         <section v-if="!hasProfile" class="mine-profile__empty">
-          <div class="mine-profile__empty-icon">空</div>
-          <p>暂无个人信息缓存，请重新登录后再查看。</p>
+          <div class="mine-profile__empty-icon">{{ $t('page.mine.profile.emptyIcon') }}</div>
+          <p>{{ $t('page.mine.profile.emptyText') }}</p>
         </section>
 
         <template v-else>
@@ -182,16 +187,16 @@ async function saveEdit(form: ProfileEditForm) {
                   v-if="!editing"
                   class="mine-profile__icon-edit"
                   type="button"
-                  title="修改资料"
+                  :title="$t('page.mine.profile.editProfile')"
                   @click="startEdit"
                 >
-                  修改
+                  {{ $t('page.mine.profile.editShort') }}
                 </button>
               </div>
               <p class="mine-profile__hero-meta">
-                <span>账号 {{ profile?.user?.userName || '—' }}</span>
+                <span>{{ $t('page.mine.profile.accountLabel') }} {{ profile?.user?.userName || '—' }}</span>
                 <i></i>
-                <span>手机 {{ profile?.user?.phonenumber || '—' }}</span>
+                <span>{{ $t('page.mine.profile.phoneLabel') }} {{ profile?.user?.phonenumber || '—' }}</span>
               </p>
               <div v-if="heroTags.length" class="mine-profile__tags">
                 <span v-for="tag in heroTags" :key="tag">{{ tag }}</span>
@@ -200,11 +205,11 @@ async function saveEdit(form: ProfileEditForm) {
 
             <div class="mine-profile__hero-side">
               <div class="mine-profile__stat">
-                <em>最近登录</em>
+                <em>{{ $t('page.mine.profile.lastLogin') }}</em>
                 <strong>{{ profile?.user?.loginDate || '—' }}</strong>
               </div>
               <div class="mine-profile__stat">
-                <em>登录 IP</em>
+                <em>{{ $t('page.mine.profile.loginIp') }}</em>
                 <strong>{{ profile?.user?.loginIp || '—' }}</strong>
               </div>
             </div>
@@ -221,7 +226,7 @@ async function saveEdit(form: ProfileEditForm) {
           <div v-else class="mine-profile__sections">
             <section
               v-for="group in groups"
-              :key="group.title"
+              :key="group.key"
               class="mine-profile__card"
             >
               <header class="mine-profile__card-head">
@@ -230,18 +235,18 @@ async function saveEdit(form: ProfileEditForm) {
                   <p>{{ group.hint }}</p>
                 </div>
                 <button
-                  v-if="group.title === '基础资料'"
+                  v-if="group.key === 'basic'"
                   class="mine-profile__link-edit"
                   type="button"
                   @click="startEdit"
                 >
-                  去修改
+                  {{ $t('page.mine.profile.goEdit') }}
                 </button>
               </header>
               <dl class="mine-profile__grid">
                 <div
                   v-for="item in group.fields"
-                  :key="`${group.title}-${item.label}`"
+                  :key="`${group.key}-${item.label}`"
                   class="mine-profile__item"
                 >
                   <dt>{{ item.label }}</dt>
@@ -254,19 +259,19 @@ async function saveEdit(form: ProfileEditForm) {
           <div v-if="editing" class="mine-profile__sections mine-profile__sections--readonly">
             <section
               v-for="group in readonlyGroups"
-              :key="group.title"
+              :key="group.key"
               class="mine-profile__card"
             >
               <header class="mine-profile__card-head">
                 <div>
                   <h4>{{ group.title }}</h4>
-                  <p>{{ group.hint }}（只读）</p>
+                  <p>{{ group.hint }}{{ $t('page.mine.profile.readonlySuffix') }}</p>
                 </div>
               </header>
               <dl class="mine-profile__grid">
                 <div
                   v-for="item in group.fields"
-                  :key="`${group.title}-${item.label}`"
+                  :key="`${group.key}-${item.label}`"
                   class="mine-profile__item"
                 >
                   <dt>{{ item.label }}</dt>

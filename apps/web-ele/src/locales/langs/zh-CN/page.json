@@ -11,5 +11,180 @@
     "title": "概览",
     "analytics": "分析页",
     "workspace": "工作台"
+  },
+  "login": {
+    "brand": {
+      "tag": "电 · 碳 · 算",
+      "titlePrefix": "随电而算",
+      "titleHighlight": "向绿",
+      "titleSuffix": "而行",
+      "desc": "绿电可追溯、算力可调度、碳排可计量。登录后管理需求与供给，未登录也可继续浏览门户服务。",
+      "feature1": "短信验证码快捷登录，安全便捷",
+      "feature2": "需求方 / 供给方一键切换身份",
+      "feature3": "与门户顶栏、业务菜单无缝衔接"
+    },
+    "mode": {
+      "accountLogin": "账号登录",
+      "smsLogin": "短信登录",
+      "backToLogin": "返回登录",
+      "backToAccountLogin": "返回账号登录"
+    },
+    "footer": {
+      "registerNow": "立即注册",
+      "hasAccount": "已有账号？去登录",
+      "forgotPassword": "找回密码"
+    },
+    "role": {
+      "demand": "算力需求下单",
+      "supply": "算力资源供给"
+    },
+    "meta": {
+      "sms": {
+        "title": "欢迎回来",
+        "hint": "请使用已注册手机号登录；新用户请先完成注册",
+        "submit": "登 录"
+      },
+      "account": {
+        "title": "账号登录",
+        "hint": "使用已注册账号与密码进入平台",
+        "submit": "登 录"
+      },
+      "register": {
+        "title": "账号注册",
+        "hint": "填写资料并完成手机验证后即可注册",
+        "submit": "完 成 注 册"
+      },
+      "forgot": {
+        "title": "找回密码",
+        "hint": "通过手机验证码重置登录密码",
+        "submit": "重置密码"
+      }
+    },
+    "form": {
+      "accountPlaceholder": "请输入账号 / 手机号",
+      "passwordPlaceholder": "请输入密码",
+      "phonePlaceholder": "请输入手机号",
+      "smsCodePlaceholder": "请输入短信验证码",
+      "getCode": "获取验证码",
+      "codeCountdown": "{0}s",
+      "agreePrefix": "我已阅读并同意",
+      "userAgreement": "《用户协议》",
+      "privacyPolicy": "《隐私政策》",
+      "and": "与",
+      "usernamePlaceholder": "请输入用户名",
+      "realNamePlaceholder": "请输入真实姓名",
+      "industryPlaceholder": "请选择行业属性",
+      "setPasswordPlaceholder": "设置密码（8位+大小写+数字+特殊字符）",
+      "confirmPasswordPlaceholder": "再次确认密码",
+      "newPasswordPlaceholder": "设置新密码（至少 6 位）",
+      "confirmNewPasswordPlaceholder": "再次确认新密码"
+    },
+    "message": {
+      "invalidPhone": "请输入正确的手机号",
+      "codeSent": "验证码已发送",
+      "agreeRequired": "请先阅读并同意《用户协议》",
+      "smsCodeRequired": "请输入短信验证码",
+      "loginSuccessDemand": "登录成功（算力需求方）",
+      "loginSuccessSupply": "登录成功（算力供给方）",
+      "loginSuccess": "登录成功",
+      "accountPasswordRequired": "请输入账号和密码",
+      "usernameRequired": "请输入用户名",
+      "realNameRequired": "请输入真实姓名",
+      "industryRequired": "请选择行业属性",
+      "passwordRule": "密码至少 8 位，且需包含大小写字母、数字和特殊字符(@$!%*?&)",
+      "passwordMismatch": "两次输入的密码不一致",
+      "registerSuccess": "注册成功",
+      "newPasswordMinLength": "新密码至少 {0} 位",
+      "resetSuccess": "密码已重置，请使用新密码登录"
+    }
+  },
+  "mine": {
+    "profile": {
+      "eyebrow": "我的信息中心",
+      "title": "个人信息",
+      "descView": "基于登录缓存展示；点击修改可编辑昵称、手机、邮箱与性别",
+      "descEdit": "正在修改资料，保存后将同步到服务端与本地缓存",
+      "resetPassword": "重置密码",
+      "editProfile": "修改资料",
+      "editShort": "修改",
+      "goEdit": "去修改",
+      "emptyIcon": "空",
+      "emptyText": "暂无个人信息缓存，请重新登录后再查看。",
+      "unnamedUser": "未命名用户",
+      "accountLabel": "账号",
+      "phoneLabel": "手机",
+      "lastLogin": "最近登录",
+      "loginIp": "登录 IP",
+      "readonlySuffix": "（只读）",
+      "updateSuccess": "个人信息修改成功",
+      "groups": {
+        "basic": {
+          "title": "基础资料",
+          "hint": "对外展示的身份与联系方式"
+        },
+        "org": {
+          "title": "组织归属",
+          "hint": "账号所属租户、部门与岗位"
+        },
+        "loginTrace": {
+          "title": "登录轨迹",
+          "hint": "最近一次登录环境"
+        }
+      },
+      "fields": {
+        "userName": "用户账号",
+        "nickName": "用户昵称",
+        "phonenumber": "手机号码",
+        "email": "用户邮箱",
+        "sex": "用户性别",
+        "userType": "用户类型",
+        "userId": "用户 ID",
+        "tenantId": "租户 ID",
+        "deptId": "部门 ID",
+        "deptName": "部门名称",
+        "roleGroup": "角色组",
+        "postGroup": "岗位组",
+        "loginIp": "最后登录 IP",
+        "loginDate": "最后登录时间"
+      },
+      "sex": {
+        "male": "男",
+        "female": "女",
+        "unknown": "未知"
+      },
+      "edit": {
+        "title": "修改个人信息",
+        "hint": "昵称必填；手机号、邮箱按规则校验后提交",
+        "nickNameRequired": "请输入用户昵称",
+        "nickNameLength": "昵称长度为 2-30 个字符",
+        "invalidPhone": "请输入正确的手机号",
+        "emailMaxLength": "邮箱最多 50 个字符",
+        "invalidEmail": "请输入正确的邮箱",
+        "sexRequired": "请选择性别",
+        "nickNamePlaceholder": "请输入昵称（2-30 字）",
+        "phonePlaceholder": "请输入手机号",
+        "emailPlaceholder": "请输入邮箱",
+        "cancel": "取消",
+        "save": "保存修改"
+      },
+      "resetPwd": {
+        "title": "重置密码",
+        "oldPassword": "旧密码",
+        "newPassword": "新密码",
+        "confirmPassword": "确认新密码",
+        "oldPasswordRequired": "请输入旧密码",
+        "newPasswordRequired": "请输入新密码",
+        "confirmPasswordRequired": "请再次输入新密码",
+        "passwordRule": "至少 8 位，需含大小写字母、数字和特殊字符(@$!%*?&)",
+        "sameAsOld": "新密码不能与旧密码相同",
+        "confirmMismatch": "两次输入的新密码不一致",
+        "oldPasswordPlaceholder": "请输入当前密码",
+        "newPasswordPlaceholder": "至少 8 位，含大小写、数字与特殊字符",
+        "confirmPasswordPlaceholder": "请再次输入新密码",
+        "cancel": "取消",
+        "confirm": "确认修改",
+        "success": "密码已修改，请重新登录"
+      }
+    }
   }
 }

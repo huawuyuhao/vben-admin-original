@@ -1,7 +1,9 @@
 <script lang="ts" setup>
-import type { UserEnterType } from '#/types/login';
+import { computed } from 'vue';
 
-import { TENANT_ROLE_OPTIONS } from '../data';
+import { $t } from '@vben/locales';
+
+import { UserEnterType } from '#/types/login';
 
 /**
  * 登录页身份切换 Tab（对应入参 userEnterType：demand / supply）
@@ -10,12 +12,18 @@ defineOptions({ name: 'LoginRoleTabs' });
 
 /** 当前选中的身份类型 */
 const userEnterType = defineModel<UserEnterType>({ required: true });
+
+/** 身份 Tab 选项（随语言切换刷新文案） */
+const tenantRoleOptions = computed(() => [
+  { label: $t('page.login.role.demand'), value: UserEnterType.Demand },
+  { label: $t('page.login.role.supply'), value: UserEnterType.Supply },
+]);
 </script>
 
 <template>
   <div class="login-roles">
     <button
-      v-for="item in TENANT_ROLE_OPTIONS"
+      v-for="item in tenantRoleOptions"
       :key="item.value"
       type="button"
       class="login-roles__item"

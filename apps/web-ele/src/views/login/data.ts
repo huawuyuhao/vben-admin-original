@@ -12,6 +12,7 @@ import { computed, onUnmounted, reactive, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import { isEmpty } from '@vben/utils';
+import { $t } from '@vben/locales';
 
 import { ElMessage } from 'element-plus';
 
@@ -46,11 +47,14 @@ export const REGISTER_INDUSTRY_OPTIONS = [...INDUSTRY_OPTIONS];
 
 /**
  * 登录页身份 Tab 选项（对应入参 userEnterType）
+ * @returns 带当前语言文案的身份选项
  */
-export const TENANT_ROLE_OPTIONS: TenantRoleOption[] = [
-  { label: '算力需求下单', value: UserEnterType.Demand },
-  { label: '算力资源供给', value: UserEnterType.Supply },
-];
+export function getTenantRoleOptions(): TenantRoleOption[] {
+  return [
+    { label: $t('page.login.role.demand'), value: UserEnterType.Demand },
+    { label: $t('page.login.role.supply'), value: UserEnterType.Supply },
+  ];
+}
 
 /**
  * 登录 / 注册页组合式逻辑（表单状态、校验、提交、模式切换等）
@@ -111,30 +115,30 @@ export function useLoginPage() {
     switch (mode.value) {
       case 'account': {
         return {
-          title: '账号登录',
-          hint: '使用已注册账号与密码进入平台',
-          submit: '登 录',
+          title: $t('page.login.meta.account.title'),
+          hint: $t('page.login.meta.account.hint'),
+          submit: $t('page.login.meta.account.submit'),
         };
       }
       case 'forgot': {
         return {
-          title: '找回密码',
-          hint: '通过手机验证码重置登录密码',
-          submit: '重置密码',
+          title: $t('page.login.meta.forgot.title'),
+          hint: $t('page.login.meta.forgot.hint'),
+          submit: $t('page.login.meta.forgot.submit'),
         };
       }
       case 'register': {
         return {
-          title: '账号注册',
-          hint: '填写资料并完成手机验证后即可注册',
-          submit: '完 成 注 册',
+          title: $t('page.login.meta.register.title'),
+          hint: $t('page.login.meta.register.hint'),
+          submit: $t('page.login.meta.register.submit'),
         };
       }
       default: {
         return {
-          title: '欢迎回来',
-          hint: '请使用已注册手机号登录；新用户请先完成注册',
-          submit: '登 录',
+          title: $t('page.login.meta.sms.title'),
+          hint: $t('page.login.meta.sms.hint'),
+          submit: $t('page.login.meta.sms.submit'),
         };
       }
     }
@@ -242,7 +246,7 @@ export function useLoginPage() {
   async function sendCode() {
     const phone = phoneForCode();
     if (!isPhone(phone)) {
-      ElMessage.warning('请输入正确的手机号');
+      ElMessage.warning($t('page.login.message.invalidPhone'));
       return;
     }
     if (countdown.value > 0 || smsLoading.value) {
@@ -250,7 +254,7 @@ export function useLoginPage() {
     }
     try {
       await loginStore.sendSmsCode(phone.trim());
-      ElMessage.success('验证码已发送');
+      ElMessage.success($t('page.login.message.codeSent'));
       startCountdown();
     } catch {
       // 错误提示由请求拦截器统一处理
@@ -272,15 +276,15 @@ export function useLoginPage() {
    */
   async function submitSmsLogin() {
     if (!agreed.value) {
-      ElMessage.warning('请先阅读并同意《用户协议》');
+      ElMessage.warning($t('page.login.message.agreeRequired'));
       return;
     }
     if (!isPhone(smsForm.phone)) {
-      ElMessage.warning('请输入正确的手机号');
+      ElMessage.warning($t('page.login.message.invalidPhone'));
       return;
     }
     if (isEmpty(smsForm.code.trim())) {
-      ElMessage.warning('请输入短信验证码');
+      ElMessage.warning($t('page.login.message.smsCodeRequired'));
       return;
     }
     await loginStore.login({
@@ -292,8 +296,8 @@ export function useLoginPage() {
     });
     finish(
       userEnterType.value === UserEnterType.Demand
-        ? '登录成功（算力需求方）'
-        : '登录成功（算力供给方）',
+        ? $t('page.login.message.loginSuccessDemand')
+        : $t('page.login.message.loginSuccessSupply'),
     );
   }
 
@@ -302,11 +306,11 @@ export function useLoginPage() {
    */
   async function submitAccountLogin() {
     if (!agreed.value) {
-      ElMessage.warning('请先阅读并同意《用户协议》');
+      ElMessage.warning($t('page.login.message.agreeRequired'));
       return;
     }
     if (isEmpty(accountForm.account.trim()) || isEmpty(accountForm.password)) {
-      ElMessage.warning('请输入账号和密码');
+      ElMessage.warning($t('page.login.message.accountPasswordRequired'));
       return;
     }
     await loginStore.login({
@@ -315,7 +319,7 @@ export function useLoginPage() {
       loginType: LoginType.Password,
       userEnterType: userEnterType.value,
     });
-    finish('登录成功');
+    finish($t('page.login.message.loginSuccess'));
   }
 
   /**
@@ -323,37 +327,35 @@ export function useLoginPage() {
    */
   async function submitRegister() {
     if (!agreed.value) {
-      ElMessage.warning('请先阅读并同意《用户协议》');
+      ElMessage.warning($t('page.login.message.agreeRequired'));
       return;
     }
     if (isEmpty(registerForm.username.trim())) {
-      ElMessage.warning('请输入用户名');
+      ElMessage.warning($t('page.login.message.usernameRequired'));
       return;
     }
     if (isEmpty(registerForm.realName.trim())) {
-      ElMessage.warning('请输入真实姓名');
+      ElMessage.warning($t('page.login.message.realNameRequired'));
       return;
     }
     if (!isPhone(registerForm.phone)) {
-      ElMessage.warning('请输入正确的手机号');
+      ElMessage.warning($t('page.login.message.invalidPhone'));
       return;
     }
     if (isEmpty(registerForm.code.trim())) {
-      ElMessage.warning('请输入短信验证码');
+      ElMessage.warning($t('page.login.message.smsCodeRequired'));
       return;
     }
     if (isEmpty(registerForm.industryType)) {
-      ElMessage.warning('请选择行业属性');
+      ElMessage.warning($t('page.login.message.industryRequired'));
       return;
     }
     if (!REGISTER_PASSWORD_REGEXP.test(registerForm.password)) {
-      ElMessage.warning(
-        '密码至少 8 位，且需包含大小写字母、数字和特殊字符(@$!%*?&)',
-      );
+      ElMessage.warning($t('page.login.message.passwordRule'));
       return;
     }
     if (registerForm.password !== registerForm.confirmPassword) {
-      ElMessage.warning('两次输入的密码不一致');
+      ElMessage.warning($t('page.login.message.passwordMismatch'));
       return;
     }
     await loginStore.register({
@@ -369,7 +371,7 @@ export function useLoginPage() {
       agreementAccepted: agreed.value,
     });
     // register 内已自动登录并拉取个人信息
-    finish('注册成功');
+    finish($t('page.login.message.registerSuccess'));
   }
 
   /**
@@ -377,26 +379,28 @@ export function useLoginPage() {
    */
   async function submitForgot() {
     if (!agreed.value) {
-      ElMessage.warning('请先阅读并同意《用户协议》');
+      ElMessage.warning($t('page.login.message.agreeRequired'));
       return;
     }
     if (!isPhone(forgotForm.phone)) {
-      ElMessage.warning('请输入正确的手机号');
+      ElMessage.warning($t('page.login.message.invalidPhone'));
       return;
     }
     if (isEmpty(forgotForm.code.trim())) {
-      ElMessage.warning('请输入短信验证码');
+      ElMessage.warning($t('page.login.message.smsCodeRequired'));
       return;
     }
     if (forgotForm.password.length < MIN_PASSWORD_LENGTH) {
-      ElMessage.warning(`新密码至少 ${MIN_PASSWORD_LENGTH} 位`);
+      ElMessage.warning(
+        $t('page.login.message.newPasswordMinLength', [MIN_PASSWORD_LENGTH]),
+      );
       return;
     }
     if (forgotForm.password !== forgotForm.confirmPassword) {
-      ElMessage.warning('两次输入的密码不一致');
+      ElMessage.warning($t('page.login.message.passwordMismatch'));
       return;
     }
-    ElMessage.success('密码已重置，请使用新密码登录');
+    ElMessage.success($t('page.login.message.resetSuccess'));
     setMode('account');
   }
 

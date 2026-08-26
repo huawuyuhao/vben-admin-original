@@ -2,6 +2,7 @@
 import type { ForgotForm } from '#/types/login';
 
 import { Iphone, Key, Lock } from '@element-plus/icons-vue';
+import { $t } from '@vben/locales';
 
 /**
  * 找回密码表单
@@ -38,7 +39,7 @@ const emit = defineEmits<{
       <el-input
         v-model="form.phone"
         maxlength="11"
-        placeholder="请输入手机号"
+        :placeholder="$t('page.login.form.phonePlaceholder')"
         size="large"
         clearable
       >
@@ -52,7 +53,7 @@ const emit = defineEmits<{
       <el-input
         v-model="form.code"
         maxlength="6"
-        placeholder="请输入短信验证码"
+        :placeholder="$t('page.login.form.smsCodePlaceholder')"
         size="large"
         clearable
       >
@@ -69,7 +70,11 @@ const emit = defineEmits<{
             type="primary"
             @click.stop="emit('sendCode')"
           >
-            {{ countdown > 0 ? `${countdown}s` : '获取验证码' }}
+            {{
+              countdown > 0
+                ? $t('page.login.form.codeCountdown', [countdown])
+                : $t('page.login.form.getCode')
+            }}
           </el-button>
         </template>
       </el-input>
@@ -78,7 +83,7 @@ const emit = defineEmits<{
     <el-form-item>
       <el-input
         v-model="form.password"
-        placeholder="设置新密码（至少 6 位）"
+        :placeholder="$t('page.login.form.newPasswordPlaceholder')"
         show-password
         size="large"
         type="password"
@@ -92,7 +97,7 @@ const emit = defineEmits<{
     <el-form-item>
       <el-input
         v-model="form.confirmPassword"
-        placeholder="再次确认新密码"
+        :placeholder="$t('page.login.form.confirmNewPasswordPlaceholder')"
         show-password
         size="large"
         type="password"
@@ -105,8 +110,10 @@ const emit = defineEmits<{
 
     <el-form-item class="login-form__agree">
       <el-checkbox v-model="agreed">
-        我已阅读并同意
-        <a class="login-form__link" href="javascript:void(0)">《用户协议》</a>
+        {{ $t('page.login.form.agreePrefix') }}
+        <a class="login-form__link" href="javascript:void(0)">{{
+          $t('page.login.form.userAgreement')
+        }}</a>
       </el-checkbox>
     </el-form-item>
 

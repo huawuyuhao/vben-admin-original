@@ -11,5 +11,180 @@
     "title": "Dashboard",
     "analytics": "Analytics",
     "workspace": "Workspace"
+  },
+  "login": {
+    "brand": {
+      "tag": "Power · Carbon · Compute",
+      "titlePrefix": "Compute with Power",
+      "titleHighlight": "Go Green",
+      "titleSuffix": "Forward",
+      "desc": "Traceable green power, schedulable compute, measurable carbon. Sign in to manage demand and supply, or browse the portal without signing in.",
+      "feature1": "Quick and secure SMS verification login",
+      "feature2": "Switch between demand and supply roles in one click",
+      "feature3": "Seamless integration with portal header and business menus"
+    },
+    "mode": {
+      "accountLogin": "Account Login",
+      "smsLogin": "SMS Login",
+      "backToLogin": "Back to Login",
+      "backToAccountLogin": "Back to Account Login"
+    },
+    "footer": {
+      "registerNow": "Register Now",
+      "hasAccount": "Already have an account? Sign in",
+      "forgotPassword": "Forgot Password"
+    },
+    "role": {
+      "demand": "Compute Demand",
+      "supply": "Compute Supply"
+    },
+    "meta": {
+      "sms": {
+        "title": "Welcome Back",
+        "hint": "Sign in with your registered mobile number; new users please register first",
+        "submit": "Sign In"
+      },
+      "account": {
+        "title": "Account Login",
+        "hint": "Sign in with your registered account and password",
+        "submit": "Sign In"
+      },
+      "register": {
+        "title": "Create Account",
+        "hint": "Complete your profile and mobile verification to register",
+        "submit": "Complete Registration"
+      },
+      "forgot": {
+        "title": "Reset Password",
+        "hint": "Reset your login password via SMS verification",
+        "submit": "Reset Password"
+      }
+    },
+    "form": {
+      "accountPlaceholder": "Enter account or mobile number",
+      "passwordPlaceholder": "Enter password",
+      "phonePlaceholder": "Enter mobile number",
+      "smsCodePlaceholder": "Enter SMS verification code",
+      "getCode": "Get Code",
+      "codeCountdown": "{0}s",
+      "agreePrefix": "I have read and agree to",
+      "userAgreement": "User Agreement",
+      "privacyPolicy": "Privacy Policy",
+      "and": "and",
+      "usernamePlaceholder": "Enter username",
+      "realNamePlaceholder": "Enter real name",
+      "industryPlaceholder": "Select industry",
+      "setPasswordPlaceholder": "Set password (8+ chars with upper, lower, number & symbol)",
+      "confirmPasswordPlaceholder": "Confirm password",
+      "newPasswordPlaceholder": "Set new password (at least 6 characters)",
+      "confirmNewPasswordPlaceholder": "Confirm new password"
+    },
+    "message": {
+      "invalidPhone": "Please enter a valid mobile number",
+      "codeSent": "Verification code sent",
+      "agreeRequired": "Please read and agree to the User Agreement first",
+      "smsCodeRequired": "Please enter the SMS verification code",
+      "loginSuccessDemand": "Signed in successfully (Demand side)",
+      "loginSuccessSupply": "Signed in successfully (Supply side)",
+      "loginSuccess": "Signed in successfully",
+      "accountPasswordRequired": "Please enter account and password",
+      "usernameRequired": "Please enter username",
+      "realNameRequired": "Please enter real name",
+      "industryRequired": "Please select industry",
+      "passwordRule": "Password must be at least 8 characters and include upper/lowercase letters, numbers, and special characters (@$!%*?&)",
+      "passwordMismatch": "The two passwords do not match",
+      "registerSuccess": "Registration successful",
+      "newPasswordMinLength": "New password must be at least {0} characters",
+      "resetSuccess": "Password reset. Please sign in with your new password"
+    }
+  },
+  "mine": {
+    "profile": {
+      "eyebrow": "My Information Center",
+      "title": "Personal Information",
+      "descView": "Displayed from login cache; click Edit to update nickname, phone, email, and gender",
+      "descEdit": "Editing profile; changes will sync to the server and local cache after saving",
+      "resetPassword": "Reset Password",
+      "editProfile": "Edit Profile",
+      "editShort": "Edit",
+      "goEdit": "Edit",
+      "emptyIcon": "—",
+      "emptyText": "No profile cache found. Please sign in again to view.",
+      "unnamedUser": "Unnamed User",
+      "accountLabel": "Account",
+      "phoneLabel": "Phone",
+      "lastLogin": "Last Login",
+      "loginIp": "Login IP",
+      "readonlySuffix": "(Read-only)",
+      "updateSuccess": "Profile updated successfully",
+      "groups": {
+        "basic": {
+          "title": "Basic Information",
+          "hint": "Identity and contact details shown to others"
+        },
+        "org": {
+          "title": "Organization",
+          "hint": "Tenant, department, and position of this account"
+        },
+        "loginTrace": {
+          "title": "Login History",
+          "hint": "Most recent login environment"
+        }
+      },
+      "fields": {
+        "userName": "Username",
+        "nickName": "Nickname",
+        "phonenumber": "Mobile Number",
+        "email": "Email",
+        "sex": "Gender",
+        "userType": "User Type",
+        "userId": "User ID",
+        "tenantId": "Tenant ID",
+        "deptId": "Department ID",
+        "deptName": "Department Name",
+        "roleGroup": "Roles",
+        "postGroup": "Positions",
+        "loginIp": "Last Login IP",
+        "loginDate": "Last Login Time"
+      },
+      "sex": {
+        "male": "Male",
+        "female": "Female",
+        "unknown": "Unknown"
+      },
+      "edit": {
+        "title": "Edit Profile",
+        "hint": "Nickname is required; phone and email are validated before submit",
+        "nickNameRequired": "Please enter nickname",
+        "nickNameLength": "Nickname must be 2-30 characters",
+        "invalidPhone": "Please enter a valid mobile number",
+        "emailMaxLength": "Email must be at most 50 characters",
+        "invalidEmail": "Please enter a valid email",
+        "sexRequired": "Please select gender",
+        "nickNamePlaceholder": "Enter nickname (2-30 characters)",
+        "phonePlaceholder": "Enter mobile number",
+        "emailPlaceholder": "Enter email",
+        "cancel": "Cancel",
+        "save": "Save Changes"
+      },
+      "resetPwd": {
+        "title": "Reset Password",
+        "oldPassword": "Current Password",
+        "newPassword": "New Password",
+        "confirmPassword": "Confirm New Password",
+        "oldPasswordRequired": "Please enter current password",
+        "newPasswordRequired": "Please enter new password",
+        "confirmPasswordRequired": "Please enter new password again",
+        "passwordRule": "At least 8 characters with upper/lowercase letters, numbers, and special characters (@$!%*?&)",
+        "sameAsOld": "New password cannot be the same as current password",
+        "confirmMismatch": "The two new passwords do not match",
+        "oldPasswordPlaceholder": "Enter current password",
+        "newPasswordPlaceholder": "At least 8 characters with upper, lower, number & symbol",
+        "confirmPasswordPlaceholder": "Enter new password again",
+        "cancel": "Cancel",
+        "confirm": "Confirm",
+        "success": "Password updated. Please sign in again"
+      }
+    }
   }
 }

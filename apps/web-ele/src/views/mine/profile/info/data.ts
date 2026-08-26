@@ -1,20 +1,19 @@
 import type { UserProfileResult } from '#/types/mine/profile/info';
 
 import { isEmpty, isHttpUrl } from '@vben/utils';
+import { $t } from '@vben/locales';
 
-/** 性别文案映射（0男 1女 2未知） */
-export const SEX_LABEL_MAP: Record<string, string> = {
-  '0': '男',
-  '1': '女',
-  '2': '未知',
-};
+/** 资料分组 key（用于 i18n 与逻辑判断） */
+export type ProfileGroupKey = 'basic' | 'loginTrace' | 'org';
 
 /** 编辑表单性别选项 */
-export const SEX_OPTIONS = [
-  { label: '男', value: '0' },
-  { label: '女', value: '1' },
-  { label: '未知', value: '2' },
-] as const;
+export function getSexOptions() {
+  return [
+    { label: $t('page.mine.profile.sex.male'), value: '0' },
+    { label: $t('page.mine.profile.sex.female'), value: '1' },
+    { label: $t('page.mine.profile.sex.unknown'), value: '2' },
+  ] as const;
+}
 
 /** 个人信息展示行 */
 export interface ProfileDisplayField {
@@ -26,6 +25,8 @@ export interface ProfileDisplayField {
 
 /** 分组后的资料块 */
 export interface ProfileFieldGroup {
+  /** 分组 key */
+  key: ProfileGroupKey;
   /** 分组标题 */
   title: string;
   /** 分组说明 */
@@ -56,7 +57,7 @@ export function formatDisplayValue(value?: null | number | string): string {
 }
 
 /**
- * 将性别码转为中文
+ * 将性别码转为文案
  * @param sex 性别码
  * @returns 男 / 女 / 未知 / —
  */
@@ -64,7 +65,12 @@ export function formatSexLabel(sex?: string): string {
   if (isEmpty(sex)) {
     return '—';
   }
-  return SEX_LABEL_MAP[String(sex)] ?? formatDisplayValue(sex);
+  const sexMap: Record<string, string> = {
+    '0': $t('page.mine.profile.sex.male'),
+    '1': $t('page.mine.profile.sex.female'),
+    '2': $t('page.mine.profile.sex.unknown'),
+  };
+  return sexMap[String(sex)] ?? formatDisplayValue(sex);
 }
 
 /**
@@ -105,35 +111,80 @@ export function buildProfileFieldGroups(
   const user = profile?.user;
   return [
     {
-      title: '基础资料',
-      hint: '对外展示的身份与联系方式',
+      key: 'basic',
+      title: $t('page.mine.profile.groups.basic.title'),
+      hint: $t('page.mine.profile.groups.basic.hint'),
       fields: [
-        { label: '用户账号', value: formatDisplayValue(user?.userName) },
-        { label: '用户昵称', value: formatDisplayValue(user?.nickName) },
-        { label: '手机号码', value: formatDisplayValue(user?.phonenumber) },
-        { label: '用户邮箱', value: formatDisplayValue(user?.email) },
-        { label: '用户性别', value: formatSexLabel(user?.sex) },
-        { label: '用户类型', value: formatDisplayValue(user?.userType) },
+        {
+          label: $t('page.mine.profile.fields.userName'),
+          value: formatDisplayValue(user?.userName),
+        },
+        {
+          label: $t('page.mine.profile.fields.nickName'),
+          value: formatDisplayValue(user?.nickName),
+        },
+        {
+          label: $t('page.mine.profile.fields.phonenumber'),
+          value: formatDisplayValue(user?.phonenumber),
+        },
+        {
+          label: $t('page.mine.profile.fields.email'),
+          value: formatDisplayValue(user?.email),
+        },
+        {
+          label: $t('page.mine.profile.fields.sex'),
+          value: formatSexLabel(user?.sex),
+        },
+        {
+          label: $t('page.mine.profile.fields.userType'),
+          value: formatDisplayValue(user?.userType),
+        },
       ],
     },
     {
-      title: '组织归属',
-      hint: '账号所属租户、部门与岗位',
+      key: 'org',
+      title: $t('page.mine.profile.groups.org.title'),
+      hint: $t('page.mine.profile.groups.org.hint'),
       fields: [
-        { label: '用户 ID', value: formatDisplayValue(user?.userId) },
-        { label: '租户 ID', value: formatDisplayValue(user?.tenantId) },
-        { label: '部门 ID', value: formatDisplayValue(user?.deptId) },
-        { label: '部门名称', value: formatDisplayValue(user?.deptName) },
-        { label: '角色组', value: formatDisplayValue(profile?.roleGroup) },
-        { label: '岗位组', value: formatDisplayValue(profile?.postGroup) },
+        {
+          label: $t('page.mine.profile.fields.userId'),
+          value: formatDisplayValue(user?.userId),
+        },
+        {
+          label: $t('page.mine.profile.fields.tenantId'),
+          value: formatDisplayValue(user?.tenantId),
+        },
+        {
+          label: $t('page.mine.profile.fields.deptId'),
+          value: formatDisplayValue(user?.deptId),
+        },
+        {
+          label: $t('page.mine.profile.fields.deptName'),
+          value: formatDisplayValue(user?.deptName),
+        },
+        {
+          label: $t('page.mine.profile.fields.roleGroup'),
+          value: formatDisplayValue(profile?.roleGroup),
+        },
+        {
+          label: $t('page.mine.profile.fields.postGroup'),
+          value: formatDisplayValue(profile?.postGroup),
+        },
       ],
     },
     {
-      title: '登录轨迹',
-      hint: '最近一次登录环境',
+      key: 'loginTrace',
+      title: $t('page.mine.profile.groups.loginTrace.title'),
+      hint: $t('page.mine.profile.groups.loginTrace.hint'),
       fields: [
-        { label: '最后登录 IP', value: formatDisplayValue(user?.loginIp) },
-        { label: '最后登录时间', value: formatDisplayValue(user?.loginDate) },
+        {
+          label: $t('page.mine.profile.fields.loginIp'),
+          value: formatDisplayValue(user?.loginIp),
+        },
+        {
+          label: $t('page.mine.profile.fields.loginDate'),
+          value: formatDisplayValue(user?.loginDate),
+        },
       ],
     },
   ];

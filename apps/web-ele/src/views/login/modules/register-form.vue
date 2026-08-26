@@ -2,6 +2,7 @@
 import type { RegisterForm } from '#/types/login';
 
 import { Iphone, Key, Lock, OfficeBuilding, User } from '@element-plus/icons-vue';
+import { $t } from '@vben/locales';
 
 import { REGISTER_INDUSTRY_OPTIONS } from '../data';
 
@@ -39,7 +40,7 @@ const emit = defineEmits<{
     <el-form-item>
       <el-input
         v-model="form.username"
-        placeholder="请输入用户名"
+        :placeholder="$t('page.login.form.usernamePlaceholder')"
         size="large"
         clearable
       >
@@ -52,7 +53,7 @@ const emit = defineEmits<{
     <el-form-item>
       <el-input
         v-model="form.realName"
-        placeholder="请输入真实姓名"
+        :placeholder="$t('page.login.form.realNamePlaceholder')"
         size="large"
         clearable
       >
@@ -66,7 +67,7 @@ const emit = defineEmits<{
       <el-input
         v-model="form.phone"
         maxlength="11"
-        placeholder="请输入手机号"
+        :placeholder="$t('page.login.form.phonePlaceholder')"
         size="large"
         clearable
       >
@@ -80,7 +81,7 @@ const emit = defineEmits<{
       <el-input
         v-model="form.code"
         maxlength="6"
-        placeholder="请输入短信验证码"
+        :placeholder="$t('page.login.form.smsCodePlaceholder')"
         size="large"
         clearable
       >
@@ -97,7 +98,11 @@ const emit = defineEmits<{
             type="primary"
             @click.stop="emit('sendCode')"
           >
-            {{ countdown > 0 ? `${countdown}s` : '获取验证码' }}
+            {{
+              countdown > 0
+                ? $t('page.login.form.codeCountdown', [countdown])
+                : $t('page.login.form.getCode')
+            }}
           </el-button>
         </template>
       </el-input>
@@ -108,7 +113,7 @@ const emit = defineEmits<{
         v-model="form.industryType"
         class="login-form__select"
         clearable
-        placeholder="请选择行业属性"
+        :placeholder="$t('page.login.form.industryPlaceholder')"
         size="large"
       >
         <template #prefix>
@@ -126,7 +131,7 @@ const emit = defineEmits<{
     <el-form-item>
       <el-input
         v-model="form.password"
-        placeholder="设置密码（8位+大小写+数字+特殊字符）"
+        :placeholder="$t('page.login.form.setPasswordPlaceholder')"
         show-password
         size="large"
         type="password"
@@ -140,7 +145,7 @@ const emit = defineEmits<{
     <el-form-item>
       <el-input
         v-model="form.confirmPassword"
-        placeholder="再次确认密码"
+        :placeholder="$t('page.login.form.confirmPasswordPlaceholder')"
         show-password
         size="large"
         type="password"
@@ -153,10 +158,14 @@ const emit = defineEmits<{
 
     <el-form-item class="login-form__agree">
       <el-checkbox v-model="agreed">
-        我已阅读并同意
-        <a class="login-form__link" href="javascript:void(0)">《用户协议》</a>
-        与
-        <a class="login-form__link" href="javascript:void(0)">《隐私政策》</a>
+        {{ $t('page.login.form.agreePrefix') }}
+        <a class="login-form__link" href="javascript:void(0)">{{
+          $t('page.login.form.userAgreement')
+        }}</a>
+        {{ $t('page.login.form.and') }}
+        <a class="login-form__link" href="javascript:void(0)">{{
+          $t('page.login.form.privacyPolicy')
+        }}</a>
       </el-checkbox>
     </el-form-item>
 

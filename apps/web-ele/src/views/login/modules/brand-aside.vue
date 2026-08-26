@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { $t } from '@vben/locales';
+
 /**
  * 登录页左侧品牌介绍区
  */
@@ -7,19 +9,19 @@ defineOptions({ name: 'LoginBrandAside' });
 
 <template>
   <aside class="login-brand">
-    <div class="login-brand__tag">电 · 碳 · 算</div>
+    <div class="login-brand__tag">{{ $t('page.login.brand.tag') }}</div>
     <h1 class="login-brand__title">
-      随电而算
-      <span class="login-brand__green">向绿</span>
-      而行
+      {{ $t('page.login.brand.titlePrefix') }}
+      <span class="login-brand__green">{{ $t('page.login.brand.titleHighlight') }}</span>
+      {{ $t('page.login.brand.titleSuffix') }}
     </h1>
     <p class="login-brand__desc">
-      绿电可追溯、算力可调度、碳排可计量。登录后管理需求与供给，未登录也可继续浏览门户服务。
+      {{ $t('page.login.brand.desc') }}
     </p>
     <ul class="login-brand__list">
-      <li>短信验证码快捷登录，安全便捷</li>
-      <li>需求方 / 供给方一键切换身份</li>
-      <li>与门户顶栏、业务菜单无缝衔接</li>
+      <li>{{ $t('page.login.brand.feature1') }}</li>
+      <li>{{ $t('page.login.brand.feature2') }}</li>
+      <li>{{ $t('page.login.brand.feature3') }}</li>
     </ul>
   </aside>
 </template>

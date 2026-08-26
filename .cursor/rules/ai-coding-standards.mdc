@@ -1,5 +1,5 @@
 ---
-description: 本仓库 AI 编程规范：复用共享工具、浏览器兼容、Vue SCSS、功能目录结构、中文注释与编码
+description: 本仓库 AI 编程规范：复用共享工具、i18n 文案、浏览器兼容、Vue SCSS、功能目录结构、中文注释与编码
 alwaysApply: true
 ---
 
@@ -126,10 +126,72 @@ views/login/
 
 ## 业务与页面约定
 
-- 主应用：`apps/web-ele`；页面文案默认**简体中文**。
+- 主应用：`apps/web-ele`；默认展示语言为**简体中文**（通过 i18n 语言包控制，见下文）。
 - 演示用假数据放在 `apps/web-ele/src/views/_shared/data/`，通过 `#/views/_shared/data/...` 引用；不要散落在各页面硬编码大段 mock。
 - 优先沿用同模块已有样式（如 `portal.css`、`shared.css`）与布局/组件模式，避免另起一套 UI 风格。
 - 只改与任务相关的文件；不擅自大范围重构。
+
+## 国际化（i18n）
+
+**登录、注册、个人信息及后续所有页面**，面向用户的文案（标题、按钮、占位符、提示、Toast/Message、确认框、空状态、表单校验信息等）**一律通过 `$t` 读取**，禁止在模板或脚本中硬编码中文/英文字符串。
+
+### 导入与调用
+
+```ts
+import { $t } from '@vben/locales';
+
+// 简单文案
+$t('ui.actionMessage.operationSuccess');
+
+// 带占位参数（语言包中用 {0}、{1} … 占位）
+$t('ui.actionMessage.deleteSuccess', [row.name]);
+```
+
+```vue
+<template>
+  <h2>{{ $t('page.mine.profile.title') }}</h2>
+  <el-button>{{ $t('authentication.signUp') }}</el-button>
+  <el-input :placeholder="$t('authentication.usernameTip')" />
+</template>
+
+<script lang="ts" setup>
+import { $t } from '@vben/locales';
+
+ElMessage.success($t('authentication.loginSuccess'));
+</script>
+```
+
+- **应用层 views / layouts / store** 也可 `import { $t } from '#/locales'`（与 `@vben/locales` 同源 re-export），但**禁止**再写 `'登录成功'` 这类字面量。
+- 注释、变量名、路由 path、API 字段等非 UI 文案不在此限；**仅用户可见文案必须 i18n**。
+
+### 语言包位置与键名
+
+| 范围 | 目录 | 键前缀示例 |
+|------|------|------------|
+| 框架通用（表单、操作反馈、验证码等） | `packages/locales/src/langs/{zh-CN,en-US}/` | `ui.*`、`authentication.*`、`common.*`、`profile.*` |
+| web-ele 业务页 | `apps/web-ele/src/locales/langs/{zh-CN,en-US}/` | `page.*`（可按模块再分子键，如 `page.mine.profile.*`） |
+
+- 新增键名使用 **小驼峰 + 点分层级**，语义清晰、与功能目录对应；**能复用框架键则复用**（如 `ui.formRules.required`、`ui.actionMessage.operationSuccess`），避免同义重复。
+- **每次新增或修改键，必须同时维护 `zh-CN` 与 `en-US` 两份 JSON**，保持键结构一致。
+- 业务页专用文案优先落在 `apps/web-ele/src/locales/langs/`，不要改 `packages/locales` 除非确属全仓共用。
+
+### 实施范围（强制）
+
+以下模块及后续新建页面均须遵守，存量页面在改动相关文件时顺带补齐 i18n：
+
+- `views/login/`（登录 / 注册 / 找回密码）
+- `views/mine/profile/`（个人信息及子模块）
+- 其余 `apps/web-ele/src/views/**` 业务页
+
+```text
+<!-- ❌ 禁止 -->
+<el-button>修改资料</el-button>
+ElMessage.success('保存成功');
+
+<!-- ✅ 必须 -->
+<el-button>{{ $t('page.mine.profile.editProfile') }}</el-button>
+ElMessage.success($t('ui.actionMessage.operationSuccess'));
+```
 
 ## 修改共享工具时的注意
 

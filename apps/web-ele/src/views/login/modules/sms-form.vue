@@ -2,6 +2,7 @@
 import type { SmsLoginForm } from '#/types/login';
 
 import { Iphone, Lock } from '@element-plus/icons-vue';
+import { $t } from '@vben/locales';
 
 /**
  * 短信验证码登录表单（仅登录，不自动注册）
@@ -38,7 +39,7 @@ const emit = defineEmits<{
       <el-input
         v-model="form.phone"
         maxlength="11"
-        placeholder="请输入手机号"
+        :placeholder="$t('page.login.form.phonePlaceholder')"
         size="large"
         clearable
       >
@@ -52,7 +53,7 @@ const emit = defineEmits<{
       <el-input
         v-model="form.code"
         maxlength="6"
-        placeholder="请输入短信验证码"
+        :placeholder="$t('page.login.form.smsCodePlaceholder')"
         size="large"
         clearable
       >
@@ -69,7 +70,11 @@ const emit = defineEmits<{
             type="primary"
             @click.stop="emit('sendCode')"
           >
-            {{ countdown > 0 ? `${countdown}s` : '获取验证码' }}
+            {{
+              countdown > 0
+                ? $t('page.login.form.codeCountdown', [countdown])
+                : $t('page.login.form.getCode')
+            }}
           </el-button>
         </template>
       </el-input>
@@ -77,8 +82,10 @@ const emit = defineEmits<{
 
     <el-form-item class="login-form__agree">
       <el-checkbox v-model="agreed">
-        我已阅读并同意
-        <a class="login-form__link" href="javascript:void(0)">《用户协议》</a>
+        {{ $t('page.login.form.agreePrefix') }}
+        <a class="login-form__link" href="javascript:void(0)">{{
+          $t('page.login.form.userAgreement')
+        }}</a>
       </el-checkbox>
     </el-form-item>
 

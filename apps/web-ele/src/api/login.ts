@@ -34,16 +34,16 @@ export async function registerApi(data: RegisterParams) {
 
 /**
  * 发送短信验证码
- * 开发态走 Apifox Mock：/api/mock/auth/sms-code
- * 正式接口：POST /api/auth/sms-code（文档路径自带 /api）
+ * 开发态走 Apifox Mock：/mock/auth/sms-code
+ * 正式接口：POST /auth/sms-code
  * @param data 含手机号的请求体
  */
 export async function sendSmsCodeApi(data: SmsCodeParams) {
   return rootRequestClient.post<null | undefined>(
-    '/mock/api/auth/sms-code',
+    '/mock/auth/sms-code',
     data,
   );
-  // return rootRequestClient.post<null | undefined>('/api/auth/sms-code', data);
+  // return rootRequestClient.post<null | undefined>('/auth/sms-code', data);
 }
 
 /**
