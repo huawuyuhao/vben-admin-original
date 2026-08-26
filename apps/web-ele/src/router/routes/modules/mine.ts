@@ -138,7 +138,7 @@ const routes: RouteRecordRaw[] = [
             name: 'MineRegisterEnterprise',
             path: '/mine/register/enterprise',
             component: () =>
-              import('#/views/register/enterprise-auth.vue'),
+              import('#/views/mine/register/enterprise/index.vue'),
             meta: {
               icon: 'ep:office-building',
               order: 1,
@@ -148,7 +148,7 @@ const routes: RouteRecordRaw[] = [
           {
             name: 'MineRegisterPerson',
             path: '/mine/register/person',
-            component: () => import('#/views/register/person-auth.vue'),
+            component: () => import('#/views/mine/register/person/index.vue'),
             meta: {
               icon: 'ep:user',
               order: 2,

@@ -185,6 +185,156 @@
         "confirm": "Confirm",
         "success": "Password updated. Please sign in again"
       }
+    },
+    "register": {
+      "enterprise": {
+        "eyebrow": "Registration & Verification",
+        "title": "Enterprise Verification",
+        "desc": "Submit legal person and license materials for review to unlock full platform services",
+        "statusTitle": "Verification Status",
+        "auditRemark": "Audit Remark",
+        "readonlyBanner": "Under review. The form is read-only until the review finishes.",
+        "reapplyBanner": "Verification passed. You can update materials and submit another application.",
+        "sections": {
+          "basic": "Enterprise & Legal Person",
+          "materials": "Upload Materials"
+        },
+        "steps": {
+          "fillInfo": "Fill Information",
+          "uploadMaterials": "Upload Materials",
+          "platformReview": "Platform Review",
+          "completed": "Completed"
+        },
+        "status": {
+          "draft": "Not Submitted",
+          "draftTip": "Complete legal person details and materials before submitting.",
+          "draftSub": "After submission, the platform will review your application.",
+          "reviewing": "Under Review",
+          "reviewingTip": "Application submitted. Review usually takes 1-2 business days.",
+          "reviewingSub": "You will be notified via SMS and inbox.",
+          "approved": "Verified",
+          "approvedTip": "Enterprise verification passed. Full services are available.",
+          "approvedSub": "You can still fill in and resubmit; approved changes will update your certification.",
+          "rejected": "Rejected",
+          "rejectedTip": "Application rejected. Please revise based on the remark and resubmit.",
+          "rejectedSub": "Ensure documents are clear and information matches."
+        },
+        "form": {
+          "enterpriseId": "Enterprise ID",
+          "enterpriseIdPlaceholder": "Enter enterprise ID",
+          "enterpriseIdRequired": "Please enter enterprise ID",
+          "enterpriseIdInvalid": "Enterprise ID must be a positive integer",
+          "legalPersonName": "Legal Person Name",
+          "legalPersonNamePlaceholder": "Enter legal person name as on ID card",
+          "legalPersonNameRequired": "Please enter legal person name",
+          "idCardNo": "ID Card Number",
+          "idCardNoPlaceholder": "Enter 18-digit ID card number",
+          "idCardNoRequired": "Please enter ID card number",
+          "idCardNoInvalid": "Please enter a valid 18-digit ID card number",
+          "idCardFront": "ID Card Front",
+          "idCardFrontRequired": "Please upload ID card front",
+          "idCardBack": "ID Card Back",
+          "idCardBackRequired": "Please upload ID card back",
+          "businessLicense": "Business License",
+          "businessLicenseRequired": "Please upload business license"
+        },
+        "upload": {
+          "hint": "Drop file here or",
+          "hintClick": "click to upload",
+          "licenseHint": "Upload a clear photo of the business license",
+          "limit": "jpg / png / jpeg, max 10MB"
+        },
+        "actions": {
+          "reset": "Reset",
+          "submit": "Submit Application",
+          "reapply": "Resubmit Application",
+          "refresh": "Refresh Progress"
+        },
+        "message": {
+          "fileTypeInvalid": "Only jpg / png / jpeg are supported",
+          "fileSizeInvalid": "File size must not exceed {0}MB",
+          "fileReadFail": "Failed to read file. Please try again",
+          "validateFail": "Please complete required fields before submitting",
+          "readonlyHint": "Cannot edit while under review",
+          "submitSuccess": "Certification materials submitted",
+          "noAuthId": "Submitted but no auth ID returned. Please refresh later",
+          "noCachedAuthId": "No certification record yet. Please submit first",
+          "refreshDone": "Progress updated",
+          "resetDone": "Form reset"
+        }
+      },
+      "person": {
+        "eyebrow": "Registration & Verification",
+        "title": "Personal Verification",
+        "desc": "Submit identity details and ID materials for review to unlock full platform services",
+        "statusTitle": "Verification Status",
+        "readonlyBanner": "Under review. The form is read-only until the review finishes.",
+        "reapplyBanner": "Verification passed. You can update materials and submit another application.",
+        "uploadPendingTip": "Upload API pending: local preview only for now; production will use server-returned URLs.",
+        "sections": {
+          "basic": "Identity Information",
+          "materials": "Upload Materials"
+        },
+        "steps": {
+          "fillInfo": "Fill Information",
+          "uploadMaterials": "Upload Materials",
+          "platformReview": "Platform Review",
+          "completed": "Completed"
+        },
+        "status": {
+          "draft": "Not Submitted",
+          "draftTip": "Complete identity details and materials before submitting.",
+          "draftSub": "After submission, the platform will review your application.",
+          "reviewing": "Under Review",
+          "reviewingTip": "Application submitted. Review usually takes 1-2 business days.",
+          "reviewingSub": "You will be notified via SMS and inbox.",
+          "approved": "Verified",
+          "approvedTip": "Personal verification passed. Full services are available.",
+          "approvedSub": "You can still fill in and resubmit; approved changes will update your certification.",
+          "rejected": "Rejected",
+          "rejectedTip": "Application rejected. Please revise based on the remark and resubmit.",
+          "rejectedSub": "Ensure documents are clear and information matches."
+        },
+        "form": {
+          "realName": "Real Name",
+          "realNamePlaceholder": "Enter real name as on ID card",
+          "realNameRequired": "Please enter real name",
+          "phone": "Mobile Number",
+          "phonePlaceholder": "Enter mobile number",
+          "phoneRequired": "Please enter mobile number",
+          "phoneInvalid": "Please enter a valid 11-digit mobile number",
+          "idCardNo": "ID Card Number",
+          "idCardNoPlaceholder": "Enter 18-digit ID card number",
+          "idCardNoRequired": "Please enter ID card number",
+          "idCardNoInvalid": "Please enter a valid 18-digit ID card number",
+          "idCardFront": "ID Card Front",
+          "idCardFrontRequired": "Please upload ID card front",
+          "idCardBack": "ID Card Back",
+          "idCardBackRequired": "Please upload ID card back"
+        },
+        "upload": {
+          "hint": "Drop file here or",
+          "hintClick": "click to upload",
+          "limit": "jpg / png / jpeg, max 10MB"
+        },
+        "actions": {
+          "reset": "Reset",
+          "submit": "Submit Application",
+          "reapply": "Resubmit Application",
+          "refresh": "Refresh Progress"
+        },
+        "message": {
+          "fileTypeInvalid": "Only jpg / png / jpeg are supported",
+          "fileSizeInvalid": "File size must not exceed {0}MB",
+          "fileReadFail": "Failed to read file. Please try again",
+          "validateFail": "Please complete required fields before submitting",
+          "readonlyHint": "Cannot edit while under review",
+          "submitSuccess": "Certification materials submitted",
+          "noAuthId": "Submitted but no auth ID returned. Please refresh later",
+          "refreshDone": "Progress updated",
+          "resetDone": "Form reset"
+        }
+      }
     }
   }
 }

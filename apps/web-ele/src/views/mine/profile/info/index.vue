@@ -128,20 +128,20 @@ async function saveEdit(form: ProfileEditForm) {
 </script>
 
 <template>
-  <div class="mine-profile-page">
-    <div class="mine-profile">
-      <div class="mine-profile__bg" aria-hidden="true">
-        <span class="mine-profile__orb mine-profile__orb--a"></span>
-        <span class="mine-profile__orb mine-profile__orb--b"></span>
-        <span class="mine-profile__mesh"></span>
+  <div class="mine-page">
+    <div class="mine-shell">
+      <div class="mine-shell__bg" aria-hidden="true">
+        <span class="mine-shell__orb mine-shell__orb--a"></span>
+        <span class="mine-shell__orb mine-shell__orb--b"></span>
+        <span class="mine-shell__mesh"></span>
       </div>
 
-      <div class="mine-profile__inner">
-        <header class="mine-profile__head">
+      <div class="mine-shell__inner">
+        <header class="mine-shell__head">
           <div>
-            <p class="mine-profile__eyebrow">{{ $t('page.mine.profile.eyebrow') }}</p>
+            <p class="mine-shell__eyebrow">{{ $t('page.mine.profile.eyebrow') }}</p>
             <h2>{{ $t('page.mine.profile.title') }}</h2>
-            <p class="mine-profile__desc">
+            <p class="mine-shell__desc">
               {{
                 editing
                   ? $t('page.mine.profile.descEdit')
@@ -149,12 +149,12 @@ async function saveEdit(form: ProfileEditForm) {
               }}
             </p>
           </div>
-          <div v-if="hasProfile && !editing" class="mine-profile__head-actions">
-            <el-button class="mine-profile__action-btn" @click="openResetPassword">
+          <div v-if="hasProfile && !editing" class="mine-shell__head-actions">
+            <el-button class="mine-shell__action-btn mine-profile__action-btn" @click="openResetPassword">
               {{ $t('page.mine.profile.resetPassword') }}
             </el-button>
             <el-button
-              class="mine-profile__action-btn mine-profile__action-btn--primary"
+              class="mine-shell__action-btn mine-profile__action-btn mine-profile__action-btn--primary"
               type="primary"
               @click="startEdit"
             >
@@ -289,154 +289,22 @@ async function saveEdit(form: ProfileEditForm) {
 </template>
 
 <style lang="scss" scoped>
-.mine-profile-page {
-  box-sizing: border-box;
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  min-height: calc(100vh - 120px);
-  /* 外边距交给布局统一控制，页面内不再叠加 */
-  padding: 0;
-}
+@use '../../../../scss/page-shell.scss';
 
+/* 个人信息页内容样式（壳层 / 背景见 src/scss/page-shell.scss） */
 .mine-profile {
-  position: relative;
-  box-sizing: border-box;
-  width: 100%;
-  max-width: none;
-  min-height: calc(100vh - 140px);
-  margin: 0;
-  padding: 20px;
-  overflow: hidden;
-  color: hsl(var(--foreground));
-  background: hsl(var(--card));
-  border: 1px solid hsl(var(--border));
-  border-radius: 20px;
-  box-shadow: 0 12px 40px hsl(var(--foreground) / 0.06);
-
-  &__bg {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-    border-radius: inherit;
-    background:
-      radial-gradient(
-        1200px 480px at 8% -10%,
-        hsl(var(--primary) / 0.14),
-        transparent 55%
-      ),
-      radial-gradient(
-        900px 420px at 100% 0%,
-        hsl(190 70% 45% / 0.1),
-        transparent 50%
-      ),
-      linear-gradient(
-        180deg,
-        hsl(var(--background)) 0%,
-        hsl(var(--card)) 45%,
-        hsl(var(--background)) 100%
-      );
-  }
-
-  &__orb {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(8px);
-    opacity: 0.55;
-
-    &--a {
-      top: 72px;
-      right: 12%;
-      width: 180px;
-      height: 180px;
-      background: hsl(var(--primary) / 0.18);
-    }
-
-    &--b {
-      bottom: 8%;
-      left: 6%;
-      width: 220px;
-      height: 220px;
-      background: hsl(210 80% 55% / 0.12);
-    }
-  }
-
-  &__mesh {
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background-image:
-      linear-gradient(hsl(var(--primary) / 0.05) 1px, transparent 1px),
-      linear-gradient(90deg, hsl(var(--primary) / 0.05) 1px, transparent 1px);
-    background-size: 28px 28px;
-    mask-image: linear-gradient(180deg, #000 0%, transparent 88%);
-  }
-
-  &__inner {
-    position: relative;
-    z-index: 1;
-    width: 100%;
-    max-width: none;
-    margin: 0;
-  }
-
-  &__head {
-    display: flex;
-    gap: 16px;
-    align-items: flex-end;
-    justify-content: space-between;
-    margin-bottom: 22px;
-
-    h2 {
-      margin: 0 0 6px;
-      font-size: 24px;
-      font-weight: 750;
-      letter-spacing: 0.02em;
-      color: hsl(var(--foreground));
-    }
-  }
-
-  &__eyebrow {
-    margin: 0 0 4px;
-    font-size: 12px;
-    font-weight: 600;
-    color: hsl(var(--primary));
-    letter-spacing: 0.08em;
-  }
-
-  &__desc {
-    margin: 0;
-    font-size: 13px;
-    line-height: 1.5;
-    color: hsl(var(--muted-foreground));
-  }
-
-  &__head-actions {
-    display: flex;
-    flex-shrink: 0;
-    gap: 10px;
-    align-items: center;
-  }
-
   &__action-btn {
-    box-sizing: border-box !important;
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
     width: 108px !important;
-    min-width: 108px !important;
     max-width: 108px !important;
-    height: 36px !important;
     padding: 0 !important;
     margin: 0 !important;
     font-size: 14px !important;
-    font-weight: 600 !important;
     line-height: 1 !important;
     border-width: 1px !important;
     border-style: solid !important;
-    border-radius: 10px !important;
-    box-shadow: none !important;
 
     /* 覆盖 Element Plus 默认尺寸，保证两钮盒模型一致 */
     :deep(span) {
@@ -738,15 +606,17 @@ async function saveEdit(form: ProfileEditForm) {
 }
 
 @media (max-width: 960px) {
-  .mine-profile-page {
+  .mine-page {
     padding: 12px;
   }
 
-  .mine-profile {
+  .mine-shell {
     min-height: auto;
     padding: 18px 16px;
     border-radius: 18px;
+  }
 
+  .mine-profile {
     &__hero {
       grid-template-columns: auto minmax(0, 1fr);
     }
@@ -772,22 +642,15 @@ async function saveEdit(form: ProfileEditForm) {
 }
 
 @media (max-width: 640px) {
-  .mine-profile-page {
+  .mine-page {
     padding: 10px;
   }
 
-  .mine-profile {
+  .mine-shell {
     padding: 14px 12px;
     border-radius: 16px;
 
-    &__head {
-      flex-direction: column;
-      align-items: stretch;
-    }
-
     &__head-actions {
-      width: 100%;
-
       .mine-profile__action-btn {
         flex: 1;
         width: auto !important;
@@ -795,7 +658,9 @@ async function saveEdit(form: ProfileEditForm) {
         max-width: none !important;
       }
     }
+  }
 
+  .mine-profile {
     &__edit-btn {
       width: auto;
     }

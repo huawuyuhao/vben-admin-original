@@ -185,6 +185,156 @@
         "confirm": "确认修改",
         "success": "密码已修改，请重新登录"
       }
+    },
+    "register": {
+      "enterprise": {
+        "eyebrow": "注册认证",
+        "title": "企业用户认证",
+        "desc": "提交法人与证照材料后进入平台审核，通过后可使用完整服务能力",
+        "statusTitle": "认证状态",
+        "auditRemark": "审核备注",
+        "readonlyBanner": "当前处于审核中，表单为只读预览。审核结束后可再次编辑提交。",
+        "reapplyBanner": "企业认证已通过。如需更新材料，可继续填写并重新提交申请。",
+        "sections": {
+          "basic": "企业与法人信息",
+          "materials": "认证材料上传"
+        },
+        "steps": {
+          "fillInfo": "填写认证信息",
+          "uploadMaterials": "上传认证材料",
+          "platformReview": "平台审核",
+          "completed": "认证完成"
+        },
+        "status": {
+          "draft": "未提交",
+          "draftTip": "请完善法人信息与认证材料后提交申请。",
+          "draftSub": "提交后进入平台审核，通过后方可使用完整服务。",
+          "reviewing": "审核中",
+          "reviewingTip": "认证申请已提交，预计 1-2 个工作日内完成审核。",
+          "reviewingSub": "审核结果将通过短信和站内信通知您。",
+          "approved": "已认证",
+          "approvedTip": "企业实名认证已通过，可使用平台完整服务能力。",
+          "approvedSub": "仍可填写并重新提交认证申请，审核通过后将更新认证信息。",
+          "rejected": "已驳回",
+          "rejectedTip": "认证申请未通过，请根据驳回原因修改后重新提交。",
+          "rejectedSub": "请核对材料清晰度与信息一致性后再次提交。"
+        },
+        "form": {
+          "enterpriseId": "企业 ID",
+          "enterpriseIdPlaceholder": "请输入企业 ID",
+          "enterpriseIdRequired": "请输入企业 ID",
+          "enterpriseIdInvalid": "企业 ID 须为正整数",
+          "legalPersonName": "法人姓名",
+          "legalPersonNamePlaceholder": "请输入与身份证一致的法定代表人姓名",
+          "legalPersonNameRequired": "请输入法人姓名",
+          "idCardNo": "身份证号",
+          "idCardNoPlaceholder": "请输入 18 位身份证号码",
+          "idCardNoRequired": "请输入身份证号",
+          "idCardNoInvalid": "请输入正确的 18 位身份证号码",
+          "idCardFront": "法人身份证正面",
+          "idCardFrontRequired": "请上传法人身份证正面",
+          "idCardBack": "法人身份证反面",
+          "idCardBackRequired": "请上传法人身份证反面",
+          "businessLicense": "营业执照",
+          "businessLicenseRequired": "请上传营业执照"
+        },
+        "upload": {
+          "hint": "将文件拖到此处，或",
+          "hintClick": "点击上传",
+          "licenseHint": "上传营业执照正本或副本照片，信息需清晰可见",
+          "limit": "支持 jpg、png、jpeg，不超过 10MB"
+        },
+        "actions": {
+          "reset": "重置",
+          "submit": "提交认证申请",
+          "reapply": "重新提交认证申请",
+          "refresh": "刷新进度"
+        },
+        "message": {
+          "fileTypeInvalid": "仅支持 jpg / png / jpeg",
+          "fileSizeInvalid": "文件大小不能超过 {0}MB",
+          "fileReadFail": "文件读取失败，请重试",
+          "validateFail": "请完善必填项后再提交",
+          "readonlyHint": "审核中不可修改，请等待审核结果",
+          "submitSuccess": "认证材料已提交",
+          "noAuthId": "提交成功但未返回认证 ID，请稍后刷新进度",
+          "noCachedAuthId": "暂无认证记录，请先提交认证申请",
+          "refreshDone": "认证进度已更新",
+          "resetDone": "已重置表单"
+        }
+      },
+      "person": {
+        "eyebrow": "注册认证",
+        "title": "个人用户认证",
+        "desc": "提交实名信息与证件材料后进入平台审核，通过后可使用完整服务能力",
+        "statusTitle": "认证状态",
+        "readonlyBanner": "当前处于审核中，表单为只读预览。审核结束后可再次编辑提交。",
+        "reapplyBanner": "个人认证已通过。如需更新材料，可继续填写并重新提交申请。",
+        "uploadPendingTip": "材料上传接口待接入：当前仅支持本地预览，正式环境将改为上传后返回的 URL。",
+        "sections": {
+          "basic": "实名信息",
+          "materials": "认证材料上传"
+        },
+        "steps": {
+          "fillInfo": "填写认证信息",
+          "uploadMaterials": "上传认证材料",
+          "platformReview": "平台审核",
+          "completed": "认证完成"
+        },
+        "status": {
+          "draft": "未提交",
+          "draftTip": "请完善实名信息与认证材料后提交申请。",
+          "draftSub": "提交后进入平台审核，通过后方可使用完整服务。",
+          "reviewing": "审核中",
+          "reviewingTip": "认证申请已提交，预计 1-2 个工作日内完成审核。",
+          "reviewingSub": "审核结果将通过短信和站内信通知您。",
+          "approved": "已认证",
+          "approvedTip": "个人实名认证已通过，可使用平台完整服务能力。",
+          "approvedSub": "仍可填写并重新提交认证申请，审核通过后将更新认证信息。",
+          "rejected": "已驳回",
+          "rejectedTip": "认证申请未通过，请根据驳回原因修改后重新提交。",
+          "rejectedSub": "请核对材料清晰度与信息一致性后再次提交。"
+        },
+        "form": {
+          "realName": "真实姓名",
+          "realNamePlaceholder": "请输入与身份证一致的真实姓名",
+          "realNameRequired": "请输入真实姓名",
+          "phone": "联系电话",
+          "phonePlaceholder": "请输入手机号码",
+          "phoneRequired": "请输入联系电话",
+          "phoneInvalid": "请输入正确的 11 位手机号",
+          "idCardNo": "身份证号",
+          "idCardNoPlaceholder": "请输入 18 位身份证号码",
+          "idCardNoRequired": "请输入身份证号",
+          "idCardNoInvalid": "请输入正确的 18 位身份证号码",
+          "idCardFront": "身份证正面",
+          "idCardFrontRequired": "请上传身份证正面",
+          "idCardBack": "身份证反面",
+          "idCardBackRequired": "请上传身份证反面"
+        },
+        "upload": {
+          "hint": "将文件拖到此处，或",
+          "hintClick": "点击上传",
+          "limit": "支持 jpg、png、jpeg，不超过 10MB"
+        },
+        "actions": {
+          "reset": "重置",
+          "submit": "提交认证申请",
+          "reapply": "重新提交认证申请",
+          "refresh": "刷新进度"
+        },
+        "message": {
+          "fileTypeInvalid": "仅支持 jpg / png / jpeg",
+          "fileSizeInvalid": "文件大小不能超过 {0}MB",
+          "fileReadFail": "文件读取失败，请重试",
+          "validateFail": "请完善必填项后再提交",
+          "readonlyHint": "审核中不可修改，请等待审核结果",
+          "submitSuccess": "认证材料已提交",
+          "noAuthId": "提交成功但未返回认证 ID，请稍后刷新进度",
+          "refreshDone": "认证进度已更新",
+          "resetDone": "已重置表单"
+        }
+      }
     }
   }
 }
