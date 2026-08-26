@@ -1,14 +1,21 @@
 <script lang="ts" setup>
+import type { UserProfileResult } from '#/types/mine/profile/info';
+
 import type { ProfileEditForm } from './data';
 
-import { computed, reactive, ref } from 'vue';
+import { computed, onMounted, reactive, ref } from 'vue';
 
+import { useUserStore } from '@vben/stores';
 import { isEmpty } from '@vben/utils';
 import { $t, useI18n } from '@vben/locales';
 
 import { ElMessage } from 'element-plus';
 
-import { useLoginStore } from '#/store/login';
+import { mapProfileToUserInfo } from '#/api';
+import {
+  getUserProfileApi,
+  updateUserProfileApi,
+} from '#/api/mine/profile/info';
 
 import {
   buildProfileFieldGroups,
@@ -20,17 +27,19 @@ import EditForm from './modules/edit-form.vue';
 import ResetPasswordDialog from './modules/reset-password-dialog.vue';
 
 /**
- * 我的 · 个人信息页（展示登录缓存；支持页内编辑并调修改接口）
+ * 我的 · 个人信息页（进入时拉取；支持页内编辑并调修改接口）
  */
 defineOptions({ name: 'MineProfileInfo' });
 
-const loginStore = useLoginStore();
+const userStore = useUserStore();
 const { locale } = useI18n();
 
-/** 登录后写入 sessionStorage 的个人信息 */
-const profile = computed(() => loginStore.userProfile);
+/** 个人信息（本页独立请求，不占用登录 store） */
+const profile = ref<null | UserProfileResult>(null);
+/** 首次加载中 */
+const pageLoading = ref(true);
 
-/** 是否已有缓存资料 */
+/** 是否已有资料 */
 const hasProfile = computed(() => !isEmpty(profile.value?.user));
 
 /** 分组资料（只读展示） */
@@ -81,6 +90,17 @@ const saving = ref(false);
 const resetPwdVisible = ref(false);
 
 /**
+ * 拉取个人信息；成功后同步一份到 vben userStore（顶栏昵称/头像）
+ */
+async function loadProfile() {
+  const data = await getUserProfileApi();
+  profile.value = data ?? null;
+  if (data?.user) {
+    userStore.setUserInfo(mapProfileToUserInfo(data));
+  }
+}
+
+/**
  * 打开重置密码弹窗
  */
 function openResetPassword() {
@@ -110,12 +130,13 @@ function cancelEdit() {
 async function saveEdit(form: ProfileEditForm) {
   saving.value = true;
   try {
-    await loginStore.updateProfile({
+    await updateUserProfileApi({
       email: form.email,
       nickName: form.nickName,
       phonenumber: form.phonenumber,
       sex: form.sex,
     });
+    await loadProfile();
     Object.assign(editForm, form);
     editing.value = false;
     ElMessage.success($t('page.mine.profile.updateSuccess'));
@@ -125,6 +146,21 @@ async function saveEdit(form: ProfileEditForm) {
     saving.value = false;
   }
 }
+
+/**
+ * 进入页面时拉取个人信息
+ */
+async function initPage() {
+  try {
+    await loadProfile();
+  } catch {
+    profile.value = null;
+  } finally {
+    pageLoading.value = false;
+  }
+}
+
+onMounted(initPage);
 </script>
 
 <template>
@@ -136,7 +172,7 @@ async function saveEdit(form: ProfileEditForm) {
         <span class="mine-shell__mesh"></span>
       </div>
 
-      <div class="mine-shell__inner">
+      <div v-loading="pageLoading" class="mine-shell__inner">
         <header class="mine-shell__head">
           <div>
             <p class="mine-shell__eyebrow">{{ $t('page.mine.profile.eyebrow') }}</p>
@@ -162,12 +198,12 @@ async function saveEdit(form: ProfileEditForm) {
             </el-button>
           </div>
         </header>
-        <section v-if="!hasProfile" class="mine-profile__empty">
+        <section v-if="!pageLoading && !hasProfile" class="mine-profile__empty">
           <div class="mine-profile__empty-icon">{{ $t('page.mine.profile.emptyIcon') }}</div>
           <p>{{ $t('page.mine.profile.emptyText') }}</p>
         </section>
 
-        <template v-else>
+        <template v-else-if="hasProfile">
           <section class="mine-profile__hero">
             <div
               class="mine-profile__avatar"

@@ -1,16 +1,4 @@
 <script lang="ts" setup>
-/**
- * 按需引入 Element Plus 组件样式（全局注册不会自动注入 CSS）
- */
-import 'element-plus/es/components/button/style/css';
-import 'element-plus/es/components/checkbox/style/css';
-import 'element-plus/es/components/form/style/css';
-import 'element-plus/es/components/form-item/style/css';
-import 'element-plus/es/components/icon/style/css';
-import 'element-plus/es/components/input/style/css';
-import 'element-plus/es/components/option/style/css';
-import 'element-plus/es/components/select/style/css';
-
 import { useLoginPage } from './data';
 import AccountForm from './modules/account-form.vue';
 import BrandAside from './modules/brand-aside.vue';

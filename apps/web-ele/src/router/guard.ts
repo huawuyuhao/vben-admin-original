@@ -185,7 +185,7 @@ function setupAccessGuard(router: Router) {
       return true;
     }
 
-    // 已登录首次进入：用本地缓存用户信息生成动态路由（不再请求 /user/info）
+    // 已登录首次进入：拉取用户信息并生成动态路由
     const userInfo = userStore.userInfo || (await authStore.fetchUserInfo());
     const userRoles = userInfo?.roles ?? [];
     await ensureAccess(router, userRoles);

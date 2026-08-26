@@ -342,6 +342,57 @@
       }
     }
   },
+  "service": {
+    "product": {
+      "eyebrow": "Portal · Products",
+      "title": "Product Services",
+      "desc": "Browse on-shelf compute products. Search, sort, and open details.",
+      "searchPlaceholder": "Search by name, description, or tags…",
+      "search": "Search",
+      "refresh": "Refresh",
+      "sortLabel": "Sort by",
+      "sortFieldLabel": "Sort field",
+      "sortOrderLabel": "Sort order",
+      "sortField": {
+        "price": "Price",
+        "greenPowerRatio": "Green power ratio"
+      },
+      "sortOrder": {
+        "asc": "Ascending",
+        "desc": "Descending"
+      },
+      "empty": "No matching products",
+      "viewDetail": "View details",
+      "pricePending": "Contact for price",
+      "greenPower": "Green power {0}",
+      "recommendLevel": "Rec {0}",
+      "detail": {
+        "eyebrow": "Portal · Product Detail",
+        "title": "Product Detail",
+        "desc": "View product basics, pricing, and shelf status.",
+        "back": "Back to list",
+        "empty": "Product not found or offline",
+        "infoTitle": "Basic information",
+        "valueEmpty": "—",
+        "shelfOn": "On shelf",
+        "shelfOff": "Off shelf",
+        "auditPending": "Pending review",
+        "auditPass": "Approved",
+        "auditReject": "Rejected",
+        "fields": {
+          "productId": "Product ID",
+          "productName": "Product name",
+          "enterpriseId": "Enterprise ID",
+          "recommendLevel": "Recommendation",
+          "shelfStatus": "Shelf status",
+          "status": "Review status",
+          "publishTime": "Published at",
+          "createTime": "Created at",
+          "description": "Description"
+        }
+      }
+    }
+  },
   "portal": {
     "home": {
       "banner": {

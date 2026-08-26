@@ -128,7 +128,7 @@ const showDot = computed(() =>
   notifications.value.some((item) => !item.isRead),
 );
 
-/** 是否已登录（以 accessToken 为准，与 session 中的登录返参一致） */
+/** 是否已登录（以 vben accessStore.accessToken 为准） */
 const isLoggedIn = computed(() => !!accessStore.accessToken);
 
 /**

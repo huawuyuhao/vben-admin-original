@@ -16,8 +16,8 @@ import { $t } from '@vben/locales';
 
 import { ElMessage } from 'element-plus';
 
+import { useAuthStore } from '#/store';
 import { useLoginStore } from '#/store/login';
-import { PORTAL_HOME_PATH } from '#/store/common';
 import {
   AUTH_CLIENT_ID,
   AUTH_REGISTER_GRANT_TYPE,
@@ -62,6 +62,7 @@ export function getTenantRoleOptions(): TenantRoleOption[] {
 export function useLoginPage() {
   const route = useRoute();
   const router = useRouter();
+  const authStore = useAuthStore();
   const loginStore = useLoginStore();
 
   /** 当前认证模式：短信 / 账号 / 注册 / 找回密码 */
@@ -103,7 +104,7 @@ export function useLoginPage() {
 
   /** 登录按钮 loading */
   const loading = computed(
-    () => loginStore.loginLoading || loginStore.registerLoading,
+    () => authStore.loginLoading || loginStore.registerLoading,
   );
   /** 发送验证码 loading */
   const smsLoading = computed(() => loginStore.smsLoading);
@@ -262,17 +263,7 @@ export function useLoginPage() {
   }
 
   /**
-   * 登录成功后的跳转
-   * @param msg 成功提示文案
-   */
-  function finish(msg: string) {
-    ElMessage.success(msg);
-    // 登录成功统一回门户首页（不再消费 redirect）
-    router.replace(PORTAL_HOME_PATH);
-  }
-
-  /**
-   * 提交短信登录
+   * 提交短信登录（校验通过后走 vben authLogin）
    */
   async function submitSmsLogin() {
     if (!agreed.value) {
@@ -287,22 +278,17 @@ export function useLoginPage() {
       ElMessage.warning($t('page.login.message.smsCodeRequired'));
       return;
     }
-    await loginStore.login({
+    await authStore.authLogin({
       username: smsForm.phone.trim(),
       password: smsForm.code.trim(),
       captcha: smsForm.code.trim(),
       loginType: LoginType.Sms,
       userEnterType: userEnterType.value,
     });
-    finish(
-      userEnterType.value === UserEnterType.Demand
-        ? $t('page.login.message.loginSuccessDemand')
-        : $t('page.login.message.loginSuccessSupply'),
-    );
   }
 
   /**
-   * 提交账号密码登录
+   * 提交账号密码登录（校验通过后走 vben authLogin）
    */
   async function submitAccountLogin() {
     if (!agreed.value) {
@@ -313,13 +299,12 @@ export function useLoginPage() {
       ElMessage.warning($t('page.login.message.accountPasswordRequired'));
       return;
     }
-    await loginStore.login({
+    await authStore.authLogin({
       username: accountForm.account.trim(),
       password: accountForm.password,
       loginType: LoginType.Password,
       userEnterType: userEnterType.value,
     });
-    finish($t('page.login.message.loginSuccess'));
   }
 
   /**
@@ -370,8 +355,6 @@ export function useLoginPage() {
       userEnterType: userEnterType.value,
       agreementAccepted: agreed.value,
     });
-    // register 内已自动登录并拉取个人信息
-    finish($t('page.login.message.registerSuccess'));
   }
 
   /**

@@ -39,106 +39,55 @@ type ElTreeSelectSchemaProps = InstanceType<typeof ElTreeSelectType>['$props'];
 type ElTimePickerSchemaProps = InstanceType<typeof ElTimePickerType>['$props'];
 
 const ElButton = defineAsyncComponent(() =>
-  Promise.all([
-    import('element-plus/es/components/button/index'),
-    import('element-plus/es/components/button/style/css'),
-  ]).then(([res]) => res.ElButton),
+  import('element-plus/es/components/button/index').then((res) => res.ElButton),
 );
 const ElCheckbox = defineAsyncComponent(() =>
-  Promise.all([
-    import('element-plus/es/components/checkbox/index'),
-    import('element-plus/es/components/checkbox/style/css'),
-  ]).then(([res]) => res.ElCheckbox),
+  import('element-plus/es/components/checkbox/index').then((res) => res.ElCheckbox),
 );
 const ElCheckboxButton = defineAsyncComponent(() =>
-  Promise.all([
-    import('element-plus/es/components/checkbox/index'),
-    import('element-plus/es/components/checkbox-button/style/css'),
-  ]).then(([res]) => res.ElCheckboxButton),
+  import('element-plus/es/components/checkbox/index').then((res) => res.ElCheckboxButton),
 );
 const ElCheckboxGroup = defineAsyncComponent(() =>
-  Promise.all([
-    import('element-plus/es/components/checkbox/index'),
-    import('element-plus/es/components/checkbox-group/style/css'),
-  ]).then(([res]) => res.ElCheckboxGroup),
+  import('element-plus/es/components/checkbox/index').then((res) => res.ElCheckboxGroup),
 );
 const ElDatePicker = defineAsyncComponent(() =>
-  Promise.all([
-    import('element-plus/es/components/date-picker/index'),
-    import('element-plus/es/components/date-picker/style/css'),
-  ]).then(([res]) => res.ElDatePicker),
+  import('element-plus/es/components/date-picker/index').then((res) => res.ElDatePicker),
 );
 const ElDivider = defineAsyncComponent(() =>
-  Promise.all([
-    import('element-plus/es/components/divider/index'),
-    import('element-plus/es/components/divider/style/css'),
-  ]).then(([res]) => res.ElDivider),
+  import('element-plus/es/components/divider/index').then((res) => res.ElDivider),
 );
 const ElInput = defineAsyncComponent(() =>
-  Promise.all([
-    import('element-plus/es/components/input/index'),
-    import('element-plus/es/components/input/style/css'),
-  ]).then(([res]) => res.ElInput),
+  import('element-plus/es/components/input/index').then((res) => res.ElInput),
 );
 const ElInputNumber = defineAsyncComponent(() =>
-  Promise.all([
-    import('element-plus/es/components/input-number/index'),
-    import('element-plus/es/components/input-number/style/css'),
-  ]).then(([res]) => res.ElInputNumber),
+  import('element-plus/es/components/input-number/index').then((res) => res.ElInputNumber),
 );
 const ElRadio = defineAsyncComponent(() =>
-  Promise.all([
-    import('element-plus/es/components/radio/index'),
-    import('element-plus/es/components/radio/style/css'),
-  ]).then(([res]) => res.ElRadio),
+  import('element-plus/es/components/radio/index').then((res) => res.ElRadio),
 );
 const ElRadioButton = defineAsyncComponent(() =>
-  Promise.all([
-    import('element-plus/es/components/radio/index'),
-    import('element-plus/es/components/radio-button/style/css'),
-  ]).then(([res]) => res.ElRadioButton),
+  import('element-plus/es/components/radio/index').then((res) => res.ElRadioButton),
 );
 const ElRadioGroup = defineAsyncComponent(() =>
-  Promise.all([
-    import('element-plus/es/components/radio/index'),
-    import('element-plus/es/components/radio-group/style/css'),
-  ]).then(([res]) => res.ElRadioGroup),
+  import('element-plus/es/components/radio/index').then((res) => res.ElRadioGroup),
 );
 const ElSelectV2 = defineAsyncComponent(() =>
-  Promise.all([
-    import('element-plus/es/components/select-v2/index'),
-    import('element-plus/es/components/select-v2/style/css'),
-  ]).then(([res]) => res.ElSelectV2),
+  import('element-plus/es/components/select-v2/index').then((res) => res.ElSelectV2),
 );
 const ElSpace = defineAsyncComponent(() =>
-  Promise.all([
-    import('element-plus/es/components/space/index'),
-    import('element-plus/es/components/space/style/css'),
-  ]).then(([res]) => res.ElSpace),
+  import('element-plus/es/components/space/index').then((res) => res.ElSpace),
 );
 const ElSwitch = defineAsyncComponent(() =>
-  Promise.all([
-    import('element-plus/es/components/switch/index'),
-    import('element-plus/es/components/switch/style/css'),
-  ]).then(([res]) => res.ElSwitch),
+  import('element-plus/es/components/switch/index').then((res) => res.ElSwitch),
 );
 const ElTimePicker = defineAsyncComponent(() =>
-  Promise.all([
-    import('element-plus/es/components/time-picker/index'),
-    import('element-plus/es/components/time-picker/style/css'),
-  ]).then(([res]) => res.ElTimePicker),
+  import('element-plus/es/components/time-picker/index').then((res) => res.ElTimePicker),
 );
 const ElTreeSelect = defineAsyncComponent(() =>
-  Promise.all([
-    import('element-plus/es/components/tree-select/index'),
-    import('element-plus/es/components/tree-select/style/css'),
-  ]).then(([res]) => res.ElTreeSelect),
+  import('element-plus/es/components/tree-select/index').then((res) => res.ElTreeSelect),
 );
 const ElUpload = defineAsyncComponent(() =>
-  Promise.all([
-    import('element-plus/es/components/upload/index'),
-    import('element-plus/es/components/upload/style/css'),
-  ]).then(([res]) => res.ElUpload),
+  import('element-plus/es/components/upload/index').then((res) => res.ElUpload),
 );
 
 const withDefaultPlaceholder = (

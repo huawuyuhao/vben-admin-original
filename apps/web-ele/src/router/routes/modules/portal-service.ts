@@ -18,7 +18,7 @@ const routes: RouteRecordRaw[] = [
       {
         name: 'ServiceProduct',
         path: '/service/product',
-        component: () => import('#/views/product/index.vue'),
+        component: () => import('#/views/service/product/index.vue'),
         meta: {
           icon: 'ep:goods',
           order: 1,
@@ -28,7 +28,7 @@ const routes: RouteRecordRaw[] = [
       {
         name: 'ServiceProductDetail',
         path: '/service/product/:id',
-        component: () => import('#/views/product/detail.vue'),
+        component: () => import('#/views/service/product/detail/index.vue'),
         meta: {
           // 详情页不进侧栏，但激活态仍落在「产品服务」
           activePath: '/service/product',

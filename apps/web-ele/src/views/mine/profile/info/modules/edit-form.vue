@@ -1,14 +1,4 @@
 <script lang="ts" setup>
-/**
- * 按需引入 Element Plus 组件样式（全局注册不会自动注入 CSS）
- */
-import 'element-plus/es/components/button/style/css';
-import 'element-plus/es/components/form/style/css';
-import 'element-plus/es/components/form-item/style/css';
-import 'element-plus/es/components/input/style/css';
-import 'element-plus/es/components/radio/style/css';
-import 'element-plus/es/components/radio-group/style/css';
-
 import type { FormInstance, FormRules } from 'element-plus';
 
 import type { ProfileEditForm } from '../data';

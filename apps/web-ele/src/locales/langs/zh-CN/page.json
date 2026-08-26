@@ -342,6 +342,57 @@
       }
     }
   },
+  "service": {
+    "product": {
+      "eyebrow": "门户服务 · 产品",
+      "title": "产品服务",
+      "desc": "展示已上架算力产品，支持关键词搜索与排序，点击进入详情。",
+      "searchPlaceholder": "搜索产品名称、简介或标签…",
+      "search": "查询",
+      "refresh": "刷新",
+      "sortLabel": "排序方式",
+      "sortFieldLabel": "排序字段",
+      "sortOrderLabel": "排序方向",
+      "sortField": {
+        "price": "价格",
+        "greenPowerRatio": "绿电占比"
+      },
+      "sortOrder": {
+        "asc": "升序",
+        "desc": "降序"
+      },
+      "empty": "暂无匹配产品",
+      "viewDetail": "查看详情",
+      "pricePending": "价格面议",
+      "greenPower": "绿电占比 {0}",
+      "recommendLevel": "荐 {0}",
+      "detail": {
+        "eyebrow": "门户服务 · 产品详情",
+        "title": "产品详情",
+        "desc": "查看算力产品基本信息、价格与上下架状态。",
+        "back": "返回列表",
+        "empty": "产品不存在或已下线",
+        "infoTitle": "基本信息",
+        "valueEmpty": "—",
+        "shelfOn": "上架",
+        "shelfOff": "下架",
+        "auditPending": "待审核",
+        "auditPass": "审核通过",
+        "auditReject": "审核不通过",
+        "fields": {
+          "productId": "产品 ID",
+          "productName": "产品名称",
+          "enterpriseId": "供给企业 ID",
+          "recommendLevel": "推荐度",
+          "shelfStatus": "上下架状态",
+          "status": "审核状态",
+          "publishTime": "发布时间",
+          "createTime": "创建时间",
+          "description": "产品简介"
+        }
+      }
+    }
+  },
   "portal": {
     "home": {
       "banner": {

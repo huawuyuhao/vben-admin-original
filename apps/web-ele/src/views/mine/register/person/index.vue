@@ -1,9 +1,4 @@
 <script lang="ts" setup>
-/**
- * 按需引入 Element Plus 按钮样式
- */
-import 'element-plus/es/components/button/style/css';
-
 import type { PersonalCertForm } from './data';
 
 import { computed, onMounted, reactive, ref } from 'vue';

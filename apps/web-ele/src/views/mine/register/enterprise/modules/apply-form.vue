@@ -1,15 +1,4 @@
 <script lang="ts" setup>
-/**
- * 按需引入 Element Plus 组件样式
- */
-import 'element-plus/es/components/button/style/css';
-import 'element-plus/es/components/form/style/css';
-import 'element-plus/es/components/form-item/style/css';
-import 'element-plus/es/components/image-viewer/style/css';
-import 'element-plus/es/components/input/style/css';
-import 'element-plus/es/components/loading/style/css';
-import 'element-plus/es/components/upload/style/css';
-
 import type { FormInstance, FormRules, UploadFile } from 'element-plus';
 
 import type { CertFileKey, EnterpriseCertForm } from '../data';

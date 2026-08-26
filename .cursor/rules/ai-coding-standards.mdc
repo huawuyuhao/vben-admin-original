@@ -1,5 +1,5 @@
 ---
-description: 本仓库 AI 编程规范：复用共享工具、i18n 文案、浏览器兼容、Vue SCSS、功能目录结构、中文注释与编码
+description: 本仓库 AI 编程规范：复用共享工具、优先 Element Plus、i18n 文案、浏览器兼容、Vue SCSS、功能目录结构、中文注释与编码
 alwaysApply: true
 ---
 
@@ -130,6 +130,38 @@ views/login/
 - 演示用假数据放在 `apps/web-ele/src/views/_shared/data/`，通过 `#/views/_shared/data/...` 引用；不要散落在各页面硬编码大段 mock。
 - 优先沿用同模块已有样式（如 `portal.css`、`shared.css`）与布局/组件模式，避免另起一套 UI 风格。
 - 只改与任务相关的文件；不擅自大范围重构。
+
+## 优先使用 Element Plus
+
+主应用 `apps/web-ele` 已 **全局注册** Element Plus 组件（`app.use(ElementPlus)`），并 **全局引入** 全量样式（`element-plus/dist/index.css`）。业务页实现交互与展示时，**优先使用 Element Plus 现成能力**，禁止在 EP 已有组件/能力时自行手写等价实现。
+
+### 原则
+
+- 表单、输入、选择、按钮、表格、分页、对话框、抽屉、消息提示、空状态、骨架屏、卡片、标签、图片、上传等，**一律优先** `el-*` 组件（文档：[Element Plus](https://element-plus.org/zh-CN/component/overview.html)）。
+- 卡片式容器优先 `el-card`（可用 `header` / `footer` 插槽、`shadow`、`body-style`），不要再用自定义白盒 + 圆角边框冒充卡片。
+- 反馈类优先 `ElMessage` / `ElMessageBox` / `ElNotification` / `el-empty` / `el-skeleton` / `v-loading`，不要自写 Toast、空态块、加载转圈。
+- 仅当 EP **确实没有**对应能力，或任务明确要求自定义视觉时，才允许手写；并尽量保持与现有页（如 `mine-shell`）风格一致。
+
+```vue
+<!-- ✅ 推荐 -->
+<el-card shadow="hover">
+  <template #header>{{ $t('page.service.product.title') }}</template>
+  <el-empty v-if="!list.length" :description="$t('page.service.product.empty')" />
+  <el-pagination v-else v-model:current-page="page" :total="total" />
+</el-card>
+
+<!-- ❌ 禁止：EP 已有卡片 / 空态 / 分页时仍手写壳子 -->
+<div class="my-card">
+  <div class="my-empty">暂无数据</div>
+  <div class="my-pager">...</div>
+</div>
+```
+
+### 引入约定
+
+- **组件**：全局可用，模板中直接写 `<el-button>` 等，无需在页面再 `import { ElButton }`（`ElMessage` 等命令式 API 仍需从 `element-plus` 导入）。
+- **样式**：已在 `bootstrap.ts` 全量引入；**禁止**再在业务页按需 `import 'element-plus/es/components/*/style/css'`。
+- 应用层对 EP 的微调放在 `@vben/styles/ele`（或局部 `scoped` 覆盖），不要复制一套平行 UI 库。
 
 ## 国际化（i18n）
 

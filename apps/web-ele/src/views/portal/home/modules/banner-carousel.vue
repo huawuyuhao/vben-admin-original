@@ -1,10 +1,4 @@
 <script lang="ts" setup>
-/**
- * 按需引入 Element Plus 走马灯样式
- */
-import 'element-plus/es/components/carousel/style/css';
-import 'element-plus/es/components/carousel-item/style/css';
-
 import type { PortalBanner } from '#/types/portal/home/banner';
 
 import { onMounted, ref } from 'vue';
