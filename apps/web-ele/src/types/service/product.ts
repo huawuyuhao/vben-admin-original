@@ -19,6 +19,11 @@ export interface ProductInfo {
   recommendLevel?: number;
   /** 标签（多个用逗号分隔） */
   tags?: string;
+  /**
+   * 当前登录用户是否已收藏（不入库，仅接口返参）
+   * 列表 / 详情接口返回
+   */
+  isCollected?: boolean;
   /** 供给企业 ID */
   enterpriseId?: number;
   /** 上下架状态（0-下架 1-上架） */
@@ -39,6 +44,19 @@ export interface ProductInfo {
   updateTime?: string;
   /** 租户编号 */
   tenantId?: string;
+}
+
+/**
+ * 我的收藏列表条目（继承产品信息 + 收藏表字段）
+ * GET /product/collect/list
+ */
+export interface ProductCollectInfo extends ProductInfo {
+  /** 收藏 ID */
+  collectId?: number;
+  /** 用户 ID */
+  userId?: number;
+  /** 收藏时间 */
+  collectTime?: string;
 }
 
 /** 产品列表排序字段（与 OpenAPI enum 对齐） */
@@ -62,12 +80,23 @@ export interface ProductListParams {
 }
 
 /**
+ * 我的收藏列表分页查询参数
+ * GET /product/collect/list
+ */
+export interface ProductCollectListParams {
+  /** 当前页码（默认 1） */
+  page: number;
+  /** 每页大小（默认 10） */
+  pageSize: number;
+}
+
+/**
  * 产品列表分页结果
  * 文档返参为扁平结构：与 code/msg 同级的 records / total / current / size
  */
-export interface ProductListResult {
+export interface ProductListResult<T extends ProductInfo = ProductInfo> {
   /** 当前页列表 */
-  records: ProductInfo[];
+  records: T[];
   /** 总记录数 */
   total: number;
   /** 当前页码 */
@@ -79,9 +108,10 @@ export interface ProductListResult {
 /**
  * 产品列表原始响应体（扁平分页 + 可选 code/msg；兼容旧版 data 包裹）
  */
-export interface ProductListResponseBody extends Partial<ProductListResult> {
+export interface ProductListResponseBody<T extends ProductInfo = ProductInfo>
+  extends Partial<ProductListResult<T>> {
   code?: number;
   msg?: string;
   /** 兼容旧版：分页包在 data 内，或 data 直接为数组 */
-  data?: ProductInfo[] | ProductListResult;
+  data?: T[] | ProductListResult<T>;
 }

@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 import type { ProductInfo } from '#/types/service/product';
 
-import { computed } from 'vue';
+import { computed, ref, watch } from 'vue';
 
+import { Star, StarFilled } from '@element-plus/icons-vue';
 import { $t } from '@vben/locales';
 
 import {
@@ -11,13 +12,36 @@ import {
   hasProductImage,
   splitProductTags,
 } from '../../data';
+import { useProductActions } from '../../composables/use-product-actions';
 
 defineOptions({ name: 'ServiceProductDetailOverview' });
 
-const props = defineProps<{
-  /** 产品详情 */
-  product: ProductInfo;
+const props = withDefaults(
+  defineProps<{
+    /** 初始是否已收藏 */
+    collected?: boolean;
+    /** 产品详情 */
+    product: ProductInfo;
+  }>(),
+  { collected: false },
+);
+
+const emit = defineEmits<{
+  /** 收藏状态变化 */
+  collectChange: [collected: boolean];
 }>();
+
+const { isCollecting, isUsing, toggleCollect, useNow } = useProductActions();
+
+/** 本地收藏态（来自详情 isCollected） */
+const collected = ref(!!props.collected || !!props.product.isCollected);
+
+watch(
+  () => [props.collected, props.product.isCollected] as const,
+  ([forced, fromApi]) => {
+    collected.value = !!forced || !!fromApi;
+  },
+);
 
 /** 标签列表 */
 const tags = computed(() => splitProductTags(props.product.tags));
@@ -33,6 +57,26 @@ const priceText = computed(
 const greenText = computed(() =>
   formatGreenPowerRatio(props.product.greenPowerRatio),
 );
+
+/**
+ * 切换收藏
+ */
+async function handleCollect() {
+  const next = await toggleCollect(props.product.productId, collected.value);
+  if (next === null) {
+    return;
+  }
+  collected.value = next;
+  props.product.isCollected = next;
+  emit('collectChange', next);
+}
+
+/**
+ * 立即使用
+ */
+async function handleUseNow() {
+  await useNow(props.product);
+}
 </script>
 
 <template>
@@ -72,6 +116,22 @@ const greenText = computed(() =>
               ])
             }}
           </el-tag>
+          <el-button
+            class="product-overview__collect"
+            circle
+            :loading="isCollecting(product.productId)"
+            :title="
+              collected
+                ? $t('page.service.product.collect.cancel')
+                : $t('page.service.product.collect.do')
+            "
+            @click="handleCollect"
+          >
+            <el-icon :class="{ 'is-collected': collected }">
+              <StarFilled v-if="collected" />
+              <Star v-else />
+            </el-icon>
+          </el-button>
         </div>
 
         <div v-if="tags.length > 0" class="product-overview__tags">
@@ -95,7 +155,16 @@ const greenText = computed(() =>
           {{ product.description }}
         </p>
 
-        <div class="product-overview__price">{{ priceText }}</div>
+        <div class="product-overview__bottom">
+          <div class="product-overview__price">{{ priceText }}</div>
+          <el-button
+            type="success"
+            :loading="isUsing(product.productId)"
+            @click="handleUseNow"
+          >
+            {{ $t('page.service.product.useNow.action') }}
+          </el-button>
+        </div>
       </div>
     </div>
   </el-card>
@@ -164,6 +233,14 @@ const greenText = computed(() =>
     }
   }
 
+  &__collect {
+    margin-left: auto;
+
+    .is-collected {
+      color: #e6a23c;
+    }
+  }
+
   &__tags {
     display: flex;
     flex-wrap: wrap;
@@ -184,8 +261,16 @@ const greenText = computed(() =>
     color: hsl(var(--muted-foreground));
   }
 
-  &__price {
+  &__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: center;
+    justify-content: space-between;
     margin-top: auto;
+  }
+
+  &__price {
     font-size: 28px;
     font-weight: 800;
     color: hsl(var(--primary));
@@ -200,6 +285,10 @@ const greenText = computed(() =>
 
     &__cover {
       height: 180px;
+    }
+
+    &__collect {
+      margin-left: 0;
     }
   }
 }

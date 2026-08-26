@@ -71,6 +71,16 @@ onMounted(() => {
 watch(productId, () => {
   void fetchDetail();
 });
+
+/**
+ * 同步详情页收藏态
+ * @param collected 是否已收藏
+ */
+function onCollectChange(collected: boolean) {
+  if (product.value) {
+    product.value.isCollected = collected;
+  }
+}
 </script>
 
 <template>
@@ -130,7 +140,11 @@ watch(productId, () => {
           </el-card>
 
           <template v-else>
-            <OverviewCard :product="product" />
+            <OverviewCard
+              :product="product"
+              :collected="!!product.isCollected"
+              @collect-change="onCollectChange"
+            />
             <InfoCard :product="product" />
           </template>
         </div>

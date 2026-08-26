@@ -186,6 +186,13 @@
         "success": "Password updated. Please sign in again"
       }
     },
+    "favorites": {
+      "eyebrow": "My Information Center",
+      "title": "My Favorites",
+      "desc": "Manage favorited compute products. Unfavorite or create a demand intent.",
+      "empty": "No favorited products yet",
+      "refresh": "Refresh"
+    },
     "register": {
       "enterprise": {
         "eyebrow": "Registration & Verification",
@@ -366,6 +373,17 @@
       "pricePending": "Contact for price",
       "greenPower": "Green power {0}",
       "recommendLevel": "Rec {0}",
+      "collect": {
+        "do": "Favorite",
+        "cancel": "Unfavorite",
+        "success": "Added to favorites",
+        "cancelSuccess": "Removed from favorites"
+      },
+      "useNow": {
+        "action": "Use now",
+        "success": "Demand intent created",
+        "nameRequired": "Product name is missing; cannot create demand intent"
+      },
       "detail": {
         "eyebrow": "Portal · Product Detail",
         "title": "Product Detail",

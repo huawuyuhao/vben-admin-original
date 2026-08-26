@@ -1,4 +1,6 @@
 import type {
+  ProductCollectInfo,
+  ProductCollectListParams,
   ProductInfo,
   ProductListParams,
   ProductListResponseBody,
@@ -23,9 +25,9 @@ function isProductApiSuccess(code?: number): boolean {
  * @param body 响应体
  * @returns 标准化分页结果
  */
-function parseProductListBody(
-  body?: null | ProductListResponseBody,
-): ProductListResult {
+function parseProductListBody<T extends ProductInfo = ProductInfo>(
+  body?: null | ProductListResponseBody<T>,
+): ProductListResult<T> {
   if (!body) {
     return { records: [], total: 0, current: 1, size: 10 };
   }
@@ -95,6 +97,38 @@ export async function getProductListApi(params: ProductListParams) {
 }
 
 /**
+ * 我的收藏列表分页查询
+ * 开发态走 Apifox Mock：GET /mock/product/collect/list
+ * 正式接口：GET /product/collect/list
+ * @param params page / pageSize
+ * @returns 扁平分页结果（records 含 collectId / collectTime 等）
+ */
+export async function getProductCollectListApi(
+  params: ProductCollectListParams,
+) {
+  const body = await rootRequestClient.get<
+    ProductListResponseBody<ProductCollectInfo>
+  >('/mock/product/collect/list', {
+    params,
+    responseReturn: 'body',
+  });
+  // const body = await rootRequestClient.get<
+  //   ProductListResponseBody<ProductCollectInfo>
+  // >('/product/collect/list', {
+  //   params,
+  //   responseReturn: 'body',
+  // });
+
+  if (!isProductApiSuccess(body?.code)) {
+    const message = String(body?.msg || 'Request failed');
+    ElMessage.error(message);
+    throw new Error(message);
+  }
+
+  return parseProductListBody(body);
+}
+
+/**
  * 产品详情查询
  * 开发态走 Apifox Mock：GET /mock/product/{id}
  * 正式接口：GET /product/{id}
@@ -104,4 +138,48 @@ export async function getProductListApi(params: ProductListParams) {
 export async function getProductDetailApi(id: number) {
   return rootRequestClient.get<ProductInfo>(`/mock/product/${id}`);
   // return rootRequestClient.get<ProductInfo>(`/product/${id}`);
+}
+
+/**
+ * 产品收藏 / 取消收藏
+ * 开发态走 Apifox Mock：POST /mock/product/collect
+ * 正式接口：POST /product/collect
+ * @param productId 产品 ID
+ * @param action collect 收藏 / uncollect 取消收藏
+ * @returns 业务 data（字符串）
+ */
+export async function toggleProductCollectApi(
+  productId: number,
+  action: 'collect' | 'uncollect',
+) {
+  return rootRequestClient.post<string>('/mock/product/collect', {
+    productId,
+    action,
+  });
+  // return rootRequestClient.post<string>('/product/collect', {
+  //   productId,
+  //   action,
+  // });
+}
+
+/**
+ * 生成算力需求意向
+ * 开发态走 Apifox Mock：POST /mock/product/demand-intent
+ * 正式接口：POST /product/demand-intent
+ * @param params productId / demandName / demandDesc
+ * @returns 含 key（demandId）
+ */
+export async function createProductDemandIntentApi(params: {
+  demandDesc?: string;
+  demandName: string;
+  productId: number;
+}) {
+  return rootRequestClient.post<{ key: number }>(
+    '/mock/product/demand-intent',
+    params,
+  );
+  // return rootRequestClient.post<{ key: number }>(
+  //   '/product/demand-intent',
+  //   params,
+  // );
 }

@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 import type { ProductInfo } from '#/types/service/product';
 
-import { computed } from 'vue';
+import { computed, ref, watch } from 'vue';
 
+import { Star, StarFilled } from '@element-plus/icons-vue';
 import { $t } from '@vben/locales';
 
 import {
@@ -11,18 +12,43 @@ import {
   hasProductImage,
   splitProductTags,
 } from '../data';
+import { useProductActions } from '../composables/use-product-actions';
 
 defineOptions({ name: 'ServiceProductCard' });
 
-const props = defineProps<{
-  /** 产品条目 */
-  item: ProductInfo;
-}>();
+const props = withDefaults(
+  defineProps<{
+    /** 初始是否已收藏（收藏页为 true） */
+    collected?: boolean;
+    /** 产品条目 */
+    item: ProductInfo;
+    /** 是否展示「立即使用」 */
+    showUseNow?: boolean;
+  }>(),
+  {
+    collected: false,
+    showUseNow: true,
+  },
+);
 
 const emit = defineEmits<{
+  /** 收藏状态变化 */
+  collectChange: [payload: { collected: boolean; productId: number }];
   /** 查看详情 */
   detail: [item: ProductInfo];
 }>();
+
+const { isCollecting, isUsing, toggleCollect, useNow } = useProductActions();
+
+/** 本地收藏态（优先 props，其次接口 isCollected） */
+const collected = ref(!!props.collected || !!props.item.isCollected);
+
+watch(
+  () => [props.collected, props.item.isCollected] as const,
+  ([forced, fromApi]) => {
+    collected.value = !!forced || !!fromApi;
+  },
+);
 
 /** 标签列表 */
 const tags = computed(() => splitProductTags(props.item.tags));
@@ -44,6 +70,30 @@ const greenText = computed(() =>
  */
 function handleDetail() {
   emit('detail', props.item);
+}
+
+/**
+ * 切换收藏
+ */
+async function handleCollect() {
+  const next = await toggleCollect(props.item.productId, collected.value);
+  if (next === null) {
+    return;
+  }
+  collected.value = next;
+  // 同步到条目，避免列表刷新前状态丢失
+  props.item.isCollected = next;
+  emit('collectChange', {
+    productId: props.item.productId,
+    collected: next,
+  });
+}
+
+/**
+ * 立即使用
+ */
+async function handleUseNow() {
+  await useNow(props.item);
 }
 </script>
 
@@ -68,6 +118,25 @@ function handleDetail() {
       <span v-else class="product-card__letter" aria-hidden="true">
         {{ item.productName.slice(0, 1) }}
       </span>
+
+      <el-button
+        class="product-card__collect"
+        circle
+        size="small"
+        :loading="isCollecting(item.productId)"
+        :title="
+          collected
+            ? $t('page.service.product.collect.cancel')
+            : $t('page.service.product.collect.do')
+        "
+        @click.stop="handleCollect"
+      >
+        <el-icon :class="{ 'is-collected': collected }">
+          <StarFilled v-if="collected" />
+          <Star v-else />
+        </el-icon>
+      </el-button>
+
       <el-tag
         v-if="item.recommendLevel != null"
         class="product-card__level"
@@ -113,13 +182,20 @@ function handleDetail() {
     <template #footer>
       <div class="product-card__foot">
         <span class="product-card__price">{{ priceText }}</span>
-        <el-button
-          type="primary"
-          size="small"
-          @click.stop="handleDetail"
-        >
-          {{ $t('page.service.product.viewDetail') }}
-        </el-button>
+        <div class="product-card__actions">
+          <el-button size="small" @click.stop="handleDetail">
+            {{ $t('page.service.product.viewDetail') }}
+          </el-button>
+          <el-button
+            v-if="showUseNow"
+            type="success"
+            size="small"
+            :loading="isUsing(item.productId)"
+            @click.stop="handleUseNow"
+          >
+            {{ $t('page.service.product.useNow.action') }}
+          </el-button>
+        </div>
       </div>
     </template>
   </el-card>
@@ -182,6 +258,19 @@ function handleDetail() {
     font-size: 40px;
     font-weight: 750;
     color: rgba(255, 255, 255, 0.92);
+  }
+
+  &__collect {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 1;
+    border: 0;
+    background: rgba(255, 255, 255, 0.92) !important;
+
+    .is-collected {
+      color: #e6a23c;
+    }
   }
 
   &__level {
@@ -249,6 +338,13 @@ function handleDetail() {
     font-size: 17px;
     font-weight: 800;
     color: hsl(var(--primary));
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: flex-end;
   }
 }
 </style>

@@ -7,14 +7,30 @@ import ProductCard from './product-card.vue';
 
 defineOptions({ name: 'ServiceProductGrid' });
 
-defineProps<{
-  /** 产品列表 */
-  products: ProductInfo[];
-  /** 加载中 */
-  loading?: boolean;
-}>();
+withDefaults(
+  defineProps<{
+    /** 列表项默认收藏态（收藏页传 true） */
+    collected?: boolean;
+    /** 空态文案（默认产品列表空态） */
+    emptyDescription?: string;
+    /** 加载中 */
+    loading?: boolean;
+    /** 产品列表 */
+    products: ProductInfo[];
+    /** 是否展示「立即使用」 */
+    showUseNow?: boolean;
+  }>(),
+  {
+    collected: false,
+    emptyDescription: undefined,
+    loading: false,
+    showUseNow: true,
+  },
+);
 
 const emit = defineEmits<{
+  /** 收藏状态变化 */
+  collectChange: [payload: { collected: boolean; productId: number }];
   /** 查看详情 */
   detail: [item: ProductInfo];
 }>();
@@ -54,7 +70,11 @@ const emit = defineEmits<{
       class="product-grid-wrap__empty"
       shadow="never"
     >
-      <el-empty :description="$t('page.service.product.empty')" />
+      <el-empty
+        :description="
+          emptyDescription || $t('page.service.product.empty')
+        "
+      />
     </el-card>
 
     <div v-else class="product-grid">
@@ -63,7 +83,10 @@ const emit = defineEmits<{
         :key="item.productId"
         class="product-grid__item"
         :item="item"
+        :collected="collected || !!item.isCollected"
+        :show-use-now="showUseNow"
         @detail="emit('detail', $event)"
+        @collect-change="emit('collectChange', $event)"
       />
     </div>
   </div>
