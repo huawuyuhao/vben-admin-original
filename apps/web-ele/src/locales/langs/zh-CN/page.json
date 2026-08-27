@@ -401,6 +401,7 @@
             "edit": "编辑",
             "view": "查看",
             "preview": "预览",
+            "online": "上线",
             "offline": "下线",
             "delete": "删除",
             "submitAudit": "提交审核"
@@ -408,6 +409,8 @@
           "saveSort": "保存排序",
           "saveSortSuccess": "排序已保存",
           "saveSortHint": "当前页有未保存的排序变更",
+          "onlineConfirm": "确定上线「{0}」吗？",
+          "onlineSuccess": "「{0}」已上线",
           "offlineConfirm": "确定下线「{0}」吗？",
           "offlineSuccess": "「{0}」已下线",
           "submitAuditConfirm": "确定提交「{0}」审核吗？",

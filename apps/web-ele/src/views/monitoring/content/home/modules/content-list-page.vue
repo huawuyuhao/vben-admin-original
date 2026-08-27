@@ -187,7 +187,25 @@ async function handleSubmitAudit(row: PortalContentItem) {
 }
 
 /**
- * 下线内容（二次确认由表格 Popconfirm 触发）
+ * 上线内容（启用，二次确认由表格 Popconfirm 触发）
+ * @param row 行数据
+ */
+async function handleOnline(row: PortalContentItem) {
+  const label = row.title?.trim() || String(row.contentId);
+
+  try {
+    await updatePortalContentShelfApi(row.contentId, { action: 'shelf' });
+    ElMessage.success(
+      $t('page.monitoring.content.home.common.onlineSuccess', [label]),
+    );
+    refresh();
+  } catch {
+    // 错误提示由接口层处理
+  }
+}
+
+/**
+ * 下线内容（停用，二次确认由表格 Popconfirm 触发）
  * @param row 行数据
  */
 async function handleOffline(row: PortalContentItem) {
@@ -326,6 +344,7 @@ function handleFormSuccess() {
       @edit="handleEdit"
       @view="handleView"
       @submit-audit="handleSubmitAudit"
+      @online="handleOnline"
       @offline="handleOffline"
       @remove="handleRemove"
     />

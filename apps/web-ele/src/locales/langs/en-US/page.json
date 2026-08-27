@@ -401,6 +401,7 @@
             "edit": "Edit",
             "view": "View",
             "preview": "Preview",
+            "online": "Enable",
             "offline": "Disable",
             "delete": "Delete",
             "submitAudit": "Submit for review"
@@ -408,6 +409,8 @@
           "saveSort": "Save sort",
           "saveSortSuccess": "Sort order saved",
           "saveSortHint": "Unsaved sort changes on this page",
+          "onlineConfirm": "Enable \"{0}\"?",
+          "onlineSuccess": "\"{0}\" has been enabled",
           "offlineConfirm": "Disable \"{0}\"?",
           "offlineSuccess": "\"{0}\" has been disabled",
           "submitAuditConfirm": "Submit \"{0}\" for review?",

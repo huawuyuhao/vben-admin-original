@@ -6,6 +6,7 @@ import { computed } from 'vue';
 import { $t } from '@vben/locales';
 
 import {
+  PORTAL_CONTENT_STATUS_DISABLED,
   PORTAL_CONTENT_STATUS_ENABLED,
   canSubmitPortalContentAudit,
   formatPortalContentDateTime,
@@ -40,7 +41,9 @@ const emit = defineEmits<{
   edit: [row: PortalContentItem];
   /** 查看 */
   view: [row: PortalContentItem];
-  /** 下线 */
+  /** 上线（启用） */
+  online: [row: PortalContentItem];
+  /** 下线（停用） */
   offline: [row: PortalContentItem];
   /** 提交审核 */
   submitAudit: [row: PortalContentItem];
@@ -91,6 +94,15 @@ const previewImageList = computed(() =>
 function submitAuditConfirmTitle(row: PortalContentItem): string {
   const label = row.title?.trim() || String(row.contentId);
   return $t('page.monitoring.content.home.common.submitAuditConfirm', [label]);
+}
+
+/**
+ * 获取上线确认文案
+ * @param row 行数据
+ */
+function onlineConfirmTitle(row: PortalContentItem): string {
+  const label = row.title?.trim() || String(row.contentId);
+  return $t('page.monitoring.content.home.common.onlineConfirm', [label]);
 }
 
 /**
@@ -408,7 +420,21 @@ function updateSortDraft(contentId: number, value?: number) {
               {{ $t('page.monitoring.content.home.common.actions.submitAudit') }}
             </el-button>
             <el-popconfirm
-              v-if="showStatus && row.status === PORTAL_CONTENT_STATUS_ENABLED"
+              v-if="showStatus && row.status === PORTAL_CONTENT_STATUS_DISABLED"
+              :title="onlineConfirmTitle(row)"
+              width="220"
+              :confirm-button-text="$t('common.confirm')"
+              :cancel-button-text="$t('common.cancel')"
+              @confirm="emit('online', row)"
+            >
+              <template #reference>
+                <el-button link type="success">
+                  {{ $t('page.monitoring.content.home.common.actions.online') }}
+                </el-button>
+              </template>
+            </el-popconfirm>
+            <el-popconfirm
+              v-else-if="showStatus && row.status === PORTAL_CONTENT_STATUS_ENABLED"
               :title="offlineConfirmTitle(row)"
               width="220"
               :confirm-button-text="$t('common.confirm')"

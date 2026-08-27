@@ -63,6 +63,9 @@ export const PORTAL_CONTENT_TYPE = {
 /** 启用状态值 */
 export const PORTAL_CONTENT_STATUS_ENABLED = 1;
 
+/** 停用状态值 */
+export const PORTAL_CONTENT_STATUS_DISABLED = 0;
+
 /** 审核通过状态值 */
 export const PORTAL_CONTENT_AUDIT_PASSED = 1;
 
