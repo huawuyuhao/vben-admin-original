@@ -656,6 +656,98 @@
           "description": "模型简介"
         }
       }
+    },
+    "case": {
+      "eyebrow": "门户服务 · 案例",
+      "title": "案例中心",
+      "desc": "浏览已发布案例资讯，支持按标签筛选，查看通算与智算关联案例。",
+      "searchPlaceholder": "按标签名称筛选…",
+      "search": "查询",
+      "refresh": "刷新",
+      "reset": "重置",
+      "add": "新增案例",
+      "empty": "暂无匹配案例",
+      "viewDetail": "查看详情",
+      "viewPending": "—",
+      "deleteConfirm": "确认删除案例「{0}」吗？",
+      "actions": {
+        "edit": "编辑",
+        "delete": "删除"
+      },
+      "filter": {
+        "tagName": "标签",
+        "caseType": "案例类型",
+        "typeAll": "全部",
+        "scopeHint": "案例类型仅筛选当前页列表，不会检索全部数据；翻页后条件仍作用于新加载的本页数据。"
+      },
+      "form": {
+        "createTitle": "新增案例",
+        "editTitle": "编辑案例",
+        "titlePlaceholder": "请输入案例标题",
+        "summaryPlaceholder": "请输入摘要（可选）",
+        "contentPlaceholder": "请输入案例正文，支持纯文本或 HTML",
+        "tagsPlaceholder": "输入后回车添加标签",
+        "tagsHint": "可添加多个标签；提交时以逗号分隔传给接口。",
+        "titleRequired": "请填写标题",
+        "contentRequired": "请填写内容",
+        "caseTypeRequired": "请选择案例类型",
+        "statusRequired": "请选择状态",
+        "imageHint": "支持 jpg / jpeg / png，大小不超过 5MB",
+        "imageTypeInvalid": "仅支持 jpg、jpeg、png 图片",
+        "imageSizeInvalid": "图片大小不能超过 5MB",
+        "imageLimit": "仅可上传 1 张封面图",
+        "uploadFail": "封面图上传失败",
+        "dragDropText": "将封面图拖到此处，或",
+        "dragDropClick": "点击上传",
+        "createSuccess": "案例已新增",
+        "updateSuccess": "案例已更新",
+        "cancel": "取消",
+        "submit": "保存",
+        "fields": {
+          "title": "标题",
+          "caseType": "案例类型",
+          "status": "状态",
+          "coverImage": "封面图",
+          "summary": "摘要",
+          "content": "内容",
+          "tags": "标签"
+        }
+      },
+      "type": {
+        "general": "通算",
+        "smart": "智算"
+      },
+      "fields": {
+        "viewCount": "浏览量",
+        "summary": "摘要",
+        "createTime": "创建时间"
+      },
+      "detail": {
+        "eyebrow": "门户服务 · 案例详情",
+        "title": "案例详情",
+        "desc": "查看案例正文、标签，以及按通算 / 智算分类的关联推荐。",
+        "back": "返回列表",
+        "empty": "案例不存在或未发布",
+        "infoTitle": "基本信息",
+        "contentTitle": "案例正文",
+        "contentEmpty": "暂无正文内容",
+        "relatedTitle": "关联案例推荐",
+        "relatedEmpty": "暂无关联案例",
+        "relatedGeneral": "通算关联案例",
+        "relatedSmart": "智算关联案例",
+        "relatedOther": "其他关联案例",
+        "relatedTagTip": "当前按标签「{0}」筛选关联案例，再次点击标签可取消",
+        "valueEmpty": "—",
+        "statusPublished": "已发布",
+        "statusDraft": "草稿",
+        "fields": {
+          "caseId": "案例 ID",
+          "caseType": "案例类型",
+          "status": "状态",
+          "createTime": "创建时间",
+          "updateTime": "更新时间"
+        }
+      }
     }
   },
   "portal": {

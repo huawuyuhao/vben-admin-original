@@ -62,11 +62,23 @@ const routes: RouteRecordRaw[] = [
       {
         name: 'ServiceCase',
         path: '/service/case',
-        component: () => import('#/views/case/index.vue'),
+        component: () => import('#/views/service/case/index.vue'),
         meta: {
           icon: 'ep:collection',
           order: 3,
           title: '案例中心',
+        },
+      },
+      {
+        name: 'ServiceCaseDetail',
+        path: '/service/case/:id',
+        component: () => import('#/views/service/case/detail/index.vue'),
+        meta: {
+          // 详情页不进侧栏，但激活态仍落在「案例中心」
+          activePath: '/service/case',
+          hideInMenu: true,
+          hideInTab: false,
+          title: '案例详情',
         },
       },
       {

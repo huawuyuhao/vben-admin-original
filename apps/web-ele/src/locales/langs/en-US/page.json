@@ -656,6 +656,98 @@
           "description": "Description"
         }
       }
+    },
+    "case": {
+      "eyebrow": "Portal · Cases",
+      "title": "Case Center",
+      "desc": "Browse published cases. Filter by tag and explore related general / intelligent computing cases.",
+      "searchPlaceholder": "Filter by tag name…",
+      "search": "Search",
+      "refresh": "Refresh",
+      "reset": "Reset",
+      "add": "Add case",
+      "empty": "No matching cases",
+      "viewDetail": "View details",
+      "viewPending": "—",
+      "deleteConfirm": "Delete case “{0}”?",
+      "actions": {
+        "edit": "Edit",
+        "delete": "Delete"
+      },
+      "filter": {
+        "tagName": "Tag",
+        "caseType": "Case type",
+        "typeAll": "All",
+        "scopeHint": "Case type only filters the current page and does not search all data; after paging, the filter still applies to the newly loaded page."
+      },
+      "form": {
+        "createTitle": "Add case",
+        "editTitle": "Edit case",
+        "titlePlaceholder": "Enter case title",
+        "summaryPlaceholder": "Enter summary (optional)",
+        "contentPlaceholder": "Enter case content (plain text or HTML)",
+        "tagsPlaceholder": "Type and press Enter to add tags",
+        "tagsHint": "You can add multiple tags; they are submitted as a comma-separated string.",
+        "titleRequired": "Title is required",
+        "contentRequired": "Content is required",
+        "caseTypeRequired": "Please select a case type",
+        "statusRequired": "Please select a status",
+        "imageHint": "jpg / jpeg / png, max 5MB",
+        "imageTypeInvalid": "Only jpg, jpeg, and png are allowed",
+        "imageSizeInvalid": "Image must be 5MB or smaller",
+        "imageLimit": "Only one cover image is allowed",
+        "uploadFail": "Cover upload failed",
+        "dragDropText": "Drop cover image here, or",
+        "dragDropClick": "click to upload",
+        "createSuccess": "Case created",
+        "updateSuccess": "Case updated",
+        "cancel": "Cancel",
+        "submit": "Save",
+        "fields": {
+          "title": "Title",
+          "caseType": "Case type",
+          "status": "Status",
+          "coverImage": "Cover",
+          "summary": "Summary",
+          "content": "Content",
+          "tags": "Tags"
+        }
+      },
+      "type": {
+        "general": "General computing",
+        "smart": "Intelligent computing"
+      },
+      "fields": {
+        "viewCount": "Views",
+        "summary": "Summary",
+        "createTime": "Created at"
+      },
+      "detail": {
+        "eyebrow": "Portal · Case Detail",
+        "title": "Case Detail",
+        "desc": "View case content, tags, and related recommendations by computing type.",
+        "back": "Back to list",
+        "empty": "Case not found or unpublished",
+        "infoTitle": "Basic information",
+        "contentTitle": "Content",
+        "contentEmpty": "No content available",
+        "relatedTitle": "Related cases",
+        "relatedEmpty": "No related cases",
+        "relatedGeneral": "Related general computing",
+        "relatedSmart": "Related intelligent computing",
+        "relatedOther": "Other related cases",
+        "relatedTagTip": "Filtering related cases by tag “{0}”. Click the tag again to clear.",
+        "valueEmpty": "—",
+        "statusPublished": "Published",
+        "statusDraft": "Draft",
+        "fields": {
+          "caseId": "Case ID",
+          "caseType": "Case type",
+          "status": "Status",
+          "createTime": "Created at",
+          "updateTime": "Updated at"
+        }
+      }
     }
   },
   "portal": {
