@@ -18,7 +18,8 @@ export function isPublicPath(path: string): boolean {
     normalized === PORTAL_LOGIN_PATH ||
     normalized === '/register' ||
     normalized === '/forgot-password' ||
-    normalized.startsWith('/auth/')
+    normalized.startsWith('/auth/') ||
+    normalized.startsWith('/portal/news/')
   );
 }
 
@@ -27,6 +28,20 @@ export function isPublicPath(path: string): boolean {
  */
 export function isLoggedIn(): boolean {
   return !!useAccessStore().accessToken;
+}
+
+/**
+ * 当前是否位于登录 / 注册 / 找回密码等认证页
+ * @param path 路由 path，默认取当前路由
+ */
+export function isAuthPath(path?: string): boolean {
+  const normalized = (path ?? router.currentRoute.value.path).replace(/\/$/, '') || '/';
+  return (
+    normalized === PORTAL_LOGIN_PATH ||
+    normalized === '/register' ||
+    normalized === '/forgot-password' ||
+    normalized.startsWith('/auth/')
+  );
 }
 
 /**
@@ -58,6 +73,7 @@ export function goPortalHome(replace = false) {
  *
  * 设计要点：从首页/公开页 push 到登录，历史为「公开页 → 登录」，
  * 浏览器返回可回到公开页；登录成功统一回门户首页。
+ * 已在认证页时不再二次跳转，避免守卫把「登录→业务」打回首页。
  *
  * @param targetPath 即将前往的路径（公开路径直接放行）
  * @returns 已登录或目标为公开页时 true，否则 false
@@ -68,6 +84,10 @@ export function ensureLoggedIn(targetPath?: string): boolean {
   }
   if (isLoggedIn()) {
     return true;
+  }
+  // 已在登录相关页：保持当前页，勿再 push 业务或登录
+  if (isAuthPath()) {
+    return false;
   }
   void goLogin(false);
   return false;

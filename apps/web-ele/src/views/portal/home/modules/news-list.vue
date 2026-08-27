@@ -166,7 +166,10 @@ onMounted(() => {
               {{ item.summary }}
             </p>
             <div class="home-news__meta">
-              <time v-if="formatNewsDateTime(item.publishTime)">
+              <time
+                v-if="formatNewsDateTime(item.publishTime)"
+                :datetime="item.publishTime"
+              >
                 {{ formatNewsDateTime(item.publishTime) }}
               </time>
               <span v-if="item.viewCount != null">

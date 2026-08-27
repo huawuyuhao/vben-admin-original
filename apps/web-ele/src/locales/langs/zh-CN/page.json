@@ -750,6 +750,28 @@
       }
     }
   },
+  "search": {
+    "triggerAria": "打开全局搜索",
+    "triggerPlaceholder": "搜索服务内容…",
+    "inputPlaceholder": "搜索产品、模型、案例或资讯…",
+    "hint": "输入关键词开始搜索",
+    "empty": "未找到相关结果",
+    "invalidTarget": "无法打开该结果详情",
+    "filter": {
+      "all": "全部",
+      "product": "产品",
+      "model": "模型",
+      "case": "案例",
+      "news": "资讯"
+    },
+    "type": {
+      "product": "产品服务",
+      "model": "模型服务",
+      "case": "案例中心",
+      "news": "行业资讯",
+      "unknown": "其他"
+    }
+  },
   "portal": {
     "home": {
       "banner": {

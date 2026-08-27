@@ -5,6 +5,8 @@ import type { PortalNews } from '#/types/portal/home/news';
 import type { PortalProductRecommend } from '#/types/portal/home/product';
 import type { PortalServiceIntro } from '#/types/portal/home/service';
 
+import dayjs from 'dayjs';
+
 import { formatDate, isEmpty, isHttpUrl } from '@vben/utils';
 
 /** 门户内容启用 / 已发布 / 上架 / 审核通过 */
@@ -249,6 +251,10 @@ export function sanitizePublishTime(publishTime?: string): string {
 export function formatNewsDateTime(publishTime?: string): string {
   const normalized = sanitizePublishTime(publishTime);
   if (!normalized) {
+    return '';
+  }
+  // Mock/脏数据解析失败时直接返回空，避免触发 formatDate 的 console.error
+  if (!dayjs(normalized).isValid()) {
     return '';
   }
   return formatDate(normalized, 'YYYY-MM-DD HH:mm');

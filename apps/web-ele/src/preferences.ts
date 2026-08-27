@@ -56,11 +56,16 @@ export const overridesPreferences = defineOverridesPreferences({
     showRefresh: false,
   },
   // 顶栏工具：按甲方要求去掉语言、时区、锁屏；退出放到用户下拉
+  // 隐藏 Vben 菜单全局搜索，改用应用层 views/search 业务搜索
   widget: {
+    globalSearch: false,
     languageToggle: false,
     lockScreen: false,
     logoutButtonPosition: 'user-dropdown',
     timezone: false,
+  },
+  shortcutKeys: {
+    globalSearch: false,
   },
   // 默认浅色 + 内置「紫罗兰」主题色（仅影响按钮 / Tag 等组件色，不影响门户首页品牌色）
   theme: {

@@ -22,6 +22,7 @@ import { useAccessStore, useUserStore } from '@vben/stores';
 
 import { $t } from '#/locales';
 import { useAuthStore } from '#/store';
+import PortalSearchBar from '#/views/search/index.vue';
 
 import '#/views/_shared/styles/portal.css';
 
@@ -64,6 +65,12 @@ watch(
   },
   { immediate: true },
 );
+
+// 强制关闭 Vben Ctrl+K 菜单搜索（本地 preferences 缓存会覆盖 preferences.ts 的 overrides）
+updatePreferences({
+  widget: { globalSearch: false },
+  shortcutKeys: { globalSearch: false },
+});
 
 const notifications = ref<NotificationItem[]>([
   {
@@ -313,6 +320,10 @@ watch(
               </button>
             </span>
           </Transition>
+        </template>
+        <!-- 顶栏右侧靠前：业务全局搜索（替代已隐藏的 Vben Ctrl+K 菜单搜索） -->
+        <template #header-right-1>
+          <PortalSearchBar />
         </template>
         <template #user-dropdown>
           <!-- 未登录：登录 / 注册入口 -->

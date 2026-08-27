@@ -750,6 +750,28 @@
       }
     }
   },
+  "search": {
+    "triggerAria": "Open global search",
+    "triggerPlaceholder": "Search services…",
+    "inputPlaceholder": "Search products, models, cases or news…",
+    "hint": "Type a keyword to search",
+    "empty": "No matching results",
+    "invalidTarget": "Unable to open this result",
+    "filter": {
+      "all": "All",
+      "product": "Product",
+      "model": "Model",
+      "case": "Case",
+      "news": "News"
+    },
+    "type": {
+      "product": "Product",
+      "model": "Model",
+      "case": "Case",
+      "news": "News",
+      "unknown": "Other"
+    }
+  },
   "portal": {
     "home": {
       "banner": {
