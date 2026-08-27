@@ -349,6 +349,135 @@
       }
     }
   },
+  "monitoring": {
+    "content": {
+      "home": {
+        "common": {
+          "search": "Search",
+          "reset": "Reset",
+          "refresh": "Refresh",
+          "export": "Export",
+          "empty": "No data",
+          "actionPending": "「{0}」 is under development",
+          "filter": {
+            "keyword": "Keyword",
+            "enableStatus": "Enable status",
+            "auditStatus": "Audit status",
+            "statusAll": "All",
+            "auditAll": "All",
+            "scopeHint": "Filters apply to the current page only, not the full dataset. Conditions still apply after you change pages."
+          },
+          "status": {
+            "enabled": "Enabled",
+            "disabled": "Disabled",
+            "unknown": "—"
+          },
+          "audit": {
+            "none": "—",
+            "pending": "Pending",
+            "passed": "Approved",
+            "rejected": "Rejected",
+            "unknown": "—"
+          },
+          "fields": {
+            "sortOrder": "Sort",
+            "sortIndex": "No.",
+            "sortEdit": "Sort",
+            "title": "Title",
+            "image": "Image",
+            "coverImage": "Cover",
+            "linkUrl": "Link",
+            "content": "Content",
+            "summary": "Summary",
+            "status": "Status",
+            "auditStatus": "Review",
+            "viewCount": "Views",
+            "publishTime": "Published at",
+            "createTime": "Created at",
+            "updateTime": "Updated at",
+            "actions": "Actions"
+          },
+          "actions": {
+            "edit": "Edit",
+            "view": "View",
+            "preview": "Preview",
+            "offline": "Disable",
+            "delete": "Delete",
+            "submitAudit": "Submit for review"
+          },
+          "saveSort": "Save sort",
+          "saveSortSuccess": "Sort order saved",
+          "saveSortHint": "Unsaved sort changes on this page",
+          "offlineConfirm": "Disable \"{0}\"?",
+          "offlineSuccess": "\"{0}\" has been disabled",
+          "submitAuditConfirm": "Submit \"{0}\" for review?",
+          "submitAuditSuccess": "\"{0}\" has been submitted for review",
+          "form": {
+            "createTitle": "Add content",
+            "editTitle": "Edit content",
+            "viewTitle": "View content",
+            "titleRequired": "Title is required",
+            "sortRequired": "Sort order is required",
+            "titlePlaceholder": "Enter title",
+            "contentPlaceholder": "Enter content",
+            "imageHint": "JPG / JPEG / PNG only, one file, max 5MB",
+            "imageTypeInvalid": "JPG, JPEG and PNG only",
+            "imageLimit": "Only one image is allowed",
+            "dragDropText": "Drop file here or ",
+            "dragDropClick": "click to upload",
+            "imageSizeInvalid": "Max file size is 5MB",
+            "uploadFail": "Upload failed",
+            "sortHint": "Lower values appear first",
+            "cancel": "Cancel",
+            "close": "Close",
+            "submit": "Save",
+            "createSuccess": "Created successfully",
+            "updateSuccess": "Saved successfully"
+          }
+        },
+        "banner": {
+          "eyebrow": "Content · Home",
+          "title": "Banners",
+          "desc": "Manage home banners: sort order, links, status and review.",
+          "add": "Add banner",
+          "addPending": "Add banner is under development",
+          "keywordPlaceholder": "Search by banner title"
+        },
+        "bizService": {
+          "eyebrow": "Content · Home",
+          "title": "Services",
+          "desc": "Manage home service cards: sort, cover image and status.",
+          "add": "Add service",
+          "addPending": "Add service is under development",
+          "keywordPlaceholder": "Search by service title"
+        },
+        "news": {
+          "eyebrow": "Content · Home",
+          "title": "News",
+          "desc": "Manage industry news: summary, cover, views and publish time.",
+          "add": "Add news",
+          "addPending": "Add news is under development",
+          "keywordPlaceholder": "Search by news title"
+        },
+        "billing": {
+          "eyebrow": "Content · Home",
+          "title": "Billing guide",
+          "desc": "Manage billing guide entries: sort order and content summary.",
+          "add": "Add billing item",
+          "addPending": "Add billing item is under development",
+          "keywordPlaceholder": "Search by title"
+        },
+        "about": {
+          "eyebrow": "Content · Home",
+          "title": "About us",
+          "desc": "Manage about-us blocks: sort, cover and content summary.",
+          "add": "Add content",
+          "addPending": "Add content is under development",
+          "keywordPlaceholder": "Search by title"
+        }
+      }
+    }
+  },
   "service": {
     "product": {
       "eyebrow": "Portal · Products",

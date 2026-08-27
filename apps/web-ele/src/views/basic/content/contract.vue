@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus';
 
-import { contracts } from '#/views/_shared/data/basic-content';
+/** 合同列表（待对接接口） */
+const contracts: never[] = [];
 
 defineOptions({ name: 'ContentContract' });
 

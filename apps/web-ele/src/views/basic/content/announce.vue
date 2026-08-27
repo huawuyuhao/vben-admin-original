@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus';
 
-import { announces } from '#/views/_shared/data/basic-content';
+/** 活动公告列表（待对接接口） */
+const announces: never[] = [];
 
 defineOptions({ name: 'ContentAnnounce' });
 </script>

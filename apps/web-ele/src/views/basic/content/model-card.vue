@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus';
 
-import { modelTemplates } from '#/views/_shared/data/basic-content';
+/** 模型卡片模板列表（待对接接口） */
+const modelTemplates: never[] = [];
 
 defineOptions({ name: 'ContentModelCard' });
 </script>

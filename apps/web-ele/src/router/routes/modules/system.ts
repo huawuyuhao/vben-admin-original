@@ -258,43 +258,62 @@ const routes: RouteRecordRaw[] = [
             },
             name: 'MonitoringContent',
             path: '/monitoring/content',
-            redirect: '/monitoring/content/banner',
+            redirect: '/monitoring/content/home/banner',
             children: [
               {
-                name: 'ContentBanner',
-                path: '/monitoring/content/banner',
-                component: () => import('#/views/basic/content/banner.vue'),
-                meta: { icon: 'ep:picture', order: 1, title: '轮播图内容管理' },
-              },
-              {
-                name: 'ContentBizIntro',
-                path: '/monitoring/content/biz-intro',
-                component: () => import('#/views/basic/content/biz-intro.vue'),
                 meta: {
-                  icon: 'ep:briefcase',
-                  order: 2,
-                  title: '业务介绍内容管理',
+                  icon: 'ep:home-filled',
+                  order: 1,
+                  title: '首页管理',
                 },
-              },
-              {
-                name: 'ContentNews',
-                path: '/monitoring/content/news',
-                component: () => import('#/views/basic/content/news.vue'),
-                meta: {
-                  icon: 'ep:reading',
-                  order: 3,
-                  title: '行业资讯内容管理',
-                },
-              },
-              {
-                name: 'ContentAbout',
-                path: '/monitoring/content/about',
-                component: () => import('#/views/basic/content/about.vue'),
-                meta: {
-                  icon: 'ep:info-filled',
-                  order: 4,
-                  title: '关于我们内容管理',
-                },
+                name: 'MonitoringContentHome',
+                path: '/monitoring/content/home',
+                redirect: '/monitoring/content/home/banner',
+                children: [
+                  {
+                    name: 'ContentHomeBanner',
+                    path: '/monitoring/content/home/banner',
+                    component: () =>
+                      import('#/views/monitoring/content/home/banner.vue'),
+                    meta: { icon: 'ep:picture', order: 1, title: '轮播图' },
+                  },
+                  {
+                    name: 'ContentHomeBizService',
+                    path: '/monitoring/content/home/biz-service',
+                    component: () =>
+                      import('#/views/monitoring/content/home/biz-service.vue'),
+                    meta: {
+                      icon: 'ep:briefcase',
+                      order: 2,
+                      title: '业务服务',
+                    },
+                  },
+                  {
+                    name: 'ContentHomeNews',
+                    path: '/monitoring/content/home/news',
+                    component: () =>
+                      import('#/views/monitoring/content/home/news.vue'),
+                    meta: { icon: 'ep:reading', order: 3, title: '行业资讯' },
+                  },
+                  {
+                    name: 'ContentHomeBilling',
+                    path: '/monitoring/content/home/billing',
+                    component: () =>
+                      import('#/views/monitoring/content/home/billing.vue'),
+                    meta: { icon: 'ep:coin', order: 4, title: '计费说明' },
+                  },
+                  {
+                    name: 'ContentHomeAbout',
+                    path: '/monitoring/content/home/about',
+                    component: () =>
+                      import('#/views/monitoring/content/home/about.vue'),
+                    meta: {
+                      icon: 'ep:info-filled',
+                      order: 5,
+                      title: '关于我们',
+                    },
+                  },
+                ],
               },
               {
                 name: 'ContentModelCard',
@@ -302,7 +321,7 @@ const routes: RouteRecordRaw[] = [
                 component: () => import('#/views/basic/content/model-card.vue'),
                 meta: {
                   icon: 'ep:grid',
-                  order: 5,
+                  order: 2,
                   title: '应用模型卡片管理',
                 },
               },
@@ -310,7 +329,7 @@ const routes: RouteRecordRaw[] = [
                 name: 'ContentCase',
                 path: '/monitoring/content/case',
                 component: () => import('#/views/basic/content/case.vue'),
-                meta: { icon: 'ep:collection', order: 6, title: '案例内容管理' },
+                meta: { icon: 'ep:collection', order: 3, title: '案例内容管理' },
               },
               {
                 name: 'ContentFaq',
@@ -318,7 +337,7 @@ const routes: RouteRecordRaw[] = [
                 component: () => import('#/views/basic/content/faq.vue'),
                 meta: {
                   icon: 'ep:question-filled',
-                  order: 7,
+                  order: 4,
                   title: '常见问题管理',
                 },
               },
@@ -328,7 +347,7 @@ const routes: RouteRecordRaw[] = [
                 component: () => import('#/views/basic/content/announce.vue'),
                 meta: {
                   icon: 'ep:bell',
-                  order: 8,
+                  order: 5,
                   title: '活动公告管理',
                 },
               },
@@ -338,7 +357,7 @@ const routes: RouteRecordRaw[] = [
                 component: () => import('#/views/basic/content/partner.vue'),
                 meta: {
                   icon: 'ep:office-building',
-                  order: 9,
+                  order: 6,
                   title: '合作伙伴展示管理',
                 },
               },
@@ -348,19 +367,8 @@ const routes: RouteRecordRaw[] = [
                 component: () => import('#/views/basic/content/legal.vue'),
                 meta: {
                   icon: 'ep:document-checked',
-                  order: 10,
+                  order: 7,
                   title: '法律条款与协议管理',
-                },
-              },
-              {
-                name: 'ContentHomeLayout',
-                path: '/monitoring/content/home-layout',
-                component: () =>
-                  import('#/views/basic/content/home-layout.vue'),
-                meta: {
-                  icon: 'ep:menu',
-                  order: 11,
-                  title: '首页排版管理',
                 },
               },
               {
@@ -369,7 +377,7 @@ const routes: RouteRecordRaw[] = [
                 component: () => import('#/views/basic/content/audit.vue'),
                 meta: {
                   icon: 'ep:finished',
-                  order: 12,
+                  order: 8,
                   title: '门户内容审核管理',
                 },
               },
@@ -379,7 +387,7 @@ const routes: RouteRecordRaw[] = [
                 component: () => import('#/views/basic/content/product.vue'),
                 meta: {
                   icon: 'ep:cpu',
-                  order: 13,
+                  order: 9,
                   title: '算力产品管理',
                 },
               },
@@ -389,7 +397,7 @@ const routes: RouteRecordRaw[] = [
                 component: () => import('#/views/basic/content/contract.vue'),
                 meta: {
                   icon: 'ep:notebook',
-                  order: 14,
+                  order: 10,
                   title: '算力合同',
                 },
               },
@@ -400,7 +408,7 @@ const routes: RouteRecordRaw[] = [
                   import('#/views/basic/content/settlement.vue'),
                 meta: {
                   icon: 'ep:coin',
-                  order: 15,
+                  order: 11,
                   title: '算力结算',
                 },
               },

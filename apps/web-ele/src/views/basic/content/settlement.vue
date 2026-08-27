@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus';
 
-import { settlements } from '#/views/_shared/data/basic-content';
+/** 结算列表（待对接接口） */
+const settlements: never[] = [];
 
 defineOptions({ name: 'ContentSettlement' });
 </script>

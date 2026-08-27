@@ -3,7 +3,8 @@ import { ref } from 'vue';
 
 import { ElMessage } from 'element-plus';
 
-import { partners } from '#/views/_shared/data/basic-content';
+/** 合作伙伴列表（待对接接口） */
+const partners: never[] = [];
 
 defineOptions({ name: 'ContentPartner' });
 

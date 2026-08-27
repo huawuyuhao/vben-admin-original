@@ -3,7 +3,8 @@ import { ref } from 'vue';
 
 import { ElMessage } from 'element-plus';
 
-import { faqs } from '#/views/_shared/data/basic-content';
+/** 常见问题列表（待对接接口） */
+const faqs: never[] = [];
 
 defineOptions({ name: 'ContentFaq' });
 

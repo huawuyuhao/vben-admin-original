@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus';
 
-import { cases } from '#/views/_shared/data/basic-content';
+/** 案例列表（待对接接口） */
+const cases: never[] = [];
 
 defineOptions({ name: 'ContentCase' });
 </script>

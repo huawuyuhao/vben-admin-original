@@ -349,6 +349,135 @@
       }
     }
   },
+  "monitoring": {
+    "content": {
+      "home": {
+        "common": {
+          "search": "查询",
+          "reset": "重置",
+          "refresh": "刷新",
+          "export": "导出",
+          "empty": "暂无数据",
+          "actionPending": "「{0}」功能开发中",
+          "filter": {
+            "keyword": "关键词",
+            "enableStatus": "启用状态",
+            "auditStatus": "审核状态",
+            "statusAll": "全部",
+            "auditAll": "全部",
+            "scopeHint": "查询条件仅筛选当前页列表，不会检索全部数据；翻页后条件仍作用于新加载的本页数据。"
+          },
+          "status": {
+            "enabled": "启用",
+            "disabled": "停用",
+            "unknown": "—"
+          },
+          "audit": {
+            "none": "—",
+            "pending": "待审核",
+            "passed": "已通过",
+            "rejected": "已驳回",
+            "unknown": "—"
+          },
+          "fields": {
+            "sortOrder": "排序",
+            "sortIndex": "序号",
+            "sortEdit": "排序",
+            "title": "标题",
+            "image": "图片",
+            "coverImage": "封面图",
+            "linkUrl": "跳转链接",
+            "content": "内容",
+            "summary": "摘要",
+            "status": "状态",
+            "auditStatus": "审核状态",
+            "viewCount": "浏览量",
+            "publishTime": "发布时间",
+            "createTime": "创建时间",
+            "updateTime": "更新时间",
+            "actions": "操作"
+          },
+          "actions": {
+            "edit": "编辑",
+            "view": "查看",
+            "preview": "预览",
+            "offline": "下线",
+            "delete": "删除",
+            "submitAudit": "提交审核"
+          },
+          "saveSort": "保存排序",
+          "saveSortSuccess": "排序已保存",
+          "saveSortHint": "当前页有未保存的排序变更",
+          "offlineConfirm": "确定下线「{0}」吗？",
+          "offlineSuccess": "「{0}」已下线",
+          "submitAuditConfirm": "确定提交「{0}」审核吗？",
+          "submitAuditSuccess": "「{0}」已提交审核",
+          "form": {
+            "createTitle": "新增内容",
+            "editTitle": "编辑内容",
+            "viewTitle": "查看内容",
+            "titleRequired": "请输入标题",
+            "sortRequired": "请输入排序",
+            "titlePlaceholder": "请输入标题",
+            "contentPlaceholder": "请输入内容详情",
+            "imageHint": "仅支持 JPG / JPEG / PNG，单张上传，大小不超过 5MB",
+            "imageTypeInvalid": "仅支持 JPG、JPEG、PNG 格式",
+            "imageLimit": "最多只能上传 1 张图片",
+            "dragDropText": "将文件拖到此处，或",
+            "dragDropClick": "点击上传",
+            "imageSizeInvalid": "图片大小不能超过 5MB",
+            "uploadFail": "图片上传失败",
+            "sortHint": "数值越小越靠前",
+            "cancel": "取消",
+            "close": "关闭",
+            "submit": "保存",
+            "createSuccess": "新增成功",
+            "updateSuccess": "保存成功"
+          }
+        },
+        "banner": {
+          "eyebrow": "内容管理 · 首页管理",
+          "title": "轮播图",
+          "desc": "管理首页轮播图，支持排序、跳转链接、启用状态与审核状态。",
+          "add": "新增轮播图",
+          "addPending": "新增轮播图功能开发中",
+          "keywordPlaceholder": "请输入轮播图标题"
+        },
+        "bizService": {
+          "eyebrow": "内容管理 · 首页管理",
+          "title": "业务服务",
+          "desc": "管理首页业务服务展示内容，支持排序、封面与启用状态。",
+          "add": "新增业务服务",
+          "addPending": "新增业务服务功能开发中",
+          "keywordPlaceholder": "请输入业务服务标题"
+        },
+        "news": {
+          "eyebrow": "内容管理 · 首页管理",
+          "title": "行业资讯",
+          "desc": "管理首页行业资讯，支持摘要、封面、浏览量与发布时间。",
+          "add": "新增资讯",
+          "addPending": "新增资讯功能开发中",
+          "keywordPlaceholder": "请输入资讯标题"
+        },
+        "billing": {
+          "eyebrow": "内容管理 · 首页管理",
+          "title": "计费说明",
+          "desc": "管理首页计费说明条目，支持排序与内容摘要展示。",
+          "add": "新增计费说明",
+          "addPending": "新增计费说明功能开发中",
+          "keywordPlaceholder": "请输入计费说明标题"
+        },
+        "about": {
+          "eyebrow": "内容管理 · 首页管理",
+          "title": "关于我们",
+          "desc": "管理首页关于我们板块，支持排序、封面与内容摘要。",
+          "add": "新增内容",
+          "addPending": "新增内容功能开发中",
+          "keywordPlaceholder": "请输入内容标题"
+        }
+      }
+    }
+  },
   "service": {
     "product": {
       "eyebrow": "门户服务 · 产品",

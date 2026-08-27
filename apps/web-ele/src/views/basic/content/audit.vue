@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus';
 
-import { auditList } from '#/views/_shared/data/basic-content';
+/** 审核列表（待对接接口） */
+const auditList: never[] = [];
 
 defineOptions({ name: 'ContentAudit' });
 

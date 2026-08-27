@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus';
 
-import { products } from '#/views/_shared/data/basic-content';
+/** 算力产品列表（待对接接口） */
+const products: never[] = [];
 
 defineOptions({ name: 'ContentProduct' });
 
