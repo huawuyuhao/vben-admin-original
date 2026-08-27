@@ -40,11 +40,23 @@ const routes: RouteRecordRaw[] = [
       {
         name: 'ServiceModel',
         path: '/service/model',
-        component: () => import('#/views/model/index.vue'),
+        component: () => import('#/views/service/model/index.vue'),
         meta: {
           icon: 'ep:cpu',
           order: 2,
           title: '模型服务',
+        },
+      },
+      {
+        name: 'ServiceModelDetail',
+        path: '/service/model/:id',
+        component: () => import('#/views/service/model/detail/index.vue'),
+        meta: {
+          // 详情页不进侧栏，但激活态仍落在「模型服务」
+          activePath: '/service/model',
+          hideInMenu: true,
+          hideInTab: false,
+          title: '模型详情',
         },
       },
       {

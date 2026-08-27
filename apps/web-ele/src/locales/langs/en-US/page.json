@@ -580,6 +580,82 @@
           "description": "Description"
         }
       }
+    },
+    "model": {
+      "eyebrow": "Portal · Models",
+      "title": "Model Services",
+      "desc": "Browse enabled models as cards. Search, compare, review, and export info templates.",
+      "searchPlaceholder": "Search by model name…",
+      "search": "Search",
+      "refresh": "Refresh",
+      "empty": "No matching models",
+      "viewDetail": "View details",
+      "scorePending": "No rating",
+      "callPending": "—",
+      "fields": {
+        "score": "Score",
+        "callCount": "Calls",
+        "description": "Description"
+      },
+      "compare": {
+        "select": "Compare",
+        "action": "Compare ({0})",
+        "title": "Model parameter comparison",
+        "paramKey": "Parameter",
+        "empty": "No comparison data",
+        "minTip": "Select at least 2 models to compare",
+        "maxTip": "You can compare at most {0} models",
+        "modelCount": "{0} models selected"
+      },
+      "evaluate": {
+        "action": "Review",
+        "title": "Submit model review",
+        "scoreLabel": "Score",
+        "contentLabel": "Review",
+        "contentPlaceholder": "Share your experience and suggestions…",
+        "scoreRequired": "Please select a score",
+        "contentRequired": "Please enter a review",
+        "contentLength": "Review must be 2–500 characters",
+        "submit": "Submit",
+        "success": "Review submitted; it appears after admin approval",
+        "auditTip": "Reviews are shown publicly only after administrator approval."
+      },
+      "export": {
+        "action": "Export models",
+        "confirm": "Confirm export ({0})",
+        "cancel": "Cancel export",
+        "selectAll": "Select all on page",
+        "select": "Export",
+        "tip": "Check the models to export, then confirm",
+        "success": "Model info exported",
+        "failed": "Export failed. Please try again",
+        "empty": "Please select at least one model",
+        "noData": "No model data to export"
+      },
+      "detail": {
+        "eyebrow": "Portal · Model Detail",
+        "title": "Model Detail",
+        "desc": "View description, parameters, score, and approved reviews.",
+        "back": "Back to list",
+        "empty": "Model not found or disabled",
+        "infoTitle": "Basic information",
+        "paramsTitle": "Parameters",
+        "paramsEmpty": "No parameters available",
+        "evalTitle": "User reviews",
+        "evalEmpty": "No approved reviews yet",
+        "evalAnonymous": "Anonymous",
+        "valueEmpty": "—",
+        "statusOn": "Enabled",
+        "statusOff": "Disabled",
+        "fields": {
+          "modelId": "Model ID",
+          "modelName": "Model name",
+          "status": "Status",
+          "createTime": "Created at",
+          "updateTime": "Updated at",
+          "description": "Description"
+        }
+      }
     }
   },
   "portal": {

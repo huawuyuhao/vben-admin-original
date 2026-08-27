@@ -580,6 +580,82 @@
           "description": "产品简介"
         }
       }
+    },
+    "model": {
+      "eyebrow": "门户服务 · 模型",
+      "title": "模型服务",
+      "desc": "浏览启用模型卡片，支持搜索、多模型对比、评价与信息模板导出。",
+      "searchPlaceholder": "按模型名称搜索…",
+      "search": "查询",
+      "refresh": "刷新",
+      "empty": "暂无匹配模型",
+      "viewDetail": "查看详情",
+      "scorePending": "暂无评分",
+      "callPending": "—",
+      "fields": {
+        "score": "评分",
+        "callCount": "调用量",
+        "description": "模型简介"
+      },
+      "compare": {
+        "select": "对比",
+        "action": "对比（{0}）",
+        "title": "模型参数对比",
+        "paramKey": "参数项",
+        "empty": "暂无对比数据",
+        "minTip": "请至少选择 2 个模型进行对比",
+        "maxTip": "最多选择 {0} 个模型进行对比",
+        "modelCount": "已选 {0} 个模型"
+      },
+      "evaluate": {
+        "action": "评价",
+        "title": "提交模型评价",
+        "scoreLabel": "评分",
+        "contentLabel": "评价内容",
+        "contentPlaceholder": "请描述使用体验与建议…",
+        "scoreRequired": "请选择评分",
+        "contentRequired": "请填写评价内容",
+        "contentLength": "评价内容长度需在 2-500 字",
+        "submit": "提交评价",
+        "success": "评价已提交，审核通过后展示",
+        "auditTip": "评价提交后需管理员审核通过才会对外展示。"
+      },
+      "export": {
+        "action": "导出模型",
+        "confirm": "确认导出（{0}）",
+        "cancel": "取消导出",
+        "selectAll": "本页全选",
+        "select": "导出",
+        "tip": "请勾选要导出的模型，然后点击确认导出",
+        "success": "模型信息已导出",
+        "failed": "导出失败，请稍后重试",
+        "empty": "请先勾选要导出的模型",
+        "noData": "当前无可导出的模型数据"
+      },
+      "detail": {
+        "eyebrow": "门户服务 · 模型详情",
+        "title": "模型详情",
+        "desc": "查看模型简介、参数、评分与已审核评价。",
+        "back": "返回列表",
+        "empty": "模型不存在或已停用",
+        "infoTitle": "基本信息",
+        "paramsTitle": "模型参数",
+        "paramsEmpty": "暂无参数信息",
+        "evalTitle": "用户评价",
+        "evalEmpty": "暂无已审核评价",
+        "evalAnonymous": "匿名用户",
+        "valueEmpty": "—",
+        "statusOn": "启用",
+        "statusOff": "停用",
+        "fields": {
+          "modelId": "模型 ID",
+          "modelName": "模型名称",
+          "status": "状态",
+          "createTime": "创建时间",
+          "updateTime": "更新时间",
+          "description": "模型简介"
+        }
+      }
     }
   },
   "portal": {
