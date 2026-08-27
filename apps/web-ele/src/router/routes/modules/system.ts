@@ -384,7 +384,8 @@ const routes: RouteRecordRaw[] = [
               {
                 name: 'ContentProduct',
                 path: '/monitoring/content/product',
-                component: () => import('#/views/basic/content/product.vue'),
+                component: () =>
+                  import('#/views/monitoring/content/product/index.vue'),
                 meta: {
                   icon: 'ep:cpu',
                   order: 9,

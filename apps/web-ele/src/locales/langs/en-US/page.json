@@ -475,6 +475,45 @@
           "addPending": "Add content is under development",
           "keywordPlaceholder": "Search by title"
         }
+      },
+      "product": {
+        "eyebrow": "Content · Compute products",
+        "title": "Compute product management",
+        "desc": "Browse and manage portal compute products. Filter by name and shelf status; cards show product overview.",
+        "add": "Add product",
+        "searchPlaceholder": "Search by product name…",
+        "shelfStatusLabel": "Shelf status",
+        "empty": "No matching products",
+        "viewDetail": "View details",
+        "detailTitle": "Product details",
+        "pricePending": "Price on request",
+        "greenPower": "Green power {0}",
+        "recommendLevel": "Rec {0}",
+        "publishTime": "Published {0}",
+        "shelfStatus": {
+          "all": "All",
+          "on": "On shelf",
+          "off": "Off shelf",
+          "unknown": "—"
+        },
+        "auditStatus": {
+          "pending": "Pending review",
+          "passed": "Approved",
+          "rejected": "Rejected",
+          "unknown": "—"
+        },
+        "fields": {
+          "productId": "Product ID",
+          "description": "Description",
+          "price": "Price",
+          "greenPowerRatio": "Green power ratio",
+          "recommendLevel": "Recommend level",
+          "shelfStatus": "Shelf status",
+          "auditStatus": "Review status",
+          "enterpriseId": "Supplier enterprise ID",
+          "publishTime": "Published at",
+          "tenantId": "Tenant ID"
+        }
       }
     }
   },

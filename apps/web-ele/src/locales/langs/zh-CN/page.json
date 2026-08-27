@@ -475,6 +475,45 @@
           "addPending": "新增内容功能开发中",
           "keywordPlaceholder": "请输入内容标题"
         }
+      },
+      "product": {
+        "eyebrow": "内容管理 · 算力产品",
+        "title": "算力产品管理",
+        "desc": "查看与管理门户算力产品，支持按名称与上下架状态筛选，卡片展示产品概览。",
+        "add": "新增产品",
+        "searchPlaceholder": "搜索产品名称…",
+        "shelfStatusLabel": "上下架状态",
+        "empty": "暂无匹配产品",
+        "viewDetail": "查看详情",
+        "detailTitle": "产品详情",
+        "pricePending": "价格面议",
+        "greenPower": "绿电占比 {0}",
+        "recommendLevel": "荐 {0}",
+        "publishTime": "发布于 {0}",
+        "shelfStatus": {
+          "all": "全部",
+          "on": "已上架",
+          "off": "已下架",
+          "unknown": "—"
+        },
+        "auditStatus": {
+          "pending": "待审核",
+          "passed": "审核通过",
+          "rejected": "审核不通过",
+          "unknown": "—"
+        },
+        "fields": {
+          "productId": "产品 ID",
+          "description": "产品简介",
+          "price": "价格",
+          "greenPowerRatio": "绿电占比",
+          "recommendLevel": "推荐度",
+          "shelfStatus": "上下架状态",
+          "auditStatus": "审核状态",
+          "enterpriseId": "供给企业 ID",
+          "publishTime": "发布时间",
+          "tenantId": "租户编号"
+        }
       }
     }
   },
