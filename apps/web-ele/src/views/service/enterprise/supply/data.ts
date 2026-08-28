@@ -3,7 +3,7 @@ import type {
   SupplyDeviceItem,
   SupplyDeviceListResult,
   SupplyDeviceStatus,
-} from '#/types/enterprise/supply';
+} from '#/types/service/enterprise/supply';
 
 import { formatDate, isEmpty, isHttpUrl } from '@vben/utils';
 

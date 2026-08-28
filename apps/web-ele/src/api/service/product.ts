@@ -1,6 +1,4 @@
 import type {
-  ProductCollectInfo,
-  ProductCollectListParams,
   ProductInfo,
   ProductListParams,
   ProductListResponseBody,
@@ -86,38 +84,6 @@ export async function getProductListApi(params: ProductListParams) {
   //   '/product/list',
   //   { params, responseReturn: 'body' },
   // );
-
-  if (!isProductApiSuccess(body?.code)) {
-    const message = String(body?.msg || 'Request failed');
-    ElMessage.error(message);
-    throw new Error(message);
-  }
-
-  return parseProductListBody(body);
-}
-
-/**
- * 我的收藏列表分页查询
- * 开发态走 Apifox Mock：GET /mock/product/collect/list
- * 正式接口：GET /product/collect/list
- * @param params page / pageSize
- * @returns 扁平分页结果（records 含 collectId / collectTime 等）
- */
-export async function getProductCollectListApi(
-  params: ProductCollectListParams,
-) {
-  const body = await rootRequestClient.get<
-    ProductListResponseBody<ProductCollectInfo>
-  >('/mock/product/collect/list', {
-    params,
-    responseReturn: 'body',
-  });
-  // const body = await rootRequestClient.get<
-  //   ProductListResponseBody<ProductCollectInfo>
-  // >('/product/collect/list', {
-  //   params,
-  //   responseReturn: 'body',
-  // });
 
   if (!isProductApiSuccess(body?.code)) {
     const message = String(body?.msg || 'Request failed');

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { SupplyProductItem } from '#/types/enterprise/product';
+import type { SupplyProductItem } from '#/types/service/enterprise/products';
 
 import { onMounted, ref, watch } from 'vue';
 
@@ -12,7 +12,7 @@ import {
   getSupplyProductListApi,
   getSupplyProductResourceStatusApi,
   shelfSupplyProductApi,
-} from '#/api/enterprise/product';
+} from '#/api/service/enterprise/products';
 
 import {
   PRODUCT_PAGE_SIZE,

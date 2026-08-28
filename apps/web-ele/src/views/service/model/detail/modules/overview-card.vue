@@ -6,6 +6,7 @@ import { computed } from 'vue';
 import { $t } from '@vben/locales';
 
 import {
+  canEvaluateModel,
   formatModelCallCount,
   formatModelScore,
   hasModelIcon,
@@ -100,7 +101,11 @@ const callText = computed(
           <el-button :loading="exporting" @click="emit('export')">
             {{ $t('page.service.model.export.action') }}
           </el-button>
-          <el-button type="primary" @click="emit('evaluate')">
+          <el-button
+            v-if="canEvaluateModel(model)"
+            type="primary"
+            @click="emit('evaluate')"
+          >
             {{ $t('page.service.model.evaluate.action') }}
           </el-button>
         </div>

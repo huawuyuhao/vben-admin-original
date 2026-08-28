@@ -301,11 +301,115 @@
       }
     },
     "favorites": {
-      "eyebrow": "My Information Center",
+      "eyebrow": "Mine",
       "title": "My Favorites",
       "desc": "Manage favorited compute products. Unfavorite or create a demand intent.",
       "empty": "No favorited products yet",
       "refresh": "Refresh"
+    },
+    "loginLog": {
+      "eyebrow": "My Information Center",
+      "title": "Login Log",
+      "desc": "View system access records. Filter by account, IP, location, status, and time, and export the list.",
+      "search": "Search",
+      "reset": "Reset",
+      "refresh": "Refresh",
+      "expand": "Expand",
+      "collapse": "Collapse",
+      "empty": "No login logs yet",
+      "valueEmpty": "—",
+      "filter": {
+        "userName": "Username",
+        "userNamePlaceholder": "Enter username",
+        "ipaddr": "Login IP",
+        "ipaddrPlaceholder": "Enter login IP",
+        "loginLocation": "Location",
+        "loginLocationPlaceholder": "Enter login location",
+        "status": "Status",
+        "statusAll": "All statuses",
+        "loginTime": "Access Time",
+        "loginTimeStart": "Start time",
+        "loginTimeEnd": "End time"
+      },
+      "status": {
+        "success": "Success",
+        "fail": "Failure",
+        "unknown": "—"
+      },
+      "fields": {
+        "infoId": "Access ID",
+        "userName": "Username",
+        "ipaddr": "Login IP",
+        "loginLocation": "Location",
+        "browser": "Browser",
+        "os": "OS",
+        "status": "Status",
+        "msg": "Message",
+        "loginTime": "Access Time"
+      },
+      "export": {
+        "btn": "Export",
+        "success": "Export succeeded",
+        "noUrl": "Download URL not found"
+      }
+    },
+    "feedback": {
+      "eyebrow": "My Information Center",
+      "title": "Feedback",
+      "desc": "Submit suggestions or issues and track handling progress and replies.",
+      "search": "Search",
+      "reset": "Reset",
+      "refresh": "Refresh",
+      "add": "Submit Feedback",
+      "empty": "No feedback yet",
+      "valueEmpty": "—",
+      "filter": {
+        "status": "Status",
+        "statusAll": "All statuses"
+      },
+      "status": {
+        "pending": "Pending",
+        "processing": "Processing",
+        "done": "Resolved",
+        "unknown": "—"
+      },
+      "fields": {
+        "feedbackId": "Feedback ID",
+        "content": "Content",
+        "images": "Images",
+        "status": "Status",
+        "replyContent": "Reply",
+        "replyTime": "Reply Time",
+        "createTime": "Submitted At",
+        "actions": "Actions"
+      },
+      "actions": {
+        "detail": "Details"
+      },
+      "detail": {
+        "title": "Feedback Details",
+        "close": "Close"
+      },
+      "form": {
+        "title": "Submit Feedback",
+        "content": "Content",
+        "contentPlaceholder": "Describe your issue or suggestion (at least 5 characters)",
+        "contentRequired": "Please enter feedback content",
+        "contentMin": "Content must be at least 5 characters",
+        "contentMax": "Content must be at most {0} characters",
+        "images": "Images",
+        "imagesTip": "Up to {0} images, jpg/png, max {1}MB each; drag or click to upload",
+        "dragDropText": "Drop images here, or",
+        "dragDropClick": "click to upload",
+        "imageTypeInvalid": "Only jpg / png / jpeg are supported",
+        "imageSizeInvalid": "Each image must be within {0}MB",
+        "imageLimit": "You can upload at most {0} images",
+        "uploadFail": "Image upload failed. Please try again",
+        "uploading": "Images are uploading. Please wait…",
+        "cancel": "Cancel",
+        "submit": "Submit",
+        "submitSuccess": "Feedback submitted"
+      }
     },
     "register": {
       "enterprise": {

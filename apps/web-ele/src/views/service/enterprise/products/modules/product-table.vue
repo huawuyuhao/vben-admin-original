@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { SupplyProductItem } from '#/types/enterprise/product';
+import type { SupplyProductItem } from '#/types/service/enterprise/products';
 
 import { $t } from '@vben/locales';
 
@@ -49,7 +49,7 @@ const emit = defineEmits<{
     >
       <el-table-column
         :label="$t('page.service.enterprise.products.fields.productName')"
-        min-width="160"
+        min-width="140"
         prop="productName"
         show-overflow-tooltip
       >
@@ -65,7 +65,7 @@ const emit = defineEmits<{
 
       <el-table-column
         :label="$t('page.service.enterprise.products.fields.description')"
-        min-width="220"
+        min-width="360"
         prop="description"
         show-overflow-tooltip
       >
@@ -82,7 +82,7 @@ const emit = defineEmits<{
       <el-table-column
         align="center"
         :label="$t('page.service.enterprise.products.fields.shelfStatus')"
-        min-width="110"
+        width="100"
       >
         <template #default="{ row }">
           <el-tag
@@ -103,7 +103,7 @@ const emit = defineEmits<{
       <el-table-column
         align="center"
         :label="$t('page.service.enterprise.products.fields.resourceStatus')"
-        min-width="120"
+        width="100"
       >
         <template #default="{ row }">
           <el-tag
@@ -123,7 +123,7 @@ const emit = defineEmits<{
 
       <el-table-column
         :label="$t('page.service.enterprise.products.fields.createTime')"
-        min-width="160"
+        width="168"
         prop="createTime"
       >
         <template #default="{ row }">
@@ -136,7 +136,7 @@ const emit = defineEmits<{
 
       <el-table-column
         :label="$t('page.service.enterprise.products.fields.updateTime')"
-        min-width="160"
+        width="168"
         prop="updateTime"
       >
         <template #default="{ row }">
@@ -151,7 +151,7 @@ const emit = defineEmits<{
         align="center"
         fixed="right"
         :label="$t('page.service.enterprise.products.fields.actions')"
-        min-width="280"
+        width="260"
       >
         <template #default="{ row }">
           <el-button link type="primary" @click="emit('edit', row)">

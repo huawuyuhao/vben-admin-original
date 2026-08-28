@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { SupplyProductItem } from '#/types/enterprise/product';
+import type { SupplyProductItem } from '#/types/service/enterprise/products';
 import type { FormInstance, FormRules } from 'element-plus';
 
 import { computed, reactive, ref, watch } from 'vue';
@@ -10,7 +10,7 @@ import { ElMessage } from 'element-plus';
 import {
   createSupplyProductApi,
   updateSupplyProductApi,
-} from '#/api/enterprise/product';
+} from '#/api/service/enterprise/products';
 
 import { resolveSupplyProductId } from '../data';
 

@@ -6,6 +6,7 @@ import { computed } from 'vue';
 import { $t } from '@vben/locales';
 
 import {
+  canEvaluateModel,
   formatModelCallCount,
   formatModelScore,
   hasModelIcon,
@@ -182,7 +183,12 @@ function handleEvaluate() {
         <el-button size="small" @click.stop="handleDetail">
           {{ $t('page.service.model.viewDetail') }}
         </el-button>
-        <el-button size="small" type="primary" @click.stop="handleEvaluate">
+        <el-button
+          v-if="canEvaluateModel(item)"
+          size="small"
+          type="primary"
+          @click.stop="handleEvaluate"
+        >
           {{ $t('page.service.model.evaluate.action') }}
         </el-button>
       </div>

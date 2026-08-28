@@ -11,7 +11,7 @@ import {
   getDeviceOptionsApi,
   getDeviceTypeListApi,
 } from '#/api/admin/device';
-import { submitSupplyDeviceApi } from '#/api/enterprise/supply';
+import { submitSupplyDeviceApi } from '#/api/service/enterprise/supply';
 
 import { formatDeviceOptionLabel, isGpuDeviceType } from '../data';
 

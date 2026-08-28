@@ -13,6 +13,7 @@ import { getModelListApi } from '#/api/service/model';
 import {
   MODEL_COMPARE_MAX,
   MODEL_PAGE_SIZE,
+  canEvaluateModel,
   exportModelInfoTemplate,
   normalizeModelPage,
 } from './data';
@@ -212,11 +213,11 @@ function handleCompare() {
 }
 
 /**
- * 打开评价弹窗
+ * 打开评价弹窗（仅 canEvaluate 为 true 时）
  * @param item 模型
  */
 function handleEvaluate(item: ModelInfo) {
-  if (exportSelecting.value) {
+  if (exportSelecting.value || !canEvaluateModel(item)) {
     return;
   }
   evaluateTarget.value = item;

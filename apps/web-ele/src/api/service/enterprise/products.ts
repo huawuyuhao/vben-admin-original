@@ -6,7 +6,7 @@ import type {
   SupplyProductResourceStatusResult,
   SupplyProductShelfAction,
   SupplyProductWriteParams,
-} from '#/types/enterprise/product';
+} from '#/types/service/enterprise/products';
 
 import { ElMessage } from 'element-plus';
 

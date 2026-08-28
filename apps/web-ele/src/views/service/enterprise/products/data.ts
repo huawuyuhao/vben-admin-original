@@ -3,7 +3,7 @@ import type {
   SupplyProductListResult,
   SupplyProductResourceStatus,
   SupplyProductShelfStatus,
-} from '#/types/enterprise/product';
+} from '#/types/service/enterprise/products';
 
 import { formatDate, isEmpty } from '@vben/utils';
 

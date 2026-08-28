@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { SupplyDeviceItem } from '#/types/enterprise/supply';
+import type { SupplyDeviceItem } from '#/types/service/enterprise/supply';
 
 import { $t } from '@vben/locales';
 

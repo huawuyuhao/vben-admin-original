@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { SupplyDeviceItem } from '#/types/enterprise/supply';
+import type { SupplyDeviceItem } from '#/types/service/enterprise/supply';
 
 import { onMounted, ref, watch } from 'vue';
 
@@ -11,7 +11,7 @@ import { ElMessage } from 'element-plus';
 import {
   exportSupplyDeviceApi,
   getSupplyDeviceListApi,
-} from '#/api/enterprise/supply';
+} from '#/api/service/enterprise/supply';
 
 import {
   SUPPLY_PAGE_SIZE,

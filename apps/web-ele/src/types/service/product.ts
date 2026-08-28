@@ -46,19 +46,6 @@ export interface ProductInfo {
   tenantId?: string;
 }
 
-/**
- * 我的收藏列表条目（继承产品信息 + 收藏表字段）
- * GET /product/collect/list
- */
-export interface ProductCollectInfo extends ProductInfo {
-  /** 收藏 ID */
-  collectId?: number;
-  /** 用户 ID */
-  userId?: number;
-  /** 收藏时间 */
-  collectTime?: string;
-}
-
 /** 产品列表排序字段（与 OpenAPI enum 对齐） */
 export type ProductSortField = 'greenPowerRatio' | 'price';
 
@@ -77,17 +64,6 @@ export interface ProductListParams {
   sortField?: ProductSortField | string;
   /** 排序方式（asc/desc） */
   sortOrder?: 'asc' | 'desc' | string;
-}
-
-/**
- * 我的收藏列表分页查询参数
- * GET /product/collect/list
- */
-export interface ProductCollectListParams {
-  /** 当前页码（默认 1） */
-  page: number;
-  /** 每页大小（默认 10） */
-  pageSize: number;
 }
 
 /**

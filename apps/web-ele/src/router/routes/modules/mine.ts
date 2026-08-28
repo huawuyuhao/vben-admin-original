@@ -35,22 +35,53 @@ const routes: RouteRecordRaw[] = [
             },
           },
           {
-            name: 'MineProfileFavorites',
-            path: '/mine/profile/favorites',
+            name: 'MineProfileLoginLog',
+            path: '/mine/profile/login-log',
             component: () =>
-              import('#/views/mine/profile/favorites/index.vue'),
+              import('#/views/mine/profile/login-log/index.vue'),
             meta: {
-              icon: 'ep:star',
+              icon: 'ep:document',
               order: 2,
-              title: '我的收藏',
+              title: '登录日志',
+            },
+          },
+          {
+            name: 'MineProfileFeedback',
+            path: '/mine/profile/feedback',
+            component: () =>
+              import('#/views/mine/profile/feedback/index.vue'),
+            meta: {
+              icon: 'ep:chat-dot-round',
+              order: 3,
+              title: '意见反馈',
             },
           },
         ],
       },
       {
+        name: 'MineFavorites',
+        path: '/mine/favorites',
+        component: () => import('#/views/mine/favorites/index.vue'),
+        meta: {
+          icon: 'ep:star',
+          order: 2,
+          title: '我的收藏',
+        },
+      },
+      {
+        /** 旧路径兼容：原「我的信息中心 / 我的收藏」 */
+        name: 'MineProfileFavoritesRedirect',
+        path: '/mine/profile/favorites',
+        redirect: '/mine/favorites',
+        meta: {
+          hideInMenu: true,
+          title: '我的收藏',
+        },
+      },
+      {
         meta: {
           icon: 'ep:bell',
-          order: 2,
+          order: 3,
           title: '消息通知',
         },
         name: 'MineMessages',
@@ -138,7 +169,7 @@ const routes: RouteRecordRaw[] = [
       {
         meta: {
           icon: 'ep:key',
-          order: 3,
+          order: 4,
           title: '注册认证',
         },
         name: 'MineRegister',

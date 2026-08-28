@@ -10,7 +10,11 @@ import { ElMessage } from 'element-plus';
 
 import { getModelDetailApi } from '#/api/service/model';
 
-import { exportModelInfoTemplate, parseModelRouteId } from '../data';
+import {
+  canEvaluateModel,
+  exportModelInfoTemplate,
+  parseModelRouteId,
+} from '../data';
 import EvaluateDialog from '../modules/evaluate-dialog.vue';
 import EvaluationList from './modules/evaluation-list.vue';
 import InfoCard from './modules/info-card.vue';
@@ -76,9 +80,12 @@ async function fetchDetail() {
 }
 
 /**
- * 打开评价弹窗
+ * 打开评价弹窗（仅 canEvaluate 为 true 时）
  */
 function openEvaluate() {
+  if (!canEvaluateModel(model.value)) {
+    return;
+  }
   evaluateVisible.value = true;
 }
 

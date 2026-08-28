@@ -6,7 +6,7 @@ import type {
   SupplyDeviceListResult,
   SupplyDeviceMutationResponse,
   SupplyDeviceSubmitParams,
-} from '#/types/enterprise/supply';
+} from '#/types/service/enterprise/supply';
 
 import { ElMessage } from 'element-plus';
 

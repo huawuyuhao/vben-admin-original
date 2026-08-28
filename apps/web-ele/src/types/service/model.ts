@@ -13,6 +13,8 @@ export interface ModelInfo {
   description?: string;
   /** 评分 */
   score?: number;
+  /** 是否可评价（列表 / 详情接口返参） */
+  canEvaluate?: boolean;
   /** 调用量 */
   callCount?: number;
   /** 模型参数（JSON 字符串） */

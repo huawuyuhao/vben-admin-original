@@ -301,11 +301,115 @@
       }
     },
     "favorites": {
-      "eyebrow": "我的信息中心",
+      "eyebrow": "我的",
       "title": "我的收藏",
       "desc": "集中管理已收藏的算力产品，可取消收藏或立即生成需求意向。",
       "empty": "暂无收藏产品",
       "refresh": "刷新"
+    },
+    "loginLog": {
+      "eyebrow": "我的信息中心",
+      "title": "登录日志",
+      "desc": "查询系统访问记录，支持按账号、IP、地点、状态与时间筛选，并可导出清单。",
+      "search": "查询",
+      "reset": "重置",
+      "refresh": "刷新",
+      "expand": "展开",
+      "collapse": "收起",
+      "empty": "暂无登录日志",
+      "valueEmpty": "—",
+      "filter": {
+        "userName": "用户账号",
+        "userNamePlaceholder": "请输入用户账号",
+        "ipaddr": "登录 IP",
+        "ipaddrPlaceholder": "请输入登录 IP",
+        "loginLocation": "登录地点",
+        "loginLocationPlaceholder": "请输入登录地点",
+        "status": "登录状态",
+        "statusAll": "全部状态",
+        "loginTime": "访问时间",
+        "loginTimeStart": "开始时间",
+        "loginTimeEnd": "结束时间"
+      },
+      "status": {
+        "success": "成功",
+        "fail": "失败",
+        "unknown": "—"
+      },
+      "fields": {
+        "infoId": "访问 ID",
+        "userName": "用户账号",
+        "ipaddr": "登录 IP",
+        "loginLocation": "登录地点",
+        "browser": "浏览器",
+        "os": "操作系统",
+        "status": "登录状态",
+        "msg": "提示消息",
+        "loginTime": "访问时间"
+      },
+      "export": {
+        "btn": "导出",
+        "success": "导出成功",
+        "noUrl": "未获取到下载地址"
+      }
+    },
+    "feedback": {
+      "eyebrow": "我的信息中心",
+      "title": "意见反馈",
+      "desc": "提交使用建议与问题反馈，查看处理进度与平台回复。",
+      "search": "查询",
+      "reset": "重置",
+      "refresh": "刷新",
+      "add": "提交反馈",
+      "empty": "暂无意见反馈",
+      "valueEmpty": "—",
+      "filter": {
+        "status": "处理状态",
+        "statusAll": "全部状态"
+      },
+      "status": {
+        "pending": "待处理",
+        "processing": "处理中",
+        "done": "已处理",
+        "unknown": "—"
+      },
+      "fields": {
+        "feedbackId": "反馈 ID",
+        "content": "反馈内容",
+        "images": "图片",
+        "status": "处理状态",
+        "replyContent": "回复内容",
+        "replyTime": "回复时间",
+        "createTime": "提交时间",
+        "actions": "操作"
+      },
+      "actions": {
+        "detail": "详情"
+      },
+      "detail": {
+        "title": "反馈详情",
+        "close": "关闭"
+      },
+      "form": {
+        "title": "提交意见反馈",
+        "content": "反馈内容",
+        "contentPlaceholder": "请描述您的问题或建议（至少 5 个字）",
+        "contentRequired": "请输入反馈内容",
+        "contentMin": "反馈内容至少 5 个字",
+        "contentMax": "反馈内容最多 {0} 个字",
+        "images": "相关图片",
+        "imagesTip": "最多上传 {0} 张，支持 jpg / png，单张不超过 {1}MB；可拖拽或点击上传",
+        "dragDropText": "将图片拖到此处，或",
+        "dragDropClick": "点击上传",
+        "imageTypeInvalid": "仅支持 jpg / png / jpeg",
+        "imageSizeInvalid": "单张图片不能超过 {0}MB",
+        "imageLimit": "最多上传 {0} 张图片",
+        "uploadFail": "图片上传失败，请重试",
+        "uploading": "图片上传中，请稍候…",
+        "cancel": "取消",
+        "submit": "提交",
+        "submitSuccess": "反馈已提交"
+      }
     },
     "register": {
       "enterprise": {

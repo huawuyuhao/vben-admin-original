@@ -61,6 +61,17 @@ export function hasModelIcon(iconUrl?: string): boolean {
 }
 
 /**
+ * 判断当前用户是否可对该模型评价（依接口 canEvaluate）
+ * @param item 模型信息（或仅含 canEvaluate 的片段）
+ * @returns 可评价返回 true
+ */
+export function canEvaluateModel(
+  item?: null | Pick<ModelInfo, 'canEvaluate'>,
+): boolean {
+  return item?.canEvaluate === true;
+}
+
+/**
  * 格式化评分展示
  * @param score 评分
  * @returns 如 4.5；无效返回空串

@@ -1,34 +1,35 @@
 <script lang="ts" setup>
-import type { ProductCollectInfo, ProductInfo } from '#/types/service/product';
+import type { FavoriteItem } from '#/types/mine/favorites';
 
 import { onMounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { $t } from '@vben/locales';
 
-import { getProductCollectListApi } from '#/api/service/product';
+import { getFavoritesListApi } from '#/api/mine/favorites';
+
 import {
-  PRODUCT_PAGE_SIZE,
-  normalizeProductPage,
-} from '#/views/service/product/data';
-import ProductGrid from '#/views/service/product/modules/product-grid.vue';
-import ProductPager from '#/views/service/product/modules/product-pager.vue';
+  FAVORITES_PAGE_SIZE,
+  normalizeFavoritesPage,
+} from './data';
+import FavoriteGrid from './modules/favorite-grid.vue';
+import FavoritePager from './modules/favorite-pager.vue';
 
 /**
  * 我的 · 我的收藏（对接 GET /product/collect/list）
  */
-defineOptions({ name: 'MineProfileFavorites' });
+defineOptions({ name: 'MineFavorites' });
 
 const router = useRouter();
 
 /** 当前页码 */
 const currentPage = ref(1);
 /** 每页条数 */
-const pageSize = ref(PRODUCT_PAGE_SIZE);
+const pageSize = ref(FAVORITES_PAGE_SIZE);
 /** 列表加载中 */
 const loading = ref(false);
 /** 当前页收藏产品 */
-const products = ref<ProductCollectInfo[]>([]);
+const products = ref<FavoriteItem[]>([]);
 /** 总条数 */
 const total = ref(0);
 /** 跳过由服务端回写 current 触发的重复请求 */
@@ -40,11 +41,11 @@ const syncingFromServer = ref(false);
 async function fetchFavorites() {
   loading.value = true;
   try {
-    const data = await getProductCollectListApi({
+    const data = await getFavoritesListApi({
       page: currentPage.value,
       pageSize: pageSize.value,
     });
-    const page = normalizeProductPage(data);
+    const page = normalizeFavoritesPage(data);
     // 收藏列表默认视为已收藏
     products.value = page.records.map((item) => ({
       ...item,
@@ -74,13 +75,37 @@ function handleRefresh() {
 
 /**
  * 进入产品详情
- * @param item 产品
+ * @param item 收藏条目
  */
-function goDetail(item: ProductInfo) {
+function goDetail(item: FavoriteItem) {
   if (!item.productId) {
     return;
   }
   router.push(`/service/product/${item.productId}`);
+}
+
+/**
+ * 取消收藏后从当前页移除；空页则回退上一页
+ * @param payload 收藏状态变化
+ */
+function handleCollectChange(payload: {
+  collected: boolean;
+  productId: number;
+}) {
+  if (payload.collected) {
+    return;
+  }
+  products.value = products.value.filter(
+    (item) => item.productId !== payload.productId,
+  );
+  total.value = Math.max(0, total.value - 1);
+  if (products.value.length === 0 && currentPage.value > 1) {
+    currentPage.value -= 1;
+    return;
+  }
+  if (products.value.length === 0) {
+    void fetchFavorites();
+  }
 }
 
 watch(pageSize, () => {
@@ -138,14 +163,16 @@ onMounted(() => {
           </div>
         </header>
 
-        <ProductGrid
+        <FavoriteGrid
+          collected
           :loading="loading"
           :products="products"
           :empty-description="$t('page.mine.favorites.empty')"
           @detail="goDetail"
+          @collect-change="handleCollectChange"
         />
 
-        <ProductPager
+        <FavoritePager
           v-if="products.length > 0 || loading || total > 0"
           v-model:page="currentPage"
           v-model:page-size="pageSize"
@@ -158,5 +185,5 @@ onMounted(() => {
 </template>
 
 <style lang="scss" scoped>
-@use '../../../../scss/page-shell.scss';
+@use '../../../scss/page-shell.scss';
 </style>

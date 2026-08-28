@@ -1,5 +1,5 @@
 ---
-description: 本仓库 AI 编程规范：复用共享工具、优先 Element Plus、i18n 文案、浏览器兼容、Vue SCSS、功能目录结构、中文注释与编码
+description: 本仓库 AI 编程规范：复用共享工具、优先 Element Plus、i18n 文案、浏览器兼容、Vue SCSS、功能目录与 api/types/URL 对齐、中文注释与编码
 alwaysApply: true
 ---
 
@@ -113,10 +113,38 @@ function isEmpty<T = unknown>(value?: T): value is T {
 |-----------|------------|
 | `/service/product` | `views/service/product/` |
 | `/service/enterprise/supply` | `views/service/enterprise/supply/` |
+| `/mine/favorites` | `views/mine/favorites/` |
 | `/service/mydemand/compute/create` | `views/service/mydemand/compute/create.vue` 或 `create/index.vue` |
 
 - 多级路由逐级建子目录；**禁止**把 `/service/enterprise/supply` 的页面放在 `views/enterprise/supply/` 等与 URL 不一致的位置。
 - 页面入口统一为目录下的 `index.vue`（或单层路由对应的 `xxx.vue`），路由 `component` 引用路径与上述规则保持一致。
+
+### api / types 与功能路径对齐（强制）
+
+页面专用的 **API、类型、页面 data、modules** 也必须与该功能的路由 / views 路径对齐，**禁止**业务页主要依赖其它功能目录下的 api / types / modules。
+
+| 路由 path | views | api | types |
+|-----------|-------|-----|-------|
+| `/mine/favorites` | `views/mine/favorites/` | `api/mine/favorites.ts` | `types/mine/favorites.ts` |
+| `/mine/profile/feedback` | `views/mine/profile/feedback/` | `api/mine/profile/feedback.ts` | `types/mine/profile/feedback.ts` |
+| `/admin/device` | `views/admin/device/` | `api/admin/device.ts` | `types/admin/device.ts` |
+| `/service/enterprise/supply` | `views/service/enterprise/supply/` | `api/service/enterprise/supply.ts` | `types/service/enterprise/supply.ts` |
+| `/service/enterprise/products` | `views/service/enterprise/products/` | `api/service/enterprise/products.ts` | `types/service/enterprise/products.ts` |
+
+```ts
+// ✅ 收藏页（/mine/favorites）
+import type { FavoriteItem } from '#/types/mine/favorites';
+import { getFavoritesListApi } from '#/api/mine/favorites';
+import { FAVORITES_PAGE_SIZE } from './data';
+import FavoriteGrid from './modules/favorite-grid.vue';
+
+// ❌ 禁止：收藏页却从门户产品目录引用页面专用能力
+import { getProductCollectListApi } from '#/api/service/product';
+import ProductGrid from '#/views/service/product/modules/product-grid.vue';
+```
+
+- **例外**：真正跨功能复用的领域模型（如产品卡片里的 `ProductInfo` 字段）或全仓工具（`#/api/common`、`@vben/utils`）可引用；但本页列表接口、分页 data、本页拆分组件仍须落在本功能目录。
+- 从 A 功能拆到 B 功能时，同步迁移（或复制后收敛）对应 api / types / modules，并更新引用；不要只改路由留下跨目录硬依赖。
 
 功能页目录（如 `views/login/`）按需拆分，规则如下：
 
