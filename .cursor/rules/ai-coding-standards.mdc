@@ -105,6 +105,19 @@ function isEmpty<T = unknown>(value?: T): value is T {
 
 ## 功能目录结构（views 页面）
 
+### 目录与路由 URL 对齐（强制）
+
+业务页在 `apps/web-ele/src/views/` 下的**目录路径必须与路由 path 一致**（去掉开头的 `/`），便于按 URL 定位源码。
+
+| 路由 path | views 目录 |
+|-----------|------------|
+| `/service/product` | `views/service/product/` |
+| `/service/enterprise/supply` | `views/service/enterprise/supply/` |
+| `/service/mydemand/compute/create` | `views/service/mydemand/compute/create.vue` 或 `create/index.vue` |
+
+- 多级路由逐级建子目录；**禁止**把 `/service/enterprise/supply` 的页面放在 `views/enterprise/supply/` 等与 URL 不一致的位置。
+- 页面入口统一为目录下的 `index.vue`（或单层路由对应的 `xxx.vue`），路由 `component` 引用路径与上述规则保持一致。
+
 功能页目录（如 `views/login/`）按需拆分，规则如下：
 
 - **页面拆分的子模块**：放在该功能下的 `modules/`（如从 `index.vue` 拆出的表单、侧栏等）；没有可拆分内容时**不要**空建。

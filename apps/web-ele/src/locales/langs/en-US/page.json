@@ -12,6 +12,120 @@
     "analytics": "Analytics",
     "workspace": "Workspace"
   },
+  "admin": {
+    "device": {
+      "eyebrow": "Admin · Devices",
+      "title": "Device Management",
+      "desc": "Manage platform devices with filters by code, name, type and online status, plus create, edit and delete.",
+      "search": "Search",
+      "reset": "Reset",
+      "refresh": "Refresh",
+      "add": "Add Device",
+      "empty": "No devices found",
+      "valueEmpty": "—",
+      "filter": {
+        "deviceCode": "Device Code",
+        "deviceCodePlaceholder": "Enter device code",
+        "deviceName": "Device Name",
+        "deviceNamePlaceholder": "Enter device name",
+        "deviceType": "Device Type",
+        "deviceTypeAll": "All types",
+        "onlineStatus": "Online Status",
+        "onlineStatusAll": "All statuses"
+      },
+      "online": {
+        "online": "Online",
+        "offline": "Offline",
+        "unknown": "—"
+      },
+      "fields": {
+        "deviceName": "Device Name",
+        "deviceCode": "Device Code",
+        "deviceType": "Device Type",
+        "deviceModel": "Device Model",
+        "location": "Location",
+        "onlineStatus": "Online Status",
+        "createTime": "Created At",
+        "updateTime": "Updated At",
+        "gpuVendor": "GPU Vendor",
+        "gpuModel": "GPU Model",
+        "cpuModel": "CPU Model",
+        "cpuCores": "CPU Cores",
+        "memorySize": "Memory (GB)",
+        "storageSize": "Storage (GB)",
+        "storageType": "Storage Type",
+        "rackNumber": "Rack",
+        "position": "Position",
+        "purchaseDate": "Purchase Date",
+        "warrantyExpiry": "Warranty Expiry",
+        "remark": "Remark",
+        "actions": "Actions"
+      },
+      "actions": {
+        "detail": "Details",
+        "edit": "Edit",
+        "delete": "Delete"
+      },
+      "delete": {
+        "title": "Confirm Delete",
+        "confirm": "Delete device \"{0}\"? This cannot be undone.",
+        "confirmBtn": "Delete",
+        "cancelBtn": "Cancel",
+        "success": "Device deleted"
+      },
+      "detail": {
+        "title": "Device Details"
+      },
+      "form": {
+        "createTitle": "Add Device",
+        "editTitle": "Edit Device",
+        "invalidId": "Invalid device ID",
+        "deviceCodeRequired": "Please enter device code",
+        "deviceNameRequired": "Please enter device name",
+        "deviceTypeRequired": "Please select device type",
+        "deviceModelRequired": "Please enter device model",
+        "deviceCodePlaceholder": "Enter unique device code",
+        "deviceNamePlaceholder": "Enter device name",
+        "deviceTypePlaceholder": "Select device type",
+        "deviceModelPlaceholder": "Enter device model",
+        "gpuVendorPlaceholder": "GPU vendor (optional)",
+        "gpuModelPlaceholder": "GPU model (optional)",
+        "cpuModelPlaceholder": "CPU model (optional)",
+        "storageTypePlaceholder": "Select storage type (optional)",
+        "onlineStatusPlaceholder": "Select online status (optional)",
+        "locationPlaceholder": "Location (optional)",
+        "rackNumberPlaceholder": "Rack number (optional)",
+        "positionPlaceholder": "Position (optional)",
+        "purchaseDatePlaceholder": "Select purchase date",
+        "warrantyExpiryPlaceholder": "Select warranty expiry",
+        "remarkPlaceholder": "Remark (optional)",
+        "createSuccess": "Device created",
+        "updateSuccess": "Device updated",
+        "cancel": "Cancel",
+        "submit": "Confirm",
+        "fields": {
+          "deviceCode": "Device Code",
+          "deviceName": "Device Name",
+          "deviceType": "Device Type",
+          "deviceModel": "Device Model",
+          "gpuVendor": "GPU Vendor",
+          "gpuModel": "GPU Model",
+          "cpuModel": "CPU Model",
+          "cpuCores": "CPU Cores",
+          "memorySize": "Memory (GB)",
+          "storageSize": "Storage (GB)",
+          "storageType": "Storage Type",
+          "onlineStatus": "Online Status",
+          "location": "Location",
+          "rackNumber": "Rack",
+          "position": "Position",
+          "purchaseDate": "Purchase Date",
+          "warrantyExpiry": "Warranty Expiry",
+          "remark": "Remark"
+        }
+      }
+    }
+  },
   "login": {
     "brand": {
       "tag": "Power · Carbon · Compute",
@@ -747,6 +861,72 @@
           "createTime": "Created at",
           "updateTime": "Updated at"
         }
+      }
+    },
+    "enterprise": {
+      "supply": {
+        "eyebrow": "Enterprise · Compute Supply",
+        "title": "My Compute Supply",
+        "desc": "Submit servers, GPUs, and other devices online, and track acceptance progress.",
+        "search": "Search",
+        "reset": "Reset",
+        "refresh": "Refresh",
+        "add": "Add device list",
+        "empty": "No device records",
+        "valueEmpty": "—",
+        "filter": {
+          "status": "Status",
+          "statusAll": "All"
+        },
+        "status": {
+          "pending": "Pending",
+          "viewed": "Viewed",
+          "unknown": "—"
+        },
+        "fields": {
+          "deviceId": "Device ID",
+          "deviceType": "Device type",
+          "deviceModel": "Model",
+          "gpuVendor": "GPU vendor",
+          "gpuModel": "GPU model",
+          "quantity": "Quantity",
+          "status": "Status",
+          "submitTime": "Submitted at"
+        },
+        "export": {
+          "action": "Export list",
+          "hint": "Export follows the acceptance status filter below",
+          "success": "Device list exported",
+          "noUrl": "Download URL missing. Please try again later"
+        },
+        "form": {
+          "createTitle": "Submit device",
+          "deviceTypeRequired": "Please select a device type",
+          "deviceModelRequired": "Please select a device model",
+          "quantityRequired": "Please enter quantity",
+          "quantityMin": "Quantity must be at least 1",
+          "deviceTypePlaceholder": "Select a device type",
+          "deviceModelPlaceholder": "Select a device model",
+          "deviceModelNeedType": "Select a device type first",
+          "gpuVendorPlaceholder": "GPU vendor (optional)",
+          "gpuModelPlaceholder": "GPU model (optional)",
+          "submitSuccess": "Device list submitted successfully. Please wait for acceptance.",
+          "cancel": "Cancel",
+          "submit": "Submit",
+          "fields": {
+            "deviceType": "Device type",
+            "deviceModel": "Model",
+            "gpuVendor": "GPU vendor",
+            "gpuModel": "GPU model",
+            "quantity": "Quantity"
+          }
+        }
+      },
+      "products": {
+        "eyebrow": "Enterprise · Compute Products",
+        "title": "My Compute Products",
+        "desc": "Manage on-shelf compute products from connected devices.",
+        "pending": "Coming soon"
       }
     }
   },

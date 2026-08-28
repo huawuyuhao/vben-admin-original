@@ -94,7 +94,8 @@ const routes: RouteRecordRaw[] = [
           {
             name: 'ServiceEnterpriseSupply',
             path: '/service/enterprise/supply',
-            component: () => import('#/views/enterprise/supply.vue'),
+            component: () =>
+              import('#/views/service/enterprise/supply/index.vue'),
             meta: {
               icon: 'ep:upload-filled',
               order: 1,
@@ -104,7 +105,8 @@ const routes: RouteRecordRaw[] = [
           {
             name: 'ServiceEnterpriseProducts',
             path: '/service/enterprise/products',
-            component: () => import('#/views/enterprise/products.vue'),
+            component: () =>
+              import('#/views/service/enterprise/products/index.vue'),
             meta: {
               icon: 'ep:box',
               order: 2,

@@ -12,6 +12,120 @@
     "analytics": "分析页",
     "workspace": "工作台"
   },
+  "admin": {
+    "device": {
+      "eyebrow": "管理 · 设备",
+      "title": "设备管理",
+      "desc": "管理平台设备档案，支持按编号、名称、类型与在线状态检索，以及新增、编辑与删除。",
+      "search": "查询",
+      "reset": "重置",
+      "refresh": "刷新",
+      "add": "新增设备",
+      "empty": "暂无设备数据",
+      "valueEmpty": "—",
+      "filter": {
+        "deviceCode": "设备编号",
+        "deviceCodePlaceholder": "请输入设备编号",
+        "deviceName": "设备名称",
+        "deviceNamePlaceholder": "请输入设备名称",
+        "deviceType": "设备类型",
+        "deviceTypeAll": "全部类型",
+        "onlineStatus": "在线状态",
+        "onlineStatusAll": "全部状态"
+      },
+      "online": {
+        "online": "在线",
+        "offline": "离线",
+        "unknown": "—"
+      },
+      "fields": {
+        "deviceName": "设备名称",
+        "deviceCode": "设备编号",
+        "deviceType": "设备类型",
+        "deviceModel": "设备型号",
+        "location": "机房位置",
+        "onlineStatus": "在线状态",
+        "createTime": "创建时间",
+        "updateTime": "更新时间",
+        "gpuVendor": "GPU 厂商",
+        "gpuModel": "GPU 型号",
+        "cpuModel": "CPU 型号",
+        "cpuCores": "CPU 核数",
+        "memorySize": "内存(GB)",
+        "storageSize": "存储(GB)",
+        "storageType": "存储类型",
+        "rackNumber": "机柜号",
+        "position": "机位",
+        "purchaseDate": "采购日期",
+        "warrantyExpiry": "保修到期日",
+        "remark": "备注",
+        "actions": "操作"
+      },
+      "actions": {
+        "detail": "详情",
+        "edit": "编辑",
+        "delete": "删除"
+      },
+      "delete": {
+        "title": "删除确认",
+        "confirm": "确认删除设备「{0}」吗？删除后不可恢复。",
+        "confirmBtn": "删除",
+        "cancelBtn": "取消",
+        "success": "设备已删除"
+      },
+      "detail": {
+        "title": "设备详情"
+      },
+      "form": {
+        "createTitle": "新增设备",
+        "editTitle": "编辑设备",
+        "invalidId": "无效的设备 ID",
+        "deviceCodeRequired": "请输入设备编号",
+        "deviceNameRequired": "请输入设备名称",
+        "deviceTypeRequired": "请选择设备类型",
+        "deviceModelRequired": "请输入设备型号",
+        "deviceCodePlaceholder": "请输入设备编号（企业内唯一）",
+        "deviceNamePlaceholder": "请输入设备名称",
+        "deviceTypePlaceholder": "请选择设备类型",
+        "deviceModelPlaceholder": "请输入设备型号",
+        "gpuVendorPlaceholder": "请输入 GPU 厂商（可选）",
+        "gpuModelPlaceholder": "请输入 GPU 型号（可选）",
+        "cpuModelPlaceholder": "请输入 CPU 型号（可选）",
+        "storageTypePlaceholder": "请选择存储类型（可选）",
+        "onlineStatusPlaceholder": "请选择在线状态（可选）",
+        "locationPlaceholder": "请输入机房位置（可选）",
+        "rackNumberPlaceholder": "请输入机柜号（可选）",
+        "positionPlaceholder": "请输入机位（可选）",
+        "purchaseDatePlaceholder": "请选择采购日期",
+        "warrantyExpiryPlaceholder": "请选择保修到期日",
+        "remarkPlaceholder": "请输入备注（可选）",
+        "createSuccess": "设备新增成功",
+        "updateSuccess": "设备修改成功",
+        "cancel": "取消",
+        "submit": "确定",
+        "fields": {
+          "deviceCode": "设备编号",
+          "deviceName": "设备名称",
+          "deviceType": "设备类型",
+          "deviceModel": "设备型号",
+          "gpuVendor": "GPU 厂商",
+          "gpuModel": "GPU 型号",
+          "cpuModel": "CPU 型号",
+          "cpuCores": "CPU 核数",
+          "memorySize": "内存(GB)",
+          "storageSize": "存储(GB)",
+          "storageType": "存储类型",
+          "onlineStatus": "在线状态",
+          "location": "机房位置",
+          "rackNumber": "机柜号",
+          "position": "机位",
+          "purchaseDate": "采购日期",
+          "warrantyExpiry": "保修到期日",
+          "remark": "备注"
+        }
+      }
+    }
+  },
   "login": {
     "brand": {
       "tag": "电 · 碳 · 算",
@@ -747,6 +861,72 @@
           "createTime": "创建时间",
           "updateTime": "更新时间"
         }
+      }
+    },
+    "enterprise": {
+      "supply": {
+        "eyebrow": "企业服务 · 算力供给",
+        "title": "我的算力供给",
+        "desc": "在线提交可接入系统的服务器、GPU 等设备清单，并跟踪清单受理进度。",
+        "search": "查询",
+        "reset": "重置",
+        "refresh": "刷新",
+        "add": "新增设备清单",
+        "empty": "暂无设备清单",
+        "valueEmpty": "—",
+        "filter": {
+          "status": "受理状态",
+          "statusAll": "全部"
+        },
+        "status": {
+          "pending": "未受理",
+          "viewed": "已查看",
+          "unknown": "—"
+        },
+        "fields": {
+          "deviceId": "设备 ID",
+          "deviceType": "设备类型",
+          "deviceModel": "设备型号",
+          "gpuVendor": "GPU 厂商",
+          "gpuModel": "GPU 型号",
+          "quantity": "数量",
+          "status": "受理状态",
+          "submitTime": "提交时间"
+        },
+        "export": {
+          "action": "导出清单",
+          "hint": "可按下方受理状态筛选条件导出对应清单",
+          "success": "设备清单导出成功",
+          "noUrl": "未获取到下载地址，请稍后重试"
+        },
+        "form": {
+          "createTitle": "提交供给设备",
+          "deviceTypeRequired": "请选择设备类型",
+          "deviceModelRequired": "请选择设备型号",
+          "quantityRequired": "请输入数量",
+          "quantityMin": "数量至少为 1",
+          "deviceTypePlaceholder": "请选择设备类型",
+          "deviceModelPlaceholder": "请选择设备型号",
+          "deviceModelNeedType": "请先选择设备类型",
+          "gpuVendorPlaceholder": "请输入 GPU 厂商（可选）",
+          "gpuModelPlaceholder": "请输入 GPU 型号（可选）",
+          "submitSuccess": "设备清单提交成功，请等待受理",
+          "cancel": "取消",
+          "submit": "提交",
+          "fields": {
+            "deviceType": "设备类型",
+            "deviceModel": "设备型号",
+            "gpuVendor": "GPU 厂商",
+            "gpuModel": "GPU 型号",
+            "quantity": "数量"
+          }
+        }
+      },
+      "products": {
+        "eyebrow": "企业服务 · 算力产品",
+        "title": "我的算力产品",
+        "desc": "管理已接入设备上架的算力产品，支持检索、筛选与维护产品信息。",
+        "pending": "功能开发中，敬请期待"
       }
     }
   },

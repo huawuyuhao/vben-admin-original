@@ -845,9 +845,19 @@ const routes: RouteRecordRaw[] = [
         ],
       },
       {
+        name: 'AdminDevice',
+        path: '/admin/device',
+        component: () => import('#/views/admin/device/index.vue'),
+        meta: {
+          icon: 'ep:cpu',
+          order: 4,
+          title: '设备管理',
+        },
+      },
+      {
         meta: {
           icon: 'ep:office-building',
-          order: 4,
+          order: 5,
           title: '企业中心',
         },
         name: 'AdminEnterprise',
@@ -886,7 +896,7 @@ const routes: RouteRecordRaw[] = [
       {
         meta: {
           icon: 'ep:user',
-          order: 5,
+          order: 6,
           title: '个人中心',
         },
         name: 'AdminPersonal',
