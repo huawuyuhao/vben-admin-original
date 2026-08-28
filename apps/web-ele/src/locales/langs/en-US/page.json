@@ -925,8 +925,81 @@
       "products": {
         "eyebrow": "Enterprise · Compute Products",
         "title": "My Compute Products",
-        "desc": "Manage on-shelf compute products from connected devices.",
-        "pending": "Coming soon"
+        "desc": "Create, edit, delete, and query compute products; publish or take them off shelf; monitor supply resource status.",
+        "search": "Search",
+        "reset": "Reset",
+        "refresh": "Refresh",
+        "add": "Add product",
+        "empty": "No compute products",
+        "valueEmpty": "—",
+        "filter": {
+          "productName": "Product name",
+          "productNamePlaceholder": "Enter product name",
+          "shelfStatus": "Shelf status",
+          "shelfStatusAll": "All"
+        },
+        "shelf": {
+          "on": "On shelf",
+          "off": "Off shelf",
+          "unknown": "—"
+        },
+        "resource": {
+          "offline": "Offline",
+          "online": "Online",
+          "abnormal": "Abnormal",
+          "unknown": "—"
+        },
+        "fields": {
+          "productName": "Product name",
+          "description": "Description",
+          "shelfStatus": "Shelf status",
+          "resourceStatus": "Resource status",
+          "createTime": "Created at",
+          "updateTime": "Updated at",
+          "actions": "Actions"
+        },
+        "actions": {
+          "edit": "Edit",
+          "delete": "Delete",
+          "shelf": "Publish",
+          "unshelf": "Unpublish",
+          "monitor": "Monitor"
+        },
+        "delete": {
+          "title": "Delete confirmation",
+          "confirm": "Delete product \"{0}\"? This cannot be undone.",
+          "confirmBtn": "Delete",
+          "cancelBtn": "Cancel",
+          "success": "Product deleted"
+        },
+        "shelfAction": {
+          "title": "Shelf confirmation",
+          "shelfConfirm": "Publish product \"{0}\" to the shelf?",
+          "unshelfConfirm": "Take product \"{0}\" off the shelf?",
+          "confirmBtn": "Confirm",
+          "cancelBtn": "Cancel",
+          "shelfSuccess": "\"{0}\" is now on shelf",
+          "unshelfSuccess": "\"{0}\" is now off shelf"
+        },
+        "monitor": {
+          "success": "Resource status updated: {0}"
+        },
+        "form": {
+          "createTitle": "Add compute product",
+          "editTitle": "Edit compute product",
+          "invalidId": "Invalid product ID",
+          "productNameRequired": "Please enter a product name",
+          "productNamePlaceholder": "Enter product name",
+          "descriptionPlaceholder": "Enter description (optional)",
+          "createSuccess": "Product created",
+          "editSuccess": "Product updated",
+          "cancel": "Cancel",
+          "submit": "Save",
+          "fields": {
+            "productName": "Product name",
+            "description": "Description"
+          }
+        }
       }
     }
   },
