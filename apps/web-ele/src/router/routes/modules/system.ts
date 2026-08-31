@@ -867,7 +867,8 @@ const routes: RouteRecordRaw[] = [
           {
             name: 'AdminEnterpriseInfo',
             path: '/admin/enterprise/info',
-            component: () => import('#/views/admin/enterprise/info.vue'),
+            component: () =>
+              import('#/views/admin/enterprise/info/index.vue'),
             meta: {
               icon: 'ep:document',
               title: '企业信息管理',
@@ -876,7 +877,8 @@ const routes: RouteRecordRaw[] = [
           {
             name: 'AdminEnterpriseAccounts',
             path: '/admin/enterprise/accounts',
-            component: () => import('#/views/admin/enterprise/accounts.vue'),
+            component: () =>
+              import('#/views/admin/enterprise/accounts/index.vue'),
             meta: {
               icon: 'ep:user',
               title: '企业子账号管理',

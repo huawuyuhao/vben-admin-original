@@ -124,6 +124,197 @@
           "remark": "Remark"
         }
       }
+    },
+    "enterprise": {
+      "info": {
+        "eyebrow": "Admin · Enterprise",
+        "title": "Enterprise Info",
+        "descView": "View enterprise profile and auth status. Contact phone and address can be updated online.",
+        "descEdit": "Only contact phone and address are editable; other fields are maintained by the platform.",
+        "refresh": "Refresh",
+        "editProfile": "Edit Info",
+        "goEdit": "Edit",
+        "empty": "No enterprise info",
+        "unnamed": "Unnamed Enterprise",
+        "valueEmpty": "—",
+        "updateSuccess": "Enterprise info updated",
+        "readonlySuffix": " (read-only)",
+        "authStatus": {
+          "unauthenticated": "Unauthenticated",
+          "pending": "Pending",
+          "authenticated": "Authenticated",
+          "rejected": "Rejected"
+        },
+        "authTip": {
+          "unauthenticated": "Enterprise is not authenticated yet. Complete the profile and submit for review.",
+          "pending": "Authentication is under review. Please wait.",
+          "authenticated": "Enterprise is authenticated. Critical changes may require re-review.",
+          "rejected": "Authentication was rejected. Please review the profile and resubmit.",
+          "unknown": "Unknown authentication status."
+        },
+        "enterpriseType": {
+          "demand": "Compute Demand",
+          "supply": "Compute Supply"
+        },
+        "status": {
+          "disabled": "Disabled",
+          "enabled": "Enabled"
+        },
+        "groups": {
+          "basic": {
+            "title": "Basic Info",
+            "hint": "Enterprise identity and type, maintained by the platform"
+          },
+          "contact": {
+            "title": "Contact",
+            "hint": "Phone and address can be updated online"
+          },
+          "meta": {
+            "title": "System Info",
+            "hint": "Identifiers and timestamps for reference only"
+          }
+        },
+        "fields": {
+          "enterpriseId": "Enterprise ID",
+          "tenantId": "Tenant ID",
+          "enterpriseName": "Enterprise Name",
+          "legalPerson": "Legal Person",
+          "creditCode": "Unified Social Credit Code",
+          "contactPhone": "Contact Phone",
+          "contactEmail": "Contact Email",
+          "address": "Address",
+          "industry": "Industry",
+          "enterpriseType": "Enterprise Type",
+          "status": "Status",
+          "createTime": "Created At",
+          "updateTime": "Updated At"
+        },
+        "edit": {
+          "title": "Edit Contact Info",
+          "hint": "Per API contract, only contact phone and address can be updated.",
+          "phoneRequired": "Please enter contact phone",
+          "invalidPhone": "Please enter a valid mobile number",
+          "phonePlaceholder": "Enter 11-digit mobile number",
+          "addressRequired": "Please enter address",
+          "addressLength": "Address must be 2-200 characters",
+          "addressPlaceholder": "Enter enterprise address",
+          "cancel": "Cancel",
+          "save": "Save"
+        }
+      },
+      "accounts": {
+        "eyebrow": "Admin · Enterprise",
+        "title": "Sub-account Management",
+        "desc": "Manage sub-account department, validity, status and menu permissions. Search by username, department or status, and export.",
+        "search": "Search",
+        "reset": "Reset",
+        "refresh": "Refresh",
+        "add": "Add Sub-account",
+        "empty": "No sub-accounts found",
+        "valueEmpty": "—",
+        "expired": "Expired",
+        "filter": {
+          "username": "Username",
+          "usernamePlaceholder": "Enter username",
+          "department": "Department",
+          "departmentPlaceholder": "Enter department",
+          "status": "Status",
+          "statusAll": "All statuses"
+        },
+        "status": {
+          "enabled": "Enabled",
+          "disabled": "Disabled",
+          "unknown": "—"
+        },
+        "fields": {
+          "username": "Username",
+          "realName": "Real Name",
+          "department": "Department",
+          "phone": "Phone",
+          "password": "Password",
+          "status": "Status",
+          "expireDate": "Valid Until",
+          "createTime": "Created At",
+          "actions": "Actions"
+        },
+        "actions": {
+          "edit": "Edit",
+          "permission": "Permissions",
+          "resetPassword": "Reset Password",
+          "delete": "Delete"
+        },
+        "delete": {
+          "title": "Confirm Delete",
+          "confirm": "Delete sub-account \"{0}\"? This cannot be undone and related permissions will be revoked.",
+          "confirmBtn": "Delete",
+          "cancelBtn": "Cancel",
+          "success": "Sub-account deleted"
+        },
+        "export": {
+          "btn": "Export",
+          "success": "Export started",
+          "invalidUrl": "No valid download URL returned"
+        },
+        "form": {
+          "createTitle": "Add Sub-account",
+          "editTitle": "Edit Sub-account",
+          "invalidId": "Invalid sub-account ID",
+          "usernameRequired": "Please enter username",
+          "usernameLength": "Username must be 3-30 characters",
+          "realNameRequired": "Please enter real name",
+          "passwordRequired": "Please enter password",
+          "passwordPattern": "Password must be at least 8 characters with upper/lower case, number and special char {'@'}$!%*?&",
+          "statusRequired": "Please select status",
+          "invalidPhone": "Please enter a valid mobile number",
+          "usernamePlaceholder": "Enter login username",
+          "realNamePlaceholder": "Enter real name",
+          "departmentPlaceholder": "Department (optional)",
+          "phonePlaceholder": "Phone (optional)",
+          "passwordPlaceholder": "Set initial password",
+          "expireDatePlaceholder": "Select valid until (optional)",
+          "createHint": "New accounts are enabled by default. Expired accounts are auto-disabled until the master renews validity.",
+          "createSuccess": "Sub-account created",
+          "updateSuccess": "Sub-account updated",
+          "cancel": "Cancel",
+          "submit": "Confirm"
+        },
+        "permission": {
+          "title": "Assign Menu Permissions",
+          "titleWithName": "Permissions · {0}",
+          "hint": "Select accessible menus. Deleting a sub-account also revokes related permissions.",
+          "required": "Please select at least one menu",
+          "submit": "Save Permissions",
+          "success": "Permissions updated"
+        },
+        "resetPassword": {
+          "title": "Reset Password",
+          "titleWithName": "Reset Password · {0}",
+          "newPassword": "New Password",
+          "confirmPassword": "Confirm Password",
+          "passwordRequired": "Please enter new password",
+          "confirmRequired": "Please confirm new password",
+          "passwordPattern": "Password must be at least 8 characters with upper/lower case, number and special char {'@'}$!%*?&",
+          "confirmMismatch": "Passwords do not match",
+          "passwordPlaceholder": "Enter new password",
+          "confirmPlaceholder": "Enter new password again",
+          "submit": "Confirm Reset",
+          "success": "Password reset"
+        },
+        "menus": {
+          "enterpriseCenter": "Enterprise Center",
+          "enterpriseInfo": "Enterprise Info",
+          "enterpriseAccounts": "Sub-account Management",
+          "enterpriseStats": "Service Stats",
+          "service": "Services",
+          "product": "Products",
+          "myDemand": "My Demands",
+          "supply": "Compute Supply",
+          "mine": "My Profile",
+          "profile": "Profile",
+          "loginLog": "Login Logs",
+          "feedback": "Feedback"
+        }
+      }
     }
   },
   "login": {
