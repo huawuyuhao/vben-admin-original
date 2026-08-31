@@ -314,6 +314,87 @@
           "loginLog": "Login Logs",
           "feedback": "Feedback"
         }
+      },
+      "stats": {
+        "eyebrow": "Admin · Enterprise",
+        "title": "Service Data Statistics",
+        "desc": "View supply device count, online time, power usage and alerts by year/month with charts and export. Alerts also support day filter.",
+        "search": "Search",
+        "reset": "Reset",
+        "refresh": "Refresh",
+        "empty": "No statistics available",
+        "valueEmpty": "—",
+        "filter": {
+          "year": "Year",
+          "yearAll": "All years",
+          "month": "Month",
+          "monthAll": "Whole year",
+          "monthOption": "Month {0}",
+          "day": "Day",
+          "dayHint": "Optional for alerts",
+          "dayOption": "Day {0}"
+        },
+        "overview": {
+          "title": "Service Overview",
+          "deviceCount": "Supply Devices",
+          "onlineTime": "Online Time",
+          "powerUsage": "Power Usage",
+          "alertCount": "Alerts",
+          "hint": "Summary for selected period"
+        },
+        "units": {
+          "device": "units",
+          "hour": "hours",
+          "kwh": "kWh",
+          "alert": "times"
+        },
+        "series": {
+          "deviceTotal": "Total Devices",
+          "deviceNew": "New",
+          "deviceOffline": "Offline",
+          "totalHours": "Total Online Hours",
+          "avgHours": "Avg Online Hours",
+          "totalPower": "Total Power",
+          "avgPower": "Avg Power"
+        },
+        "alertLevel": {
+          "minor": "Minor",
+          "major": "Major",
+          "critical": "Critical",
+          "urgent": "Urgent"
+        },
+        "charts": {
+          "deviceCount": {
+            "title": "Supply Device Count",
+            "hint": "Daily total, new and offline devices"
+          },
+          "onlineTime": {
+            "title": "Device Online Time",
+            "hint": "Daily total and average online hours"
+          },
+          "powerUsage": {
+            "title": "Device Power Usage",
+            "hint": "Daily total and average power usage"
+          },
+          "alert": {
+            "title": "Device Alerts",
+            "hint": "Year/month/day filters; alert trend and level distribution",
+            "barTitle": "Alert Trend",
+            "pieTitle": "Level Distribution"
+          }
+        },
+        "export": {
+          "btn": "Export",
+          "success": "Export started",
+          "invalidUrl": "No valid download URL returned"
+        },
+        "exportTypes": {
+          "overview": "Overview",
+          "deviceCount": "Device Count",
+          "onlineTime": "Online Time",
+          "powerUsage": "Power Usage",
+          "alert": "Alerts"
+        }
       }
     }
   },

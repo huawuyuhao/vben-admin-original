@@ -887,7 +887,8 @@ const routes: RouteRecordRaw[] = [
           {
             name: 'AdminEnterpriseStats',
             path: '/admin/enterprise/stats',
-            component: () => import('#/views/admin/enterprise/stats.vue'),
+            component: () =>
+              import('#/views/admin/enterprise/stats/index.vue'),
             meta: {
               icon: 'ep:data-analysis',
               title: '服务数据统计',

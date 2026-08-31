@@ -1,5 +1,5 @@
 ---
-description: 本仓库 AI 编程规范：复用共享工具、优先 Element Plus、i18n 文案、浏览器兼容、Vue SCSS、功能目录与 api/types/URL 对齐、中文注释与编码
+description: 本仓库 AI 编程规范：复用共享工具、优先 Element Plus、i18n 文案、浏览器兼容、Vue SCSS、功能目录与 api/types/URL 对齐、中文注释与编码、新页面图表用 VisActor VChart
 alwaysApply: true
 ---
 
@@ -264,6 +264,39 @@ ElMessage.success('保存成功');
 <!-- ✅ 必须 -->
 <el-button>{{ $t('page.mine.profile.editProfile') }}</el-button>
 ElMessage.success($t('ui.actionMessage.operationSuccess'));
+```
+
+## 图表（VisActor VChart）
+
+- 官方站点：[VisActor](https://www.visactor.io/)；图表库为 **VChart**。
+- **后续新页面 / 新功能中的图表，一律使用 `@vben/plugins/vchart`**（`VchartUI` + `useVChart`），禁止在新代码中再引入 ECharts。
+- 存量 ECharts 页面（如部分工作台 / 旧统计页）可暂保留；重做或新开发时迁移到 VChart。
+- 不要在业务页直接 `new VChart(...)`，统一走插件封装，便于主题、resize、keep-alive。
+
+```vue
+<script lang="ts" setup>
+import type { VchartUIType } from '@vben/plugins/vchart';
+
+import { onMounted, ref } from 'vue';
+
+import { useVChart, VchartUI } from '@vben/plugins/vchart';
+
+const chartRef = ref<VchartUIType>();
+const { renderVChart } = useVChart(chartRef);
+
+onMounted(() => {
+  void renderVChart({
+    type: 'line',
+    data: [{ id: 'line', values: [{ x: 'A', y: 1 }] }],
+    xField: 'x',
+    yField: 'y',
+  });
+});
+</script>
+
+<template>
+  <VchartUI ref="chartRef" height="280px" />
+</template>
 ```
 
 ## 修改共享工具时的注意

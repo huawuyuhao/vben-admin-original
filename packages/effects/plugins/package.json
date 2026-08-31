@@ -22,6 +22,10 @@
       "types": "./src/echarts/index.ts",
       "default": "./src/echarts/index.ts"
     },
+    "./vchart": {
+      "types": "./src/vchart/index.ts",
+      "default": "./src/vchart/index.ts"
+    },
     "./tiptap": {
       "types": "./src/tiptap/index.ts",
       "default": "./src/tiptap/index.ts"
@@ -61,6 +65,7 @@
     "@vben/utils": "workspace:*",
     "@vueuse/core": "catalog:",
     "@vueuse/motion": "catalog:",
+    "@visactor/vchart": "catalog:",
     "echarts": "catalog:",
     "vue": "catalog:",
     "vxe-pc-ui": "catalog:",

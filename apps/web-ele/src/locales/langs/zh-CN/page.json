@@ -314,6 +314,87 @@
           "loginLog": "登录日志",
           "feedback": "意见反馈"
         }
+      },
+      "stats": {
+        "eyebrow": "管理 · 企业中心",
+        "title": "服务数据统计",
+        "desc": "按年/月查看供给设备数量、在线时间、用电量与告警统计，支持图表展示与数据导出；告警另支持按日筛选。",
+        "search": "查询",
+        "reset": "重置",
+        "refresh": "刷新",
+        "empty": "暂无统计数据",
+        "valueEmpty": "—",
+        "filter": {
+          "year": "年份",
+          "yearAll": "全部年份",
+          "month": "月份",
+          "monthAll": "全年",
+          "monthOption": "{0} 月",
+          "day": "日期",
+          "dayHint": "告警可选日",
+          "dayOption": "{0} 日"
+        },
+        "overview": {
+          "title": "服务数据概览",
+          "deviceCount": "供给设备数量",
+          "onlineTime": "在线时间",
+          "powerUsage": "用电量",
+          "alertCount": "告警数量",
+          "hint": "当前筛选周期汇总"
+        },
+        "units": {
+          "device": "台",
+          "hour": "小时",
+          "kwh": "kWh",
+          "alert": "次"
+        },
+        "series": {
+          "deviceTotal": "设备总数",
+          "deviceNew": "新增",
+          "deviceOffline": "离线",
+          "totalHours": "在线总时长",
+          "avgHours": "平均在线时长",
+          "totalPower": "总用电量",
+          "avgPower": "平均用电量"
+        },
+        "alertLevel": {
+          "minor": "次要",
+          "major": "重要",
+          "critical": "严重",
+          "urgent": "紧急"
+        },
+        "charts": {
+          "deviceCount": {
+            "title": "供给设备数量统计",
+            "hint": "按日展示设备总数、新增与离线数量"
+          },
+          "onlineTime": {
+            "title": "设备在线时间统计",
+            "hint": "按日展示在线总时长与单设备平均时长"
+          },
+          "powerUsage": {
+            "title": "设备用电量统计",
+            "hint": "按日展示总用电量与单设备平均用电量"
+          },
+          "alert": {
+            "title": "设备告警统计",
+            "hint": "支持年/月/日维度；展示告警趋势与等级分布",
+            "barTitle": "告警数量趋势",
+            "pieTitle": "告警等级分布"
+          }
+        },
+        "export": {
+          "btn": "导出",
+          "success": "导出成功",
+          "invalidUrl": "未获取到有效的下载地址"
+        },
+        "exportTypes": {
+          "overview": "概览汇总",
+          "deviceCount": "设备数量",
+          "onlineTime": "在线时间",
+          "powerUsage": "用电量",
+          "alert": "告警统计"
+        }
       }
     }
   },
