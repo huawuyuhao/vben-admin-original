@@ -1379,6 +1379,189 @@
           }
         }
       }
+    },
+    "mydemand": {
+      "apps": {
+        "eyebrow": "My Demands · Apps",
+        "title": "My Applications",
+        "desc": "Maintain personal apps with favorites, enable/disable, schedules, versions, and materials.",
+        "search": "Search",
+        "reset": "Reset",
+        "refresh": "Refresh",
+        "add": "Add App",
+        "empty": "No applications yet",
+        "valueEmpty": "—",
+        "filter": {
+          "appName": "App name",
+          "appNamePlaceholder": "Enter app name",
+          "appType": "App type",
+          "appTypeAll": "All types",
+          "appStatus": "Status",
+          "appStatusAll": "All statuses",
+          "isCollect": "Favorite",
+          "isCollectAll": "All"
+        },
+        "type": {
+          "train": "Training",
+          "infer": "Inference",
+          "analysis": "Analysis",
+          "render": "Rendering",
+          "unknown": "—"
+        },
+        "status": {
+          "on": "Enabled",
+          "off": "Disabled",
+          "unknown": "—"
+        },
+        "collect": {
+          "yes": "Favorited",
+          "no": "Not favorited"
+        },
+        "fields": {
+          "appName": "App name",
+          "appVersion": "Version",
+          "appType": "Type",
+          "appStatus": "Status",
+          "isCollect": "Favorite",
+          "createTime": "Created at",
+          "updateTime": "Updated at",
+          "actions": "Actions"
+        },
+        "actions": {
+          "edit": "Edit",
+          "delete": "Delete",
+          "enable": "Enable",
+          "disable": "Disable",
+          "collect": "Favorite",
+          "uncollect": "Unfavorite",
+          "version": "Versions",
+          "schedule": "Schedule",
+          "material": "Materials",
+          "more": "More"
+        },
+        "delete": {
+          "title": "Delete confirmation",
+          "confirm": "Delete app \"{0}\"? This cannot be undone.",
+          "confirmBtn": "Delete",
+          "cancelBtn": "Cancel",
+          "success": "App deleted"
+        },
+        "toggle": {
+          "enableSuccess": "\"{0}\" enabled",
+          "disableSuccess": "\"{0}\" disabled"
+        },
+        "collectAction": {
+          "collectSuccess": "\"{0}\" favorited",
+          "uncollectSuccess": "\"{0}\" unfavorited"
+        },
+        "form": {
+          "createTitle": "Add application",
+          "editTitle": "Edit application",
+          "invalidId": "Invalid app ID",
+          "appNameRequired": "Please enter app name",
+          "appNamePlaceholder": "Enter app name",
+          "appVersionRequired": "Please enter version",
+          "appVersionPlaceholder": "e.g. V1.0",
+          "appTypeRequired": "Please select app type",
+          "appTypePlaceholder": "Select app type",
+          "appStatusLabel": "Status",
+          "createSuccess": "App created",
+          "editSuccess": "App updated",
+          "cancel": "Cancel",
+          "submit": "Save",
+          "fields": {
+            "appName": "App name",
+            "appVersion": "Version",
+            "appType": "Type",
+            "appStatus": "Status"
+          }
+        },
+        "schedule": {
+          "title": "Configure schedule",
+          "invalidId": "Invalid app ID",
+          "cronRequired": "Please enter a Cron expression",
+          "cronPlaceholder": "e.g. 0 0 2 * * ?",
+          "cronTip": "Use a standard Cron expression to control scheduled runs.",
+          "statusLabel": "Task status",
+          "success": "Schedule task created",
+          "cancel": "Cancel",
+          "submit": "Create",
+          "fields": {
+            "appName": "App name",
+            "cronExpression": "Cron expression",
+            "status": "Status"
+          }
+        },
+        "version": {
+          "title": "Version maintenance",
+          "invalidId": "Invalid app ID",
+          "empty": "No versions yet",
+          "add": "Add version",
+          "versionNoRequired": "Please enter version number",
+          "versionNoPlaceholder": "e.g. V1.0.1",
+          "materialPlaceholder": "Select materials (enabled only)",
+          "materialEmpty": "No enabled materials. Add and enable materials first.",
+          "createSuccess": "Version created",
+          "cancel": "Cancel",
+          "submit": "Save",
+          "loadFail": "Failed to load versions",
+          "fields": {
+            "versionNo": "Version",
+            "materialIds": "Materials",
+            "createTime": "Created at"
+          }
+        },
+        "material": {
+          "title": "Material management",
+          "invalidId": "Invalid app ID",
+          "invalidMaterialId": "Invalid material ID",
+          "empty": "No materials yet",
+          "add": "Add material",
+          "refresh": "Refresh",
+          "nameRequired": "Please enter material name",
+          "namePlaceholder": "Enter material name",
+          "descPlaceholder": "Enter description (optional)",
+          "statusLabel": "Status",
+          "attachmentRequired": "Please upload at least one file",
+          "uploadTip": "Supports doc/docx/pdf/ppt/pptx/xls/xlsx/jpg/jpeg/png. Max {0}MB each, up to {1} files.",
+          "uploadText": "Drop files here, or click to upload",
+          "typeInvalid": "Unsupported file type",
+          "sizeInvalid": "File size cannot exceed {0}MB",
+          "limit": "Up to {0} files",
+          "uploadFail": "Upload failed",
+          "createSuccess": "Material created",
+          "editSuccess": "Material updated",
+          "deleteSuccess": "Material deleted",
+          "enableSuccess": "Material enabled",
+          "disableSuccess": "Material disabled",
+          "deleteConfirm": "Delete material \"{0}\"?",
+          "deleteConfirmBtn": "Delete",
+          "deleteCancelBtn": "Cancel",
+          "cancel": "Cancel",
+          "submit": "Save",
+          "edit": "Edit",
+          "delete": "Delete",
+          "enable": "Enable",
+          "disable": "Disable",
+          "createTitle": "Add material",
+          "editTitle": "Edit material",
+          "fields": {
+            "materialName": "Name",
+            "description": "Description",
+            "attachment": "Attachments",
+            "status": "Status",
+            "createTime": "Created at",
+            "actions": "Actions"
+          },
+          "preview": "Preview",
+          "previewTitle": "Material preview",
+          "noAttachment": "No attachments",
+          "existingAttachments": "Uploaded files",
+          "removeFile": "Remove",
+          "addMore": "Upload more",
+          "openFile": "Open file"
+        }
+      }
     }
   },
   "search": {

@@ -136,7 +136,7 @@ function next() {
 }
 
 function goCreateApp() {
-  router.push('/service/mydemand/apps/config');
+  router.push('/service/mydemand/apps');
 }
 
 function removeModelFile() {

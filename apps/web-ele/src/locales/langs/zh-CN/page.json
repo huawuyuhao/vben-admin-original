@@ -1379,6 +1379,189 @@
           }
         }
       }
+    },
+    "mydemand": {
+      "apps": {
+        "eyebrow": "我的需求 · 应用",
+        "title": "我的应用",
+        "desc": "维护个人应用信息，支持收藏、启停、定时任务、版本与素材管理。",
+        "search": "查询",
+        "reset": "重置",
+        "refresh": "刷新",
+        "add": "新增应用",
+        "empty": "暂无应用",
+        "valueEmpty": "—",
+        "filter": {
+          "appName": "应用名称",
+          "appNamePlaceholder": "请输入应用名称",
+          "appType": "应用类型",
+          "appTypeAll": "全部类型",
+          "appStatus": "应用状态",
+          "appStatusAll": "全部状态",
+          "isCollect": "收藏",
+          "isCollectAll": "全部"
+        },
+        "type": {
+          "train": "训练类",
+          "infer": "推理类",
+          "analysis": "分析类",
+          "render": "渲染类",
+          "unknown": "—"
+        },
+        "status": {
+          "on": "启用",
+          "off": "停用",
+          "unknown": "—"
+        },
+        "collect": {
+          "yes": "已收藏",
+          "no": "未收藏"
+        },
+        "fields": {
+          "appName": "应用名称",
+          "appVersion": "应用版本",
+          "appType": "应用类型",
+          "appStatus": "应用状态",
+          "isCollect": "收藏",
+          "createTime": "创建时间",
+          "updateTime": "更新时间",
+          "actions": "操作"
+        },
+        "actions": {
+          "edit": "编辑",
+          "delete": "删除",
+          "enable": "启用",
+          "disable": "停用",
+          "collect": "收藏",
+          "uncollect": "取消收藏",
+          "version": "版本",
+          "schedule": "定时任务",
+          "material": "素材",
+          "more": "更多"
+        },
+        "delete": {
+          "title": "删除确认",
+          "confirm": "确认删除应用「{0}」吗？删除后不可恢复。",
+          "confirmBtn": "删除",
+          "cancelBtn": "取消",
+          "success": "应用已删除"
+        },
+        "toggle": {
+          "enableSuccess": "「{0}」已启用",
+          "disableSuccess": "「{0}」已停用"
+        },
+        "collectAction": {
+          "collectSuccess": "「{0}」已收藏",
+          "uncollectSuccess": "「{0}」已取消收藏"
+        },
+        "form": {
+          "createTitle": "新增应用",
+          "editTitle": "编辑应用",
+          "invalidId": "无效的应用 ID",
+          "appNameRequired": "请输入应用名称",
+          "appNamePlaceholder": "请输入应用名称",
+          "appVersionRequired": "请输入应用版本",
+          "appVersionPlaceholder": "如 V1.0",
+          "appTypeRequired": "请选择应用类型",
+          "appTypePlaceholder": "请选择应用类型",
+          "appStatusLabel": "应用状态",
+          "createSuccess": "应用创建成功",
+          "editSuccess": "应用更新成功",
+          "cancel": "取消",
+          "submit": "保存",
+          "fields": {
+            "appName": "应用名称",
+            "appVersion": "应用版本",
+            "appType": "应用类型",
+            "appStatus": "应用状态"
+          }
+        },
+        "schedule": {
+          "title": "配置定时任务",
+          "invalidId": "无效的应用 ID",
+          "cronRequired": "请输入 Cron 表达式",
+          "cronPlaceholder": "如 0 0 2 * * ?",
+          "cronTip": "使用标准 Cron 表达式，控制应用定时执行策略。",
+          "statusLabel": "任务状态",
+          "success": "定时任务已创建",
+          "cancel": "取消",
+          "submit": "创建",
+          "fields": {
+            "appName": "应用名称",
+            "cronExpression": "Cron 表达式",
+            "status": "任务状态"
+          }
+        },
+        "version": {
+          "title": "版本维护",
+          "invalidId": "无效的应用 ID",
+          "empty": "暂无版本记录",
+          "add": "新增版本",
+          "versionNoRequired": "请输入版本号",
+          "versionNoPlaceholder": "如 V1.0.1",
+          "materialPlaceholder": "请选择关联素材（仅展示启用中的素材）",
+          "materialEmpty": "暂无可用素材，请先在素材管理中新增并启用",
+          "createSuccess": "版本创建成功",
+          "cancel": "取消",
+          "submit": "保存",
+          "loadFail": "版本列表加载失败",
+          "fields": {
+            "versionNo": "版本号",
+            "materialIds": "关联素材",
+            "createTime": "创建时间"
+          }
+        },
+        "material": {
+          "title": "素材管理",
+          "invalidId": "无效的应用 ID",
+          "invalidMaterialId": "无效的素材 ID",
+          "empty": "暂无素材",
+          "add": "新增素材",
+          "refresh": "刷新",
+          "nameRequired": "请输入素材名称",
+          "namePlaceholder": "请输入素材名称",
+          "descPlaceholder": "请输入素材描述（可选）",
+          "statusLabel": "素材状态",
+          "attachmentRequired": "请至少上传一个附件",
+          "uploadTip": "支持 doc/docx/pdf/ppt/pptx/xls/xlsx/jpg/jpeg/png，单文件不超过 {0}MB，最多 {1} 个",
+          "uploadText": "将文件拖到此处，或点击上传",
+          "typeInvalid": "文件格式不支持",
+          "sizeInvalid": "文件大小不能超过 {0}MB",
+          "limit": "最多上传 {0} 个附件",
+          "uploadFail": "附件上传失败",
+          "createSuccess": "素材创建成功",
+          "editSuccess": "素材更新成功",
+          "deleteSuccess": "素材已删除",
+          "enableSuccess": "素材已启用",
+          "disableSuccess": "素材已停用",
+          "deleteConfirm": "确认删除素材「{0}」吗？",
+          "deleteConfirmBtn": "删除",
+          "deleteCancelBtn": "取消",
+          "cancel": "取消",
+          "submit": "保存",
+          "edit": "编辑",
+          "delete": "删除",
+          "enable": "启用",
+          "disable": "停用",
+          "createTitle": "新增素材",
+          "editTitle": "编辑素材",
+          "fields": {
+            "materialName": "素材名称",
+            "description": "素材描述",
+            "attachment": "附件",
+            "status": "状态",
+            "createTime": "创建时间",
+            "actions": "操作"
+          },
+          "preview": "预览",
+          "previewTitle": "素材预览",
+          "noAttachment": "暂无附件",
+          "existingAttachments": "已上传附件",
+          "removeFile": "移除",
+          "addMore": "继续上传",
+          "openFile": "打开文件"
+        }
+      }
     }
   },
   "search": {

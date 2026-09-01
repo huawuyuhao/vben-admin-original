@@ -128,21 +128,11 @@ const routes: RouteRecordRaw[] = [
           {
             name: 'ServiceMyDemandApps',
             path: '/service/mydemand/apps',
-            component: () => import('#/views/mydemand/apps/index.vue'),
+            component: () => import('#/views/service/mydemand/apps/index.vue'),
             meta: {
               icon: 'ep:menu',
               order: 1,
               title: '我的应用',
-            },
-          },
-          {
-            name: 'ServiceMyDemandAppConfig',
-            path: '/service/mydemand/apps/config',
-            component: () => import('#/views/mydemand/apps/config.vue'),
-            meta: {
-              activePath: '/service/mydemand/apps',
-              hideInMenu: true,
-              title: '应用配置',
             },
           },
           {
