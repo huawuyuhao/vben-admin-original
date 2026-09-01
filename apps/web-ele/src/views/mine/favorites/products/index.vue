@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-import type { FavoriteItem } from '#/types/mine/favorites';
+import type { FavoriteItem } from '#/types/mine/favorites/products';
 
 import { onMounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { $t } from '@vben/locales';
 
-import { getFavoritesListApi } from '#/api/mine/favorites';
+import { getFavoritesListApi } from '#/api/mine/favorites/products';
 
 import {
   FAVORITES_PAGE_SIZE,
@@ -16,9 +16,9 @@ import FavoriteGrid from './modules/favorite-grid.vue';
 import FavoritePager from './modules/favorite-pager.vue';
 
 /**
- * 我的 · 我的收藏（对接 GET /product/collect/list）
+ * 我的 · 我的收藏 · 我的产品（对接 GET /product/collect/list）
  */
-defineOptions({ name: 'MineFavorites' });
+defineOptions({ name: 'MineFavoritesProducts' });
 
 const router = useRouter();
 
@@ -36,7 +36,7 @@ const total = ref(0);
 const syncingFromServer = ref(false);
 
 /**
- * 拉取收藏分页列表
+ * 拉取收藏产品分页列表
  */
 async function fetchFavorites() {
   loading.value = true;
@@ -144,11 +144,11 @@ onMounted(() => {
         <header class="mine-shell__head">
           <div>
             <p class="mine-shell__eyebrow">
-              {{ $t('page.mine.favorites.eyebrow') }}
+              {{ $t('page.mine.favorites.products.eyebrow') }}
             </p>
-            <h2>{{ $t('page.mine.favorites.title') }}</h2>
+            <h2>{{ $t('page.mine.favorites.products.title') }}</h2>
             <p class="mine-shell__desc">
-              {{ $t('page.mine.favorites.desc') }}
+              {{ $t('page.mine.favorites.products.desc') }}
             </p>
           </div>
           <div class="mine-shell__head-actions">
@@ -158,7 +158,7 @@ onMounted(() => {
               :loading="loading"
               @click="handleRefresh"
             >
-              {{ $t('page.mine.favorites.refresh') }}
+              {{ $t('page.mine.favorites.products.refresh') }}
             </el-button>
           </div>
         </header>
@@ -167,7 +167,7 @@ onMounted(() => {
           collected
           :loading="loading"
           :products="products"
-          :empty-description="$t('page.mine.favorites.empty')"
+          :empty-description="$t('page.mine.favorites.products.empty')"
           @detail="goDetail"
           @collect-change="handleCollectChange"
         />
@@ -185,5 +185,5 @@ onMounted(() => {
 </template>
 
 <style lang="scss" scoped>
-@use '../../../scss/page-shell.scss';
+@use '../../../../scss/page-shell.scss';
 </style>

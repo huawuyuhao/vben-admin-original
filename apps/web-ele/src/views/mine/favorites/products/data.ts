@@ -1,11 +1,11 @@
 import type {
   FavoriteItem,
   FavoritesListResult,
-} from '#/types/mine/favorites';
+} from '#/types/mine/favorites/products';
 
 import { isEmpty } from '@vben/utils';
 
-/** 我的收藏默认每页条数（3 列 × 2 行） */
+/** 我的产品（收藏）默认每页条数（3 列 × 2 行） */
 export const FAVORITES_PAGE_SIZE = 6;
 
 /** 可选每页条数（供 el-pagination） */

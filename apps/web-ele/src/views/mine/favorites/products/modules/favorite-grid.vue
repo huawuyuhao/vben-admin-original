@@ -1,15 +1,15 @@
 <script lang="ts" setup>
-import type { FavoriteItem } from '#/types/mine/favorites';
+import type { FavoriteItem } from '#/types/mine/favorites/products';
 
 import { $t } from '@vben/locales';
 
 import FavoriteCard from './favorite-card.vue';
 
-defineOptions({ name: 'MineFavoriteGrid' });
+defineOptions({ name: 'MineFavoritesProductsGrid' });
 
 withDefaults(
   defineProps<{
-    /** 列表项默认收藏态（收藏页传 true） */
+    /** 列表项默认收藏态（我的产品页传 true） */
     collected?: boolean;
     /** 空态文案 */
     emptyDescription?: string;
@@ -72,7 +72,7 @@ const emit = defineEmits<{
     >
       <el-empty
         :description="
-          emptyDescription || $t('page.mine.favorites.empty')
+          emptyDescription || $t('page.mine.favorites.products.empty')
         "
       />
     </el-card>

@@ -1,7 +1,7 @@
 import type { ProductInfo } from '#/types/service/product';
 
 /**
- * 我的收藏列表条目（产品信息 + 收藏表字段）
+ * 我的产品（收藏）列表条目（产品信息 + 收藏表字段）
  * GET /product/collect/list · records[]
  */
 export interface FavoriteItem extends ProductInfo {
@@ -14,7 +14,7 @@ export interface FavoriteItem extends ProductInfo {
 }
 
 /**
- * 我的收藏列表查询参数
+ * 我的产品（收藏）列表查询参数
  * GET /product/collect/list
  */
 export interface FavoritesListParams {
@@ -25,7 +25,7 @@ export interface FavoritesListParams {
 }
 
 /**
- * 我的收藏分页结果
+ * 我的产品（收藏）分页结果
  */
 export interface FavoritesListResult<T = FavoriteItem> {
   /** 当前页列表 */
@@ -39,7 +39,7 @@ export interface FavoritesListResult<T = FavoriteItem> {
 }
 
 /**
- * 我的收藏列表响应体（扁平分页 + code/msg，兼容 data 包裹）
+ * 我的产品（收藏）列表响应体（扁平分页 + code/msg，兼容 data 包裹）
  */
 export interface FavoritesListResponseBody<T = FavoriteItem> {
   code?: number;

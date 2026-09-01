@@ -1,4 +1,4 @@
-import type { FavoriteItem } from '#/types/mine/favorites';
+import type { FavoriteItem } from '#/types/mine/favorites/products';
 
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
@@ -13,7 +13,7 @@ import {
 import { ensureLoggedIn } from '#/store/common';
 
 /**
- * 收藏页：取消收藏与「立即使用」共用逻辑
+ * 我的产品（收藏）页：取消收藏与「立即使用」共用逻辑
  * （收藏/取消、需求意向接口属产品域，故复用 #/api/service/product）
  * @returns 收藏切换、生成需求意向方法及 loading 状态
  */
@@ -55,7 +55,7 @@ export function useFavoriteActions() {
     if (!productId) {
       return null;
     }
-    if (!ensureLoggedIn('/mine/favorites')) {
+    if (!ensureLoggedIn('/mine/favorites/products')) {
       return null;
     }
 

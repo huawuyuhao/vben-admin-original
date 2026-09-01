@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { FavoriteItem } from '#/types/mine/favorites';
+import type { FavoriteItem } from '#/types/mine/favorites/products';
 
 import { computed, ref, watch } from 'vue';
 
@@ -14,11 +14,11 @@ import {
 } from '../data';
 import { useFavoriteActions } from '../composables/use-favorite-actions';
 
-defineOptions({ name: 'MineFavoriteCard' });
+defineOptions({ name: 'MineFavoritesProductsCard' });
 
 const props = withDefaults(
   defineProps<{
-    /** 初始是否已收藏（收藏页为 true） */
+    /** 初始是否已收藏（我的产品页为 true） */
     collected?: boolean;
     /** 收藏条目 */
     item: FavoriteItem;

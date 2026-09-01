@@ -3,7 +3,7 @@ import type {
   FavoritesListParams,
   FavoritesListResponseBody,
   FavoritesListResult,
-} from '#/types/mine/favorites';
+} from '#/types/mine/favorites/products';
 
 import { ElMessage } from 'element-plus';
 
@@ -62,7 +62,7 @@ function parseFavoritesListBody<T = FavoriteItem>(
 }
 
 /**
- * 我的收藏列表分页查询
+ * 我的产品（收藏）列表分页查询
  * 开发态：GET /mock/product/collect/list
  * 正式：GET /product/collect/list
  * @param params page / pageSize

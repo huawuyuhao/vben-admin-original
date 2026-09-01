@@ -59,23 +59,36 @@ const routes: RouteRecordRaw[] = [
         ],
       },
       {
-        name: 'MineFavorites',
-        path: '/mine/favorites',
-        component: () => import('#/views/mine/favorites/index.vue'),
         meta: {
           icon: 'ep:star',
           order: 2,
           title: '我的收藏',
         },
+        name: 'MineFavorites',
+        path: '/mine/favorites',
+        redirect: '/mine/favorites/products',
+        children: [
+          {
+            name: 'MineFavoritesProducts',
+            path: '/mine/favorites/products',
+            component: () =>
+              import('#/views/mine/favorites/products/index.vue'),
+            meta: {
+              icon: 'ep:goods',
+              order: 1,
+              title: '我的产品',
+            },
+          },
+        ],
       },
       {
-        /** 旧路径兼容：原「我的信息中心 / 我的收藏」 */
+        /** 旧路径兼容：原「我的信息中心 / 我的收藏」及叶子「我的收藏」 */
         name: 'MineProfileFavoritesRedirect',
         path: '/mine/profile/favorites',
-        redirect: '/mine/favorites',
+        redirect: '/mine/favorites/products',
         meta: {
           hideInMenu: true,
-          title: '我的收藏',
+          title: '我的产品',
         },
       },
       {

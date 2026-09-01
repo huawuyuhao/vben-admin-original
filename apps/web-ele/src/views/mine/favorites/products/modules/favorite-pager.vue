@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { FAVORITES_PAGE_SIZE_OPTIONS } from '../data';
 
-defineOptions({ name: 'MineFavoritePager' });
+defineOptions({ name: 'MineFavoritesProductsPager' });
 
 /** 当前页 */
 const page = defineModel<number>('page', { default: 1 });

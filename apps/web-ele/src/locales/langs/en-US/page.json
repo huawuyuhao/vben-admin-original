@@ -573,11 +573,13 @@
       }
     },
     "favorites": {
-      "eyebrow": "Mine",
-      "title": "My Favorites",
-      "desc": "Manage favorited compute products. Unfavorite or create a demand intent.",
-      "empty": "No favorited products yet",
-      "refresh": "Refresh"
+      "products": {
+        "eyebrow": "My Favorites",
+        "title": "My Products",
+        "desc": "Manage favorited compute products. Unfavorite or create a demand intent.",
+        "empty": "No favorited products yet",
+        "refresh": "Refresh"
+      }
     },
     "loginLog": {
       "eyebrow": "My Information Center",

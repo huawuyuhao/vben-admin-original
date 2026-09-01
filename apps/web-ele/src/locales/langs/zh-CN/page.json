@@ -573,11 +573,13 @@
       }
     },
     "favorites": {
-      "eyebrow": "我的",
-      "title": "我的收藏",
-      "desc": "集中管理已收藏的算力产品，可取消收藏或立即生成需求意向。",
-      "empty": "暂无收藏产品",
-      "refresh": "刷新"
+      "products": {
+        "eyebrow": "我的收藏",
+        "title": "我的产品",
+        "desc": "集中管理已收藏的算力产品，可取消收藏或立即生成需求意向。",
+        "empty": "暂无收藏产品",
+        "refresh": "刷新"
+      }
     },
     "loginLog": {
       "eyebrow": "我的信息中心",
