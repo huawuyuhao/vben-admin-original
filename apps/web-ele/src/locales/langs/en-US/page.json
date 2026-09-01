@@ -581,6 +581,73 @@
         "refresh": "Refresh"
       }
     },
+    "messages": {
+      "header": {
+        "justNow": "Just now",
+        "minutesAgo": "{0} min ago",
+        "hoursAgo": "{0} hours ago",
+        "daysAgo": "{0} days ago",
+        "untitled": "Untitled message",
+        "markAllSuccess": "All messages marked as read",
+        "clearTitle": "Clear notifications",
+        "clearConfirm": "Delete {0} message(s) in the dropdown? This cannot be undone."
+      },
+      "all": {
+        "eyebrow": "Notifications",
+        "title": "All Messages",
+        "desc": "Browse demand, certification, sub-account, and system messages by category. Mark as read or delete in bulk.",
+        "empty": "No messages yet",
+        "refresh": "Refresh",
+        "valueEmpty": "—",
+        "selectedCount": "{0} selected",
+        "types": {
+          "all": "All",
+          "demand": "Demand",
+          "auth": "Certification",
+          "subaccount": "Sub-account",
+          "system": "System",
+          "unknown": "Unknown"
+        },
+        "filter": {
+          "readStatus": "Read status",
+          "readAll": "All",
+          "unread": "Unread",
+          "read": "Read"
+        },
+        "readStatus": {
+          "unread": "Unread",
+          "read": "Read"
+        },
+        "fields": {
+          "title": "Title",
+          "messageType": "Type",
+          "content": "Content",
+          "isRead": "Status",
+          "createTime": "Created",
+          "readTime": "Read at",
+          "actions": "Actions"
+        },
+        "actions": {
+          "markRead": "Mark as read",
+          "delete": "Delete",
+          "detail": "Details",
+          "cancel": "Cancel"
+        },
+        "detail": {
+          "title": "Message Details",
+          "close": "Close"
+        },
+        "form": {
+          "invalidId": "Invalid message ID"
+        },
+        "tips": {
+          "selectFirst": "Please select messages first",
+          "markReadSuccess": "Marked as read",
+          "deleteTitle": "Delete messages",
+          "deleteConfirm": "Delete {0} selected message(s)? This cannot be undone."
+        }
+      }
+    },
     "loginLog": {
       "eyebrow": "My Information Center",
       "title": "Login Log",

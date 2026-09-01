@@ -581,6 +581,73 @@
         "refresh": "刷新"
       }
     },
+    "messages": {
+      "header": {
+        "justNow": "刚刚",
+        "minutesAgo": "{0} 分钟前",
+        "hoursAgo": "{0} 小时前",
+        "daysAgo": "{0} 天前",
+        "untitled": "无标题消息",
+        "markAllSuccess": "已全部标记为已读",
+        "clearTitle": "清空通知",
+        "clearConfirm": "确认删除下拉列表中的 {0} 条消息吗？删除后不可恢复。"
+      },
+      "all": {
+        "eyebrow": "消息通知",
+        "title": "全部消息",
+        "desc": "按分类查看需求、认证、子账号与系统消息，支持批量已读与删除。",
+        "empty": "暂无消息",
+        "refresh": "刷新",
+        "valueEmpty": "—",
+        "selectedCount": "已选 {0} 条",
+        "types": {
+          "all": "全部",
+          "demand": "需求消息",
+          "auth": "认证消息",
+          "subaccount": "企业子账号消息",
+          "system": "系统消息",
+          "unknown": "未知类型"
+        },
+        "filter": {
+          "readStatus": "阅读状态",
+          "readAll": "全部",
+          "unread": "未读",
+          "read": "已读"
+        },
+        "readStatus": {
+          "unread": "未读",
+          "read": "已读"
+        },
+        "fields": {
+          "title": "标题",
+          "messageType": "消息类型",
+          "content": "内容",
+          "isRead": "状态",
+          "createTime": "创建时间",
+          "readTime": "阅读时间",
+          "actions": "操作"
+        },
+        "actions": {
+          "markRead": "标记已读",
+          "delete": "删除",
+          "detail": "详情",
+          "cancel": "取消"
+        },
+        "detail": {
+          "title": "消息详情",
+          "close": "关闭"
+        },
+        "form": {
+          "invalidId": "消息 ID 无效"
+        },
+        "tips": {
+          "selectFirst": "请先选择消息",
+          "markReadSuccess": "已标记为已读",
+          "deleteTitle": "删除消息",
+          "deleteConfirm": "确认删除选中的 {0} 条消息吗？删除后不可恢复。"
+        }
+      }
+    },
     "loginLog": {
       "eyebrow": "我的信息中心",
       "title": "登录日志",

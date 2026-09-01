@@ -22,7 +22,10 @@ import { useAccessStore, useUserStore } from '@vben/stores';
 
 import { $t } from '#/locales';
 import { useAuthStore } from '#/store';
+import MessageDetailDialog from '#/views/mine/messages/all/modules/detail-dialog.vue';
 import PortalSearchBar from '#/views/search/index.vue';
+
+import { useHeaderNotifications } from './composables/use-header-notifications';
 
 import '#/views/_shared/styles/portal.css';
 
@@ -72,71 +75,89 @@ updatePreferences({
   shortcutKeys: { globalSearch: false },
 });
 
-const notifications = ref<NotificationItem[]>([
-  {
-    id: 1,
-    avatar: 'https://avatar.vercel.sh/vercel.svg?text=VB',
-    date: '3小时前',
-    isRead: true,
-    message: '描述信息描述信息描述信息',
-    title: '收到了 14 份新周报',
-  },
-  {
-    id: 2,
-    avatar: 'https://avatar.vercel.sh/1',
-    date: '刚刚',
-    isRead: false,
-    message: '描述信息描述信息描述信息',
-    title: '朱偏右 回复了你',
-  },
-  {
-    id: 3,
-    avatar: 'https://avatar.vercel.sh/1',
-    date: '2024-01-01',
-    isRead: false,
-    message: '描述信息描述信息描述信息',
-    title: '曲丽丽 评论了你',
-  },
-  {
-    id: 4,
-    avatar: 'https://avatar.vercel.sh/satori',
-    date: '1天前',
-    isRead: false,
-    message: '描述信息描述信息描述信息',
-    title: '代办提醒',
-  },
-  {
-    id: 5,
-    avatar: 'https://avatar.vercel.sh/satori',
-    date: '1天前',
-    isRead: false,
-    message: '描述信息描述信息描述信息',
-    title: '跳转Workspace示例',
-    link: '/workspace',
-  },
-  {
-    id: 6,
-    avatar: 'https://avatar.vercel.sh/satori',
-    date: '1天前',
-    isRead: false,
-    message: '描述信息描述信息描述信息',
-    title: '跳转外部链接示例',
-    link: 'https://doc.vben.pro',
-  },
-]);
-
 const router = useRouter();
 const userStore = useUserStore();
 const authStore = useAuthStore();
 const accessStore = useAccessStore();
 const { destroyWatermark, updateWatermark } = useWatermark();
 const { isDark } = usePreferences();
-const showDot = computed(() =>
-  notifications.value.some((item) => !item.isRead),
-);
 
 /** 是否已登录（以 vben accessStore.accessToken 为准） */
 const isLoggedIn = computed(() => !!accessStore.accessToken);
+
+/** 顶栏消息详情弹窗 */
+const headerDetailDialogRef =
+  ref<InstanceType<typeof MessageDetailDialog>>();
+
+/**
+ * 顶栏点击单条通知：直接打开详情弹窗，不跳转页面
+ * @param item 通知项
+ */
+function openHeaderMessageDetail(item: NotificationItem) {
+  const id = Number(item.id);
+  if (!Number.isFinite(id) || id <= 0) {
+    return;
+  }
+  void headerDetailDialogRef.value?.open({
+    messageId: id,
+    title: item.title,
+    content: item.message,
+    isRead: item.isRead ? 1 : 0,
+    messageType:
+      typeof item.messageType === 'number' ? item.messageType : undefined,
+  });
+}
+
+const {
+  notifications,
+  showDot,
+  fetchNotifications,
+  handleRead,
+  handleRemove,
+  handleMakeAll,
+  handleClear,
+  handleClick,
+  handleViewAll,
+} = useHeaderNotifications({
+  isLoggedIn: () => isLoggedIn.value,
+  onOpenDetail: openHeaderMessageDetail,
+});
+
+/**
+ * 顶栏详情打开未读消息后：标记已读并刷新铃铛状态
+ * @param messageId 消息 ID
+ */
+async function handleHeaderDetailRead(messageId: number) {
+  const item = notifications.value.find(
+    (row) => Number(row.id) === messageId,
+  );
+  if (item) {
+    await handleRead(item);
+    return;
+  }
+  await handleRead({
+    id: messageId,
+    avatar: '',
+    date: '',
+    isRead: false,
+    message: '',
+    title: '',
+  });
+}
+/**
+ * 从全部消息页返回时刷新顶栏未读
+ */
+watch(
+  () => route.path,
+  (path, prev) => {
+    if (!isLoggedIn.value) {
+      return;
+    }
+    if (prev?.startsWith('/mine/messages') && !path.startsWith('/mine/messages')) {
+      void fetchNotifications();
+    }
+  },
+);
 
 /**
  * 顶栏展示用头像：无自定义头像时用系统默认头像
@@ -194,52 +215,6 @@ function goPortalHome() {
 /** 点击左上角 Logo / 标题回到门户首页 */
 function handleClickLogo() {
   goPortalHome();
-}
-
-function handleNoticeClear() {
-  notifications.value = [];
-}
-
-function markRead(id: number | string) {
-  const item = notifications.value.find((item) => item.id === id);
-  if (item) {
-    item.isRead = true;
-  }
-}
-
-function remove(id: number | string) {
-  notifications.value = notifications.value.filter((item) => item.id !== id);
-}
-
-function handleMakeAll() {
-  notifications.value.forEach((item) => (item.isRead = true));
-}
-
-const viewAll = () => {};
-
-const handleClick = (item: NotificationItem) => {
-  // 如果通知项有链接，点击时跳转
-  if (item.link) {
-    navigateTo(item.link, item.query, item.state);
-  }
-};
-
-function navigateTo(
-  link: string,
-  query?: Record<string, any>,
-  state?: Record<string, any>,
-) {
-  if (link.startsWith('http://') || link.startsWith('https://')) {
-    // 外部链接，在新标签页打开
-    window.open(link, '_blank');
-  } else {
-    // 内部路由链接，支持 query 参数和 state
-    router.push({
-      path: link,
-      query: query || {},
-      state,
-    });
-  }
 }
 
 watch(
@@ -355,14 +330,15 @@ watch(
         </template>
         <template #notification>
           <Notification
+            v-if="isLoggedIn"
             :dot="showDot"
             :notifications="notifications"
-            @clear="handleNoticeClear"
-            @read="(item) => item.id && markRead(item.id)"
-            @remove="(item) => item.id && remove(item.id)"
+            @clear="handleClear"
+            @read="handleRead"
+            @remove="handleRemove"
             @make-all="handleMakeAll"
             @on-click="handleClick"
-            @view-all="viewAll"
+            @view-all="handleViewAll"
           />
         </template>
         <template #extra>
@@ -384,6 +360,11 @@ watch(
               </button>
             </div>
           </AuthenticationLoginExpiredModal>
+          <MessageDetailDialog
+            v-if="isLoggedIn"
+            ref="headerDetailDialogRef"
+            @read="handleHeaderDetailRead"
+          />
         </template>
         <template #lock-screen>
           <LockScreen :avatar @to-login="handleLogout" />
