@@ -138,21 +138,12 @@ const routes: RouteRecordRaw[] = [
           {
             name: 'ServiceMyDemandCompute',
             path: '/service/mydemand/compute',
-            component: () => import('#/views/mydemand/compute/index.vue'),
+            component: () =>
+              import('#/views/service/mydemand/compute/index.vue'),
             meta: {
               icon: 'ep:cpu',
               order: 2,
               title: '我的算力需求',
-            },
-          },
-          {
-            name: 'ServiceMyDemandComputeCreate',
-            path: '/service/mydemand/compute/create',
-            component: () => import('#/views/mydemand/compute/create.vue'),
-            meta: {
-              activePath: '/service/mydemand/compute',
-              hideInMenu: true,
-              title: '新建算力需求',
             },
           },
           {

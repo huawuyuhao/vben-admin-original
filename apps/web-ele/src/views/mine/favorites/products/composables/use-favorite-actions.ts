@@ -87,7 +87,7 @@ export function useFavoriteActions() {
     if (!product?.productId) {
       return;
     }
-    if (!ensureLoggedIn('/service/mydemand/compute/create')) {
+    if (!ensureLoggedIn('/service/mydemand/compute')) {
       return;
     }
 
@@ -107,12 +107,12 @@ export function useFavoriteActions() {
       const demandId = Number(data?.key);
       ElMessage.success($t('page.service.product.useNow.success'));
       await router.push({
-        path: '/service/mydemand/compute/create',
+        path: '/service/mydemand/compute',
         query: {
           productId: String(product.productId),
           ...(Number.isFinite(demandId) && demandId > 0
             ? { demandId: String(demandId) }
-            : {}),
+            : { create: '1' }),
         },
       });
     } catch {

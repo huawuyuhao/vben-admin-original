@@ -1561,6 +1561,114 @@
           "addMore": "Upload more",
           "openFile": "Open file"
         }
+      },
+      "compute": {
+        "eyebrow": "My Demands · Compute",
+        "title": "My Compute Demands",
+        "desc": "Submit compute demand intents, manage records, copy history, track progress, and preview or download results.",
+        "search": "Search",
+        "reset": "Reset",
+        "refresh": "Refresh",
+        "add": "New Demand",
+        "empty": "No compute demands yet",
+        "valueEmpty": "—",
+        "filter": {
+          "demandNo": "Demand No.",
+          "demandNoPlaceholder": "Enter demand number",
+          "status": "Status",
+          "statusAll": "All statuses",
+          "timeRange": "Time range",
+          "timeStart": "Start time",
+          "timeEnd": "End time"
+        },
+        "type": {
+          "train": "Training",
+          "infer": "Inference",
+          "analysis": "Analysis",
+          "render": "Rendering",
+          "unknown": "—"
+        },
+        "status": {
+          "draft": "Draft",
+          "pending": "Pending review",
+          "rejected": "Rejected",
+          "converted": "Converted",
+          "running": "Running",
+          "done": "Completed",
+          "unknown": "—"
+        },
+        "fields": {
+          "demandNo": "Demand No.",
+          "demandName": "Demand name",
+          "demandType": "Type",
+          "resourceSpec": "Resource spec",
+          "applicationId": "Linked app",
+          "status": "Status",
+          "submitTime": "Submitted at",
+          "resultFile": "Result file",
+          "resultTime": "Result time",
+          "actions": "Actions"
+        },
+        "actions": {
+          "detail": "Details",
+          "edit": "Edit",
+          "delete": "Delete",
+          "copy": "Copy",
+          "resubmit": "Resubmit",
+          "result": "Result"
+        },
+        "delete": {
+          "confirm": "Delete demand \"{0}\"? This cannot be undone.",
+          "confirmBtn": "Delete",
+          "cancelBtn": "Cancel",
+          "success": "Demand deleted"
+        },
+        "copy": {
+          "success": "Demand copied",
+          "successWithNo": "Demand copied. New No.: {0}"
+        },
+        "export": {
+          "action": "Export",
+          "hint": "Export table with current filters",
+          "success": "Export succeeded",
+          "noUrl": "Export file URL is missing"
+        },
+        "form": {
+          "createTitle": "New compute demand",
+          "editTitle": "Edit compute demand",
+          "resubmitTitle": "Resubmit compute demand",
+          "invalidId": "Invalid demand ID",
+          "demandNameRequired": "Please enter demand name",
+          "demandNamePlaceholder": "Enter demand name",
+          "demandTypeRequired": "Please select demand type",
+          "demandTypePlaceholder": "Select demand type",
+          "resourceSpecPlaceholder": "e.g. GPU A100 × 4 / 64GB RAM",
+          "applicationPlaceholder": "Select linked app (optional)",
+          "createSuccess": "Demand submitted",
+          "editSuccess": "Demand updated",
+          "resubmitSuccess": "Demand resubmitted",
+          "cancel": "Cancel",
+          "submit": "Save",
+          "resubmit": "Resubmit",
+          "fields": {
+            "demandName": "Demand name",
+            "demandType": "Type",
+            "resourceSpec": "Resource spec",
+            "applicationId": "Linked app"
+          }
+        },
+        "detail": {
+          "title": "Demand details",
+          "close": "Close"
+        },
+        "result": {
+          "title": "Execution result",
+          "download": "Download result",
+          "openPreview": "Open preview file",
+          "empty": "No preview content",
+          "downloadSuccess": "Download started",
+          "noUrl": "Result download URL is missing"
+        }
       }
     }
   },

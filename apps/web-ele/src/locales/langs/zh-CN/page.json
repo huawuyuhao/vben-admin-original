@@ -1561,6 +1561,114 @@
           "addMore": "继续上传",
           "openFile": "打开文件"
         }
+      },
+      "compute": {
+        "eyebrow": "我的需求 · 算力",
+        "title": "我的算力需求",
+        "desc": "提交算力需求意向，管理需求台账，复制历史需求，查看执行进度并预览下载结果。",
+        "search": "查询",
+        "reset": "重置",
+        "refresh": "刷新",
+        "add": "新建需求",
+        "empty": "暂无算力需求",
+        "valueEmpty": "—",
+        "filter": {
+          "demandNo": "需求编号",
+          "demandNoPlaceholder": "请输入需求编号",
+          "status": "需求状态",
+          "statusAll": "全部状态",
+          "timeRange": "时间范围",
+          "timeStart": "开始时间",
+          "timeEnd": "结束时间"
+        },
+        "type": {
+          "train": "训练类",
+          "infer": "推理类",
+          "analysis": "分析类",
+          "render": "渲染类",
+          "unknown": "—"
+        },
+        "status": {
+          "draft": "待提交",
+          "pending": "待审核",
+          "rejected": "审核不通过",
+          "converted": "已转任务",
+          "running": "执行中",
+          "done": "已完成",
+          "unknown": "—"
+        },
+        "fields": {
+          "demandNo": "需求编号",
+          "demandName": "需求名称",
+          "demandType": "需求类型",
+          "resourceSpec": "资源规格",
+          "applicationId": "关联应用",
+          "status": "需求状态",
+          "submitTime": "提交时间",
+          "resultFile": "结果文件",
+          "resultTime": "结果时间",
+          "actions": "操作"
+        },
+        "actions": {
+          "detail": "详情",
+          "edit": "编辑",
+          "delete": "删除",
+          "copy": "复制",
+          "resubmit": "重新提交",
+          "result": "结果"
+        },
+        "delete": {
+          "confirm": "确认删除需求「{0}」吗？删除后不可恢复。",
+          "confirmBtn": "删除",
+          "cancelBtn": "取消",
+          "success": "需求已删除"
+        },
+        "copy": {
+          "success": "需求已复制",
+          "successWithNo": "需求已复制，新编号：{0}"
+        },
+        "export": {
+          "action": "导出",
+          "hint": "按当前筛选条件导出表格",
+          "success": "导出成功",
+          "noUrl": "未获取到导出文件地址"
+        },
+        "form": {
+          "createTitle": "新建算力需求",
+          "editTitle": "编辑算力需求",
+          "resubmitTitle": "重新提交算力需求",
+          "invalidId": "无效的需求 ID",
+          "demandNameRequired": "请输入需求名称",
+          "demandNamePlaceholder": "请输入需求名称",
+          "demandTypeRequired": "请选择需求类型",
+          "demandTypePlaceholder": "请选择需求类型",
+          "resourceSpecPlaceholder": "如 GPU A100 × 4 / 内存 64GB",
+          "applicationPlaceholder": "请选择关联应用（可选）",
+          "createSuccess": "需求提交成功",
+          "editSuccess": "需求更新成功",
+          "resubmitSuccess": "需求已重新提交",
+          "cancel": "取消",
+          "submit": "保存",
+          "resubmit": "重新提交",
+          "fields": {
+            "demandName": "需求名称",
+            "demandType": "需求类型",
+            "resourceSpec": "资源规格",
+            "applicationId": "关联应用"
+          }
+        },
+        "detail": {
+          "title": "需求详情",
+          "close": "关闭"
+        },
+        "result": {
+          "title": "执行结果",
+          "download": "下载结果",
+          "openPreview": "打开预览文件",
+          "empty": "暂无预览内容",
+          "downloadSuccess": "结果下载已开始",
+          "noUrl": "未获取到结果下载地址"
+        }
       }
     }
   },
