@@ -1736,6 +1736,109 @@
           "downloadSuccess": "Download started",
           "noUrl": "Result download URL is missing"
         }
+      },
+      "runtime": {
+        "eyebrow": "My Demands · Runtime",
+        "title": "Application Runtime",
+        "desc": "Monitor running apps for status, resource usage, live power and carbon data, and close active compute tasks.",
+        "refresh": "Refresh",
+        "empty": "No running applications",
+        "valueEmpty": "—",
+        "invalidId": "Invalid task ID",
+        "autoRefreshHint": "List and detail data auto-refresh every 30 seconds",
+        "fields": {
+          "taskName": "Task name",
+          "taskId": "Task ID",
+          "runStatus": "Status",
+          "runTime": "Runtime",
+          "completePercent": "Progress",
+          "collectTime": "Collected at",
+          "actions": "Actions"
+        },
+        "status": {
+          "submitted": "Submitted",
+          "preparing": "Preparing",
+          "running": "Running",
+          "done": "Completed",
+          "unknown": "—"
+        },
+        "steps": {
+          "submitted": "Submitted",
+          "preparing": "Preparing resources",
+          "running": "Running",
+          "done": "Completed"
+        },
+        "actions": {
+          "detail": "Details",
+          "close": "Close"
+        },
+        "close": {
+          "confirm": "Close task \"{0}\"? The task will stop running.",
+          "confirmBtn": "Close",
+          "cancelBtn": "Cancel",
+          "success": "Task closed"
+        },
+        "detail": {
+          "title": "Runtime details",
+          "desc": "View task status, resource usage, live power and carbon data, and historical trends.",
+          "back": "Back to list",
+          "empty": "No task details"
+        },
+        "kpi": {
+          "power": "Total power",
+          "carbon": "Total carbon",
+          "cpu": "CPU usage",
+          "gpu": "GPU usage",
+          "memory": "Memory usage"
+        },
+        "unit": {
+          "kwh": "kWh",
+          "kg": "kgCO₂e"
+        },
+        "range": {
+          "h1": "Last 1h",
+          "h6": "Last 6h",
+          "h24": "Last 24h",
+          "start": "Start time",
+          "end": "End time"
+        },
+        "tabs": {
+          "power": "Power",
+          "carbon": "Carbon",
+          "resource": "Resources",
+          "history": "History"
+        },
+        "chart": {
+          "empty": "No monitoring data",
+          "powerTitle": "Live power data",
+          "powerHint": "Linked with live market prices: consumption and electricity price",
+          "carbonTitle": "Live carbon emissions",
+          "carbonHint": "Calculated from green-power share and energy via the electricity-carbon model",
+          "resourceTitle": "Resource monitoring",
+          "resourceHint": "CPU / GPU / memory / disk / network usage",
+          "historyTitle": "Historical trend",
+          "historyHint": "View historical changes by selected dimension",
+          "series": {
+            "powerConsumption": "Power usage",
+            "powerPrice": "Power price",
+            "carbonEmission": "Carbon emission",
+            "cpu": "CPU",
+            "gpu": "GPU",
+            "memory": "Memory",
+            "disk": "Disk",
+            "network": "Network"
+          }
+        },
+        "history": {
+          "dimensionLabel": "Dimension",
+          "dimension": {
+            "power": "Power",
+            "carbon": "Carbon",
+            "cpu": "CPU",
+            "gpu": "GPU",
+            "memory": "Memory"
+          }
+        }
       }
     }
   },

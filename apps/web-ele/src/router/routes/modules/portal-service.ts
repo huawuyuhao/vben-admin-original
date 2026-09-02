@@ -149,11 +149,24 @@ const routes: RouteRecordRaw[] = [
           {
             name: 'ServiceMyDemandRuntime',
             path: '/service/mydemand/runtime',
-            component: () => import('#/views/mydemand/runtime.vue'),
+            component: () =>
+              import('#/views/service/mydemand/runtime/index.vue'),
             meta: {
               icon: 'ep:monitor',
               order: 3,
               title: '应用运行管理',
+            },
+          },
+          {
+            name: 'ServiceMyDemandRuntimeDetail',
+            path: '/service/mydemand/runtime/detail',
+            component: () =>
+              import('#/views/service/mydemand/runtime/detail/index.vue'),
+            meta: {
+              // 详情页不进侧栏，激活态仍落在「应用运行管理」
+              activePath: '/service/mydemand/runtime',
+              hideInMenu: true,
+              title: '运行详情',
             },
           },
         ],
