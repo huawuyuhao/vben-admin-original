@@ -36,7 +36,6 @@ import {
 import {
   APP_STATUS_OFF,
   APP_STATUS_ON,
-  MATERIAL_MAX_FILE_COUNT,
   MATERIAL_MAX_FILE_SIZE_MB,
   MATERIAL_PAGE_SIZE,
   MATERIAL_PAGE_SIZE_OPTIONS,
@@ -301,24 +300,7 @@ const beforeUpload: UploadProps['beforeUpload'] = (raw) => {
     );
     return false;
   }
-  if (form.attachmentUrls.length >= MATERIAL_MAX_FILE_COUNT) {
-    ElMessage.warning(
-      $t('page.service.mydemand.apps.material.limit', [
-        MATERIAL_MAX_FILE_COUNT,
-      ]),
-    );
-    return false;
-  }
   return true;
-};
-
-/**
- * 超出上传数量限制
- */
-const handleUploadExceed: UploadProps['onExceed'] = () => {
-  ElMessage.warning(
-    $t('page.service.mydemand.apps.material.limit', [MATERIAL_MAX_FILE_COUNT]),
-  );
 };
 
 /**
@@ -748,7 +730,7 @@ defineExpose({ open });
                 $t('page.service.mydemand.apps.material.existingAttachments')
               }}
               <span class="material-form-dialog__count">
-                {{ form.attachmentUrls.length }}/{{ MATERIAL_MAX_FILE_COUNT }}
+                {{ form.attachmentUrls.length }}
               </span>
             </div>
 
@@ -806,14 +788,10 @@ defineExpose({ open });
               v-model:file-list="uploadFileList"
               :accept="MATERIAL_UPLOAD_ACCEPT"
               :before-upload="beforeUpload"
-              :disabled="
-                uploading || form.attachmentUrls.length >= MATERIAL_MAX_FILE_COUNT
-              "
+              :disabled="uploading"
               drag
               :http-request="handleFileUpload"
-              :limit="MATERIAL_MAX_FILE_COUNT"
               multiple
-              :on-exceed="handleUploadExceed"
               :show-file-list="false"
             >
               <el-icon class="el-icon--upload"><Plus /></el-icon>
@@ -825,7 +803,6 @@ defineExpose({ open });
                   {{
                     $t('page.service.mydemand.apps.material.uploadTip', [
                       MATERIAL_MAX_FILE_SIZE_MB,
-                      MATERIAL_MAX_FILE_COUNT,
                     ])
                   }}
                 </div>

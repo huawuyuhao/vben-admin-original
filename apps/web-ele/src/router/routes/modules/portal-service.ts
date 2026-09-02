@@ -147,6 +147,18 @@ const routes: RouteRecordRaw[] = [
             },
           },
           {
+            name: 'ServiceMyDemandComputeCreate',
+            path: '/service/mydemand/compute/create',
+            component: () =>
+              import('#/views/service/mydemand/compute/create/index.vue'),
+            meta: {
+              // 新建/编辑页不进侧栏，激活态仍落在「我的算力需求」
+              activePath: '/service/mydemand/compute',
+              hideInMenu: true,
+              title: '新建算力需求',
+            },
+          },
+          {
             name: 'ServiceMyDemandRuntime',
             path: '/service/mydemand/runtime',
             component: () =>

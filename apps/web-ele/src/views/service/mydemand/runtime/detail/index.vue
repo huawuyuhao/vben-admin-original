@@ -4,7 +4,7 @@ import type {
   RunningTaskHistoryDimension,
 } from '#/types/service/mydemand/runtime';
 
-import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import { ArrowLeft, Refresh } from '@element-plus/icons-vue';
@@ -34,7 +34,6 @@ import {
   formatRuntimePercent,
   getRuntimeStepsActive,
   parseRunningTaskIdParam,
-  RUNTIME_AUTO_REFRESH_MS,
   RUNTIME_HISTORY_DIMENSIONS,
   RUNTIME_RANGE_1H,
   RUNTIME_RANGE_24H,
@@ -84,9 +83,6 @@ const resourceSeries = ref<RuntimeChartPoint[]>([]);
 /** 历史趋势图表数据 */
 const historySeries = ref<RuntimeChartPoint[]>([]);
 
-/** 自动刷新定时器 */
-let refreshTimer: null | ReturnType<typeof setInterval> = null;
-
 /** 当前生效查询时间范围 */
 const queryRange = computed(() => {
   if (customRange.value?.[0] && customRange.value?.[1]) {
@@ -121,64 +117,31 @@ function displayValue(value?: null | number | string): string {
 }
 
 /**
- * 停止自动刷新
- */
-function stopAutoRefresh() {
-  if (refreshTimer != null) {
-    clearInterval(refreshTimer);
-    refreshTimer = null;
-  }
-}
-
-/**
- * 启动自动刷新
- */
-function startAutoRefresh() {
-  stopAutoRefresh();
-  refreshTimer = setInterval(() => {
-    if (taskId.value == null) {
-      return;
-    }
-    void loadAll(true);
-  }, RUNTIME_AUTO_REFRESH_MS);
-}
-
-/**
  * 拉取任务详情
- * @param silent 静默刷新
  */
-async function fetchDetail(silent = false) {
+async function fetchDetail() {
   if (taskId.value == null) {
     return;
   }
-  if (!silent) {
-    loading.value = true;
-  }
+  loading.value = true;
   try {
     const data = await getRunningTaskDetailApi(taskId.value);
     detail.value = data ?? null;
   } catch {
-    if (!silent) {
-      detail.value = null;
-    }
+    detail.value = null;
   } finally {
-    if (!silent) {
-      loading.value = false;
-    }
+    loading.value = false;
   }
 }
 
 /**
  * 并行拉取电力 / 碳排 / 资源 / 历史趋势全部序列
- * @param silent 静默刷新
  */
-async function fetchAllCharts(silent = false) {
+async function fetchAllCharts() {
   if (taskId.value == null) {
     return;
   }
-  if (!silent) {
-    chartLoading.value = true;
-  }
+  chartLoading.value = true;
 
   const id = taskId.value;
   const range = queryRange.value;
@@ -217,17 +180,14 @@ async function fetchAllCharts(silent = false) {
       $t(`page.service.mydemand.runtime.history.dimension.${dimension}`),
     );
   } finally {
-    if (!silent) {
-      chartLoading.value = false;
-    }
+    chartLoading.value = false;
   }
 }
 
 /**
  * 加载详情 + 全部图表
- * @param silent 静默刷新
  */
-async function loadAll(silent = false) {
+async function loadAll() {
   if (taskId.value == null) {
     detail.value = null;
     powerSeries.value = [];
@@ -236,7 +196,7 @@ async function loadAll(silent = false) {
     historySeries.value = [];
     return;
   }
-  await Promise.all([fetchDetail(silent), fetchAllCharts(silent)]);
+  await Promise.all([fetchDetail(), fetchAllCharts()]);
 }
 
 /**
@@ -316,11 +276,6 @@ onMounted(() => {
     return;
   }
   void loadAll();
-  startAutoRefresh();
-});
-
-onUnmounted(() => {
-  stopAutoRefresh();
 });
 </script>
 

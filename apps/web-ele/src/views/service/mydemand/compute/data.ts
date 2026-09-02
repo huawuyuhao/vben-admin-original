@@ -1,3 +1,4 @@
+import type { MyAppItem, MyAppListResult } from '#/types/service/mydemand/apps';
 import type {
   ComputeDemandItem,
   ComputeDemandListResult,
@@ -11,6 +12,12 @@ export const COMPUTE_PAGE_SIZE = 10;
 
 /** 可选每页条数（供 el-pagination） */
 export const COMPUTE_PAGE_SIZE_OPTIONS = [10, 20, 50];
+
+/** 关联应用分页选择默认每页条数（卡片 3×3） */
+export const COMPUTE_APP_PICKER_PAGE_SIZE = 9;
+
+/** 关联应用分页可选每页条数 */
+export const COMPUTE_APP_PICKER_PAGE_SIZE_OPTIONS = [9, 18, 36];
 
 /** 待提交 */
 export const COMPUTE_STATUS_DRAFT = 0 as ComputeDemandStatus;
@@ -295,4 +302,62 @@ export function isComputePreviewUrl(content?: null | string): boolean {
     return false;
   }
   return isHttpUrl(text) || text.startsWith('/');
+}
+
+/**
+ * 归一化「我的应用」列表分页结果（关联应用选择器用）
+ * @param data 接口分页结果
+ * @returns records + total + current + size
+ */
+export function normalizeComputeAppPage(
+  data?: MyAppListResult<MyAppItem> | null,
+): {
+  current: number;
+  records: MyAppItem[];
+  size: number;
+  total: number;
+} {
+  return {
+    records: Array.isArray(data?.records) ? data!.records : [],
+    total: Math.max(0, Number(data?.total) || 0),
+    current: Math.max(1, Number(data?.current) || 1),
+    size: Math.max(1, Number(data?.size) || COMPUTE_APP_PICKER_PAGE_SIZE),
+  };
+}
+
+/**
+ * 解析新建/编辑页路由中的需求 ID（兼容 id / demandId）
+ * @param query 路由 query
+ * @returns 合法 ID；无效时 null
+ */
+export function parseComputeCreateDemandId(query: {
+  demandId?: unknown;
+  id?: unknown;
+}): null | number {
+  const raw = query.id ?? query.demandId;
+  const id = Number(raw);
+  return Number.isFinite(id) && id > 0 ? id : null;
+}
+
+/**
+ * 取应用展示名称
+ * @param app 应用条目
+ * @param empty 空值占位
+ * @returns 名称或占位
+ */
+export function displayComputeAppName(
+  app?: MyAppItem | null,
+  empty = '',
+): string {
+  return app?.appName?.trim() || String(app?.appId ?? '') || empty;
+}
+
+/**
+ * 取应用封面首字
+ * @param app 应用条目
+ * @returns 单个字符
+ */
+export function getComputeAppCoverLetter(app?: MyAppItem | null): string {
+  const name = displayComputeAppName(app).trim();
+  return name ? name.slice(0, 1) : 'A';
 }

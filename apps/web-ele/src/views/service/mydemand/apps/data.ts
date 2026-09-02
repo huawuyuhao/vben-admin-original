@@ -72,9 +72,6 @@ export const MATERIAL_UPLOAD_ACCEPT = MATERIAL_ALLOWED_EXTENSIONS.map(
 /** 单文件大小上限（MB） */
 export const MATERIAL_MAX_FILE_SIZE_MB = 50;
 
-/** 单素材最多附件数 */
-export const MATERIAL_MAX_FILE_COUNT = 5;
-
 /**
  * 解析状态筛选值为接口参数
  * @param status 筛选值

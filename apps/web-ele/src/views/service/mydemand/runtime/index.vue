@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import type { RunningTaskItem } from '#/types/service/mydemand/runtime';
 
-import { onMounted, onUnmounted, ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { Refresh } from '@element-plus/icons-vue';
@@ -16,7 +16,6 @@ import {
 import {
   normalizeRuntimePage,
   resolveRunningTaskId,
-  RUNTIME_AUTO_REFRESH_MS,
   RUNTIME_PAGE_SIZE,
 } from './data';
 import TaskPager from './modules/task-pager.vue';
@@ -45,17 +44,11 @@ const syncingFromServer = ref(false);
 /** 正在关闭的任务 ID */
 const closingId = ref<null | string>(null);
 
-/** 列表自动刷新定时器 */
-let listTimer: null | ReturnType<typeof setInterval> = null;
-
 /**
  * 拉取当前页在运应用列表
- * @param silent 静默刷新时不展示 loading
  */
-async function fetchTasks(silent = false) {
-  if (!silent) {
-    loading.value = true;
-  }
+async function fetchTasks() {
+  loading.value = true;
   try {
     const data = await getRunningTaskListApi({
       page: currentPage.value,
@@ -71,14 +64,10 @@ async function fetchTasks(silent = false) {
       syncingFromServer.value = false;
     }
   } catch {
-    if (!silent) {
-      tasks.value = [];
-      total.value = 0;
-    }
+    tasks.value = [];
+    total.value = 0;
   } finally {
-    if (!silent) {
-      loading.value = false;
-    }
+    loading.value = false;
   }
 }
 
@@ -131,26 +120,6 @@ async function handleClose(row: RunningTaskItem) {
   }
 }
 
-/**
- * 启动列表自动刷新
- */
-function startListAutoRefresh() {
-  stopListAutoRefresh();
-  listTimer = setInterval(() => {
-    void fetchTasks(true);
-  }, RUNTIME_AUTO_REFRESH_MS);
-}
-
-/**
- * 停止列表自动刷新
- */
-function stopListAutoRefresh() {
-  if (listTimer != null) {
-    clearInterval(listTimer);
-    listTimer = null;
-  }
-}
-
 watch(pageSize, () => {
   if (syncingFromServer.value) {
     return;
@@ -171,11 +140,6 @@ watch(currentPage, () => {
 
 onMounted(() => {
   void fetchTasks();
-  startListAutoRefresh();
-});
-
-onUnmounted(() => {
-  stopListAutoRefresh();
 });
 </script>
 
@@ -211,10 +175,6 @@ onUnmounted(() => {
           </div>
         </header>
 
-        <p class="runtime-page__hint">
-          {{ $t('page.service.mydemand.runtime.autoRefreshHint') }}
-        </p>
-
         <TaskTable
           :closing-id="closingId"
           :loading="loading"
@@ -237,12 +197,4 @@ onUnmounted(() => {
 
 <style lang="scss" scoped>
 @use '../../../../scss/page-shell.scss';
-
-.runtime-page {
-  &__hint {
-    margin: 0 0 12px;
-    font-size: 13px;
-    color: hsl(var(--muted-foreground));
-  }
-}
 </style>

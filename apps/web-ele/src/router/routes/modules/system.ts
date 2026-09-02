@@ -896,62 +896,6 @@ const routes: RouteRecordRaw[] = [
           },
         ],
       },
-      {
-        meta: {
-          icon: 'ep:user',
-          order: 6,
-          title: '个人中心',
-        },
-        name: 'AdminPersonal',
-        path: '/admin/personal',
-        redirect: '/admin/personal/service/profile',
-        children: [
-          {
-            meta: {
-              icon: 'ep:user-filled',
-              title: '个人中心服务',
-            },
-            name: 'AdminPersonalService',
-            path: '/admin/personal/service',
-            redirect: '/admin/personal/service/profile',
-            children: [
-              {
-                name: 'AdminPersonalProfile',
-                path: '/admin/personal/service/profile',
-                component: () =>
-                  import('#/views/admin/personal/profile.vue'),
-                meta: {
-                  icon: 'ep:postcard',
-                  order: 1,
-                  title: '个人信息管理',
-                },
-              },
-              {
-                name: 'AdminPersonalContact',
-                path: '/admin/personal/service/contact',
-                component: () =>
-                  import('#/views/admin/personal/contact.vue'),
-                meta: {
-                  icon: 'ep:phone',
-                  order: 2,
-                  title: '联系信息更新',
-                },
-              },
-              {
-                name: 'AdminPersonalSecurity',
-                path: '/admin/personal/service/security',
-                component: () =>
-                  import('#/views/admin/personal/security.vue'),
-                meta: {
-                  icon: 'ep:lock',
-                  order: 3,
-                  title: '账户安全管理',
-                },
-              },
-            ],
-          },
-        ],
-      },
     ],
   },
 ];

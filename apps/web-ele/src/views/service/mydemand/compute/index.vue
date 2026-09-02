@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import type { ComputeDemandItem } from '#/types/service/mydemand/compute';
 
-import { nextTick, onMounted, ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import { Download, Plus, Refresh } from '@element-plus/icons-vue';
@@ -29,7 +29,6 @@ import DemandPager from './modules/demand-pager.vue';
 import DemandTable from './modules/demand-table.vue';
 import DetailDialog from './modules/detail-dialog.vue';
 import FilterBar from './modules/filter-bar.vue';
-import FormDialog from './modules/form-dialog.vue';
 
 /**
  * 门户服务 · 我的算力需求
@@ -71,8 +70,6 @@ const syncingFromServer = ref(false);
 /** 正在复制的需求 ID */
 const copyingId = ref<null | number>(null);
 
-/** 新增 / 编辑表单弹窗 */
-const formDialogRef = ref<InstanceType<typeof FormDialog>>();
 /** 详情弹窗 */
 const detailDialogRef = ref<InstanceType<typeof DetailDialog>>();
 
@@ -161,26 +158,42 @@ function handleRefresh() {
 }
 
 /**
- * 打开新增弹窗
+ * 跳转新建需求页
  */
 function handleCreate() {
-  formDialogRef.value?.openCreate();
+  void router.push({ path: '/service/mydemand/compute/create' });
 }
 
 /**
- * 打开编辑弹窗
+ * 跳转编辑需求页
  * @param row 列表行
  */
 function handleEdit(row: ComputeDemandItem) {
-  void formDialogRef.value?.openEdit(row);
+  const id = resolveComputeDemandId(row);
+  if (id == null) {
+    ElMessage.warning($t('page.service.mydemand.compute.form.invalidId'));
+    return;
+  }
+  void router.push({
+    path: '/service/mydemand/compute/create',
+    query: { id: String(id) },
+  });
 }
 
 /**
- * 打开重新提交弹窗
+ * 跳转重新提交页
  * @param row 列表行
  */
 function handleResubmit(row: ComputeDemandItem) {
-  void formDialogRef.value?.openResubmit(row);
+  const id = resolveComputeDemandId(row);
+  if (id == null) {
+    ElMessage.warning($t('page.service.mydemand.compute.form.invalidId'));
+    return;
+  }
+  void router.push({
+    path: '/service/mydemand/compute/create',
+    query: { id: String(id), resubmit: '1' },
+  });
 }
 
 /**
@@ -277,13 +290,6 @@ async function handleExport() {
   }
 }
 
-/**
- * 表单提交成功后刷新列表
- */
-function handleFormSuccess() {
-  void fetchDemands();
-}
-
 watch(pageSize, () => {
   if (syncingFromServer.value) {
     return;
@@ -303,24 +309,28 @@ watch(currentPage, () => {
 });
 
 /**
- * 处理产品「立即使用」等入口携带的 query（demandId / create）
+ * 兼容旧入口 query：跳转到新建/编辑页后清掉列表上的 query
  */
 async function handleEntryQuery() {
-  const demandId = Number(route.query.demandId);
+  const demandId = Number(route.query.demandId ?? route.query.id);
   const needCreate =
     route.query.create === '1' || Boolean(route.query.productId);
+  const resubmit =
+    route.query.resubmit === '1' || route.query.resubmit === 'true';
 
   if (Number.isFinite(demandId) && demandId > 0) {
-    await nextTick();
-    void formDialogRef.value?.openEdit({ demandId });
-    await router.replace({ path: route.path });
+    await router.replace({
+      path: '/service/mydemand/compute/create',
+      query: {
+        id: String(demandId),
+        ...(resubmit ? { resubmit: '1' } : {}),
+      },
+    });
     return;
   }
 
   if (needCreate) {
-    await nextTick();
-    formDialogRef.value?.openCreate();
-    await router.replace({ path: route.path });
+    await router.replace({ path: '/service/mydemand/compute/create' });
   }
 }
 
@@ -416,7 +426,6 @@ onMounted(() => {
       </div>
     </div>
 
-    <FormDialog ref="formDialogRef" @success="handleFormSuccess" />
     <DetailDialog ref="detailDialogRef" />
   </div>
 </template>

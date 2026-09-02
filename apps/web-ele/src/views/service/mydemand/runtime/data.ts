@@ -17,9 +17,6 @@ export const RUNTIME_PAGE_SIZE = 10;
 /** 可选每页条数（供 el-pagination） */
 export const RUNTIME_PAGE_SIZE_OPTIONS = [10, 20, 50];
 
-/** 列表 / 详情自动刷新间隔（毫秒） */
-export const RUNTIME_AUTO_REFRESH_MS = 30_000;
-
 /** 运行状态：任务提交 */
 export const RUNTIME_STATUS_SUBMITTED = 0;
 
