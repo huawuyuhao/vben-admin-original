@@ -576,7 +576,7 @@
       "products": {
         "eyebrow": "My Favorites",
         "title": "My Products",
-        "desc": "Manage favorited compute products. Unfavorite or create a demand intent.",
+        "desc": "Manage favorited compute products. Unfavorite or place an order.",
         "empty": "No favorited products yet",
         "refresh": "Refresh"
       }
@@ -1111,8 +1111,139 @@
       },
       "useNow": {
         "action": "Use now",
-        "success": "Demand intent created",
-        "nameRequired": "Product name is missing; cannot create demand intent"
+        "success": "Please complete your compute configuration",
+        "nameRequired": "Product info is incomplete; cannot place an order"
+      },
+      "order": {
+        "eyebrow": "Portal · Order Configuration",
+        "title": "Place Order",
+        "desc": "Select specs, image and network, then credentials. Review fees and submit.",
+        "back": "Back to products",
+        "cancelTitle": "Cancel order",
+        "cancelConfirm": "Unsaved configuration will be lost. Leave this page?",
+        "cancelOk": "Leave",
+        "cancelKeep": "Keep editing",
+        "draftSuccess": "Draft saved",
+        "submitSuccess": "Demand submitted",
+        "steps": {
+          "basic": "Basics",
+          "basicDesc": "Spec & disks",
+          "network": "Image & Network",
+          "networkDesc": "Image & bandwidth",
+          "advanced": "Advanced",
+          "advancedDesc": "Account & apps",
+          "confirm": "Confirm",
+          "confirmDesc": "Review & submit"
+        },
+        "basic": {
+          "specTitle": "Select instance spec",
+          "specDesc": "Filter by architecture, family, type and GPU. Click a row to select.",
+          "architecture": "Architecture",
+          "instanceFamily": "Family",
+          "specType": "Type",
+          "gpuModel": "GPU model",
+          "filterEmpty": "No options",
+          "keywordPlaceholder": "Search spec code or CPU model…",
+          "diskTitle": "Disk configuration",
+          "diskDesc": "A system disk is included. Add up to 20 data disks.",
+          "columns": {
+            "specCode": "Spec code",
+            "architecture": "Architecture",
+            "instanceFamily": "Family",
+            "vcpu": "vCPU",
+            "memory": "Memory",
+            "gpu": "GPU",
+            "bandwidth": "Intranet bandwidth",
+            "price": "Price"
+          }
+        },
+        "network": {
+          "imageTitle": "Select image",
+          "imageDesc": "Browse public, private or cloud images by OS type.",
+          "imageEmpty": "No images available",
+          "imageTypeAll": "All",
+          "imageTypePublic": "Public",
+          "imageTypePrivate": "Private",
+          "imageTypeCloud": "Cloud",
+          "imageTypeUnknown": "Other",
+          "osOther": "Other OS",
+          "bandwidthTitle": "Network bandwidth",
+          "bandwidthDesc": "Set public bandwidth and deployment region.",
+          "region": "Region",
+          "regionPlaceholder": "e.g. East China Zone 1 (optional)",
+          "bandwidth": "Bandwidth"
+        },
+        "advanced": {
+          "accountTitle": "Login & demand info",
+          "accountDesc": "Set demand name, instance name and login password.",
+          "demandName": "Demand name",
+          "demandNamePlaceholder": "Enter demand name",
+          "demandNameRequired": "Demand name is required",
+          "instanceName": "Instance name",
+          "instanceNamePlaceholder": "Letters, digits, _ or -, 2-64 chars",
+          "instanceNameRequired": "Instance name is required",
+          "instanceNamePattern": "Instance name must be 2-64 chars: letters, digits, _ or -",
+          "loginPassword": "Login password",
+          "confirmPassword": "Confirm password",
+          "passwordPlaceholder": "8-30 character password",
+          "confirmPasswordPlaceholder": "Re-enter password",
+          "passwordRequired": "Password is required",
+          "confirmPasswordRequired": "Please confirm password",
+          "passwordLength": "Password must be 8-30 characters",
+          "passwordMismatch": "Passwords do not match",
+          "modelTitle": "Linked models",
+          "modelDesc": "Optionally pick models from the marketplace (multi-select).",
+          "optional": "Optional",
+          "modelKeywordPlaceholder": "Search models…",
+          "modelEmpty": "No matching models"
+        },
+        "confirm": {
+          "title": "Configuration summary",
+          "desc": "Review the configuration before submitting.",
+          "demandName": "Demand name",
+          "instanceName": "Instance name",
+          "specCode": "Spec code",
+          "quantity": "Quantity",
+          "image": "Image",
+          "region": "Region",
+          "bandwidth": "Bandwidth",
+          "models": "Linked models",
+          "modelCount": "{0} selected",
+          "diskTitle": "Disks",
+          "feeTitle": "Fee estimate",
+          "feeDesc": "Fees update with spec, quantity, bandwidth and disks.",
+          "configFee": "Config fee",
+          "networkFee": "Network fee",
+          "totalFee": "Estimated total"
+        },
+        "disk": {
+          "system": "System disk",
+          "data": "Data disk",
+          "usage": "Usage",
+          "type": "Type",
+          "capacity": "Capacity (GB)",
+          "quantity": "Quantity",
+          "actions": "Actions",
+          "addData": "Add data disk"
+        },
+        "footer": {
+          "spec": "Selected spec",
+          "quantity": "Qty",
+          "configFee": "Config fee",
+          "networkFee": "Network fee"
+        },
+        "actions": {
+          "cancel": "Cancel",
+          "saveDraft": "Save draft",
+          "prev": "Previous",
+          "next": "Next",
+          "submit": "Submit order"
+        },
+        "validate": {
+          "specRequired": "Please select an instance spec",
+          "imageRequired": "Please select an image",
+          "advancedRequired": "Please complete demand name, instance name and password"
+        }
       },
       "detail": {
         "eyebrow": "Portal · Product Detail",

@@ -80,14 +80,14 @@ export function useFavoriteActions() {
   }
 
   /**
-   * 立即使用：生成需求意向并跳转需求提交页
+   * 立即使用：生成需求意向并跳转下单配置页
    * @param product 产品信息（名称 / 简介作为意向默认值）
    */
   async function useNow(product: FavoriteItem) {
     if (!product?.productId) {
       return;
     }
-    if (!ensureLoggedIn('/service/mydemand/compute/create')) {
+    if (!ensureLoggedIn('/service/product/order')) {
       return;
     }
 
@@ -107,11 +107,14 @@ export function useFavoriteActions() {
       const demandId = Number(data?.key);
       ElMessage.success($t('page.service.product.useNow.success'));
       await router.push({
-        path: '/service/mydemand/compute/create',
-        query:
-          Number.isFinite(demandId) && demandId > 0
-            ? { id: String(demandId) }
-            : undefined,
+        path: '/service/product/order',
+        query: {
+          productId: String(product.productId),
+          demandName,
+          ...(Number.isFinite(demandId) && demandId > 0
+            ? { demandId: String(demandId) }
+            : {}),
+        },
       });
     } catch {
       // 错误提示由请求拦截器处理

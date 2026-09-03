@@ -26,6 +26,18 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
+        name: 'ServiceProductOrder',
+        path: '/service/product/order',
+        component: () => import('#/views/service/product/order/index.vue'),
+        meta: {
+          // 下单页不进侧栏，激活态仍落在「产品服务」
+          activePath: '/service/product',
+          hideInMenu: true,
+          hideInTab: false,
+          title: '算力下单',
+        },
+      },
+      {
         name: 'ServiceProductDetail',
         path: '/service/product/:id',
         component: () => import('#/views/service/product/detail/index.vue'),

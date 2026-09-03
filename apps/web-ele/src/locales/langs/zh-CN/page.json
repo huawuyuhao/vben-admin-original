@@ -576,7 +576,7 @@
       "products": {
         "eyebrow": "我的收藏",
         "title": "我的产品",
-        "desc": "集中管理已收藏的算力产品，可取消收藏或立即生成需求意向。",
+        "desc": "集中管理已收藏的算力产品，可取消收藏或立即下单。",
         "empty": "暂无收藏产品",
         "refresh": "刷新"
       }
@@ -1111,8 +1111,139 @@
       },
       "useNow": {
         "action": "立即使用",
-        "success": "已生成需求意向",
-        "nameRequired": "产品名称缺失，无法生成需求意向"
+        "success": "请完善算力配置",
+        "nameRequired": "产品信息不完整，暂时无法下单"
+      },
+      "order": {
+        "eyebrow": "门户服务 · 下单配置",
+        "title": "算力下单",
+        "desc": "按步骤选择规格、镜像与网络、登录信息，确认费用后提交需求。",
+        "back": "返回产品列表",
+        "cancelTitle": "取消下单",
+        "cancelConfirm": "未提交的配置将不会保存，确定离开吗？",
+        "cancelOk": "离开",
+        "cancelKeep": "继续配置",
+        "draftSuccess": "草稿已保存",
+        "submitSuccess": "需求已提交",
+        "steps": {
+          "basic": "基础配置",
+          "basicDesc": "规格与磁盘",
+          "network": "镜像与网络",
+          "networkDesc": "镜像与带宽",
+          "advanced": "高级配置",
+          "advancedDesc": "账号与应用",
+          "confirm": "确认配置",
+          "confirmDesc": "核对并提交"
+        },
+        "basic": {
+          "specTitle": "选择实例规格",
+          "specDesc": "可按架构、实例族、类型与 GPU 型号筛选，点击行即可选中。",
+          "architecture": "架构",
+          "instanceFamily": "实例族",
+          "specType": "类型",
+          "gpuModel": "GPU 型号",
+          "filterEmpty": "暂无筛选项",
+          "keywordPlaceholder": "搜索规格码、处理器型号…",
+          "diskTitle": "磁盘配置",
+          "diskDesc": "默认包含系统盘，可按需添加数据盘（最多 20 块）。",
+          "columns": {
+            "specCode": "规格码",
+            "architecture": "架构",
+            "instanceFamily": "实例族",
+            "vcpu": "vCPU",
+            "memory": "内存",
+            "gpu": "GPU",
+            "bandwidth": "内网带宽",
+            "price": "费用"
+          }
+        },
+        "network": {
+          "imageTitle": "选择镜像",
+          "imageDesc": "按操作系统类型浏览公共 / 私有 / 云镜像。",
+          "imageEmpty": "暂无可用镜像",
+          "imageTypeAll": "全部",
+          "imageTypePublic": "公共镜像",
+          "imageTypePrivate": "私有镜像",
+          "imageTypeCloud": "云镜像",
+          "imageTypeUnknown": "其他",
+          "osOther": "其他系统",
+          "bandwidthTitle": "网络带宽",
+          "bandwidthDesc": "设置公网带宽上限，并填写部署地域。",
+          "region": "地域",
+          "regionPlaceholder": "如：华东一区（可选，默认取规格地域）",
+          "bandwidth": "带宽"
+        },
+        "advanced": {
+          "accountTitle": "登录与需求信息",
+          "accountDesc": "设置需求名称、实例名与登录密码。",
+          "demandName": "需求名称",
+          "demandNamePlaceholder": "请输入需求名称",
+          "demandNameRequired": "请填写需求名称",
+          "instanceName": "实例名称",
+          "instanceNamePlaceholder": "字母、数字、下划线或短横线，2-64 位",
+          "instanceNameRequired": "请填写实例名称",
+          "instanceNamePattern": "实例名称需为 2-64 位字母、数字、下划线或短横线",
+          "loginPassword": "登录密码",
+          "confirmPassword": "确认密码",
+          "passwordPlaceholder": "8-30 位登录密码",
+          "confirmPasswordPlaceholder": "再次输入密码",
+          "passwordRequired": "请填写登录密码",
+          "confirmPasswordRequired": "请确认登录密码",
+          "passwordLength": "密码长度为 8-30 位",
+          "passwordMismatch": "两次输入的密码不一致",
+          "modelTitle": "关联模型应用",
+          "modelDesc": "可从模型市场选择预装模型，支持多选。",
+          "optional": "可选",
+          "modelKeywordPlaceholder": "搜索模型名称…",
+          "modelEmpty": "暂无匹配模型"
+        },
+        "confirm": {
+          "title": "配置摘要",
+          "desc": "请核对以下配置，确认无误后提交。",
+          "demandName": "需求名称",
+          "instanceName": "实例名称",
+          "specCode": "规格码",
+          "quantity": "数量",
+          "image": "镜像",
+          "region": "地域",
+          "bandwidth": "带宽",
+          "models": "关联模型",
+          "modelCount": "已选 {0} 个",
+          "diskTitle": "磁盘清单",
+          "feeTitle": "费用试算",
+          "feeDesc": "费用随规格、数量、带宽与磁盘变化自动更新。",
+          "configFee": "配置费用",
+          "networkFee": "网络费用",
+          "totalFee": "预估总费用"
+        },
+        "disk": {
+          "system": "系统盘",
+          "data": "数据盘",
+          "usage": "用途",
+          "type": "类型",
+          "capacity": "容量 (GB)",
+          "quantity": "数量",
+          "actions": "操作",
+          "addData": "添加数据盘"
+        },
+        "footer": {
+          "spec": "已选规格",
+          "quantity": "数量",
+          "configFee": "配置费用",
+          "networkFee": "网络费用"
+        },
+        "actions": {
+          "cancel": "取消",
+          "saveDraft": "保存草稿",
+          "prev": "上一步",
+          "next": "下一步",
+          "submit": "提交订单"
+        },
+        "validate": {
+          "specRequired": "请先选择实例规格",
+          "imageRequired": "请先选择镜像",
+          "advancedRequired": "请完善需求名称、实例名称与登录密码"
+        }
       },
       "detail": {
         "eyebrow": "门户服务 · 产品详情",
