@@ -1,10 +1,12 @@
 <script lang="ts" setup>
-import type { SubAccountItem } from '#/types/admin/enterprise/accounts';
 import type { FormInstance, FormRules } from 'element-plus';
+
+import type { SubAccountItem } from '#/types/admin/enterprise/accounts';
 
 import { computed, reactive, ref } from 'vue';
 
 import { $t } from '@vben/locales';
+
 import { ElMessage } from 'element-plus';
 
 import { resetSubAccountPasswordApi } from '#/api/admin/enterprise/accounts';

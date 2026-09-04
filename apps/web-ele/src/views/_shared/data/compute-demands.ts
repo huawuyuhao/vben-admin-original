@@ -1,7 +1,7 @@
 /** 我的算力需求 mock */
 
-export type DemandStatus = '进行中' | '已完成' | '待确认' | '已取消' | '审核中';
-export type DataTypeTag = '目标检测' | '图片分类' | '文本分类' | '语音识别';
+export type DemandStatus = '审核中' | '已取消' | '已完成' | '待确认' | '进行中';
+export type DataTypeTag = '图片分类' | '文本分类' | '目标检测' | '语音识别';
 
 export interface ComputeDemand {
   id: string;
@@ -38,7 +38,7 @@ export interface WizardMaterial {
 }
 
 export interface PreferOption {
-  key: 'time' | 'price' | 'carbon';
+  key: 'carbon' | 'price' | 'time';
   title: string;
   icon: string;
   cost: number;
@@ -54,7 +54,7 @@ export const modelTypeOptions = [
   '语音识别',
 ] as const;
 
-export const statusOptions: Array<DemandStatus | '全部'> = [
+export const statusOptions: Array<'全部' | DemandStatus> = [
   '全部',
   '进行中',
   '已完成',

@@ -128,7 +128,7 @@ function handleDetail() {
     background: linear-gradient(
       145deg,
       hsl(var(--primary) / 12%),
-      hsl(190 90% 66% / 18%) 55%,
+      hsl(190deg 90% 66% / 18%) 55%,
       hsl(var(--primary) / 8%)
     );
 
@@ -167,10 +167,10 @@ function handleDetail() {
   &__name {
     margin: 0;
     overflow: hidden;
+    text-overflow: ellipsis;
     font-size: 14px;
     font-weight: 700;
     line-height: 1.4;
-    text-overflow: ellipsis;
     white-space: nowrap;
   }
 

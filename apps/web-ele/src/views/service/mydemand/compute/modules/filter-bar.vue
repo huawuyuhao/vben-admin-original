@@ -10,6 +10,12 @@ import {
 
 defineOptions({ name: 'MyDemandComputeFilterBar' });
 
+const emit = defineEmits<{
+  /** 重置筛选 */
+  reset: [];
+  /** 点击查询 */
+  search: [];
+}>();
 /** 需求编号 */
 const demandNo = defineModel<string>('demandNo', { default: '' });
 /** 状态筛选 */
@@ -19,12 +25,6 @@ const timeRange = defineModel<ComputeTimeRange>('timeRange', {
   default: null,
 });
 
-const emit = defineEmits<{
-  /** 重置筛选 */
-  reset: [];
-  /** 点击查询 */
-  search: [];
-}>();
 </script>
 
 <template>

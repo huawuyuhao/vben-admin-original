@@ -4,6 +4,7 @@ import type { EchartsUIType } from '@vben/plugins/echarts';
 import { onMounted, ref } from 'vue';
 
 import { EchartsUI, useEcharts } from '@vben/plugins/echarts';
+
 import { ElMessage } from 'element-plus';
 
 import {
@@ -79,7 +80,7 @@ onMounted(() => {
           <i
             :class="m.tone"
             :style="{ width: `${m.pct}%` }"
-          />
+          ></i>
         </div>
         <div class="metric-status">负载状态 <em>正常</em></div>
       </article>
@@ -123,15 +124,15 @@ onMounted(() => {
 
 .run-pill {
   padding: 4px 10px;
-  color: #67c23a;
   font-size: 13px;
+  color: #67c23a;
   background: #f0f9eb;
   border-radius: 12px;
 }
 
 .uptime {
-  color: #909399;
   font-size: 13px;
+  color: #909399;
 }
 
 .metric-grid {
@@ -146,8 +147,8 @@ onMounted(() => {
 }
 
 .metric-label {
-  color: #909399;
   font-size: 13px;
+  color: #909399;
 }
 
 .metric-value {
@@ -182,13 +183,13 @@ onMounted(() => {
 }
 
 .metric-status {
-  color: #909399;
   font-size: 12px;
+  color: #909399;
 }
 
 .metric-status em {
-  color: #67c23a;
   font-style: normal;
+  color: #67c23a;
 }
 
 .main-grid {
@@ -201,16 +202,16 @@ onMounted(() => {
   display: flex;
   gap: 8px;
   align-items: center;
-  margin-bottom: 12px;
   padding: 10px 12px;
+  margin-bottom: 12px;
   color: #67c23a;
   background: #f0f9eb;
   border-radius: 8px;
 }
 
 .health ul {
-  margin: 0;
   padding: 0;
+  margin: 0;
   list-style: none;
 }
 
@@ -236,21 +237,21 @@ onMounted(() => {
 }
 
 .health-top .ok {
-  color: #67c23a;
   font-size: 12px;
+  color: #67c23a;
 }
 
 .health-top .warn {
   padding: 2px 8px;
-  color: #e6a23c;
   font-size: 12px;
+  color: #e6a23c;
   background: #fdf6ec;
   border-radius: 10px;
 }
 
 .health-detail {
-  color: #909399;
   font-size: 12px;
+  color: #909399;
 }
 
 @media (max-width: 1000px) {

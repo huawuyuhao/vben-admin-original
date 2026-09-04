@@ -30,7 +30,7 @@ function isRunningTaskApiSuccess(code?: number): boolean {
  * 校验写操作 / 详情响应并抛出错误
  * @param body 响应体
  */
-function assertRunningTaskSuccess(body?: RunningTaskMutationResponse | null) {
+function assertRunningTaskSuccess(body?: null | RunningTaskMutationResponse) {
   if (!isRunningTaskApiSuccess(body?.code)) {
     const message = String(body?.msg || 'Request failed');
     ElMessage.error(message);
@@ -44,7 +44,7 @@ function assertRunningTaskSuccess(body?: RunningTaskMutationResponse | null) {
  * @returns 标准化分页结果
  */
 function parseRunningTaskListBody<T>(
-  body?: RunningTaskListResponseBody<T> | null,
+  body?: null | RunningTaskListResponseBody<T>,
 ): RunningTaskListResult<T> {
   if (!body) {
     return { records: [], total: 0, current: 1, size: 10 };
@@ -87,7 +87,7 @@ function parseRunningTaskListBody<T>(
  * @returns 数组；失败抛错
  */
 function parseRunningTaskArrayBody<T>(
-  body?: RunningTaskMutationResponse<T[]> | null,
+  body?: null | RunningTaskMutationResponse<T[]>,
 ): T[] {
   assertRunningTaskSuccess(body);
   return Array.isArray(body?.data) ? body.data : [];

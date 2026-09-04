@@ -136,7 +136,7 @@ const tab = ref('指令校验');
 
 h4 {
   margin: 0 0 8px;
-  color: #409eff;
   font-size: 14px;
+  color: #409eff;
 }
 </style>

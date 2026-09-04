@@ -25,7 +25,7 @@ const loading = ref(false);
 /** 加载失败 / 无数据 */
 const loadError = ref(false);
 /** 案例详情 */
-const caseItem = ref<null | CaseInfo>(null);
+const caseItem = ref<CaseInfo | null>(null);
 /** 关联推荐按标签筛选（点击概览标签） */
 const relatedTag = ref('');
 

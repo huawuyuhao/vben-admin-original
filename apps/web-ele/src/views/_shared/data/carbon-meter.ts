@@ -1,6 +1,6 @@
 /** 智算任务碳排计量 mock */
 
-export type CarbonPeriod = 'today' | 'week' | 'month';
+export type CarbonPeriod = 'month' | 'today' | 'week';
 
 export interface CarbonMeterKpi {
   key: string;
@@ -18,7 +18,7 @@ export interface CarbonMeterTask {
   name: string;
   type: string;
   region: string;
-  status: '计量中' | '已完成' | '待核算';
+  status: '已完成' | '待核算' | '计量中';
   gross: string;
   offset: string;
   net: string;

@@ -5,8 +5,8 @@ import type { CertFileKey, EnterpriseCertForm } from '../data';
 
 import { computed, reactive, ref, watch } from 'vue';
 
-import { isEmpty } from '@vben/utils';
 import { $t } from '@vben/locales';
+import { isEmpty } from '@vben/utils';
 
 import { Delete, UploadFilled, ZoomIn } from '@element-plus/icons-vue';
 import { ElMessage } from 'element-plus';
@@ -15,13 +15,19 @@ import { uploadImageApi } from '#/api/common';
 
 import { ID_CARD_PATTERN, validateCertFile } from '../data';
 
+/**
+ * 企业认证申请表单（字段与 POST /auth/enterprise-cert 对齐）
+ * 材料先调统一上传接口拿 url，再写入表单供提交
+ */
+defineOptions({ name: 'MineRegisterEnterpriseApplyForm' });
+
 const props = defineProps<{
+  /** 已认证，可重复申请 */
+  canReapply?: boolean;
   /** 表单初值 */
   modelValue: EnterpriseCertForm;
   /** 是否只读（审核中） */
   readonly?: boolean;
-  /** 已认证，可重复申请 */
-  canReapply?: boolean;
   /** 是否提交中 */
   submitting?: boolean;
 }>();
@@ -31,12 +37,6 @@ const emit = defineEmits<{
   submit: [form: EnterpriseCertForm];
   'update:modelValue': [form: EnterpriseCertForm];
 }>();
-
-/**
- * 企业认证申请表单（字段与 POST /auth/enterprise-cert 对齐）
- * 材料先调统一上传接口拿 url，再写入表单供提交
- */
-defineOptions({ name: 'MineRegisterEnterpriseApplyForm' });
 
 const formRef = ref<FormInstance>();
 const form = reactive<EnterpriseCertForm>({ ...props.modelValue });
@@ -685,15 +685,15 @@ async function handleSubmit() {
 <style lang="scss" scoped>
 .ent-apply {
   padding: 22px 24px;
-  background: hsl(var(--card) / 0.92);
+  background: hsl(var(--card) / 92%);
   border: 1px solid hsl(var(--border));
   border-radius: 16px;
-  box-shadow: 0 8px 24px hsl(var(--foreground) / 0.05);
+  box-shadow: 0 8px 24px hsl(var(--foreground) / 5%);
   backdrop-filter: blur(8px);
 
   &__banner {
-    margin-bottom: 16px;
     padding: 10px 12px;
+    margin-bottom: 16px;
     font-size: 13px;
     color: #b86e00;
     background: #fff8eb;
@@ -702,14 +702,14 @@ async function handleSubmit() {
 
     &--info {
       color: hsl(var(--primary));
-      background: hsl(var(--primary) / 0.08);
-      border-color: hsl(var(--primary) / 0.28);
+      background: hsl(var(--primary) / 8%);
+      border-color: hsl(var(--primary) / 28%);
     }
   }
 
   &__section {
-    margin: 8px 0 16px;
     padding-left: 10px;
+    margin: 8px 0 16px;
     font-size: 15px;
     font-weight: 700;
     color: hsl(var(--foreground));
@@ -760,7 +760,7 @@ async function handleSubmit() {
       min-height: 180px;
       padding: 20px;
       background: hsl(var(--background));
-      border: 1px dashed hsl(var(--primary) / 0.35);
+      border: 1px dashed hsl(var(--primary) / 35%);
       border-radius: 10px;
 
       &:hover {
@@ -840,8 +840,8 @@ async function handleSubmit() {
     display: flex;
     gap: 12px;
     justify-content: flex-end;
-    margin-top: 16px;
     padding-top: 18px;
+    margin-top: 16px;
     border-top: 1px solid hsl(var(--border));
   }
 }

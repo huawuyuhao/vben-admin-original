@@ -4,6 +4,7 @@ import type { DeviceItem } from '#/types/admin/device';
 import { ref } from 'vue';
 
 import { $t } from '@vben/locales';
+
 import { ElMessage } from 'element-plus';
 
 import { getDeviceDetailApi } from '#/api/admin/device';

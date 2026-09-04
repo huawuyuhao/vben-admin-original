@@ -4,8 +4,9 @@ import type { CaseListItem } from '#/types/service/case';
 import { computed, onMounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { Plus, Refresh } from '@element-plus/icons-vue';
 import { $t } from '@vben/locales';
+
+import { Plus, Refresh } from '@element-plus/icons-vue';
 import { ElMessage } from 'element-plus';
 
 import { deleteCaseApi, getCaseListApi } from '#/api/service/case';

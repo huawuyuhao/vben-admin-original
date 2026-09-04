@@ -1,13 +1,13 @@
 /** 我的需求 / 我的应用 mock */
 
-export type AppCategory = '训练类' | '推理类' | '分析类' | '渲染类';
+export type AppCategory = '分析类' | '推理类' | '渲染类' | '训练类';
 export type AppDomain =
   | '图像处理'
-  | '语音回复'
+  | '数据分析'
   | '文本生成'
   | '目标识别'
-  | '数据分析'
-  | '科学计算';
+  | '科学计算'
+  | '语音回复';
 
 export interface MyAppItem {
   id: string;

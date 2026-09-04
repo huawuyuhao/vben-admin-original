@@ -206,9 +206,9 @@ defineExpose({ open });
     width: 140px;
     height: 80px;
     overflow: hidden;
+    cursor: zoom-in;
     border: 1px solid var(--el-border-color);
     border-radius: 8px;
-    cursor: zoom-in;
 
     :deep(.el-image__inner) {
       width: 100%;

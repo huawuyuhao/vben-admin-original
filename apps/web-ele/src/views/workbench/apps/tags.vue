@@ -5,8 +5,8 @@ import { ElMessage } from 'element-plus';
 
 import {
   type AppTagItem,
-  appTags as seedTags,
   categoryTree,
+  appTags as seedTags,
   workbenchApps,
 } from '#/views/_shared/data/workbench-apps';
 
@@ -162,13 +162,13 @@ function removeTag(id: string) {
 
 .tree-title {
   margin: 12px 0 8px;
-  color: #303133;
   font-weight: 600;
+  color: #303133;
 }
 
 .tree {
-  margin: 0;
   padding: 0;
+  margin: 0;
   list-style: none;
 }
 
@@ -177,8 +177,8 @@ function removeTag(id: string) {
   gap: 6px;
   align-items: center;
   padding: 8px 6px;
-  color: #606266;
   font-size: 13px;
+  color: #606266;
   cursor: pointer;
   border-radius: 4px;
 }
@@ -190,8 +190,8 @@ function removeTag(id: string) {
 }
 
 .plus {
-  color: #909399;
   font-family: monospace;
+  color: #909399;
 }
 
 .main {
@@ -238,8 +238,8 @@ function removeTag(id: string) {
 .btn {
   height: 32px;
   padding: 0 12px;
-  color: #606266;
   font-size: 13px;
+  color: #606266;
   cursor: pointer;
   background: #fff;
   border: 1px solid #dcdfe6;
@@ -258,9 +258,9 @@ function removeTag(id: string) {
 
 .tag-group h4 {
   margin: 0 0 8px;
-  color: #909399;
   font-size: 13px;
   font-weight: 500;
+  color: #909399;
 }
 
 .tag-list {
@@ -323,18 +323,18 @@ function removeTag(id: string) {
 
 .meta {
   margin: 0 0 2px;
-  color: #909399;
   font-size: 12px;
+  color: #909399;
 }
 
 .desc {
-  margin: 8px 0 0;
-  color: #606266;
-  font-size: 12px;
-  line-height: 1.5;
   display: -webkit-box;
+  margin: 8px 0 0;
   overflow: hidden;
   -webkit-line-clamp: 2;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #606266;
   -webkit-box-orient: vertical;
 }
 

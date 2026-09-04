@@ -2,12 +2,12 @@
 defineOptions({ name: 'PortalContentPageShell' });
 
 defineProps<{
+  /** 页面描述 */
+  desc: string;
   /** 页眉副标题 */
   eyebrow: string;
   /** 页面标题 */
   title: string;
-  /** 页面描述 */
-  desc: string;
 }>();
 </script>
 
@@ -28,11 +28,11 @@ defineProps<{
             <p class="mine-shell__desc">{{ desc }}</p>
           </div>
           <div v-if="$slots.actions" class="mine-shell__head-actions">
-            <slot name="actions" />
+            <slot name="actions"></slot>
           </div>
         </header>
 
-        <slot />
+        <slot></slot>
       </div>
     </div>
   </div>

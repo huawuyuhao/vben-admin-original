@@ -27,7 +27,7 @@ function isCaseApiSuccess(code?: number): boolean {
  * 校验写操作响应并抛出错误
  * @param body 响应体
  */
-function assertCaseMutationSuccess(body?: null | CaseMutationResponse) {
+function assertCaseMutationSuccess(body?: CaseMutationResponse | null) {
   if (!isCaseApiSuccess(body?.code)) {
     const message = String(body?.msg || 'Request failed');
     ElMessage.error(message);
@@ -41,7 +41,7 @@ function assertCaseMutationSuccess(body?: null | CaseMutationResponse) {
  * @returns 标准化分页结果
  */
 function parseCaseListBody<T = CaseListItem>(
-  body?: null | CaseListResponseBody<T>,
+  body?: CaseListResponseBody<T> | null,
 ): CaseListResult<T> {
   if (!body) {
     return { records: [], total: 0, current: 1, size: 10 };

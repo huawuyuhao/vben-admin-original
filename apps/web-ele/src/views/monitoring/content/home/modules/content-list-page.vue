@@ -1,16 +1,18 @@
 <script lang="ts" setup>
-import type { PortalContentItem, PortalContentType } from '#/types/monitoring/content/home/common';
 import type {
   PortalContentAuditStatusFilter,
   PortalContentEnableStatusFilter,
   PortalContentListFilters,
 } from '../data';
 
+import type { PortalContentItem, PortalContentType } from '#/types/monitoring/content/home/common';
+
 import { computed, ref, watch } from 'vue';
 
 import { $t } from '@vben/locales';
-import { ElMessage } from 'element-plus';
+
 import { Plus, Refresh } from '@element-plus/icons-vue';
+import { ElMessage } from 'element-plus';
 
 import {
   auditPortalContentApi,
@@ -21,13 +23,13 @@ import {
 
 import { usePortalContentList } from '../composables/use-portal-content-list';
 import {
-  PORTAL_CONTENT_AUDIT_PENDING,
-  PORTAL_CONTENT_TYPE,
   buildPortalContentSortMaps,
   filterPortalContentRecords,
   hasPortalContentActiveFilters,
   hasPortalContentSortChanges,
   pickPortalContentImageRaw,
+  PORTAL_CONTENT_AUDIT_PENDING,
+  PORTAL_CONTENT_TYPE,
   supportsPortalContentSort,
 } from '../data';
 import ContentDataTable from './content-data-table.vue';
@@ -368,8 +370,8 @@ function handleFormSuccess() {
 <style lang="scss" scoped>
 .content-list-page {
   &__sort-tip {
-    color: hsl(var(--muted-foreground));
     font-size: 13px;
+    color: hsl(var(--muted-foreground));
     white-space: nowrap;
   }
 }

@@ -166,7 +166,7 @@ function statusClass(s: string) {
         <h3 class="section-title">采集吞吐量趋势（近24h）</h3>
         <div class="line-chart">
           <div v-for="i in 24" :key="i" class="bar-col">
-            <div class="bar" :style="{ height: `${30 + Math.sin(i) * 20 + i * 1.5}%` }" />
+            <div class="bar" :style="{ height: `${30 + Math.sin(i) * 20 + i * 1.5}%` }"></div>
             <span>{{ i }}h</span>
           </div>
         </div>
@@ -313,8 +313,8 @@ function statusClass(s: string) {
   align-items: center;
   padding: 10px 14px;
   margin-bottom: 12px;
-  color: #e6a23c;
   font-size: 13px;
+  color: #e6a23c;
   background: #fdf6ec;
   border: 1px solid #f5dab1;
   border-radius: 8px;
@@ -334,8 +334,8 @@ function statusClass(s: string) {
 .page-tabs button {
   flex: 1;
   height: 40px;
-  color: #606266;
   font-size: 13px;
+  color: #606266;
   cursor: pointer;
   background: #fff;
   border: none;
@@ -347,8 +347,8 @@ function statusClass(s: string) {
 }
 
 .page-tabs button.active {
-  color: #409eff;
   font-weight: 500;
+  color: #409eff;
   background: #ecf5ff;
 }
 
@@ -375,8 +375,8 @@ function statusClass(s: string) {
   flex-direction: column;
   gap: 4px;
   align-items: center;
-  height: 100%;
   justify-content: flex-end;
+  height: 100%;
 }
 
 .bar-col .bar {
@@ -387,7 +387,7 @@ function statusClass(s: string) {
 }
 
 .bar-col span {
-  color: #c0c4cc;
   font-size: 10px;
+  color: #c0c4cc;
 }
 </style>

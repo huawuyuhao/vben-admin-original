@@ -3,8 +3,9 @@ import type { SupplyProductItem } from '#/types/service/enterprise/products';
 
 import { onMounted, ref, watch } from 'vue';
 
-import { Plus, Refresh } from '@element-plus/icons-vue';
 import { $t } from '@vben/locales';
+
+import { Plus, Refresh } from '@element-plus/icons-vue';
 import { ElMessage } from 'element-plus';
 
 import {
@@ -15,13 +16,13 @@ import {
 } from '#/api/service/enterprise/products';
 
 import {
-  PRODUCT_PAGE_SIZE,
   getProductResourceI18nKey,
   isProductOnShelf,
   normalizeProductPage,
   parseProductShelfFilter,
-  resolveSupplyProductId,
+  PRODUCT_PAGE_SIZE,
   type ProductShelfFilter,
+  resolveSupplyProductId,
 } from './data';
 import FilterBar from './modules/filter-bar.vue';
 import FormDialog from './modules/form-dialog.vue';

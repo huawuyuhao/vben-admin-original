@@ -5,12 +5,12 @@ import PortalSidebar from './portal-sidebar.vue';
 
 defineProps<{
   breadcrumb: string[];
-  title: string;
   description?: string;
   groups: Array<{
-    title: string;
     items: PortalSidebarItem[];
+    title: string;
   }>;
+  title: string;
 }>();
 </script>
 

@@ -3,8 +3,9 @@ import type { PortalSearchResultItem } from '#/types/search';
 
 import { computed } from 'vue';
 
-import { ArrowRight } from '@element-plus/icons-vue';
 import { $t } from '@vben/locales';
+
+import { ArrowRight } from '@element-plus/icons-vue';
 
 import {
   SEARCH_TYPE_TAG_TYPE,
@@ -90,8 +91,8 @@ function handleSelect() {
 
   &:hover,
   &:focus-visible {
-    background: hsl(var(--primary) / 8%);
     outline: none;
+    background: hsl(var(--primary) / 8%);
   }
 
   &:hover &__arrow {
@@ -117,10 +118,10 @@ function handleSelect() {
 
   &__name {
     overflow: hidden;
+    text-overflow: ellipsis;
     font-size: 14px;
     font-weight: 600;
     line-height: 1.4;
-    text-overflow: ellipsis;
     white-space: nowrap;
   }
 
@@ -128,17 +129,17 @@ function handleSelect() {
     display: -webkit-box;
     margin: 4px 0 0;
     overflow: hidden;
-    color: hsl(var(--muted-foreground));
+    -webkit-line-clamp: 2;
     font-size: 12px;
     line-height: 1.45;
-    -webkit-line-clamp: 2;
+    color: hsl(var(--muted-foreground));
     -webkit-box-orient: vertical;
   }
 
   &__arrow {
     flex-shrink: 0;
-    color: hsl(var(--primary));
     font-size: 14px;
+    color: hsl(var(--primary));
     opacity: 0.35;
     transition:
       opacity 0.18s ease,

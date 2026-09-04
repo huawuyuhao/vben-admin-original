@@ -10,7 +10,7 @@ import {
 
 defineOptions({ name: 'AdminMessageApproval' });
 
-const tab = ref<'todo' | 'history'>('todo');
+const tab = ref<'history' | 'todo'>('todo');
 const bizType = ref('全部');
 const status = ref('全部');
 

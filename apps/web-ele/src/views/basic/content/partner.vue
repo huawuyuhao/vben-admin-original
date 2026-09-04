@@ -3,10 +3,10 @@ import { ref } from 'vue';
 
 import { ElMessage } from 'element-plus';
 
+defineOptions({ name: 'ContentPartner' });
+
 /** 合作伙伴列表（待对接接口） */
 const partners: never[] = [];
-
-defineOptions({ name: 'ContentPartner' });
 
 const view = ref<'card' | 'list'>('card');
 </script>
@@ -69,7 +69,7 @@ const view = ref<'card' | 'list'>('card');
           <button type="button" class="link">✎</button>
           <button type="button" class="link danger">🗑</button>
         </div>
-        <div class="partner-cover" />
+        <div class="partner-cover"></div>
         <div class="partner-body">
           <div class="name-row">
             <strong>{{ p.name }}</strong>
@@ -122,8 +122,8 @@ const view = ref<'card' | 'list'>('card');
   align-items: center;
   justify-content: space-between;
   margin-bottom: 12px;
-  color: #909399;
   font-size: 13px;
+  color: #909399;
 }
 
 .view-tabs {
@@ -193,16 +193,16 @@ const view = ref<'card' | 'list'>('card');
 
 .industry {
   margin-bottom: 8px;
-  color: #909399;
   font-size: 12px;
+  color: #909399;
 }
 
 .partner-foot {
   display: flex;
   justify-content: space-between;
   margin-top: 10px;
-  color: #909399;
   font-size: 12px;
+  color: #909399;
 }
 
 .pager.center {

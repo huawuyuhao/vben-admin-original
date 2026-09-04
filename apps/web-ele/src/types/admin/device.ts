@@ -190,10 +190,10 @@ export interface DeviceListResponseBody<T = DeviceItem> {
   data?:
     | T[]
     | {
-        records?: T[];
-        total?: number;
         current?: number;
+        records?: T[];
         size?: number;
+        total?: number;
       };
 }
 
@@ -204,11 +204,11 @@ export interface DeviceMutationResponse {
   code?: number;
   msg?: string;
   data?:
-    | string
     | DeviceItem
+    | string
     | {
-        key?: number;
         deviceId?: number;
+        key?: number;
       };
 }
 

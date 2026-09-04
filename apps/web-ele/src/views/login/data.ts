@@ -12,8 +12,8 @@ import type {
 import { computed, onUnmounted, reactive, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-import { isEmpty } from '@vben/utils';
 import { $t } from '@vben/locales';
+import { isEmpty } from '@vben/utils';
 
 import { ElMessage } from 'element-plus';
 

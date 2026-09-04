@@ -4,6 +4,7 @@ import type { EchartsUIType } from '@vben/plugins/echarts';
 import { onMounted, ref } from 'vue';
 
 import { EchartsUI, useEcharts } from '@vben/plugins/echarts';
+
 import { ElMessage } from 'element-plus';
 
 import {
@@ -144,8 +145,8 @@ onMounted(() => {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  color: #909399;
   font-size: 12px;
+  color: #909399;
 }
 
 .kv {
@@ -162,19 +163,19 @@ onMounted(() => {
 }
 
 .kv dt {
-  color: #909399;
   font-size: 12px;
+  color: #909399;
 }
 
 .kv dd {
   margin: 0;
-  color: #303133;
   font-size: 14px;
+  color: #303133;
 }
 
 .kv .em {
-  color: #409eff;
   font-weight: 600;
+  color: #409eff;
 }
 
 .card-title.sub {

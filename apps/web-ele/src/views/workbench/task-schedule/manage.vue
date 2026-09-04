@@ -99,12 +99,12 @@ function statusClass(s: string) {
           <h4>华东中心A（来源）</h4>
           <div class="bar-row">
             <span>当前功耗</span>
-            <div class="track"><i style="width: 69%; background: #67c23a" /></div>
+            <div class="track"><i style="width: 69%; background: #67c23a"></i></div>
             <em>5840 / 8500 kW</em>
           </div>
           <div class="bar-row">
             <span>峰值历史</span>
-            <div class="track"><i style="width: 95%; background: #e6a23c" /></div>
+            <div class="track"><i style="width: 95%; background: #e6a23c"></i></div>
             <em>8120 / 8500 kW</em>
           </div>
         </div>
@@ -112,12 +112,12 @@ function statusClass(s: string) {
           <h4>西部中心A（目的）</h4>
           <div class="bar-row">
             <span>当前功耗</span>
-            <div class="track"><i style="width: 55%; background: #409eff" /></div>
+            <div class="track"><i style="width: 55%; background: #409eff"></i></div>
             <em>3280 / 6000 kW</em>
           </div>
           <div class="bar-row">
             <span>预计峰值</span>
-            <div class="track"><i style="width: 75%; background: #e6a23c" /></div>
+            <div class="track"><i style="width: 75%; background: #e6a23c"></i></div>
             <em>4520 / 6000 kW</em>
           </div>
         </div>
@@ -129,7 +129,7 @@ function statusClass(s: string) {
         <div v-for="m in modeStats" :key="m.name" class="mode-row">
           <span>{{ m.name }}</span>
           <div class="track">
-            <i :style="{ width: `${m.count * 4}%` }" />
+            <i :style="{ width: `${m.count * 4}%` }"></i>
           </div>
           <em>{{ m.count }}</em>
         </div>
@@ -230,13 +230,13 @@ function statusClass(s: string) {
 }
 
 .plan-top .on {
-  color: #67c23a;
   font-size: 12px;
+  color: #67c23a;
 }
 
 .plan-top .off {
-  color: #909399;
   font-size: 12px;
+  color: #909399;
 }
 
 .plan-meta {
@@ -244,16 +244,16 @@ function statusClass(s: string) {
   flex-wrap: wrap;
   gap: 6px;
   align-items: center;
-  color: #909399;
   font-size: 12px;
+  color: #909399;
 }
 
 .list-foot {
   display: flex;
   justify-content: space-between;
   margin-top: 8px;
-  color: #909399;
   font-size: 12px;
+  color: #909399;
 }
 
 .list-foot button {
@@ -278,9 +278,9 @@ function statusClass(s: string) {
 
 .timeline-bar i {
   padding: 8px;
-  color: #fff;
   font-size: 12px;
   font-style: normal;
+  color: #fff;
   text-align: center;
 }
 
@@ -334,22 +334,22 @@ function statusClass(s: string) {
 
 .bar-row em,
 .mode-row em {
-  color: #909399;
   font-style: normal;
+  color: #909399;
 }
 
 .prog {
   margin: 8px 0 0;
-  color: #606266;
   font-size: 12px;
+  color: #606266;
 }
 
 .stat-list {
-  margin: 12px 0 0;
   padding: 0;
-  list-style: none;
+  margin: 12px 0 0;
   font-size: 13px;
   color: #606266;
+  list-style: none;
 }
 
 .stat-list li {
@@ -357,8 +357,8 @@ function statusClass(s: string) {
 }
 
 .stat-list .ok {
-  color: #67c23a;
   font-weight: 600;
+  color: #67c23a;
 }
 
 .flow {
@@ -370,15 +370,15 @@ function statusClass(s: string) {
 
 .flow span {
   padding: 8px 14px;
-  color: #fff;
   font-size: 13px;
+  color: #fff;
   background: #409eff;
   border-radius: 4px;
 }
 
 .flow i {
-  color: #909399;
   font-style: normal;
+  color: #909399;
 }
 
 .badge.warn {

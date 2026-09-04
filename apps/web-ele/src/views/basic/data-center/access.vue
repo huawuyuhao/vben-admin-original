@@ -13,7 +13,7 @@ import {
 
 defineOptions({ name: 'DcAccess' });
 
-const tab = ref<'infra' | 'it' | 'location' | 'relation' | 'monitor' | 'change'>('infra');
+const tab = ref<'change' | 'infra' | 'it' | 'location' | 'monitor' | 'relation'>('infra');
 const infraCategory = ref('全部');
 const itType = ref('全部');
 const monitorStatus = ref('全部');
@@ -440,8 +440,8 @@ function statusClass(s: string) {
   flex-shrink: 0;
   height: 40px;
   padding: 0 16px;
-  color: #606266;
   font-size: 13px;
+  color: #606266;
   white-space: nowrap;
   cursor: pointer;
   background: #fff;
@@ -450,8 +450,8 @@ function statusClass(s: string) {
 }
 
 .page-tabs button.active {
-  color: #409eff;
   font-weight: 500;
+  color: #409eff;
   background: #ecf5ff;
 }
 
@@ -471,20 +471,20 @@ function statusClass(s: string) {
 
 .tree-title {
   margin-bottom: 10px;
-  color: #909399;
   font-size: 12px;
+  color: #909399;
 }
 
 .tree {
-  margin: 0;
   padding: 0;
+  margin: 0;
   list-style: none;
 }
 
 .tree li {
   padding: 8px 10px;
-  color: #606266;
   font-size: 13px;
+  color: #606266;
   cursor: pointer;
   border-radius: 4px;
 }
@@ -530,8 +530,8 @@ function statusClass(s: string) {
 }
 
 .monitor-card span {
-  color: #909399;
   font-size: 13px;
+  color: #909399;
 }
 
 .monitor-card em {

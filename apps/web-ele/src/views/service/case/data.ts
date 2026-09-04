@@ -84,7 +84,7 @@ export function filterCaseRecordsByType(
  * @returns 可展示列表
  */
 export function normalizeCaseList(
-  list?: null | CaseListItem[],
+  list?: CaseListItem[] | null,
 ): CaseListItem[] {
   if (!list?.length) {
     return [];
@@ -97,7 +97,7 @@ export function normalizeCaseList(
  * @param data 接口分页结果
  * @returns records + total + current + size
  */
-export function normalizeCasePage(data?: null | CaseListResult): {
+export function normalizeCasePage(data?: CaseListResult | null): {
   current: number;
   records: CaseListItem[];
   size: number;
@@ -186,7 +186,7 @@ export function normalizeCaseTags(tags?: null | string[]): string[] {
  * @param list 关联案例列表
  * @returns 分组结果
  */
-export function groupCasesByType(list?: null | CaseInfo[]): {
+export function groupCasesByType(list?: CaseInfo[] | null): {
   general: CaseInfo[];
   other: CaseInfo[];
   smart: CaseInfo[];

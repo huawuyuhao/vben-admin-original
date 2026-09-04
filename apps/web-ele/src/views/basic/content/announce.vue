@@ -1,10 +1,11 @@
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus';
 
+defineOptions({ name: 'ContentAnnounce' });
+
 /** 活动公告列表（待对接接口） */
 const announces: never[] = [];
 
-defineOptions({ name: 'ContentAnnounce' });
 </script>
 
 <template>
@@ -55,7 +56,7 @@ defineOptions({ name: 'ContentAnnounce' });
         <table>
           <thead>
             <tr>
-              <th />
+              <th></th>
               <th>公告标题</th>
               <th>类型</th>
               <th>是否置顶</th>

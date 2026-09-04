@@ -131,7 +131,7 @@ function riskClass(r: string) {
               :key="v.version"
               :class="{ current: v.current }"
             >
-              <i />
+              <i></i>
               <div>
                 <strong>{{ v.version }}</strong>
                 <span>{{ v.date }}</span>
@@ -155,8 +155,8 @@ function riskClass(r: string) {
 .search-bar {
   display: flex;
   gap: 10px;
-  margin-bottom: 12px;
   padding: 12px;
+  margin-bottom: 12px;
 }
 
 .search-bar input {
@@ -231,16 +231,16 @@ function riskClass(r: string) {
 
 .report-card h3 {
   margin: 0 0 8px;
-  color: #303133;
   font-size: 14px;
   font-weight: 600;
   line-height: 1.5;
+  color: #303133;
 }
 
 .meta {
   margin-bottom: 12px;
-  color: #909399;
   font-size: 12px;
+  color: #909399;
 }
 
 .report-foot {
@@ -252,21 +252,21 @@ function riskClass(r: string) {
 
 .cat {
   padding: 2px 8px;
-  color: #606266;
   font-size: 12px;
+  color: #606266;
   background: #f5f7fa;
   border-radius: 10px;
 }
 
 .id {
-  color: #c0c4cc;
   font-size: 12px;
+  color: #c0c4cc;
 }
 
 .actions {
-  margin-left: auto;
   display: flex;
   gap: 4px;
+  margin-left: auto;
 }
 
 .icon-btn {
@@ -306,9 +306,9 @@ function riskClass(r: string) {
 
 .summary-kpis em {
   display: block;
-  color: #9aa4b2;
   font-size: 12px;
   font-style: normal;
+  color: #9aa4b2;
 }
 
 .summary-kpis strong {
@@ -328,8 +328,8 @@ function riskClass(r: string) {
 }
 
 .versions {
-  margin: 0;
   padding: 0;
+  margin: 0;
   list-style: none;
 }
 
@@ -362,15 +362,15 @@ function riskClass(r: string) {
 }
 
 .versions span {
-  color: #909399;
   font-size: 12px;
+  color: #909399;
 }
 
 .versions em {
   margin-left: auto;
-  color: #409eff;
   font-size: 12px;
   font-style: normal;
+  color: #409eff;
 }
 
 @media (max-width: 1000px) {

@@ -34,7 +34,7 @@ const loading = ref(false);
 /** 加载失败 / 无数据 */
 const loadError = ref(false);
 /** 模型详情 */
-const model = ref<null | ModelInfo>(null);
+const model = ref<ModelInfo | null>(null);
 /** 评价弹窗 */
 const evaluateVisible = ref(false);
 /** 评价列表刷新令牌 */

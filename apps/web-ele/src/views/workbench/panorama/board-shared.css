@@ -1,16 +1,16 @@
 .board {
   --cyan: #00d8ff;
-  --panel: rgba(6, 40, 78, 0.72);
-  --line: rgba(0, 180, 255, 0.35);
+  --panel: rgb(6 40 78 / 72%);
+  --line: rgb(0 180 255 / 35%);
   --text: #d7eefc;
   --muted: #7eb6d9;
 
   min-height: calc(100vh - 140px);
-  margin: -12px -16px;
   padding: 16px 18px 24px;
+  margin: -12px -16px;
   color: var(--text);
   background:
-    radial-gradient(ellipse 70% 40% at 50% 0%, rgba(0, 90, 180, 0.35), transparent),
+    radial-gradient(ellipse 70% 40% at 50% 0%, rgb(0 90 180 / 35%), transparent),
     linear-gradient(180deg, #062a52 0%, #041428 50%, #020b18 100%);
 }
 
@@ -22,13 +22,13 @@
   margin: 0 0 6px;
   font-size: 22px;
   letter-spacing: 0.06em;
-  text-shadow: 0 0 14px rgba(0, 216, 255, 0.35);
+  text-shadow: 0 0 14px rgb(0 216 255 / 35%);
 }
 
 .board > header p {
   margin: 0;
-  color: var(--muted);
   font-size: 13px;
+  color: var(--muted);
 }
 
 .kpi-row {
@@ -48,13 +48,13 @@
 .kpi strong {
   display: block;
   margin-bottom: 4px;
-  color: var(--cyan);
   font-size: 24px;
+  color: var(--cyan);
 }
 
 .kpi span {
-  color: var(--muted);
   font-size: 12px;
+  color: var(--muted);
 }
 
 .grid {
@@ -78,16 +78,16 @@
 }
 
 .panel h3 {
-  margin: 0 0 12px;
   padding-left: 10px;
-  color: var(--cyan);
+  margin: 0 0 12px;
   font-size: 14px;
+  color: var(--cyan);
   border-left: 3px solid var(--cyan);
 }
 
 .timeline {
-  margin: 0;
   padding: 0;
+  margin: 0;
   list-style: none;
 }
 
@@ -99,8 +99,8 @@
 }
 
 .timeline time {
-  color: var(--muted);
   font-size: 12px;
+  color: var(--muted);
 }
 
 .timeline strong {
@@ -127,32 +127,32 @@
 
 .timeline em[data-s='待执行'] {
   color: #ffecb3;
-  background: rgba(255, 183, 77, 0.25);
-  border: 1px solid rgba(255, 183, 77, 0.45);
+  background: rgb(255 183 77 / 25%);
+  border: 1px solid rgb(255 183 77 / 45%);
 }
 
 .timeline p {
   margin: 4px 0 0;
-  color: var(--muted);
   font-size: 12px;
+  color: var(--muted);
 }
 
 .table {
   width: 100%;
-  border-collapse: collapse;
   font-size: 13px;
+  border-collapse: collapse;
 }
 
 .table th,
 .table td {
   padding: 10px 8px;
   text-align: left;
-  border-bottom: 1px solid rgba(0, 140, 200, 0.25);
+  border-bottom: 1px solid rgb(0 140 200 / 25%);
 }
 
 .table th {
-  color: var(--muted);
   font-weight: 500;
+  color: var(--muted);
 }
 
 .badge {
@@ -179,8 +179,8 @@
 
 .badge.mute {
   color: var(--muted);
-  background: rgba(126, 182, 217, 0.15);
-  border: 1px solid rgba(126, 182, 217, 0.35);
+  background: rgb(126 182 217 / 15%);
+  border: 1px solid rgb(126 182 217 / 35%);
 }
 
 .bar-row {
@@ -195,7 +195,7 @@
 .bar-track {
   height: 8px;
   overflow: hidden;
-  background: rgba(0, 40, 90, 0.6);
+  background: rgb(0 40 90 / 60%);
   border-radius: 4px;
 }
 

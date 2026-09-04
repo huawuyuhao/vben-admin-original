@@ -3,9 +3,10 @@ import type { SupplyDeviceItem } from '#/types/service/enterprise/supply';
 
 import { onMounted, ref, watch } from 'vue';
 
-import { Download, Plus, Refresh } from '@element-plus/icons-vue';
 import { $t } from '@vben/locales';
 import { downloadFileFromUrl } from '@vben/utils';
+
+import { Download, Plus, Refresh } from '@element-plus/icons-vue';
 import { ElMessage } from 'element-plus';
 
 import {
@@ -14,10 +15,10 @@ import {
 } from '#/api/service/enterprise/supply';
 
 import {
-  SUPPLY_PAGE_SIZE,
   normalizeSupplyPage,
   parseSupplyStatusFilter,
   resolveSupplyExportDownloadUrl,
+  SUPPLY_PAGE_SIZE,
   type SupplyStatusFilter,
 } from './data';
 import DevicePager from './modules/device-pager.vue';
@@ -278,8 +279,8 @@ onMounted(() => {
 
 .supply-page {
   &__export-tip {
-    color: hsl(var(--muted-foreground));
     font-size: 13px;
+    color: hsl(var(--muted-foreground));
     white-space: nowrap;
   }
 }

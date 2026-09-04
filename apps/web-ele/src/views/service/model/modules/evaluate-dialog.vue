@@ -10,8 +10,6 @@ import { ensureLoggedIn } from '#/store/common';
 
 defineOptions({ name: 'ServiceModelEvaluateDialog' });
 
-const visible = defineModel<boolean>('visible', { default: false });
-
 const props = defineProps<{
   /** 模型 ID */
   modelId?: number;
@@ -23,6 +21,8 @@ const emit = defineEmits<{
   /** 提交成功 */
   success: [];
 }>();
+
+const visible = defineModel<boolean>('visible', { default: false });
 
 const formRef = ref<FormInstance>();
 /** 提交中 */

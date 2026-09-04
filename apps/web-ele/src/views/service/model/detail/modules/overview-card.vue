@@ -132,7 +132,7 @@ const callText = computed(
     background: linear-gradient(
       145deg,
       hsl(var(--primary)),
-      hsl(190 90% 66%) 55%,
+      hsl(190deg 90% 66%) 55%,
       hsl(var(--primary) / 70%)
     );
     border-radius: calc(var(--el-card-border-radius, 4px) - 2px);
@@ -153,7 +153,7 @@ const callText = computed(
   &__letter {
     font-size: 56px;
     font-weight: 750;
-    color: rgba(255, 255, 255, 0.92);
+    color: rgb(255 255 255 / 92%);
   }
 
   &__main {

@@ -9,11 +9,16 @@ import { $t } from '@vben/locales';
 
 import { PHONE_PATTERN } from '../data';
 
+/**
+ * 修改企业信息表单（仅联系电话、企业地址可改）
+ */
+defineOptions({ name: 'AdminEnterpriseInfoEditForm' });
+
 const props = defineProps<{
-  /** 是否正在保存 */
-  saving?: boolean;
   /** 表单初值 */
   modelValue: EnterpriseEditForm;
+  /** 是否正在保存 */
+  saving?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -21,11 +26,6 @@ const emit = defineEmits<{
   save: [form: EnterpriseEditForm];
   'update:modelValue': [form: EnterpriseEditForm];
 }>();
-
-/**
- * 修改企业信息表单（仅联系电话、企业地址可改）
- */
-defineOptions({ name: 'AdminEnterpriseInfoEditForm' });
 
 const formRef = ref<FormInstance>();
 const form = reactive<EnterpriseEditForm>({ ...props.modelValue });
@@ -168,16 +168,16 @@ function handleCancel() {
 
 <style lang="scss" scoped>
 .enterprise-edit {
-  margin-bottom: 16px;
   padding: 22px 24px 18px;
-  background: hsl(var(--card) / 0.96);
+  margin-bottom: 16px;
+  background: hsl(var(--card) / 96%);
   border: 1px solid hsl(var(--border));
   border-radius: 20px;
-  box-shadow: 0 8px 24px hsl(var(--foreground) / 0.06);
+  box-shadow: 0 8px 24px hsl(var(--foreground) / 6%);
 
   &__head {
-    margin-bottom: 18px;
     padding-bottom: 14px;
+    margin-bottom: 18px;
     border-bottom: 1px solid hsl(var(--border));
 
     h4 {
@@ -226,7 +226,7 @@ function handleCancel() {
       box-shadow: 0 0 0 1px hsl(var(--border)) inset;
 
       &:hover {
-        box-shadow: 0 0 0 1px hsl(var(--primary) / 0.35) inset;
+        box-shadow: 0 0 0 1px hsl(var(--primary) / 35%) inset;
       }
 
       &.is-focus {
@@ -250,8 +250,8 @@ function handleCancel() {
     display: flex;
     gap: 10px;
     justify-content: flex-end;
-    margin-top: 4px;
     padding-top: 14px;
+    margin-top: 4px;
     border-top: 1px solid hsl(var(--border));
 
     :deep(.el-button) {
@@ -262,7 +262,7 @@ function handleCancel() {
 
     :deep(.el-button--primary) {
       border: 0;
-      box-shadow: 0 8px 16px hsl(var(--primary) / 0.24);
+      box-shadow: 0 8px 16px hsl(var(--primary) / 24%);
     }
   }
 }

@@ -9,6 +9,12 @@ import {
 
 defineOptions({ name: 'EnterpriseProductsFilterBar' });
 
+const emit = defineEmits<{
+  /** 重置筛选 */
+  reset: [];
+  /** 点击查询 */
+  search: [];
+}>();
 /** 产品名称筛选 */
 const productName = defineModel<string>('productName', { default: '' });
 /** 上下架状态筛选（与父级 v-model:shelfStatus 同步） */
@@ -16,12 +22,6 @@ const shelfStatus = defineModel<ProductShelfFilter>('shelfStatus', {
   default: '',
 });
 
-const emit = defineEmits<{
-  /** 重置筛选 */
-  reset: [];
-  /** 点击查询 */
-  search: [];
-}>();
 </script>
 
 <template>

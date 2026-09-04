@@ -114,13 +114,13 @@
     font-size: 15px;
     font-weight: 700;
     color: hsl(var(--primary-foreground));
-    border: 0;
-    border-radius: 10px;
     background: linear-gradient(
       135deg,
       hsl(var(--primary)),
       color-mix(in srgb, hsl(var(--primary)) 72%, #fff)
     );
+    border: 0;
+    border-radius: 10px;
     box-shadow: 0 8px 20px
       color-mix(in srgb, hsl(var(--primary)) 28%, transparent);
 

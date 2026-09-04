@@ -34,10 +34,10 @@ export function isAllowedPortalContentImageFile(file: File): boolean {
 }
 
 /** 启用状态筛选项 */
-export type PortalContentEnableStatusFilter = '' | '0' | '1';
+export type PortalContentEnableStatusFilter = '0' | '1' | '';
 
 /** 审核状态筛选项 */
-export type PortalContentAuditStatusFilter = '' | '0' | '1' | '2';
+export type PortalContentAuditStatusFilter = '0' | '1' | '2' | '';
 
 /**
  * 列表前端筛选条件

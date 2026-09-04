@@ -6,8 +6,8 @@ import { nextTick, ref, watch } from 'vue';
 import { $t, useI18n } from '@vben/locales';
 import {
   useVChart,
-  VchartUI,
   type VChartSpec,
+  VchartUI,
   type VchartUIType,
 } from '@vben/plugins/vchart';
 
@@ -18,14 +18,14 @@ const props = defineProps<{
   data: RuntimeChartPoint[];
   /** 空态描述 */
   emptyText?: string;
-  /** 加载中 */
-  loading?: boolean;
   /** 副标题 */
   hint?: string;
-  /** 标题 */
-  title: string;
+  /** 加载中 */
+  loading?: boolean;
   /** Y 轴是否按百分比 0-100 */
   percentAxis?: boolean;
+  /** 标题 */
+  title: string;
 }>();
 
 const { locale } = useI18n();

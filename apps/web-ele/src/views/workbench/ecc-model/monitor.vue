@@ -85,7 +85,7 @@ function statusClass(s: string) {
             <td>{{ r.carbon }}</td>
             <td>
               <div class="prog">
-                <i :style="{ width: `${r.progress}%` }" />
+                <i :style="{ width: `${r.progress}%` }"></i>
                 <em>{{ r.progress }}%</em>
               </div>
             </td>
@@ -111,8 +111,8 @@ function statusClass(s: string) {
 .filter {
   display: flex;
   gap: 8px;
-  margin-bottom: 12px;
   padding: 12px;
+  margin-bottom: 12px;
 }
 
 .filter input,

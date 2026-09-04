@@ -99,7 +99,7 @@ function addCategory() {
             >
               {{ expanded.includes(node.id) ? '−' : '+' }}
             </button>
-            <span v-else class="exp ghost" />
+            <span v-else class="exp ghost"></span>
             <input
               type="checkbox"
               :checked="checked.includes(node.id)"
@@ -115,7 +115,7 @@ function addCategory() {
               :class="{ on: activeLabel === child.label }"
               @click="selectNode(child)"
             >
-              <span class="exp ghost" />
+              <span class="exp ghost"></span>
               <input
                 type="checkbox"
                 :checked="checked.includes(child.id)"
@@ -231,8 +231,8 @@ function addCategory() {
 
 .tree,
 .sub {
-  margin: 0;
   padding: 0;
+  margin: 0;
   list-style: none;
 }
 
@@ -245,8 +245,8 @@ function addCategory() {
   gap: 6px;
   align-items: center;
   padding: 7px 4px;
-  color: #606266;
   font-size: 13px;
+  color: #606266;
   cursor: pointer;
   border-radius: 4px;
 }
@@ -261,8 +261,8 @@ function addCategory() {
   width: 18px;
   height: 18px;
   padding: 0;
-  color: #909399;
   line-height: 16px;
+  color: #909399;
   cursor: pointer;
   background: none;
   border: 1px solid #dcdfe6;
@@ -275,8 +275,8 @@ function addCategory() {
 }
 
 .card {
-  padding: 14px 16px;
   min-width: 0;
+  padding: 14px 16px;
 }
 
 .card-head {
@@ -337,26 +337,26 @@ function addCategory() {
 .badge {
   flex-shrink: 0;
   padding: 1px 8px;
-  color: #409eff;
   font-size: 12px;
+  color: #409eff;
   background: #ecf5ff;
   border-radius: 10px;
 }
 
 .meta {
   margin: 4px 0 0;
-  color: #909399;
   font-size: 12px;
+  color: #909399;
 }
 
 .desc {
-  margin: 8px 0 0;
-  color: #606266;
-  font-size: 12px;
-  line-height: 1.5;
   display: -webkit-box;
+  margin: 8px 0 0;
   overflow: hidden;
   -webkit-line-clamp: 2;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #606266;
   -webkit-box-orient: vertical;
 }
 
@@ -384,8 +384,8 @@ function addCategory() {
   align-items: center;
   justify-content: flex-end;
   margin-top: 14px;
-  color: #606266;
   font-size: 13px;
+  color: #606266;
 }
 
 .pages {

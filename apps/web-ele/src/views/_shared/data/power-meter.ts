@@ -1,6 +1,6 @@
 /** 智算任务电力计量 mock */
 
-export type PowerPeriod = 'today' | 'week' | 'month';
+export type PowerPeriod = 'month' | 'today' | 'week';
 
 export interface PowerMeterKpi {
   key: string;
@@ -9,7 +9,7 @@ export interface PowerMeterKpi {
   unit: string;
   trend: string;
   up: boolean;
-  tone: 'orange' | 'orange-light' | 'green' | 'green-light';
+  tone: 'green' | 'green-light' | 'orange' | 'orange-light';
   icon: string;
 }
 
@@ -18,8 +18,8 @@ export interface PowerMeterTask {
   name: string;
   type: string;
   stage: string;
-  status: '正常' | '警告' | '异常' | '缓慢' | '超时';
-  priority: '高' | '中' | '低';
+  status: '异常' | '正常' | '缓慢' | '警告' | '超时';
+  priority: '中' | '低' | '高';
   elapsed: string;
   progress: number;
   powerKwh: string;

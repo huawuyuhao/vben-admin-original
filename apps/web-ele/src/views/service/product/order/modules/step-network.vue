@@ -13,19 +13,19 @@ import {
 } from '../data';
 
 const props = defineProps<{
-  /** 网络带宽 Mbps */
-  networkBandwidth: number;
   /** 已选镜像 ID */
   imageId?: null | number;
+  /** 网络带宽 Mbps */
+  networkBandwidth: number;
   /** 地域 */
   region?: string;
 }>();
 
 const emit = defineEmits<{
+  'image-change': [null | ProductImageItem];
   'update:imageId': [null | number];
   'update:networkBandwidth': [number];
   'update:region': [string];
-  'image-change': [null | ProductImageItem];
 }>();
 
 const loading = ref(false);
@@ -110,7 +110,7 @@ defineExpose({ selectedImage, fetchImages });
 
       <div class="order-network__type-tabs">
         <el-radio-group v-model="imageTypeFilter">
-          <el-radio-button :value="''">
+          <el-radio-button value="">
             {{ $t('page.service.product.order.network.imageTypeAll') }}
           </el-radio-button>
           <el-radio-button :value="1">
@@ -264,9 +264,9 @@ defineExpose({ selectedImage, fetchImages });
 
     p {
       margin: 6px 0 0;
-      color: hsl(var(--muted-foreground));
       font-size: 13px;
       line-height: 1.5;
+      color: hsl(var(--muted-foreground));
     }
   }
 
@@ -327,18 +327,18 @@ defineExpose({ selectedImage, fetchImages });
     flex-wrap: wrap;
     gap: 8px;
     align-items: center;
-    color: hsl(var(--muted-foreground));
     font-size: 12px;
+    color: hsl(var(--muted-foreground));
   }
 
   &__image-desc {
     display: -webkit-box;
     margin: 0;
     overflow: hidden;
-    color: hsl(var(--muted-foreground));
+    -webkit-line-clamp: 2;
     font-size: 12px;
     line-height: 1.5;
-    -webkit-line-clamp: 2;
+    color: hsl(var(--muted-foreground));
     -webkit-box-orient: vertical;
   }
 
@@ -358,8 +358,8 @@ defineExpose({ selectedImage, fetchImages });
   }
 
   &__unit {
-    color: hsl(var(--muted-foreground));
     font-size: 13px;
+    color: hsl(var(--muted-foreground));
   }
 }
 </style>

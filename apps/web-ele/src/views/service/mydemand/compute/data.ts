@@ -70,12 +70,12 @@ export const COMPUTE_TYPE_OPTIONS = [
 /** 状态筛选：空串表示全部 */
 export type ComputeStatusFilter =
   | ''
+  | `${typeof COMPUTE_STATUS_CONVERTED}`
+  | `${typeof COMPUTE_STATUS_DONE}`
   | `${typeof COMPUTE_STATUS_DRAFT}`
   | `${typeof COMPUTE_STATUS_PENDING}`
   | `${typeof COMPUTE_STATUS_REJECTED}`
-  | `${typeof COMPUTE_STATUS_CONVERTED}`
-  | `${typeof COMPUTE_STATUS_RUNNING}`
-  | `${typeof COMPUTE_STATUS_DONE}`;
+  | `${typeof COMPUTE_STATUS_RUNNING}`;
 
 /** 时间范围筛选：[开始, 结束]；未选时为 null */
 export type ComputeTimeRange = [string, string] | null;
@@ -110,7 +110,7 @@ export function parseComputeStatusFilter(
  * @param data 接口分页结果
  * @returns records + total + current + size
  */
-export function normalizeComputePage(data?: null | ComputeDemandListResult): {
+export function normalizeComputePage(data?: ComputeDemandListResult | null): {
   current: number;
   records: ComputeDemandItem[];
   size: number;

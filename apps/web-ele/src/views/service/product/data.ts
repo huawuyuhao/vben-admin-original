@@ -61,7 +61,7 @@ export function buildProductSortParams(
   sortOrder?: 'asc' | 'desc';
 } {
   const field = sortField?.trim() as ProductSortField | undefined;
-  const order = (sortOrder?.trim() || '') as 'asc' | 'desc' | '';
+  const order = (sortOrder?.trim() || '') as '' | 'asc' | 'desc';
   const result: {
     sortField?: ProductSortField;
     sortOrder?: 'asc' | 'desc';

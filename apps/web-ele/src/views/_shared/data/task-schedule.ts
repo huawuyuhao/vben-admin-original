@@ -192,12 +192,12 @@ export const manageOps = [
 export const strategyProfiles: Record<
   string,
   {
-    desc: string;
-    kpis: Array<{ label: string; value: string }>;
-    steps: string[];
-    rows: Array<Record<string, string>>;
     columns: string[];
+    desc: string;
     footer: string;
+    kpis: Array<{ label: string; value: string }>;
+    rows: Array<Record<string, string>>;
+    steps: string[];
   }
 > = {
   'carbon-realtime': {
@@ -292,8 +292,8 @@ export const dispatchBoards: Record<
   {
     desc: string;
     mode: string;
-    stats: Array<{ label: string; value: string }>;
     rows: Array<Record<string, string>>;
+    stats: Array<{ label: string; value: string }>;
   }
 > = {
   'dayahead-local': {

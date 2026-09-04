@@ -4,6 +4,7 @@ import type { SubAccountItem } from '#/types/admin/enterprise/accounts';
 import { computed, ref } from 'vue';
 
 import { $t, useI18n } from '@vben/locales';
+
 import { ElMessage, ElTree } from 'element-plus';
 
 import { assignSubAccountPermissionApi } from '#/api/admin/enterprise/accounts';
@@ -127,7 +128,7 @@ defineExpose({ open });
     <p class="accounts-permission__hint">
       {{ $t('page.admin.enterprise.accounts.permission.hint') }}
     </p>
-    <el-tree
+    <ElTree
       ref="treeRef"
       class="accounts-permission__tree"
       :data="menuTree"
@@ -161,7 +162,7 @@ defineExpose({ open });
     max-height: 360px;
     padding: 8px 4px;
     overflow: auto;
-    background: hsl(var(--background) / 0.6);
+    background: hsl(var(--background) / 60%);
     border: 1px solid hsl(var(--border));
     border-radius: 12px;
   }

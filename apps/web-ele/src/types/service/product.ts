@@ -89,5 +89,5 @@ export interface ProductListResponseBody<T extends ProductInfo = ProductInfo>
   code?: number;
   msg?: string;
   /** 兼容旧版：分页包在 data 内，或 data 直接为数组 */
-  data?: T[] | ProductListResult<T>;
+  data?: ProductListResult<T> | T[];
 }

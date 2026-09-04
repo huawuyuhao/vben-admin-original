@@ -137,7 +137,7 @@ function priceDot(p: string) {
               <td>{{ r.node }}</td>
               <td>{{ r.power }}</td>
               <td>
-                <span class="dot" :class="priceDot(r.price)" />
+                <span class="dot" :class="priceDot(r.price)"></span>
                 {{ r.price }}
               </td>
               <td>{{ r.basis }}</td>
@@ -152,7 +152,7 @@ function priceDot(p: string) {
           <p>任务时间窗口校验通过 · 算力资源许可满足 · 能耗规划约束满足</p>
         </div>
         <div class="footer-btns">
-          <span style="color: #909399; font-size: 12px">
+          <span style=" font-size: 12px;color: #909399">
             计划下发时间: 2026-07-23 00:00
           </span>
           <button class="btn primary" type="button">复制执行准备</button>

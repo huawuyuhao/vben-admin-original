@@ -1,7 +1,7 @@
 import type { AuthStatusMeta } from '../enterprise/data';
 
-import { isEmpty } from '@vben/utils';
 import { $t } from '@vben/locales';
+import { isEmpty } from '@vben/utils';
 
 import {
   CERT_FILE_MAX_MB,

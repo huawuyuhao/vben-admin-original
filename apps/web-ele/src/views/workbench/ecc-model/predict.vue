@@ -98,8 +98,8 @@ async function run() {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  color: #606266;
   font-size: 13px;
+  color: #606266;
 }
 
 .hint-grid input {

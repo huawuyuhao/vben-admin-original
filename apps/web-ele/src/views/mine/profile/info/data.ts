@@ -1,7 +1,7 @@
 import type { UserProfileResult } from '#/types/mine/profile/info';
 
-import { isEmpty, isHttpUrl } from '@vben/utils';
 import { $t } from '@vben/locales';
+import { isEmpty, isHttpUrl } from '@vben/utils';
 
 /** 资料分组 key（用于 i18n 与逻辑判断） */
 export type ProfileGroupKey = 'basic' | 'loginTrace' | 'org';

@@ -201,8 +201,8 @@ function displayValue(value?: null | number | string): string {
   &__progress-text {
     flex-shrink: 0;
     min-width: 42px;
-    color: hsl(var(--muted-foreground));
     font-size: 12px;
+    color: hsl(var(--muted-foreground));
     text-align: right;
   }
 }

@@ -3,8 +3,9 @@ import type { MyAppItem } from '#/types/service/mydemand/apps';
 
 import { computed, onMounted, ref, watch } from 'vue';
 
-import { Check, Close, Search } from '@element-plus/icons-vue';
 import { $t } from '@vben/locales';
+
+import { Check, Close, Search } from '@element-plus/icons-vue';
 
 import { getMyAppListApi } from '#/api/service/mydemand/apps';
 
@@ -361,8 +362,8 @@ onMounted(() => {
   }
 
   &__selected-label {
-    color: hsl(var(--muted-foreground));
     font-size: 13px;
+    color: hsl(var(--muted-foreground));
   }
 
   &__selected-tag {
@@ -372,8 +373,8 @@ onMounted(() => {
   }
 
   &__selected-empty {
-    color: hsl(var(--muted-foreground));
     font-size: 13px;
+    color: hsl(var(--muted-foreground));
   }
 
   &__toolbar {
@@ -399,8 +400,8 @@ onMounted(() => {
   }
 
   &__card {
-    cursor: pointer;
     overflow: hidden;
+    cursor: pointer;
     border-radius: 12px;
     transition:
       transform 0.2s ease,
@@ -426,7 +427,7 @@ onMounted(() => {
     background: linear-gradient(
       145deg,
       hsl(var(--primary) / 14%),
-      hsl(190 90% 66% / 20%) 55%,
+      hsl(190deg 90% 66% / 20%) 55%,
       hsl(var(--primary) / 10%)
     );
   }
@@ -439,11 +440,11 @@ onMounted(() => {
     height: 52px;
     font-size: 22px;
     font-weight: 750;
-    color: rgba(255, 255, 255, 0.96);
+    color: rgb(255 255 255 / 96%);
     background: linear-gradient(
       145deg,
       hsl(var(--primary)),
-      hsl(190 90% 66%)
+      hsl(190deg 90% 66%)
     );
     border-radius: 16px;
     box-shadow: 0 8px 20px hsl(var(--foreground) / 12%);
@@ -473,10 +474,10 @@ onMounted(() => {
   &__title {
     margin: 0;
     overflow: hidden;
+    text-overflow: ellipsis;
     font-size: 15px;
     font-weight: 650;
     line-height: 1.4;
-    text-overflow: ellipsis;
     white-space: nowrap;
   }
 
@@ -488,8 +489,8 @@ onMounted(() => {
 
   &__id {
     margin: 0;
-    color: hsl(var(--muted-foreground));
     font-size: 12px;
+    color: hsl(var(--muted-foreground));
   }
 
   &__pager {

@@ -7,14 +7,14 @@ import { getMessageTypeI18nKey } from '../data';
 
 defineOptions({ name: 'MineMessagesCategoryTabs' });
 
-const activeType = defineModel<MessageTypeFilter>('activeType', {
-  default: '',
-});
-
 defineProps<{
   /** 分类统计 Tab */
   tabs: MessageCategoryTab[];
 }>();
+
+const activeType = defineModel<MessageTypeFilter>('activeType', {
+  default: '',
+});
 
 /**
  * 解析 Tab 标题
@@ -77,8 +77,8 @@ function resolveTabLabel(tab: MessageCategoryTab) {
   }
 
   &__count {
-    color: hsl(var(--muted-foreground));
     font-weight: 500;
+    color: hsl(var(--muted-foreground));
   }
 
   /* 内联徽章：取消默认右上角绝对定位，贴近图一效果 */

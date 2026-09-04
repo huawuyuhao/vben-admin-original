@@ -5,8 +5,8 @@ import { ElMessage } from 'element-plus';
 
 import {
   type ProcessStatus,
-  type StrategyProcessItem,
   strategyProcesses as seed,
+  type StrategyProcessItem,
 } from '#/views/_shared/data/workbench-strategy-check';
 
 defineOptions({ name: 'WorkbenchStrategyProcess' });
@@ -14,7 +14,7 @@ defineOptions({ name: 'WorkbenchStrategyProcess' });
 const rows = ref<StrategyProcessItem[]>(seed.map((i) => ({ ...i })));
 const page = ref(1);
 const pageSize = 6;
-const current = ref<StrategyProcessItem | null>(null);
+const current = ref<null | StrategyProcessItem>(null);
 
 const query = reactive({
   keyword: '',
@@ -134,7 +134,7 @@ function registerTask() {
             </td>
             <td>
               <div class="progress">
-                <i :style="{ width: `${row.progress}%` }" />
+                <i :style="{ width: `${row.progress}%` }"></i>
                 <em>{{ row.progress }}%</em>
               </div>
             </td>
@@ -193,35 +193,41 @@ function registerTask() {
 <style scoped>
 .page {
   --primary: #409eff;
+
   padding-bottom: 24px;
 }
+
 .head {
   display: flex;
   gap: 16px;
   justify-content: space-between;
   margin-bottom: 14px;
 }
+
 .head h2 {
   margin: 0 0 6px;
   font-size: 20px;
 }
+
 .head p {
-  margin: 0;
   max-width: 740px;
-  color: #909399;
+  margin: 0;
   font-size: 13px;
   line-height: 1.5;
+  color: #909399;
 }
+
 .filter {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-bottom: 12px;
   padding: 12px;
+  margin-bottom: 12px;
   background: #fff;
   border: 1px solid #ebeef5;
   border-radius: 6px;
 }
+
 .filter input,
 .filter select {
   height: 32px;
@@ -229,6 +235,7 @@ function registerTask() {
   border: 1px solid #dcdfe6;
   border-radius: 4px;
 }
+
 .btn {
   height: 32px;
   padding: 0 14px;
@@ -238,64 +245,77 @@ function registerTask() {
   border: 1px solid #dcdfe6;
   border-radius: 4px;
 }
+
 .btn.primary {
   color: #fff;
   background: var(--primary);
   border-color: var(--primary);
 }
+
 .table-wrap {
   overflow: auto;
   background: #fff;
   border: 1px solid #ebeef5;
   border-radius: 6px;
 }
+
 table {
   width: 100%;
-  border-collapse: collapse;
   font-size: 13px;
+  border-collapse: collapse;
 }
+
 th,
 td {
   padding: 11px 10px;
   text-align: left;
-  border-bottom: 1px solid #ebeef5;
   white-space: nowrap;
+  border-bottom: 1px solid #ebeef5;
 }
+
 th {
-  color: #909399;
   font-weight: 500;
+  color: #909399;
   background: #fafafa;
 }
+
 .mono {
   font-family: Consolas, monospace;
   color: #409eff;
 }
+
 .badge {
   display: inline-block;
   padding: 2px 8px;
   font-size: 12px;
   border-radius: 4px;
 }
+
 .badge.ok {
   color: #67c23a;
   background: #f0f9eb;
 }
+
 .badge.info {
   color: #409eff;
   background: #ecf5ff;
 }
+
 .badge.warn {
   color: #e6a23c;
   background: #fdf6ec;
 }
+
 .badge.danger {
   color: #f56c6c;
   background: #fef0f0;
 }
+
 .badge.mute {
   color: #909399;
   background: #f4f4f5;
 }
+
 .progress {
   position: relative;
   width: 96px;
@@ -304,11 +324,13 @@ th {
   background: #ebeef5;
   border-radius: 4px;
 }
+
 .progress i {
   display: block;
   height: 100%;
   background: linear-gradient(90deg, #79bbff, #409eff);
 }
+
 .progress em {
   position: absolute;
   top: -16px;
@@ -317,6 +339,7 @@ th {
   font-style: normal;
   color: #909399;
 }
+
 .ops button {
   padding: 0;
   color: var(--primary);
@@ -324,6 +347,7 @@ th {
   background: none;
   border: none;
 }
+
 .pager {
   display: flex;
   gap: 12px;
@@ -333,10 +357,12 @@ th {
   font-size: 13px;
   color: #606266;
 }
+
 .pages {
   display: flex;
   gap: 4px;
 }
+
 .pages button {
   min-width: 30px;
   height: 30px;
@@ -345,17 +371,20 @@ th {
   border: 1px solid #dcdfe6;
   border-radius: 4px;
 }
+
 .pages button.on {
   color: #fff;
   background: var(--primary);
   border-color: var(--primary);
 }
+
 .mask {
   position: fixed;
   inset: 0;
   z-index: 40;
   background: rgb(0 0 0 / 35%);
 }
+
 .drawer {
   position: absolute;
   top: 0;
@@ -366,47 +395,56 @@ th {
   overflow: auto;
   background: #fff;
 }
+
 .drawer header {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
+
 .drawer header h3 {
   margin: 0;
   font-size: 15px;
 }
+
 .drawer header button {
   font-size: 22px;
   cursor: pointer;
   background: none;
   border: none;
 }
+
 .drawer dl {
   margin: 12px 0;
 }
+
 .drawer dl > div {
   display: grid;
   grid-template-columns: 88px 1fr;
   gap: 8px;
   padding: 8px 0;
-  border-bottom: 1px solid #f0f2f5;
   font-size: 13px;
+  border-bottom: 1px solid #f0f2f5;
 }
+
 .drawer dt {
   color: #909399;
 }
+
 .drawer dd {
   margin: 0;
 }
+
 .drawer h4 {
   margin: 12px 0 6px;
 }
+
 .drawer pre {
-  margin: 0;
   padding: 10px;
-  color: #606266;
+  margin: 0;
   font-size: 12px;
   line-height: 1.6;
+  color: #606266;
   white-space: pre-wrap;
   background: #f5f7fa;
   border-radius: 6px;

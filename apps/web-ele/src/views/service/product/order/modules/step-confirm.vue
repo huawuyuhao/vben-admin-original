@@ -15,16 +15,16 @@ import {
 
 defineProps<{
   demandName: string;
+  disks: DemandDiskPayload[];
+  fee: DemandFeeResult | null;
+  feeLoading?: boolean;
   instanceName: string;
   networkBandwidth: number;
   quantity: number;
   region?: string;
-  selectedSpec: null | ProductSpecItem;
   selectedImage: null | ProductImageItem;
-  disks: DemandDiskPayload[];
   selectedModelCount: number;
-  fee: null | DemandFeeResult;
-  feeLoading?: boolean;
+  selectedSpec: null | ProductSpecItem;
 }>();
 
 /**
@@ -194,9 +194,9 @@ function diskUsageLabel(usage: number) {
 
     p {
       margin: 6px 0 0;
-      color: hsl(var(--muted-foreground));
       font-size: 13px;
       line-height: 1.5;
+      color: hsl(var(--muted-foreground));
     }
   }
 
@@ -221,21 +221,21 @@ function diskUsageLabel(usage: number) {
     border-radius: 12px;
 
     span {
-      color: hsl(var(--muted-foreground));
       font-size: 13px;
+      color: hsl(var(--muted-foreground));
     }
 
     strong {
-      color: var(--el-color-primary);
       font-size: 22px;
       font-weight: 700;
       line-height: 1.2;
+      color: var(--el-color-primary);
 
       small {
         margin-left: 2px;
-        color: hsl(var(--muted-foreground));
         font-size: 13px;
         font-weight: 400;
+        color: hsl(var(--muted-foreground));
       }
     }
 

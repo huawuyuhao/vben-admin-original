@@ -7,10 +7,10 @@ import {
   algoCallLogs,
   algoCategories,
   algoLedgerItems,
+  type AlgoLedgerTab,
   algoOpLogs,
   algoParams,
   algoTypeOptions,
-  type AlgoLedgerTab,
 } from '#/views/_shared/data/algo-version';
 
 defineOptions({ name: 'AlgoLedger' });
@@ -341,8 +341,8 @@ function search() {
 
 .role-pill {
   padding: 4px 10px;
-  color: #67c23a;
   font-size: 12px;
+  color: #67c23a;
   background: #f0f9eb;
   border: 1px solid #c2e7b0;
   border-radius: 12px;
@@ -353,8 +353,8 @@ function search() {
   grid-template-columns: repeat(4, minmax(0, 1fr)) auto;
   gap: 12px;
   align-items: end;
-  margin-bottom: 12px;
   padding: 14px;
+  margin-bottom: 12px;
   background: #fafafa;
 }
 
@@ -362,8 +362,8 @@ function search() {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  color: #606266;
   font-size: 13px;
+  color: #606266;
 }
 
 .filter input,
@@ -381,8 +381,8 @@ function search() {
 }
 
 .dates i {
-  color: #909399;
   font-style: normal;
+  color: #909399;
 }
 
 .filter-actions {
@@ -394,8 +394,8 @@ function search() {
 .type-tag {
   display: inline-block;
   padding: 2px 8px;
-  color: #606266;
   font-size: 12px;
+  color: #606266;
   background: #f5f7fa;
   border-radius: 4px;
 }
@@ -410,8 +410,8 @@ function search() {
 .status-dot::before {
   width: 8px;
   height: 8px;
-  border-radius: 50%;
   content: '';
+  border-radius: 50%;
 }
 
 .status-dot.on {
@@ -449,8 +449,8 @@ function search() {
   justify-content: space-between;
   padding-top: 12px;
   margin-top: 12px;
-  color: #909399;
   font-size: 13px;
+  color: #909399;
   border-top: 1px solid #ebeef5;
 }
 

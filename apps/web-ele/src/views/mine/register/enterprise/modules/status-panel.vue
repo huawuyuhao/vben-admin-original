@@ -10,10 +10,10 @@ defineOptions({ name: 'MineRegisterStatusPanel' });
 
 withDefaults(
   defineProps<{
-    /** 状态元数据 */
-    meta: AuthStatusMeta;
     /** i18n 前缀，如 page.mine.register.enterprise */
     i18nPrefix?: string;
+    /** 状态元数据 */
+    meta: AuthStatusMeta;
   }>(),
   {
     i18nPrefix: 'page.mine.register.enterprise',
@@ -69,12 +69,12 @@ const STEP_KEYS = [
 
 <style lang="scss" scoped>
 .ent-status {
-  margin-bottom: 18px;
   padding: 22px 24px;
-  background: hsl(var(--card) / 0.92);
+  margin-bottom: 18px;
+  background: hsl(var(--card) / 92%);
   border: 1px solid hsl(var(--border));
   border-radius: 16px;
-  box-shadow: 0 8px 24px hsl(var(--foreground) / 0.05);
+  box-shadow: 0 8px 24px hsl(var(--foreground) / 5%);
   backdrop-filter: blur(8px);
 
   &__head {
@@ -149,7 +149,7 @@ const STEP_KEYS = [
       .ent-status__node {
         color: #fff;
         background: hsl(var(--primary));
-        box-shadow: 0 0 0 4px hsl(var(--primary) / 0.16);
+        box-shadow: 0 0 0 4px hsl(var(--primary) / 16%);
       }
 
       .ent-status__label {
@@ -167,7 +167,7 @@ const STEP_KEYS = [
     font-size: 14px;
     font-weight: 700;
     color: hsl(var(--muted-foreground));
-    background: hsl(var(--muted) / 0.55);
+    background: hsl(var(--muted) / 55%);
     border-radius: 50%;
   }
 

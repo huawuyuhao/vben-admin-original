@@ -391,8 +391,8 @@ function bizClass(b: string) {
 .main-tab {
   padding: 12px 16px;
   margin-bottom: -1px;
-  color: #606266;
   font-size: 14px;
+  color: #606266;
   cursor: pointer;
   background: none;
   border: none;
@@ -400,8 +400,8 @@ function bizClass(b: string) {
 }
 
 .main-tab.active {
-  color: #409eff;
   font-weight: 600;
+  color: #409eff;
   border-bottom-color: #409eff;
 }
 
@@ -413,8 +413,8 @@ function bizClass(b: string) {
 
 .sub-tab {
   padding: 8px 0;
-  color: #606266;
   font-size: 13px;
+  color: #606266;
   cursor: pointer;
   background: none;
   border: none;
@@ -431,8 +431,8 @@ function bizClass(b: string) {
   flex-wrap: wrap;
   gap: 12px;
   align-items: end;
-  margin-bottom: 14px;
   padding: 12px;
+  margin-bottom: 14px;
   background: #fafafa;
   border-radius: 6px;
 }
@@ -441,14 +441,14 @@ function bizClass(b: string) {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  color: #606266;
   font-size: 13px;
+  color: #606266;
 }
 
 .filter input,
 .filter select {
-  height: 32px;
   min-width: 140px;
+  height: 32px;
   padding: 0 10px;
   border: 1px solid #dcdfe6;
   border-radius: 4px;
@@ -508,8 +508,8 @@ function bizClass(b: string) {
 .status-dot::before {
   width: 8px;
   height: 8px;
-  border-radius: 50%;
   content: '';
+  border-radius: 50%;
 }
 
 .status-dot.ok::before {
@@ -549,8 +549,8 @@ function bizClass(b: string) {
 .pager {
   padding-top: 12px;
   margin-top: 12px;
-  color: #909399;
   font-size: 13px;
+  color: #909399;
   border-top: 1px solid #ebeef5;
 }
 
@@ -574,8 +574,8 @@ function bizClass(b: string) {
 }
 
 .mk span {
-  color: #909399;
   font-size: 12px;
+  color: #909399;
 }
 
 .mk.danger strong {

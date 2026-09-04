@@ -23,7 +23,7 @@ export interface SupplyDeviceItem {
   /** 数量 */
   quantity?: number;
   /** 受理状态（0-未受理 1-已查看） */
-  status?: SupplyDeviceStatus | number;
+  status?: number | SupplyDeviceStatus;
   /** 提交时间 */
   submitTime?: string;
   /** 创建时间 */
@@ -131,5 +131,5 @@ export interface SupplyDeviceListResponseBody<T = SupplyDeviceItem> {
 export interface SupplyDeviceMutationResponse {
   code?: number;
   msg?: string;
-  data?: { key?: number | string } | SupplyDeviceExportResult;
+  data?: SupplyDeviceExportResult | { key?: number | string };
 }

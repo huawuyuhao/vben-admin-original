@@ -4,7 +4,6 @@ import type { EchartsUIType } from '@vben/plugins/echarts';
 import { onMounted, ref } from 'vue';
 
 import { EchartsUI, useEcharts } from '@vben/plugins/echarts';
-import { ElMessage } from 'element-plus';
 
 import {
   taskDurationBuckets,
@@ -179,8 +178,8 @@ onMounted(() => {
 .granularity button {
   height: 30px;
   padding: 0 12px;
-  color: #606266;
   font-size: 12px;
+  color: #606266;
   cursor: pointer;
   background: #fff;
   border: 1px solid #dcdfe6;
@@ -195,8 +194,8 @@ onMounted(() => {
 }
 
 .range-text {
-  color: #909399;
   font-size: 12px;
+  color: #909399;
 }
 
 .kpi.compare {
@@ -206,14 +205,14 @@ onMounted(() => {
 }
 
 .kpi-label {
-  color: #909399;
   font-size: 12px;
+  color: #909399;
 }
 
 .kpi em {
-  color: #909399;
   font-size: 11px;
   font-style: normal;
+  color: #909399;
 }
 
 .chg {
@@ -237,10 +236,10 @@ onMounted(() => {
 }
 
 .tip {
-  margin-top: 8px;
   padding: 8px 10px;
-  color: #606266;
+  margin-top: 8px;
   font-size: 12px;
+  color: #606266;
   background: #ecf5ff;
   border-radius: 4px;
 }

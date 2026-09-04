@@ -37,8 +37,8 @@ defineOptions({ name: 'LoginBrandAside' });
     margin-bottom: 16px;
     font-size: 12px;
     font-weight: 600;
-    letter-spacing: 0.08em;
     color: var(--portal-primary, #6b4cff);
+    letter-spacing: 0.08em;
     background: var(--portal-primary-bg, #f0edff);
     border-radius: 999px;
   }
@@ -85,7 +85,7 @@ defineOptions({ name: 'LoginBrandAside' });
         content: '';
         background: var(--portal-primary, #6b4cff);
         border-radius: 50%;
-        box-shadow: 0 0 0 4px rgba(107, 76, 255, 0.15);
+        box-shadow: 0 0 0 4px rgb(107 76 255 / 15%);
       }
     }
   }

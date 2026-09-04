@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus';
 
+defineOptions({ name: 'ContentAudit' });
+
 /** 审核列表（待对接接口） */
 const auditList: never[] = [];
-
-defineOptions({ name: 'ContentAudit' });
 
 function typeClass(t: string) {
   if (t === '案例') return 'info';
@@ -67,7 +67,7 @@ function statusClass(s: string) {
         <table>
           <thead>
             <tr>
-              <th />
+              <th></th>
               <th>内容标题</th>
               <th>内容类型</th>
               <th>提交人</th>

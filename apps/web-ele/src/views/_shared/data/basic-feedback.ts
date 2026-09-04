@@ -153,7 +153,7 @@ export const replyQueue = [
     time: '2026-03-25 14:32',
     status: '待处理',
     reply: '',
-    history: [] as Array<{ time: string; operator: string; content: string }>,
+    history: [] as Array<{ content: string; operator: string; time: string; }>,
   },
   {
     id: 2,

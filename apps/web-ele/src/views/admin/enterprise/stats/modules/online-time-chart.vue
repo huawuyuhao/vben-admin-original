@@ -6,8 +6,8 @@ import { nextTick, ref, watch } from 'vue';
 import { $t, useI18n } from '@vben/locales';
 import {
   useVChart,
-  VchartUI,
   type VChartSpec,
+  VchartUI,
   type VchartUIType,
 } from '@vben/plugins/vchart';
 

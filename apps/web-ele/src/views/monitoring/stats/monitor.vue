@@ -4,6 +4,7 @@ import type { EchartsUIType } from '@vben/plugins/echarts';
 import { onMounted, ref } from 'vue';
 
 import { EchartsUI, useEcharts } from '@vben/plugins/echarts';
+
 import { ElMessage } from 'element-plus';
 
 import {
@@ -190,8 +191,8 @@ onMounted(() => {
   flex-wrap: wrap;
   gap: 8px;
   align-items: center;
-  margin-bottom: 12px;
   padding: 12px;
+  margin-bottom: 12px;
   font-size: 13px;
   color: #606266;
 }
@@ -226,8 +227,8 @@ onMounted(() => {
   display: flex;
   gap: 16px;
   margin-top: 8px;
-  color: #9aa4b2;
   font-size: 12px;
+  color: #9aa4b2;
 }
 
 .summary {
@@ -235,20 +236,20 @@ onMounted(() => {
   flex-wrap: wrap;
   gap: 20px;
   margin-bottom: 12px;
-  color: #9aa4b2;
   font-size: 13px;
+  color: #9aa4b2;
 }
 
 .summary strong {
   margin-right: 4px;
-  color: #36cfc9;
   font-size: 18px;
+  color: #36cfc9;
 }
 
 .dark-table {
   width: 100%;
-  color: #c0c4cc;
   font-size: 13px;
+  color: #c0c4cc;
 }
 
 .dark-table th,

@@ -261,8 +261,8 @@ defineExpose({ refresh: fetchEvaluations });
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-end;
-    margin-top: 16px;
     padding-top: 12px;
+    margin-top: 16px;
     border-top: 1px solid var(--el-border-color-lighter);
   }
 }

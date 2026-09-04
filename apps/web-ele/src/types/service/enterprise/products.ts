@@ -28,9 +28,9 @@ export interface SupplyProductItem {
   /** 产品描述 */
   description?: string;
   /** 上下架状态（0-下架 1-上架） */
-  shelfStatus?: SupplyProductShelfStatus | number;
+  shelfStatus?: number | SupplyProductShelfStatus;
   /** 资源状态（0-离线 1-在线 2-异常） */
-  resourceStatus?: SupplyProductResourceStatus | number;
+  resourceStatus?: number | SupplyProductResourceStatus;
   /** 创建时间 */
   createTime?: string;
   /** 更新时间 */
@@ -77,7 +77,7 @@ export interface SupplyProductWriteParams {
  */
 export interface SupplyProductResourceStatusResult {
   /** 资源状态（0-离线 1-在线 2-异常） */
-  resourceStatus?: SupplyProductResourceStatus | number;
+  resourceStatus?: number | SupplyProductResourceStatus;
 }
 
 /**
@@ -125,6 +125,6 @@ export interface SupplyProductMutationResponse {
     | string
     | {
         key?: number | string;
-        resourceStatus?: SupplyProductResourceStatus | number;
+        resourceStatus?: number | SupplyProductResourceStatus;
       };
 }

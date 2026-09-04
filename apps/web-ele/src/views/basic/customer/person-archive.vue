@@ -129,7 +129,7 @@ function authClass(a: string) {
         <table>
           <thead>
             <tr>
-              <th />
+              <th></th>
               <th>序号</th>
               <th>姓名</th>
               <th>身份证号</th>
@@ -202,8 +202,8 @@ function authClass(a: string) {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  color: #606266;
   font-size: 13px;
+  color: #606266;
 }
 
 .filter input,
@@ -229,8 +229,8 @@ function authClass(a: string) {
 
 .count {
   margin-left: auto;
-  color: #909399;
   font-size: 13px;
+  color: #909399;
 }
 
 .table-wrap {
@@ -284,8 +284,8 @@ function authClass(a: string) {
 .pager {
   padding-top: 12px;
   margin-top: 12px;
-  color: #909399;
   font-size: 13px;
+  color: #909399;
   border-top: 1px solid #ebeef5;
 }
 

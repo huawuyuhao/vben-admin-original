@@ -4,8 +4,9 @@ import type { MessageItem } from '#/types/mine/messages/all';
 import { nextTick, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-import { Refresh } from '@element-plus/icons-vue';
 import { $t } from '@vben/locales';
+
+import { Refresh } from '@element-plus/icons-vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 
 import {
@@ -16,14 +17,14 @@ import {
 } from '#/api/mine/messages/all';
 
 import {
-  MESSAGE_PAGE_SIZE,
   buildMessageCategoryTabs,
-  normalizeMessagePage,
-  parseMessageReadFilter,
-  parseMessageTypeFilter,
+  MESSAGE_PAGE_SIZE,
   type MessageCategoryTab,
   type MessageReadFilter,
   type MessageTypeFilter,
+  normalizeMessagePage,
+  parseMessageReadFilter,
+  parseMessageTypeFilter,
 } from './data';
 import CategoryTabs from './modules/category-tabs.vue';
 import DetailDialog from './modules/detail-dialog.vue';

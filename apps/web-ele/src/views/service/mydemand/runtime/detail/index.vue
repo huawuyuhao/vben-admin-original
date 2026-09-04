@@ -7,8 +7,9 @@ import type {
 import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-import { ArrowLeft, Refresh } from '@element-plus/icons-vue';
 import { $t } from '@vben/locales';
+
+import { ArrowLeft, Refresh } from '@element-plus/icons-vue';
 import { ElMessage } from 'element-plus';
 
 import {
@@ -36,8 +37,8 @@ import {
   parseRunningTaskIdParam,
   RUNTIME_HISTORY_DIMENSIONS,
   RUNTIME_RANGE_1H,
-  RUNTIME_RANGE_24H,
   RUNTIME_RANGE_6H,
+  RUNTIME_RANGE_24H,
   RUNTIME_STEP_KEYS,
   type RuntimeChartPoint,
   type RuntimeRangeKey,
@@ -64,7 +65,7 @@ const chartLoading = ref(false);
 /** 关闭中 */
 const closing = ref(false);
 /** 详情 */
-const detail = ref<RunningTaskDetail | null>(null);
+const detail = ref<null | RunningTaskDetail>(null);
 /** 当前 Tab */
 const activeTab = ref('power');
 /** 快捷时间范围 */
@@ -654,10 +655,10 @@ onMounted(() => {
   }
 
   &__steps {
-    margin-bottom: 20px;
     padding: 16px 8px 8px;
+    margin-bottom: 20px;
+    background: hsl(var(--muted) / 35%);
     border-radius: 12px;
-    background: hsl(var(--muted) / 0.35);
   }
 
   &__steps-label {

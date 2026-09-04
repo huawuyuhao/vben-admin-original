@@ -17,12 +17,12 @@ import {
 defineOptions({ name: 'MyDemandComputeTable' });
 
 defineProps<{
+  /** 正在复制的需求 ID */
+  copyingId?: null | number;
   /** 列表数据 */
   demands: ComputeDemandItem[];
   /** 加载中 */
   loading?: boolean;
-  /** 正在复制的需求 ID */
-  copyingId?: null | number;
 }>();
 
 const emit = defineEmits<{
@@ -227,7 +227,7 @@ const emit = defineEmits<{
   }
 
   :deep(.el-table) {
-    --el-table-header-bg-color: hsl(var(--muted) / 0.35);
+    --el-table-header-bg-color: hsl(var(--muted) / 35%);
   }
 }
 </style>

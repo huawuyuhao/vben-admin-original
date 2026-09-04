@@ -109,11 +109,11 @@ export function parseMessageReadFilter(
  */
 export function getMessageTypeI18nKey(type?: number): string {
   switch (type) {
-    case MESSAGE_TYPE_DEMAND: {
-      return 'page.mine.messages.all.types.demand';
-    }
     case MESSAGE_TYPE_AUTH: {
       return 'page.mine.messages.all.types.auth';
+    }
+    case MESSAGE_TYPE_DEMAND: {
+      return 'page.mine.messages.all.types.demand';
     }
     case MESSAGE_TYPE_SUBACCOUNT: {
       return 'page.mine.messages.all.types.subaccount';
@@ -136,11 +136,11 @@ export function getMessageTypeTagType(
   type?: number,
 ): 'danger' | 'info' | 'primary' | 'success' | 'warning' {
   switch (type) {
-    case MESSAGE_TYPE_DEMAND: {
-      return 'success';
-    }
     case MESSAGE_TYPE_AUTH: {
       return 'warning';
+    }
+    case MESSAGE_TYPE_DEMAND: {
+      return 'success';
     }
     case MESSAGE_TYPE_SUBACCOUNT: {
       return 'primary';
@@ -168,7 +168,7 @@ export function isMessageUnread(isRead?: number): boolean {
  * @param item 消息条目
  * @returns 合法 ID；无效返回 null
  */
-export function resolveMessageId(item?: null | MessageItem): null | number {
+export function resolveMessageId(item?: MessageItem | null): null | number {
   const id = Number(item?.messageId);
   if (!Number.isFinite(id) || id <= 0) {
     return null;
@@ -214,7 +214,7 @@ export function displayMessageValue(
  * @param data 接口分页结果
  * @returns records + total + current + size
  */
-export function normalizeMessagePage(data?: null | MessageListResult): {
+export function normalizeMessagePage(data?: MessageListResult | null): {
   current: number;
   records: MessageItem[];
   size: number;
@@ -234,7 +234,7 @@ export function normalizeMessagePage(data?: null | MessageListResult): {
  * @returns Tab 列表
  */
 export function buildMessageCategoryTabs(
-  stats?: null | MessageStatisticsItem[],
+  stats?: MessageStatisticsItem[] | null,
 ): MessageCategoryTab[] {
   const map = new Map<number, MessageStatisticsItem>();
   for (const item of stats ?? []) {

@@ -44,7 +44,7 @@ const filtered = computed(() => {
 const stats = computed(() => ({
   total: rows.value.length,
   queued: rows.value.filter((i) =>
-    ['已入队', '排队中', '已下发'].includes(i.queueStatus),
+    ['已下发', '已入队', '排队中'].includes(i.queueStatus),
   ).length,
   pending: rows.value.filter((i) => i.queueStatus === '待入队').length,
   auto: rows.value.filter((i) => i.auto).length,
@@ -188,7 +188,7 @@ function toggle(id: string) {
       <table>
         <thead>
           <tr>
-            <th style="width: 40px" />
+            <th style="width: 40px"></th>
             <th>需求ID</th>
             <th>标准工单号</th>
             <th>委托方</th>
@@ -306,6 +306,7 @@ function toggle(id: string) {
 <style scoped>
 .page {
   --primary: #409eff;
+
   padding-bottom: 24px;
 }
 
@@ -323,11 +324,11 @@ function toggle(id: string) {
 }
 
 .head p {
-  margin: 0;
   max-width: 640px;
-  color: #909399;
+  margin: 0;
   font-size: 13px;
   line-height: 1.5;
+  color: #909399;
 }
 
 .kpi-row {
@@ -348,13 +349,13 @@ function toggle(id: string) {
 .kpi strong {
   display: block;
   margin-bottom: 4px;
-  color: var(--primary);
   font-size: 24px;
+  color: var(--primary);
 }
 
 .kpi span {
-  color: #909399;
   font-size: 12px;
+  color: #909399;
 }
 
 .filter {
@@ -381,15 +382,15 @@ function toggle(id: string) {
   display: inline-flex;
   gap: 4px;
   align-items: center;
-  color: #606266;
   font-size: 13px;
+  color: #606266;
 }
 
 .btn {
   height: 32px;
   padding: 0 14px;
-  color: #606266;
   font-size: 13px;
+  color: #606266;
   cursor: pointer;
   background: #fff;
   border: 1px solid #dcdfe6;
@@ -416,21 +417,21 @@ function toggle(id: string) {
 
 table {
   width: 100%;
-  border-collapse: collapse;
   font-size: 13px;
+  border-collapse: collapse;
 }
 
 th,
 td {
   padding: 11px 10px;
   text-align: left;
-  border-bottom: 1px solid #ebeef5;
   white-space: nowrap;
+  border-bottom: 1px solid #ebeef5;
 }
 
 th {
-  color: #909399;
   font-weight: 500;
+  color: #909399;
   background: #fafafa;
 }
 
@@ -485,8 +486,8 @@ th {
   align-items: center;
   justify-content: flex-end;
   margin-top: 14px;
-  color: #606266;
   font-size: 13px;
+  color: #606266;
 }
 
 .pages {
@@ -555,8 +556,8 @@ th {
   grid-template-columns: 96px 1fr;
   gap: 8px;
   padding: 8px 0;
-  border-bottom: 1px solid #f0f2f5;
   font-size: 13px;
+  border-bottom: 1px solid #f0f2f5;
 }
 
 .drawer dt {
@@ -570,9 +571,9 @@ th {
 
 .tip {
   margin: 14px 0 0;
-  color: #909399;
   font-size: 12px;
   line-height: 1.6;
+  color: #909399;
 }
 
 @media (max-width: 900px) {

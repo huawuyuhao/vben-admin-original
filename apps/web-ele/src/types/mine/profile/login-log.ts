@@ -93,10 +93,10 @@ export interface LoginLogListResponseBody<T = LoginLogItem> {
   data?:
     | T[]
     | {
-        records?: T[];
-        total?: number;
         current?: number;
+        records?: T[];
         size?: number;
+        total?: number;
       };
 }
 

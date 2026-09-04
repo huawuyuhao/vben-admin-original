@@ -14,6 +14,11 @@ import { useAuthStore } from '#/store';
 
 import { createResetPasswordForm, PASSWORD_PATTERN } from '../data';
 
+/**
+ * 重置密码弹窗（成功后退出并回登录页）
+ */
+defineOptions({ name: 'MineProfileResetPasswordDialog' });
+
 const props = defineProps<{
   /** 是否显示弹窗 */
   modelValue: boolean;
@@ -22,11 +27,6 @@ const props = defineProps<{
 const emit = defineEmits<{
   'update:modelValue': [visible: boolean];
 }>();
-
-/**
- * 重置密码弹窗（成功后退出并回登录页）
- */
-defineOptions({ name: 'MineProfileResetPasswordDialog' });
 
 const authStore = useAuthStore();
 const formRef = ref<FormInstance>();
@@ -219,7 +219,7 @@ async function handleSubmit() {
       box-shadow: 0 0 0 1px hsl(var(--border)) inset;
 
       &:hover {
-        box-shadow: 0 0 0 1px hsl(var(--primary) / 0.35) inset;
+        box-shadow: 0 0 0 1px hsl(var(--primary) / 35%) inset;
       }
 
       &.is-focus {

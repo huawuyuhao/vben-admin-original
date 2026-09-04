@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 
-import { ArrowDown, ArrowUp } from '@element-plus/icons-vue';
 import { $t } from '@vben/locales';
+
+import { ArrowDown, ArrowUp } from '@element-plus/icons-vue';
 
 import {
   LOGIN_LOG_STATUS_FAIL,
@@ -13,6 +14,12 @@ import {
 
 defineOptions({ name: 'MineProfileLoginLogFilterBar' });
 
+const emit = defineEmits<{
+  /** 重置筛选 */
+  reset: [];
+  /** 点击查询 */
+  search: [];
+}>();
 /** 用户账号 */
 const userName = defineModel<string>('userName', { default: '' });
 /** 登录 IP */
@@ -25,13 +32,6 @@ const status = defineModel<LoginLogStatusFilter>('status', { default: '' });
 const loginTimeRange = defineModel<LoginLogTimeRange>('loginTimeRange', {
   default: null,
 });
-
-const emit = defineEmits<{
-  /** 重置筛选 */
-  reset: [];
-  /** 点击查询 */
-  search: [];
-}>();
 
 /** 是否展开更多筛选（默认收起，仅展示常用项） */
 const expanded = ref(false);
@@ -200,8 +200,8 @@ function toggleExpand() {
   }
 
   &__extra-inner {
-    overflow: hidden;
     min-height: 0;
+    overflow: hidden;
   }
 
   &__field {

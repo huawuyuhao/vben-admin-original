@@ -3,16 +3,17 @@ import type { ProductInfo } from '#/types/service/product';
 
 import { computed, ref, watch } from 'vue';
 
-import { Star, StarFilled } from '@element-plus/icons-vue';
 import { $t } from '@vben/locales';
 
+import { Star, StarFilled } from '@element-plus/icons-vue';
+
+import { useProductActions } from '../../composables/use-product-actions';
 import {
   formatGreenPowerRatio,
   formatProductPrice,
   hasProductImage,
   splitProductTags,
 } from '../../data';
-import { useProductActions } from '../../composables/use-product-actions';
 
 defineOptions({ name: 'ServiceProductDetailOverview' });
 
@@ -188,8 +189,8 @@ async function handleUseNow() {
     background: linear-gradient(
       145deg,
       hsl(var(--primary)),
-      hsl(250 100% 76%) 55%,
-      hsl(190 90% 66%)
+      hsl(250deg 100% 76%) 55%,
+      hsl(190deg 90% 66%)
     );
     border-radius: calc(var(--el-card-border-radius, 4px) - 2px);
 
@@ -209,7 +210,7 @@ async function handleUseNow() {
   &__letter {
     font-size: 56px;
     font-weight: 750;
-    color: rgba(255, 255, 255, 0.92);
+    color: rgb(255 255 255 / 92%);
   }
 
   &__main {
@@ -251,7 +252,7 @@ async function handleUseNow() {
     margin: 0;
     font-size: 13px;
     font-weight: 650;
-    color: hsl(145 70% 36%);
+    color: hsl(145deg 70% 36%);
   }
 
   &__desc {

@@ -80,7 +80,7 @@ export interface SmsCodeParams {
  */
 export interface LoginUserInfo {
   /** 用户 ID */
-  userId?: string | number;
+  userId?: number | string;
   /** 用户名 */
   username?: string;
   /** 真实姓名 / 昵称 */
@@ -156,50 +156,50 @@ export interface AccountLoginForm {
  * 授权类型（注册 / 登录 grantType）
  */
 export enum AuthGrantType {
+  /** 邮箱 */
+  Email = 'email',
   /** 密码 */
   Password = 'password',
   /** 短信 */
   Sms = 'sms',
-  /** 邮箱 */
-  Email = 'email',
-  /** 小程序 */
-  Xcx = 'xcx',
   /** 社交账号 */
   Social = 'social',
+  /** 小程序 */
+  Xcx = 'xcx',
 }
 
 /**
  * 行业属性（注册 industryType）
  */
 export enum IndustryType {
-  /** 电力 */
-  Electricity = 'electricity',
-  /** 算力 */
-  Computing = 'computing',
   /** 碳 */
   Carbon = 'carbon',
-  /** 新能源 */
-  NewEnergy = 'new_energy',
-  /** 制造业 */
-  Manufacturing = 'manufacturing',
-  /** 互联网 */
-  Internet = 'internet',
-  /** 科研 */
-  Research = 'research',
+  /** 算力 */
+  Computing = 'computing',
+  /** 电力 */
+  Electricity = 'electricity',
   /** 政务 */
   Government = 'government',
+  /** 互联网 */
+  Internet = 'internet',
+  /** 制造业 */
+  Manufacturing = 'manufacturing',
+  /** 新能源 */
+  NewEnergy = 'new_energy',
   /** 其他 */
   Other = 'other',
+  /** 科研 */
+  Research = 'research',
 }
 
 /**
  * 用户类型（注册 userType）
  */
 export enum AuthUserType {
-  /** 系统用户 */
-  SysUser = 'sys_user',
   /** 应用用户 */
   AppUser = 'app_user',
+  /** 系统用户 */
+  SysUser = 'sys_user',
 }
 
 /**

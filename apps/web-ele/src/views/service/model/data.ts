@@ -25,7 +25,7 @@ export const MODEL_STATUS_ENABLED = 1;
  * @param list 接口原始列表
  * @returns 可展示列表
  */
-export function normalizeModelList(list?: null | ModelInfo[]): ModelInfo[] {
+export function normalizeModelList(list?: ModelInfo[] | null): ModelInfo[] {
   if (!list?.length) {
     return [];
   }
@@ -37,7 +37,7 @@ export function normalizeModelList(list?: null | ModelInfo[]): ModelInfo[] {
  * @param data 接口分页结果
  * @returns records + total + current + size
  */
-export function normalizeModelPage(data?: null | ModelListResult): {
+export function normalizeModelPage(data?: ModelListResult | null): {
   current: number;
   records: ModelInfo[];
   size: number;

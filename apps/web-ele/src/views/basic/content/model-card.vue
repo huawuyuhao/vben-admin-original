@@ -1,10 +1,11 @@
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus';
 
+defineOptions({ name: 'ContentModelCard' });
+
 /** 模型卡片模板列表（待对接接口） */
 const modelTemplates: never[] = [];
 
-defineOptions({ name: 'ContentModelCard' });
 </script>
 
 <template>
@@ -39,7 +40,7 @@ defineOptions({ name: 'ContentModelCard' });
         <div class="tpl-status" :class="t.status === '启用中' ? 'ok' : 'mute'">
           {{ t.status }}
         </div>
-        <div class="tpl-cover" />
+        <div class="tpl-cover"></div>
         <div class="tpl-body">
           <div class="tpl-title">
             <strong>{{ t.name }}</strong>
@@ -81,8 +82,8 @@ defineOptions({ name: 'ContentModelCard' });
 
 .tpl-card {
   position: relative;
-  overflow: hidden;
   padding: 0;
+  overflow: hidden;
 }
 
 .tpl-status {
@@ -123,8 +124,8 @@ defineOptions({ name: 'ContentModelCard' });
 
 .tpl-body p {
   margin: 0 0 8px;
-  color: #909399;
   font-size: 12px;
+  color: #909399;
 }
 
 .tags {
@@ -135,16 +136,16 @@ defineOptions({ name: 'ContentModelCard' });
 
 .tpl-meta {
   margin-bottom: 10px;
-  color: #c0c4cc;
   font-size: 12px;
+  color: #c0c4cc;
 }
 
 .tpl-foot {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  color: #606266;
   font-size: 12px;
+  color: #606266;
 }
 
 .pager.center {

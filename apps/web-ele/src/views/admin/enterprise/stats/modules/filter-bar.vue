@@ -7,19 +7,18 @@ import { getCurrentStatYear } from '../data';
 
 defineOptions({ name: 'AdminEnterpriseStatsFilterBar' });
 
-/** 年份 */
-const year = defineModel<null | number>('year', { default: null });
-/** 月份 1-12，空表示全年 */
-const month = defineModel<null | number>('month', { default: null });
-/** 日（告警维度可选） */
-const day = defineModel<null | number>('day', { default: null });
-
 const emit = defineEmits<{
   /** 重置 */
   reset: [];
   /** 查询 */
   search: [];
 }>();
+/** 年份 */
+const year = defineModel<null | number>('year', { default: null });
+/** 月份 1-12，空表示全年 */
+const month = defineModel<null | number>('month', { default: null });
+/** 日（告警维度可选） */
+const day = defineModel<null | number>('day', { default: null });
 
 /** 年份选项：近 6 年 */
 const yearOptions = computed(() => {

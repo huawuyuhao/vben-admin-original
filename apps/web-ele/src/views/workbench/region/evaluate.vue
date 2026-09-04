@@ -4,6 +4,7 @@ import type { EchartsUIType } from '@vben/plugins/echarts';
 import { computed, onMounted, ref, watch } from 'vue';
 
 import { EchartsUI, useEcharts } from '@vben/plugins/echarts';
+
 import { ElMessage } from 'element-plus';
 
 import {
@@ -54,7 +55,7 @@ function renderCharts() {
     },
     series: [
       {
-        areaStyle: { color: 'rgba(64,158,255,0.2)' },
+        areaStyle: { color: 'rgb(64 158 255 / 20%)' },
         data: [
           {
             name: cur.schemeName,
@@ -194,6 +195,7 @@ onMounted(() => renderCharts());
 <style scoped>
 .page {
   --primary: #409eff;
+
   padding-bottom: 24px;
 }
 
@@ -210,11 +212,11 @@ onMounted(() => renderCharts());
 }
 
 .head p {
-  margin: 0;
   max-width: 720px;
-  color: #909399;
+  margin: 0;
   font-size: 13px;
   line-height: 1.5;
+  color: #909399;
 }
 
 .btn {
@@ -270,8 +272,8 @@ onMounted(() => renderCharts());
 }
 
 .rank {
-  color: #909399;
   font-weight: 700;
+  color: #909399;
 }
 
 .body h4 {
@@ -281,15 +283,15 @@ onMounted(() => renderCharts());
 
 .body p {
   margin: 0;
-  color: #909399;
   font-size: 12px;
+  color: #909399;
 }
 
 .score {
   min-width: 36px;
-  color: #303133;
   font-size: 18px;
   font-weight: 700;
+  color: #303133;
   text-align: right;
 }
 
@@ -326,8 +328,8 @@ onMounted(() => renderCharts());
 
 .detail-head p {
   margin: 0;
-  color: #606266;
   font-size: 13px;
+  color: #606266;
 }
 
 .big-score {
@@ -344,9 +346,9 @@ onMounted(() => renderCharts());
 }
 
 .big-score span {
-  color: #909399;
   font-size: 12px;
   font-weight: 400;
+  color: #909399;
 }
 
 .metric-row {
@@ -366,13 +368,13 @@ onMounted(() => renderCharts());
 .metric strong {
   display: block;
   margin-bottom: 4px;
-  color: var(--primary);
   font-size: 20px;
+  color: var(--primary);
 }
 
 .metric span {
-  color: #909399;
   font-size: 12px;
+  color: #909399;
 }
 
 .charts {
@@ -389,9 +391,9 @@ onMounted(() => renderCharts());
 
 .chart-box h4 {
   margin: 0 0 8px;
-  color: #606266;
   font-size: 13px;
   font-weight: 500;
+  color: #606266;
 }
 
 @media (max-width: 1100px) {

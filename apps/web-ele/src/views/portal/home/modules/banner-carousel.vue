@@ -137,12 +137,12 @@ onMounted(fetchBanners);
   background:
     radial-gradient(
       ellipse 80% 60% at 20% 40%,
-      rgba(47, 107, 255, 0.18),
+      rgb(47 107 255 / 18%),
       transparent 55%
     ),
     radial-gradient(
       ellipse 70% 50% at 85% 70%,
-      rgba(0, 200, 83, 0.12),
+      rgb(0 200 83 / 12%),
       transparent 50%
     ),
     linear-gradient(160deg, #0b1220 0%, #152238 48%, #0f1a2e 100%);
@@ -160,11 +160,11 @@ onMounted(fetchBanners);
       height: 44px;
       font-size: 18px;
       color: #fff;
-      background: rgba(15, 26, 46, 0.55);
-      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: rgb(15 26 46 / 55%);
+      border: 1px solid rgb(255 255 255 / 18%);
 
       &:hover {
-        background: rgba(15, 26, 46, 0.78);
+        background: rgb(15 26 46 / 78%);
       }
     }
 
@@ -175,8 +175,8 @@ onMounted(fetchBanners);
     :deep(.el-carousel__button) {
       width: 28px;
       height: 3px;
+      background: rgb(255 255 255 / 45%);
       border-radius: 2px;
-      background: rgba(255, 255, 255, 0.45);
       opacity: 1;
     }
 
@@ -198,9 +198,9 @@ onMounted(fetchBanners);
     margin: 0;
     overflow: hidden;
     cursor: default;
+    outline: none;
     background: transparent;
     border: 0;
-    outline: none;
 
     &--link {
       cursor: pointer;
@@ -222,14 +222,14 @@ onMounted(fetchBanners);
     background:
       linear-gradient(
         90deg,
-        rgba(8, 14, 28, 0.72) 0%,
-        rgba(8, 14, 28, 0.28) 42%,
-        rgba(8, 14, 28, 0.08) 68%,
+        rgb(8 14 28 / 72%) 0%,
+        rgb(8 14 28 / 28%) 42%,
+        rgb(8 14 28 / 8%) 68%,
         transparent 100%
       ),
       linear-gradient(
         0deg,
-        rgba(8, 14, 28, 0.55) 0%,
+        rgb(8 14 28 / 55%) 0%,
         transparent 42%
       );
   }
@@ -254,8 +254,8 @@ onMounted(fetchBanners);
     font-weight: 750;
     line-height: 1.25;
     color: #fff;
-    text-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
     letter-spacing: 0.02em;
+    text-shadow: 0 8px 28px rgb(0 0 0 / 35%);
   }
 
   &__cta {
@@ -268,7 +268,7 @@ onMounted(fetchBanners);
     color: #0f1a2e;
     background: #fff;
     border-radius: 10px;
-    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
+    box-shadow: 0 10px 28px rgb(0 0 0 / 18%);
   }
 
   &__skeleton,
@@ -285,8 +285,8 @@ onMounted(fetchBanners);
   &__skeleton-pulse {
     width: 72px;
     height: 72px;
-    border: 2px solid rgba(255, 255, 255, 0.18);
-    border-top-color: rgba(255, 255, 255, 0.75);
+    border: 2px solid rgb(255 255 255 / 18%);
+    border-top-color: rgb(255 255 255 / 75%);
     border-radius: 50%;
     animation: home-banner-spin 0.9s linear infinite;
   }
@@ -295,7 +295,7 @@ onMounted(fetchBanners);
   &__empty p {
     margin: 0;
     font-size: 14px;
-    color: rgba(255, 255, 255, 0.72);
+    color: rgb(255 255 255 / 72%);
   }
 }
 

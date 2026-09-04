@@ -11,7 +11,7 @@ import {
 
 defineOptions({ name: 'FeedbackForm' });
 
-const tab = ref<'form' | 'trigger' | 'questions'>('form');
+const tab = ref<'form' | 'questions' | 'trigger'>('form');
 const forms = ref(evalForms.map((f) => ({ ...f })));
 const triggers = ref(triggerRules.map((t) => ({ ...t })));
 const questions = ref(formQuestions.map((q) => ({ ...q })));
@@ -260,22 +260,22 @@ function statusClass(s: string) {
 }
 
 .trigger-desc {
-  color: #909399;
   font-size: 13px;
+  color: #909399;
 }
 
 .scene {
   margin-left: 8px;
-  color: #303133;
   font-weight: 500;
+  color: #303133;
 }
 
 .switch {
   display: inline-flex;
   gap: 8px;
   align-items: center;
-  color: #606266;
   font-size: 13px;
+  color: #606266;
   white-space: nowrap;
 }
 

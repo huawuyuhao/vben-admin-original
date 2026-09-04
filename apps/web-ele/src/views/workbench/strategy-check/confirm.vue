@@ -5,8 +5,8 @@ import { ElMessage } from 'element-plus';
 
 import {
   type ConfirmStatus,
-  type StrategyConfirmItem,
   strategyConfirms as seed,
+  type StrategyConfirmItem,
 } from '#/views/_shared/data/workbench-strategy-check';
 
 defineOptions({ name: 'WorkbenchStrategyConfirm' });
@@ -14,7 +14,7 @@ defineOptions({ name: 'WorkbenchStrategyConfirm' });
 const rows = ref<StrategyConfirmItem[]>(seed.map((i) => ({ ...i, logs: [...i.logs] })));
 const page = ref(1);
 const pageSize = 5;
-const current = ref<StrategyConfirmItem | null>(null);
+const current = ref<null | StrategyConfirmItem>(null);
 
 const query = reactive({
   keyword: '',
@@ -200,8 +200,10 @@ function decide(row: StrategyConfirmItem, pass: boolean) {
 <style scoped>
 .page {
   --primary: #409eff;
+
   padding-bottom: 24px;
 }
+
 .head {
   display: flex;
   gap: 16px;
@@ -209,34 +211,39 @@ function decide(row: StrategyConfirmItem, pass: boolean) {
   justify-content: space-between;
   margin-bottom: 14px;
 }
+
 .head h2 {
   margin: 0 0 6px;
   font-size: 20px;
 }
+
 .head p {
-  margin: 0;
   max-width: 740px;
-  color: #909399;
+  margin: 0;
   font-size: 13px;
   line-height: 1.5;
+  color: #909399;
 }
+
 .pending {
   padding: 8px 14px;
-  color: #e6a23c;
   font-weight: 600;
+  color: #e6a23c;
   background: #fdf6ec;
   border-radius: 16px;
 }
+
 .filter {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-bottom: 12px;
   padding: 12px;
+  margin-bottom: 12px;
   background: #fff;
   border: 1px solid #ebeef5;
   border-radius: 6px;
 }
+
 .filter input,
 .filter select {
   height: 32px;
@@ -244,6 +251,7 @@ function decide(row: StrategyConfirmItem, pass: boolean) {
   border: 1px solid #dcdfe6;
   border-radius: 4px;
 }
+
 .btn {
   height: 32px;
   padding: 0 14px;
@@ -253,64 +261,76 @@ function decide(row: StrategyConfirmItem, pass: boolean) {
   border: 1px solid #dcdfe6;
   border-radius: 4px;
 }
+
 .btn.primary {
   color: #fff;
   background: var(--primary);
   border-color: var(--primary);
 }
+
 .table-wrap {
   overflow: auto;
   background: #fff;
   border: 1px solid #ebeef5;
   border-radius: 6px;
 }
+
 table {
   width: 100%;
-  border-collapse: collapse;
   font-size: 13px;
+  border-collapse: collapse;
 }
+
 th,
 td {
   padding: 11px 10px;
   text-align: left;
   border-bottom: 1px solid #ebeef5;
 }
+
 th {
-  color: #909399;
   font-weight: 500;
-  background: #fafafa;
+  color: #909399;
   white-space: nowrap;
+  background: #fafafa;
 }
+
 .conclusion {
   max-width: 280px;
+  line-height: 1.45;
   color: #606266;
   white-space: normal;
-  line-height: 1.45;
 }
+
 .badge {
   display: inline-block;
   padding: 2px 8px;
   font-size: 12px;
-  border-radius: 4px;
   white-space: nowrap;
+  border-radius: 4px;
 }
+
 .badge.ok {
   color: #67c23a;
   background: #f0f9eb;
 }
+
 .badge.warn {
   color: #e6a23c;
   background: #fdf6ec;
 }
+
 .badge.danger {
   color: #f56c6c;
   background: #fef0f0;
 }
+
 .ops {
   display: flex;
   gap: 10px;
   white-space: nowrap;
 }
+
 .ops button {
   padding: 0;
   color: var(--primary);
@@ -318,13 +338,16 @@ th {
   background: none;
   border: none;
 }
+
 .ops button:disabled {
   color: #c0c4cc;
   cursor: not-allowed;
 }
+
 .ops .danger {
   color: #f56c6c;
 }
+
 .pager {
   display: flex;
   gap: 12px;
@@ -334,10 +357,12 @@ th {
   font-size: 13px;
   color: #606266;
 }
+
 .pages {
   display: flex;
   gap: 4px;
 }
+
 .pages button {
   min-width: 30px;
   height: 30px;
@@ -346,17 +371,20 @@ th {
   border: 1px solid #dcdfe6;
   border-radius: 4px;
 }
+
 .pages button.on {
   color: #fff;
   background: var(--primary);
   border-color: var(--primary);
 }
+
 .mask {
   position: fixed;
   inset: 0;
   z-index: 40;
   background: rgb(0 0 0 / 35%);
 }
+
 .drawer {
   position: absolute;
   top: 0;
@@ -367,35 +395,41 @@ th {
   overflow: auto;
   background: #fff;
 }
+
 .drawer header {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
+
 .drawer header h3 {
   margin: 0;
   font-size: 15px;
 }
+
 .drawer header button {
   font-size: 22px;
   cursor: pointer;
   background: none;
   border: none;
 }
+
 .conclusion-full {
-  margin: 12px 0;
   padding: 10px;
-  color: #606266;
+  margin: 12px 0;
   font-size: 13px;
   line-height: 1.6;
+  color: #606266;
   background: #f5f7fa;
   border-radius: 6px;
 }
+
 .timeline {
-  margin: 0;
   padding: 0;
+  margin: 0;
   list-style: none;
 }
+
 .timeline li {
   display: grid;
   grid-template-columns: 120px 1fr;
@@ -403,15 +437,19 @@ th {
   margin-bottom: 14px;
   font-size: 13px;
 }
+
 .timeline time {
   color: #909399;
 }
+
 .timeline strong {
   margin-right: 8px;
 }
+
 .timeline span {
   color: #909399;
 }
+
 .timeline p {
   margin: 4px 0 0;
   color: #606266;

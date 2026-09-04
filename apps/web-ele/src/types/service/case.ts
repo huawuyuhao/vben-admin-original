@@ -95,7 +95,7 @@ export interface CaseListResponseBody<T = CaseListItem>
   code?: number;
   msg?: string;
   /** 兼容旧版：分页包在 data 内，或 data 直接为数组 */
-  data?: T[] | CaseListResult<T>;
+  data?: CaseListResult<T> | T[];
 }
 
 /**

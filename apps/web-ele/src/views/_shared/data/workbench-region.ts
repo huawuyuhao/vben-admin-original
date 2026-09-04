@@ -1,13 +1,13 @@
 /** 区域调度管理 mock 数据 */
 
 export type SchemeStatus =
-  | '草稿'
-  | '已生成'
-  | '执行中'
   | '已完成'
-  | '已终止';
+  | '已生成'
+  | '已终止'
+  | '执行中'
+  | '草稿';
 
-export type ReassessResult = '优于预期' | '符合预期' | '低于预期' | '待评估';
+export type ReassessResult = '优于预期' | '低于预期' | '待评估' | '符合预期';
 
 export interface RegionScheme {
   id: string;

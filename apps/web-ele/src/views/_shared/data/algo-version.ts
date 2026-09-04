@@ -1,18 +1,18 @@
 /** 算法台账管理 mock */
 
 export type AlgoLedgerTab =
-  | 'list'
+  | 'call-log'
   | 'category'
-  | 'params'
+  | 'list'
   | 'op-log'
-  | 'call-log';
+  | 'params';
 
 export interface AlgoLedgerItem {
   id: string;
   name: string;
   type: string;
   version: string;
-  status: '启用' | '停用';
+  status: '停用' | '启用';
   updated: string;
   created: string;
 }
@@ -48,7 +48,7 @@ export interface AlgoCallLog {
   algo: string;
   caller: string;
   duration: string;
-  status: '成功' | '失败';
+  status: '失败' | '成功';
 }
 
 export const algoLedgerItems: AlgoLedgerItem[] = [

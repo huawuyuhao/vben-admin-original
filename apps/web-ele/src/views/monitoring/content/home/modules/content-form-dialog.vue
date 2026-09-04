@@ -1,23 +1,25 @@
 <script lang="ts" setup>
-import type { PortalContentItem, PortalContentType } from '#/types/monitoring/content/home/common';
 import type { FormInstance, FormRules, UploadProps } from 'element-plus';
+
+import type { PortalContentItem, PortalContentType } from '#/types/monitoring/content/home/common';
 
 import { computed, reactive, ref, watch } from 'vue';
 
 import { $t } from '@vben/locales';
 import { isEmpty } from '@vben/utils';
-import { ElMessage } from 'element-plus';
-import { Delete, UploadFilled, ZoomIn } from '@element-plus/icons-vue';
 
+import { Delete, UploadFilled, ZoomIn } from '@element-plus/icons-vue';
+import { ElMessage } from 'element-plus';
+
+import { uploadImageApi } from '#/api/common';
 import {
   createPortalContentApi,
   updatePortalContentApi,
 } from '#/api/monitoring/content/home/common';
-import { uploadImageApi } from '#/api/common';
 
 import {
-  PORTAL_CONTENT_IMAGE_ACCEPT,
   isAllowedPortalContentImageFile,
+  PORTAL_CONTENT_IMAGE_ACCEPT,
   resolvePortalContentImageUrl,
   supportsPortalContentImage,
   supportsPortalContentSort,
@@ -41,7 +43,7 @@ const visible = defineModel<boolean>('visible', { default: false });
 /** 模式：新增 / 编辑 / 查看 */
 const mode = ref<'create' | 'edit' | 'view'>('create');
 /** 当前编辑行 */
-const editingRow = ref<PortalContentItem | null>(null);
+const editingRow = ref<null | PortalContentItem>(null);
 /** 提交中 */
 const submitting = ref(false);
 /** 图片上传中 */
@@ -528,21 +530,21 @@ defineExpose({ openCreate, openEdit, openView });
 
   &__upload-icon {
     margin-bottom: 8px;
-    color: var(--el-text-color-secondary);
     font-size: 44px;
+    color: var(--el-text-color-secondary);
   }
 
   &__hint {
     margin: 8px 0 0;
-    color: hsl(var(--muted-foreground));
     font-size: 12px;
     line-height: 1.5;
+    color: hsl(var(--muted-foreground));
   }
 
   &__hint-inline {
     margin-left: 12px;
-    color: hsl(var(--muted-foreground));
     font-size: 12px;
+    color: hsl(var(--muted-foreground));
   }
 }
 </style>

@@ -141,7 +141,7 @@ function showToast(msg: string) {
       </button>
     </div>
 
-    <div class="portal-card" style="padding: 0; overflow: hidden; margin-bottom: 20px">
+    <div class="portal-card" style="padding: 0; margin-bottom: 20px; overflow: hidden">
       <table class="portal-data-table">
         <thead>
           <tr>

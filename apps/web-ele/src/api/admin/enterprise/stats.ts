@@ -29,7 +29,7 @@ function isStatApiSuccess(code?: number): boolean {
  * @param body 响应体
  */
 function assertStatMutationSuccess(
-  body?: null | EnterpriseStatMutationResponse,
+  body?: EnterpriseStatMutationResponse | null,
 ) {
   if (!isStatApiSuccess(body?.code)) {
     const message = String(body?.msg || 'Request failed');

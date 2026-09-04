@@ -10,10 +10,10 @@ import { buildOverviewCards } from '../data';
 defineOptions({ name: 'AdminEnterpriseStatsOverviewCards' });
 
 const props = defineProps<{
-  /** 概览数据 */
-  overview: null | EnterpriseStatOverview;
   /** 加载中 */
   loading?: boolean;
+  /** 概览数据 */
+  overview: EnterpriseStatOverview | null;
 }>();
 
 const emit = defineEmits<{
@@ -95,7 +95,7 @@ const cards = computed(() => {
     flex-direction: column;
     justify-content: center;
     padding: 18px 16px;
-    background: hsl(var(--background) / 0.72);
+    background: hsl(var(--background) / 72%);
     border: 1px solid hsl(var(--border));
     border-radius: 14px;
   }

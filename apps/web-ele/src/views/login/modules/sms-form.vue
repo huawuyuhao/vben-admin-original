@@ -1,18 +1,14 @@
 <script lang="ts" setup>
 import type { SmsLoginForm } from '#/types/login';
 
-import { Iphone, Lock } from '@element-plus/icons-vue';
 import { $t } from '@vben/locales';
+
+import { Iphone, Lock } from '@element-plus/icons-vue';
 
 /**
  * 短信验证码登录表单（仅登录，不自动注册）
  */
 defineOptions({ name: 'LoginSmsForm' });
-
-/** 表单数据 */
-const form = defineModel<SmsLoginForm>({ required: true });
-/** 是否同意用户协议 */
-const agreed = defineModel<boolean>('agreed', { required: true });
 
 defineProps<{
   /** 短信倒计时剩余秒数 */
@@ -24,13 +20,17 @@ defineProps<{
   /** 提交按钮文案 */
   submitText: string;
 }>();
-
 const emit = defineEmits<{
   /** 点击获取验证码 */
   sendCode: [];
   /** 提交表单 */
   submit: [];
 }>();
+/** 表单数据 */
+const form = defineModel<SmsLoginForm>({ required: true });
+/** 是否同意用户协议 */
+const agreed = defineModel<boolean>('agreed', { required: true });
+
 </script>
 
 <template>

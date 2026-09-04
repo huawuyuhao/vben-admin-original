@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 import type { ProductSortField } from '#/types/service/product';
 
-import { Search } from '@element-plus/icons-vue';
 import { $t } from '@vben/locales';
+
+import { Search } from '@element-plus/icons-vue';
 
 import {
   PRODUCT_SORT_FIELD_OPTIONS,
@@ -11,6 +12,16 @@ import {
 
 defineOptions({ name: 'ServiceProductFilterBar' });
 
+defineProps<{
+  /** 刷新按钮 loading */
+  refreshing?: boolean;
+}>();
+const emit = defineEmits<{
+  /** 点击刷新 */
+  refresh: [];
+  /** 点击查询 */
+  search: [];
+}>();
 /** 关键词（与父级 v-model:keyword 同步） */
 const keyword = defineModel<string>('keyword', { default: '' });
 /** 排序字段（清空表示默认） */
@@ -21,18 +32,6 @@ const sortField = defineModel<null | ProductSortField | string>('sortField', {
 const sortOrder = defineModel<'asc' | 'desc' | null | string>('sortOrder', {
   default: '',
 });
-
-const emit = defineEmits<{
-  /** 点击查询 */
-  search: [];
-  /** 点击刷新 */
-  refresh: [];
-}>();
-
-defineProps<{
-  /** 刷新按钮 loading */
-  refreshing?: boolean;
-}>();
 
 /**
  * 回车触发搜索

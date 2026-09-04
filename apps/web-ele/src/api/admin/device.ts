@@ -27,7 +27,7 @@ function isDeviceApiSuccess(code?: number): boolean {
  * 校验写操作响应并抛出错误
  * @param body 响应体
  */
-function assertDeviceMutationSuccess(body?: null | DeviceMutationResponse) {
+function assertDeviceMutationSuccess(body?: DeviceMutationResponse | null) {
   if (!isDeviceApiSuccess(body?.code)) {
     const message = String(body?.msg || 'Request failed');
     ElMessage.error(message);
@@ -41,7 +41,7 @@ function assertDeviceMutationSuccess(body?: null | DeviceMutationResponse) {
  * @returns 标准化分页结果
  */
 function parseDeviceListBody<T>(
-  body?: null | DeviceListResponseBody<T>,
+  body?: DeviceListResponseBody<T> | null,
 ): DeviceListResult<T> {
   if (!body) {
     return { records: [], total: 0, current: 1, size: 10 };

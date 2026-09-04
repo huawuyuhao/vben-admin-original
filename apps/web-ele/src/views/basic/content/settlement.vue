@@ -1,10 +1,11 @@
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus';
 
+defineOptions({ name: 'ContentSettlement' });
+
 /** 结算列表（待对接接口） */
 const settlements: never[] = [];
 
-defineOptions({ name: 'ContentSettlement' });
 </script>
 
 <template>
@@ -74,7 +75,7 @@ defineOptions({ name: 'ContentSettlement' });
         <table>
           <thead>
             <tr>
-              <th />
+              <th></th>
               <th>序号</th>
               <th>结算单号</th>
               <th>关联合同号</th>
@@ -135,8 +136,8 @@ defineOptions({ name: 'ContentSettlement' });
 }
 
 .price {
-  color: #303133;
   font-weight: 600;
+  color: #303133;
 }
 
 @media (max-width: 1200px) {

@@ -9,15 +9,16 @@ import {
 
 defineOptions({ name: 'EnterpriseSupplyFilterBar' });
 
-/** 受理状态筛选（与父级 v-model:status 同步） */
-const status = defineModel<SupplyStatusFilter>('status', { default: '' });
-
 const emit = defineEmits<{
   /** 重置筛选 */
   reset: [];
   /** 点击查询 */
   search: [];
 }>();
+
+/** 受理状态筛选（与父级 v-model:status 同步） */
+const status = defineModel<SupplyStatusFilter>('status', { default: '' });
+
 </script>
 
 <template>

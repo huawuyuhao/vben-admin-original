@@ -14,7 +14,7 @@ defineOptions({ name: 'WorkbenchRegionScheme' });
 const rows = ref<RegionScheme[]>(seed.map((i) => ({ ...i })));
 const page = ref(1);
 const pageSize = 5;
-const current = ref<RegionScheme | null>(null);
+const current = ref<null | RegionScheme>(null);
 
 const query = reactive({
   keyword: '',
@@ -215,6 +215,7 @@ function statusClass(s: SchemeStatus) {
 <style scoped>
 .page {
   --primary: #409eff;
+
   padding-bottom: 24px;
 }
 
@@ -232,11 +233,11 @@ function statusClass(s: SchemeStatus) {
 }
 
 .head p {
-  margin: 0;
   max-width: 720px;
-  color: #909399;
+  margin: 0;
   font-size: 13px;
   line-height: 1.5;
+  color: #909399;
 }
 
 .kpi-row {
@@ -256,21 +257,21 @@ function statusClass(s: SchemeStatus) {
 
 .kpi strong {
   display: block;
-  color: var(--primary);
   font-size: 24px;
+  color: var(--primary);
 }
 
 .kpi span {
-  color: #909399;
   font-size: 12px;
+  color: #909399;
 }
 
 .filter {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-bottom: 12px;
   padding: 12px;
+  margin-bottom: 12px;
   background: #fff;
   border: 1px solid #ebeef5;
   border-radius: 6px;
@@ -309,21 +310,21 @@ function statusClass(s: SchemeStatus) {
 
 table {
   width: 100%;
-  border-collapse: collapse;
   font-size: 13px;
+  border-collapse: collapse;
 }
 
 th,
 td {
   padding: 11px 10px;
   text-align: left;
-  border-bottom: 1px solid #ebeef5;
   white-space: nowrap;
+  border-bottom: 1px solid #ebeef5;
 }
 
 th {
-  color: #909399;
   font-weight: 500;
+  color: #909399;
   background: #fafafa;
 }
 
@@ -378,8 +379,8 @@ th {
   align-items: center;
   justify-content: flex-end;
   margin-top: 14px;
-  color: #606266;
   font-size: 13px;
+  color: #606266;
 }
 
 .pages {
@@ -447,8 +448,8 @@ th {
   grid-template-columns: 88px 1fr;
   gap: 8px;
   padding: 8px 0;
-  border-bottom: 1px solid #f0f2f5;
   font-size: 13px;
+  border-bottom: 1px solid #f0f2f5;
 }
 
 .drawer dt {
@@ -466,23 +467,23 @@ th {
 
 .drawer p {
   margin: 0;
-  color: #606266;
   font-size: 13px;
   line-height: 1.6;
+  color: #606266;
 }
 
 .flow {
-  margin: 0;
   padding-left: 18px;
-  color: #606266;
+  margin: 0;
   font-size: 13px;
   line-height: 1.8;
+  color: #606266;
 }
 
 .tip {
   margin-top: 16px !important;
-  color: #909399 !important;
   font-size: 12px !important;
+  color: #909399 !important;
 }
 
 @media (max-width: 900px) {

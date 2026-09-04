@@ -24,7 +24,7 @@ function isFeedbackApiSuccess(code?: number): boolean {
  * @param body 响应体
  */
 function assertFeedbackMutationSuccess(
-  body?: null | FeedbackMutationResponse,
+  body?: FeedbackMutationResponse | null,
 ) {
   if (!isFeedbackApiSuccess(body?.code)) {
     const message = String(body?.msg || 'Request failed');
@@ -39,7 +39,7 @@ function assertFeedbackMutationSuccess(
  * @returns 标准化分页结果
  */
 function parseFeedbackListBody<T>(
-  body?: null | FeedbackListResponseBody<T>,
+  body?: FeedbackListResponseBody<T> | null,
 ): FeedbackListResult<T> {
   if (!body) {
     return { records: [], total: 0, current: 1, size: 10 };

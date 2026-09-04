@@ -123,21 +123,21 @@ header h2 {
 
 header p {
   margin: 0;
-  color: #909399;
   font-size: 13px;
+  color: #909399;
 }
 
 .card {
-  margin-bottom: 14px;
   padding: 16px 18px;
+  margin-bottom: 14px;
   background: #fff;
   border: 1px solid #ebeef5;
   border-radius: 8px;
 }
 
 .card h3 {
-  margin: 0 0 14px;
   padding-left: 10px;
+  margin: 0 0 14px;
   font-size: 15px;
   border-left: 3px solid #409eff;
 }
@@ -152,8 +152,8 @@ header p {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  color: #606266;
   font-size: 13px;
+  color: #606266;
 }
 
 .grid label.full {

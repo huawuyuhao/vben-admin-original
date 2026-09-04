@@ -133,7 +133,7 @@ onMounted(fetchAbout);
     background: var(--portal-surface, #fff);
     border: 1px solid var(--portal-gray-200);
     border-radius: 20px;
-    box-shadow: 0 10px 28px rgba(31, 36, 48, 0.05);
+    box-shadow: 0 10px 28px rgb(31 36 48 / 5%);
 
     &--reverse {
       .home-about__media {
@@ -152,7 +152,7 @@ onMounted(fetchAbout);
     background:
       radial-gradient(
         circle at 30% 30%,
-        rgba(255, 255, 255, 0.22),
+        rgb(255 255 255 / 22%),
         transparent 45%
       ),
       linear-gradient(135deg, var(--portal-primary), #4a2fcc 55%, #2f6bff);
@@ -175,7 +175,7 @@ onMounted(fetchAbout);
   &__media-fallback {
     font-size: 56px;
     font-weight: 750;
-    color: rgba(255, 255, 255, 0.92);
+    color: rgb(255 255 255 / 92%);
   }
 
   &__copy {

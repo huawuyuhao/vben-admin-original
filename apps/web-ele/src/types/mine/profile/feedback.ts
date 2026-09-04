@@ -87,10 +87,10 @@ export interface FeedbackListResponseBody<T = FeedbackItem> {
   data?:
     | T[]
     | {
-        records?: T[];
-        total?: number;
         current?: number;
+        records?: T[];
         size?: number;
+        total?: number;
       };
 }
 

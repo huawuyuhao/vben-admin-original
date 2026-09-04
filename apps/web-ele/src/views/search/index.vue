@@ -7,17 +7,18 @@ import type {
 import { computed, nextTick, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { Search } from '@element-plus/icons-vue';
 import { $t } from '@vben/locales';
 import { debounce, isEmpty } from '@vben/utils';
+
+import { Search } from '@element-plus/icons-vue';
 import { ElMessage } from 'element-plus';
 
 import { getPortalSearchApi } from '#/api/search';
 import { ensureLoggedIn } from '#/store/common';
 
 import {
-  SEARCH_TYPE_FILTERS,
   resolveSearchDetailPath,
+  SEARCH_TYPE_FILTERS,
 } from './data';
 import ResultItem from './modules/result-item.vue';
 
@@ -255,9 +256,9 @@ watch(panelVisible, (visible) => {
     &:hover,
     &:focus-visible {
       color: hsl(var(--foreground));
+      outline: none;
       background: hsl(var(--background));
       border-color: hsl(var(--primary) / 45%);
-      outline: none;
       box-shadow: 0 0 0 3px hsl(var(--primary) / 12%);
     }
   }
@@ -270,9 +271,9 @@ watch(panelVisible, (visible) => {
 
   &__trigger-text {
     overflow: hidden;
+    text-overflow: ellipsis;
     font-size: 13px;
     line-height: 1;
-    text-overflow: ellipsis;
     white-space: nowrap;
   }
 
@@ -291,9 +292,9 @@ watch(panelVisible, (visible) => {
   &__filter {
     height: 28px;
     padding: 0 10px;
-    color: hsl(var(--muted-foreground));
     font-size: 12px;
     line-height: 26px;
+    color: hsl(var(--muted-foreground));
     cursor: pointer;
     background: hsl(var(--accent) / 40%);
     border: 1px solid transparent;
@@ -333,10 +334,10 @@ watch(panelVisible, (visible) => {
     margin-right: 4px;
 
     &__trigger {
+      justify-content: center;
       min-width: 36px;
       max-width: 36px;
       padding: 0;
-      justify-content: center;
     }
 
     &__trigger-text {
@@ -352,7 +353,7 @@ watch(panelVisible, (visible) => {
   padding: 14px !important;
   border-radius: 14px !important;
   box-shadow:
-    0 10px 30px hsl(245 40% 20% / 12%),
-    0 2px 8px hsl(245 40% 20% / 6%) !important;
+    0 10px 30px hsl(245deg 40% 20% / 12%),
+    0 2px 8px hsl(245deg 40% 20% / 6%) !important;
 }
 </style>

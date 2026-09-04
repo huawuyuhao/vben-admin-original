@@ -4,6 +4,7 @@ import type { EchartsUIType } from '@vben/plugins/echarts';
 import { onMounted, ref } from 'vue';
 
 import { EchartsUI, useEcharts } from '@vben/plugins/echarts';
+
 import { ElMessage } from 'element-plus';
 
 import {
@@ -157,7 +158,7 @@ onMounted(() => {
         <EchartsUI ref="pieRef" height="220px" />
         <ul class="legend-list">
           <li v-for="d in strategyLevelPie" :key="d.name">
-            <i :style="{ background: d.color }" />
+            <i :style="{ background: d.color }"></i>
             {{ d.name }}
             <em>{{ d.value }}</em>
           </li>
@@ -230,8 +231,8 @@ onMounted(() => {
 }
 
 .kpi-label {
-  color: #909399;
   font-size: 13px;
+  color: #909399;
 }
 
 .kpi-card strong {
@@ -262,8 +263,8 @@ onMounted(() => {
 .sub-tab {
   padding: 10px 0;
   margin-bottom: -1px;
-  color: #606266;
   font-size: 14px;
+  color: #606266;
   cursor: pointer;
   background: none;
   border: none;
@@ -306,9 +307,9 @@ onMounted(() => {
 
 .sub {
   margin-top: 2px;
-  color: #909399;
   font-size: 12px;
   font-weight: 400;
+  color: #909399;
 }
 
 .lvl.danger {
@@ -333,8 +334,8 @@ onMounted(() => {
 .status-dot::before {
   width: 8px;
   height: 8px;
-  border-radius: 50%;
   content: '';
+  border-radius: 50%;
 }
 
 .status-dot.warn::before {
@@ -363,8 +364,8 @@ onMounted(() => {
 }
 
 .legend-list {
-  margin: 8px 0 0;
   padding: 0;
+  margin: 8px 0 0;
   list-style: none;
 }
 
@@ -384,8 +385,8 @@ onMounted(() => {
 
 .legend-list em {
   margin-left: auto;
-  color: #909399;
   font-style: normal;
+  color: #909399;
 }
 
 @media (max-width: 1000px) {

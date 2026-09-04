@@ -8,10 +8,10 @@ import { computed, onMounted, ref, watch } from 'vue';
 import { getPortalContentListApi } from '#/api/monitoring/content/home/common';
 
 import {
-  PORTAL_CONTENT_FETCH_ALL_SIZE,
-  PORTAL_CONTENT_PAGE_SIZE,
   calcPortalContentPageRange,
   normalizePortalContentPage,
+  PORTAL_CONTENT_FETCH_ALL_SIZE,
+  PORTAL_CONTENT_PAGE_SIZE,
 } from '../data';
 
 /**

@@ -207,16 +207,16 @@ function priorityClass(p: string) {
 }
 
 .type-desc {
-  color: #909399;
   font-size: 13px;
+  color: #909399;
 }
 
 .switch {
   display: inline-flex;
   gap: 8px;
   align-items: center;
-  color: #606266;
   font-size: 13px;
+  color: #606266;
   white-space: nowrap;
 }
 
@@ -260,8 +260,8 @@ function priorityClass(p: string) {
 .modal-foot {
   gap: 8px;
   justify-content: flex-end;
-  border-bottom: none;
   border-top: 1px solid #ebeef5;
+  border-bottom: none;
 }
 
 .modal-body {
@@ -275,8 +275,8 @@ function priorityClass(p: string) {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  color: #606266;
   font-size: 13px;
+  color: #606266;
 }
 
 .modal-body input,

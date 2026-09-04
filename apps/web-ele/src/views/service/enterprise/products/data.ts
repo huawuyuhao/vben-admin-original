@@ -40,7 +40,7 @@ export type ProductShelfFilter =
  * @returns 合法状态数字；全部时返回 undefined
  */
 export function parseProductShelfFilter(
-  status?: ProductShelfFilter | null,
+  status?: null | ProductShelfFilter,
 ): SupplyProductShelfStatus | undefined {
   if (status === String(PRODUCT_SHELF_OFF)) {
     return PRODUCT_SHELF_OFF;

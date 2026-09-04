@@ -1,13 +1,13 @@
 <script lang="ts" setup>
-import type { UserProfileResult } from '#/types/mine/profile/info';
-
 import type { ProfileEditForm } from './data';
+
+import type { UserProfileResult } from '#/types/mine/profile/info';
 
 import { computed, onMounted, reactive, ref } from 'vue';
 
+import { $t, useI18n } from '@vben/locales';
 import { useUserStore } from '@vben/stores';
 import { isEmpty } from '@vben/utils';
-import { $t, useI18n } from '@vben/locales';
 
 import { ElMessage } from 'element-plus';
 
@@ -339,8 +339,8 @@ onMounted(initPage);
     margin: 0 !important;
     font-size: 14px !important;
     line-height: 1 !important;
-    border-width: 1px !important;
     border-style: solid !important;
+    border-width: 1px !important;
 
     /* 覆盖 Element Plus 默认尺寸，保证两钮盒模型一致 */
     :deep(span) {
@@ -376,8 +376,8 @@ onMounted(initPage);
     min-height: 240px;
     padding: 40px 24px;
     color: hsl(var(--muted-foreground));
-    background: hsl(var(--card) / 0.72);
-    border: 1px dashed hsl(var(--primary) / 0.35);
+    background: hsl(var(--card) / 72%);
+    border: 1px dashed hsl(var(--primary) / 35%);
     border-radius: 20px;
     backdrop-filter: blur(8px);
   }
@@ -390,7 +390,7 @@ onMounted(initPage);
     font-size: 14px;
     font-weight: 700;
     color: hsl(var(--primary));
-    background: hsl(var(--primary) / 0.12);
+    background: hsl(var(--primary) / 12%);
     border-radius: 16px;
   }
 
@@ -399,12 +399,12 @@ onMounted(initPage);
     grid-template-columns: auto minmax(0, 1fr) auto;
     gap: 20px;
     align-items: center;
-    margin-bottom: 18px;
     padding: 24px 28px;
-    background: hsl(var(--card) / 0.92);
+    margin-bottom: 18px;
+    background: hsl(var(--card) / 92%);
     border: 1px solid hsl(var(--border));
     border-radius: 22px;
-    box-shadow: 0 10px 30px hsl(var(--foreground) / 0.08);
+    box-shadow: 0 10px 30px hsl(var(--foreground) / 8%);
     backdrop-filter: blur(10px);
   }
 
@@ -419,12 +419,12 @@ onMounted(initPage);
     font-size: 30px;
     font-weight: 700;
     color: #fff;
-    background: linear-gradient(145deg, hsl(var(--primary)), hsl(250 100% 76%) 55%, hsl(190 90% 66%));
+    background: linear-gradient(145deg, hsl(var(--primary)), hsl(250deg 100% 76%) 55%, hsl(190deg 90% 66%));
     background-position: center;
     background-size: cover;
-    border: 3px solid hsl(var(--card) / 0.9);
+    border: 3px solid hsl(var(--card) / 90%);
     border-radius: 50%;
-    box-shadow: 0 10px 24px hsl(var(--primary) / 0.28);
+    box-shadow: 0 10px 24px hsl(var(--primary) / 28%);
   }
 
   &__hero-main {
@@ -452,13 +452,13 @@ onMounted(initPage);
     font-weight: 600;
     color: hsl(var(--primary));
     cursor: pointer;
-    background: hsl(var(--primary) / 0.12);
-    border: 1px solid hsl(var(--primary) / 0.28);
+    background: hsl(var(--primary) / 12%);
+    border: 1px solid hsl(var(--primary) / 28%);
     border-radius: 999px;
     transition: background 0.2s ease;
 
     &:hover {
-      background: hsl(var(--primary) / 0.18);
+      background: hsl(var(--primary) / 18%);
     }
   }
 
@@ -489,7 +489,7 @@ onMounted(initPage);
       font-size: 12px;
       font-weight: 600;
       color: hsl(var(--primary));
-      background: hsl(var(--primary) / 0.12);
+      background: hsl(var(--primary) / 12%);
       border-radius: 999px;
     }
   }
@@ -503,7 +503,7 @@ onMounted(initPage);
 
   &__stat {
     padding: 12px 14px;
-    background: hsl(var(--background) / 0.72);
+    background: hsl(var(--background) / 72%);
     border: 1px solid hsl(var(--border));
     border-radius: 14px;
 
@@ -533,8 +533,8 @@ onMounted(initPage);
     }
 
     &--readonly {
-      margin-top: 16px;
       grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-top: 16px;
 
       > * {
         grid-column: auto;
@@ -546,10 +546,10 @@ onMounted(initPage);
   &__card {
     width: 100%;
     padding: 20px 22px 10px;
-    background: hsl(var(--card) / 0.92);
+    background: hsl(var(--card) / 92%);
     border: 1px solid hsl(var(--border));
     border-radius: 20px;
-    box-shadow: 0 8px 24px hsl(var(--foreground) / 0.05);
+    box-shadow: 0 8px 24px hsl(var(--foreground) / 5%);
     backdrop-filter: blur(8px);
   }
 
@@ -558,8 +558,8 @@ onMounted(initPage);
     gap: 12px;
     align-items: flex-start;
     justify-content: space-between;
-    margin-bottom: 8px;
     padding-bottom: 12px;
+    margin-bottom: 8px;
     border-bottom: 1px solid hsl(var(--border));
 
     h4 {
@@ -658,8 +658,8 @@ onMounted(initPage);
     }
 
     &__hero-side {
-      grid-column: 1 / -1;
       flex-direction: row;
+      grid-column: 1 / -1;
       min-width: 0;
     }
 

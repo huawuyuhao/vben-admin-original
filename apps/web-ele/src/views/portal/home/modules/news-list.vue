@@ -10,9 +10,9 @@ import { getPortalNewsPageApi } from '#/api/portal/home/news';
 
 import ScrollReveal from '../components/scroll-reveal.vue';
 import {
-  NEWS_PAGE_SIZE,
   formatNewsDateTime,
   hasNewsNextPage,
+  NEWS_PAGE_SIZE,
   normalizeNewsList,
   openNewsDetailWindow,
 } from '../data';
@@ -229,11 +229,11 @@ onMounted(() => {
     flex-direction: column;
     overflow: hidden;
     cursor: pointer;
+    outline: none;
     background: var(--portal-surface, #fff);
     border: 1px solid var(--portal-gray-200);
     border-radius: 16px;
-    outline: none;
-    box-shadow: 0 8px 24px rgba(31, 36, 48, 0.04);
+    box-shadow: 0 8px 24px rgb(31 36 48 / 4%);
     transition:
       border-color 0.18s ease,
       box-shadow 0.18s ease,
@@ -246,7 +246,7 @@ onMounted(() => {
         var(--portal-primary) 32%,
         var(--portal-gray-200)
       );
-      box-shadow: 0 14px 32px rgba(107, 76, 255, 0.1);
+      box-shadow: 0 14px 32px rgb(107 76 255 / 10%);
       transform: translateY(-3px);
     }
   }
@@ -258,7 +258,7 @@ onMounted(() => {
     background:
       radial-gradient(
         circle at 30% 30%,
-        rgba(255, 255, 255, 0.22),
+        rgb(255 255 255 / 22%),
         transparent 45%
       ),
       linear-gradient(135deg, var(--portal-primary), #4a2fcc 55%, #2f6bff);
@@ -295,11 +295,11 @@ onMounted(() => {
   &__title {
     margin: 0;
     overflow: hidden;
+    text-overflow: ellipsis;
     font-size: 17px;
     font-weight: 750;
     line-height: 1.4;
     color: var(--portal-gray-900);
-    text-overflow: ellipsis;
     white-space: nowrap;
   }
 

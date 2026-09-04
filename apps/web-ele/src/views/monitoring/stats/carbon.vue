@@ -4,6 +4,7 @@ import type { EchartsUIType } from '@vben/plugins/echarts';
 import { onMounted, ref } from 'vue';
 
 import { EchartsUI, useEcharts } from '@vben/plugins/echarts';
+
 import { ElMessage } from 'element-plus';
 
 import {
@@ -191,16 +192,16 @@ onMounted(() => {
   grid-template-columns: 1fr 1fr 1fr auto;
   gap: 12px;
   align-items: end;
-  margin-bottom: 12px;
   padding: 14px;
+  margin-bottom: 12px;
 }
 
 .filter label {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  color: #606266;
   font-size: 13px;
+  color: #606266;
 }
 
 .filter input,
@@ -223,8 +224,8 @@ onMounted(() => {
 }
 
 .kpi .lbl {
-  color: #909399;
   font-size: 12px;
+  color: #909399;
 }
 
 .kpi em {
@@ -254,8 +255,8 @@ onMounted(() => {
   height: 26px;
   padding: 0 10px;
   margin-left: 4px;
-  color: #606266;
   font-size: 12px;
+  color: #606266;
   cursor: pointer;
   background: #fff;
   border: 1px solid #dcdfe6;

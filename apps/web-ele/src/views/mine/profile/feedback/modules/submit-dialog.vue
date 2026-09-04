@@ -3,9 +3,10 @@ import type { FormInstance, FormRules, UploadProps } from 'element-plus';
 
 import { computed, reactive, ref } from 'vue';
 
-import { Delete, UploadFilled, ZoomIn } from '@element-plus/icons-vue';
 import { $t } from '@vben/locales';
 import { isEmpty } from '@vben/utils';
+
+import { Delete, UploadFilled, ZoomIn } from '@element-plus/icons-vue';
 import { ElMessage } from 'element-plus';
 
 import { uploadImageApi } from '#/api/common';

@@ -9,9 +9,9 @@ import { $t } from '@vben/locales';
 import { getProductListApi } from '#/api/service/product';
 
 import {
-  PRODUCT_PAGE_SIZE,
   buildProductSortParams,
   normalizeProductPage,
+  PRODUCT_PAGE_SIZE,
 } from './data';
 import FilterBar from './modules/filter-bar.vue';
 import ProductGrid from './modules/product-grid.vue';

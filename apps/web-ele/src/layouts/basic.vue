@@ -226,8 +226,8 @@ watch(
   async ({ enable, content, isDark: isDarkValue }) => {
     if (enable) {
       const watermarkColor = isDarkValue
-        ? 'rgba(255, 255, 255, 0.12)'
-        : 'rgba(0, 0, 0, 0.12)';
+        ? 'rgb(255 255 255 / 12%)'
+        : 'rgb(0 0 0 / 12%)';
 
       await updateWatermark({
         advancedStyle: {
@@ -387,8 +387,8 @@ body,
 #app {
   width: 100% !important;
   height: 100% !important;
-  margin: 0 !important;
   padding: 0 !important;
+  margin: 0 !important;
   overflow: hidden !important;
 }
 
@@ -459,6 +459,7 @@ body,
 .site-admin-shell [data-layout='header-sidebar-nav'] [data-layout-region='header'] {
   top: var(--admin-offset-top) !important;
   z-index: 300 !important;
+
   /*
    * 开启 Tab 后，header 容器高度 = 顶栏 + 标签栏，且 mixed-nav 下 left:0 通栏。
    * 标签栏本身有 margin-left 避开侧栏，但容器空白区仍会挡住侧栏第一项点击。
@@ -476,8 +477,7 @@ body,
  * 注意：不要清 margin-top，Vben 用它给 fixed 面包屑顶栏让位，清掉会把大标题盖住 */
 .site-admin-shell:not(.is-public-page) [data-layout-region='scroll'],
 .site-admin-shell:not(.is-public-page) #__vben_layout_scroll {
-  overflow-x: hidden !important;
-  overflow-y: auto !important;
+  overflow: hidden auto !important;
   background: var(--portal-bg, #f8f9fc) !important;
 }
 
@@ -488,8 +488,8 @@ body,
   width: 0 !important;
   height: 0 !important;
   min-height: 0 !important;
-  margin: 0 !important;
   padding: 0 !important;
+  margin: 0 !important;
   overflow: hidden !important;
   border: none !important;
 }
@@ -502,8 +502,7 @@ body,
 
 .is-public-page [data-layout-region='scroll'],
 .is-public-page #__vben_layout_scroll {
-  overflow-x: hidden !important;
-  overflow-y: auto !important;
+  overflow: hidden auto !important;
   background: transparent !important;
 }
 
@@ -511,10 +510,10 @@ body,
 .is-public-page main.relative,
 .is-public-page .page-route-container,
 .is-public-page .portal-page-wrap {
-  margin: 0 !important;
-  padding: 0 !important;
-  background: transparent !important;
   min-height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
 }
 
 /* 业务页内容区内边距（全站统一：四边一致） */
@@ -564,19 +563,19 @@ body,
   line-height: 1;
   color: hsl(var(--accent-foreground));
   white-space: nowrap;
+  cursor: pointer;
   background: transparent;
   border: none;
   border-radius: 6px;
-  cursor: pointer;
   transition:
     background-color 0.2s,
     color 0.2s;
 }
 
 .portal-home-header-tab__icon {
+  flex-shrink: 0;
   width: 16px;
   height: 16px;
-  flex-shrink: 0;
 }
 
 .portal-home-header-tab:hover {
@@ -633,8 +632,8 @@ body,
   font-weight: 500;
   line-height: 1;
   white-space: nowrap;
-  border-radius: 999px;
   cursor: pointer;
+  border-radius: 999px;
   transition:
     background-color 0.2s,
     color 0.2s,

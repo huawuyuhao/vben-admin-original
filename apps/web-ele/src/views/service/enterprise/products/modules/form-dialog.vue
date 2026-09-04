@@ -1,10 +1,12 @@
 <script lang="ts" setup>
-import type { SupplyProductItem } from '#/types/service/enterprise/products';
 import type { FormInstance, FormRules } from 'element-plus';
+
+import type { SupplyProductItem } from '#/types/service/enterprise/products';
 
 import { computed, reactive, ref, watch } from 'vue';
 
 import { $t } from '@vben/locales';
+
 import { ElMessage } from 'element-plus';
 
 import {

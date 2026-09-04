@@ -95,8 +95,8 @@ function renderCharts() {
         areaStyle: {
           color: {
             colorStops: [
-              { color: 'rgba(0,216,255,0.35)', offset: 0 },
-              { color: 'rgba(0,216,255,0)', offset: 1 },
+              { color: 'rgb(0 216 255 / 35%)', offset: 0 },
+              { color: 'rgb(0 216 255 / 0%)', offset: 1 },
             ],
             type: 'linear',
             x: 0,
@@ -130,7 +130,7 @@ function renderCharts() {
         axisLabel: { color: '#7eb6d9', fontSize: 10 },
         name: '负荷%',
         nameTextStyle: { color: '#7eb6d9', fontSize: 10 },
-        splitLine: { lineStyle: { color: 'rgba(0,120,180,0.25)' } },
+        splitLine: { lineStyle: { color: 'rgb(0 120 180 / 25%)' } },
         type: 'value',
       },
       {
@@ -158,7 +158,7 @@ onUnmounted(() => {
 <template>
   <div class="screen">
     <header class="screen-head">
-      <div class="head-deco" />
+      <div class="head-deco"></div>
       <h1>电碳算协同运营系统</h1>
       <nav class="head-nav">
         <button
@@ -226,18 +226,18 @@ onUnmounted(() => {
         <section class="panel map-panel">
           <h3 class="panel-title">算力节点分布</h3>
           <div class="map-stage">
-            <div class="map-glow" />
+            <div class="map-glow"></div>
             <svg class="map-shape" viewBox="0 0 100 100" aria-hidden="true">
               <path
                 d="M22 30 C30 18, 55 14, 72 22 C88 30, 92 48, 84 62 C76 78, 55 88, 36 84 C18 78, 12 52, 22 30 Z"
-                fill="rgba(0,80,160,0.35)"
-                stroke="rgba(0,216,255,0.55)"
+                fill="rgb(0 80 160 / 35%)"
+                stroke="rgb(0 216 255 / 55%)"
                 stroke-width="0.6"
               />
               <path
                 d="M34 36 C42 28, 58 30, 66 38 C74 48, 70 62, 58 68 C44 74, 30 58, 34 36 Z"
-                fill="rgba(0,120,200,0.2)"
-                stroke="rgba(0,216,255,0.25)"
+                fill="rgb(0 120 200 / 20%)"
+                stroke="rgb(0 216 255 / 25%)"
                 stroke-width="0.4"
               />
             </svg>
@@ -248,7 +248,7 @@ onUnmounted(() => {
               :data-status="n.status"
               :style="{ left: `${n.x}%`, top: `${n.y}%` }"
             >
-              <i />
+              <i></i>
               <em>{{ n.name }}</em>
             </div>
           </div>
@@ -324,19 +324,19 @@ onUnmounted(() => {
   --cyan: #00d8ff;
   --blue: #005eff;
   --bg: #041428;
-  --panel: rgba(6, 40, 78, 0.72);
-  --line: rgba(0, 180, 255, 0.35);
+  --panel: rgb(6 40 78 / 72%);
+  --line: rgb(0 180 255 / 35%);
   --text: #d7eefc;
   --muted: #7eb6d9;
 
   min-height: calc(100vh - 120px);
-  margin: -12px -16px;
   padding: 10px 14px 16px;
+  margin: -12px -16px;
+  overflow: hidden;
   color: var(--text);
   background:
-    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(0, 90, 180, 0.45), transparent),
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgb(0 90 180 / 45%), transparent),
     linear-gradient(180deg, #062a52 0%, var(--bg) 45%, #020b18 100%);
-  overflow: hidden;
 }
 
 .screen-head {
@@ -357,10 +357,10 @@ onUnmounted(() => {
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(0, 216, 255, 0.15),
+    rgb(0 216 255 / 15%),
     transparent
   );
-  border-bottom: 1px solid rgba(0, 216, 255, 0.35);
+  border-bottom: 1px solid rgb(0 216 255 / 35%);
   clip-path: polygon(4% 0, 96% 0, 100% 100%, 0 100%);
 }
 
@@ -370,7 +370,7 @@ onUnmounted(() => {
   font-size: 26px;
   font-weight: 700;
   letter-spacing: 0.12em;
-  text-shadow: 0 0 18px rgba(0, 216, 255, 0.45);
+  text-shadow: 0 0 18px rgb(0 216 255 / 45%);
 }
 
 .head-nav {
@@ -383,18 +383,18 @@ onUnmounted(() => {
 
 .head-nav button {
   padding: 4px 12px;
-  color: var(--muted);
   font-size: 12px;
-  background: rgba(0, 60, 120, 0.35);
-  border: 1px solid rgba(0, 180, 255, 0.25);
+  color: var(--muted);
   cursor: pointer;
+  background: rgb(0 60 120 / 35%);
+  border: 1px solid rgb(0 180 255 / 25%);
 }
 
 .head-nav button.active {
   color: #fff;
-  background: linear-gradient(180deg, rgba(0, 120, 255, 0.55), rgba(0, 60, 140, 0.55));
+  background: linear-gradient(180deg, rgb(0 120 255 / 55%), rgb(0 60 140 / 55%));
   border-color: var(--cyan);
-  box-shadow: 0 0 12px rgba(0, 216, 255, 0.35);
+  box-shadow: 0 0 12px rgb(0 216 255 / 35%);
 }
 
 .head-time {
@@ -402,8 +402,8 @@ onUnmounted(() => {
   bottom: -2px;
   left: 50%;
   margin: 0;
-  color: var(--muted);
   font-size: 12px;
+  color: var(--muted);
   transform: translateX(-50%);
 }
 
@@ -425,7 +425,7 @@ onUnmounted(() => {
   padding: 10px 12px;
   background: var(--panel);
   border: 1px solid var(--line);
-  box-shadow: inset 0 0 24px rgba(0, 120, 200, 0.12);
+  box-shadow: inset 0 0 24px rgb(0 120 200 / 12%);
 }
 
 .panel.grow {
@@ -435,21 +435,21 @@ onUnmounted(() => {
 
 .panel-title {
   position: relative;
-  margin: 0 0 10px;
   padding-left: 10px;
-  color: var(--cyan);
+  margin: 0 0 10px;
   font-size: 14px;
   font-weight: 600;
+  color: var(--cyan);
   letter-spacing: 0.06em;
 }
 
 .panel-title::before {
-  content: '';
   position: absolute;
   top: 3px;
   left: 0;
   width: 3px;
   height: 14px;
+  content: '';
   background: var(--cyan);
   box-shadow: 0 0 8px var(--cyan);
 }
@@ -465,8 +465,8 @@ onUnmounted(() => {
   gap: 8px;
   align-items: center;
   padding: 8px;
-  background: rgba(0, 40, 90, 0.45);
-  border: 1px solid rgba(0, 160, 220, 0.2);
+  background: rgb(0 40 90 / 45%);
+  border: 1px solid rgb(0 160 220 / 20%);
 }
 
 .dc-icon {
@@ -481,14 +481,14 @@ onUnmounted(() => {
 
 .dc-card small {
   margin-left: 2px;
-  color: var(--muted);
   font-size: 11px;
   font-weight: 400;
+  color: var(--muted);
 }
 
 .dc-card span {
-  color: var(--muted);
   font-size: 11px;
+  color: var(--muted);
 }
 
 .ai-grid {
@@ -500,8 +500,8 @@ onUnmounted(() => {
 .ai-card {
   padding: 12px 8px;
   text-align: center;
-  background: rgba(0, 50, 100, 0.4);
-  border: 1px solid rgba(0, 180, 255, 0.25);
+  background: rgb(0 50 100 / 40%);
+  border: 1px solid rgb(0 180 255 / 25%);
 }
 
 .ai-card strong {
@@ -524,8 +524,8 @@ onUnmounted(() => {
 }
 
 .ai-card span {
-  color: var(--muted);
   font-size: 12px;
+  color: var(--muted);
 }
 
 .kpi-row {
@@ -548,11 +548,11 @@ onUnmounted(() => {
   justify-content: center;
   width: 86px;
   height: 86px;
-  background: radial-gradient(circle at 35% 30%, rgba(0, 180, 255, 0.35), transparent 55%),
-    rgba(0, 40, 90, 0.5);
-  border: 2px solid rgba(0, 216, 255, 0.55);
+  background: radial-gradient(circle at 35% 30%, rgb(0 180 255 / 35%), transparent 55%),
+    rgb(0 40 90 / 50%);
+  border: 2px solid rgb(0 216 255 / 55%);
   border-radius: 50%;
-  box-shadow: 0 0 18px rgba(0, 216, 255, 0.25);
+  box-shadow: 0 0 18px rgb(0 216 255 / 25%);
 }
 
 .ring strong {
@@ -561,13 +561,13 @@ onUnmounted(() => {
 }
 
 .ring small {
-  color: var(--muted);
   font-size: 10px;
+  color: var(--muted);
 }
 
 .kpi-bubble > span {
-  color: var(--muted);
   font-size: 12px;
+  color: var(--muted);
 }
 
 .map-panel {
@@ -580,15 +580,15 @@ onUnmounted(() => {
   height: 240px;
   overflow: hidden;
   background:
-    radial-gradient(circle at 50% 55%, rgba(0, 120, 200, 0.25), transparent 55%),
-    linear-gradient(180deg, rgba(0, 30, 70, 0.2), rgba(0, 20, 50, 0.4));
+    radial-gradient(circle at 50% 55%, rgb(0 120 200 / 25%), transparent 55%),
+    linear-gradient(180deg, rgb(0 30 70 / 20%), rgb(0 20 50 / 40%));
 }
 
 .map-glow {
   position: absolute;
   inset: 20% 15%;
-  background: radial-gradient(circle, rgba(0, 216, 255, 0.12), transparent 70%);
   pointer-events: none;
+  background: radial-gradient(circle, rgb(0 216 255 / 12%), transparent 70%);
 }
 
 .map-shape {
@@ -600,9 +600,9 @@ onUnmounted(() => {
 
 .map-node {
   position: absolute;
-  transform: translate(-50%, -50%);
   text-align: center;
   white-space: nowrap;
+  transform: translate(-50%, -50%);
 }
 
 .map-node i {
@@ -627,11 +627,11 @@ onUnmounted(() => {
 
 .map-node em {
   padding: 1px 6px;
-  color: #e8f7ff;
   font-size: 11px;
   font-style: normal;
-  background: rgba(0, 40, 90, 0.75);
-  border: 1px solid rgba(0, 180, 255, 0.35);
+  color: #e8f7ff;
+  background: rgb(0 40 90 / 75%);
+  border: 1px solid rgb(0 180 255 / 35%);
 }
 
 .ops-top {
@@ -647,17 +647,17 @@ onUnmounted(() => {
   align-items: center;
   justify-content: center;
   min-height: 92px;
+  aspect-ratio: 1;
   padding: 8px;
   text-align: center;
-  background: radial-gradient(circle at 50% 40%, rgba(0, 160, 255, 0.25), transparent 60%),
-    rgba(0, 40, 90, 0.45);
-  border: 1px solid rgba(0, 180, 255, 0.35);
+  background: radial-gradient(circle at 50% 40%, rgb(0 160 255 / 25%), transparent 60%),
+    rgb(0 40 90 / 45%);
+  border: 1px solid rgb(0 180 255 / 35%);
   border-radius: 50%;
-  aspect-ratio: 1;
 }
 
 .ops-circle.green {
-  border-color: rgba(105, 240, 174, 0.45);
+  border-color: rgb(105 240 174 / 45%);
 }
 
 .ops-circle strong {
@@ -675,8 +675,8 @@ onUnmounted(() => {
 
 .ops-circle span {
   margin-top: 4px;
-  color: var(--muted);
   font-size: 11px;
+  color: var(--muted);
 }
 
 .ops-grid {
@@ -688,19 +688,19 @@ onUnmounted(() => {
 .ops-mini {
   padding: 8px;
   text-align: center;
-  background: rgba(0, 40, 90, 0.4);
-  border: 1px solid rgba(0, 160, 220, 0.25);
+  background: rgb(0 40 90 / 40%);
+  border: 1px solid rgb(0 160 220 / 25%);
 }
 
 .ops-mini strong {
   display: block;
-  color: var(--cyan);
   font-size: 16px;
+  color: var(--cyan);
 }
 
 .ops-mini span {
-  color: var(--muted);
   font-size: 11px;
+  color: var(--muted);
 }
 
 .queue-panel {
@@ -711,15 +711,15 @@ onUnmounted(() => {
 .queue-list {
   flex: 1;
   max-height: 420px;
-  overflow: auto;
   padding-right: 4px;
+  overflow: auto;
 }
 
 .queue-item {
-  margin-bottom: 8px;
   padding: 8px 10px;
-  background: rgba(0, 36, 80, 0.55);
-  border: 1px solid rgba(0, 160, 220, 0.22);
+  margin-bottom: 8px;
+  background: rgb(0 36 80 / 55%);
+  border: 1px solid rgb(0 160 220 / 22%);
 }
 
 .queue-head {
@@ -755,22 +755,22 @@ onUnmounted(() => {
 
 .tag.strat {
   color: #ffecb3;
-  background: rgba(255, 183, 77, 0.25);
-  border: 1px solid rgba(255, 183, 77, 0.5);
+  background: rgb(255 183 77 / 25%);
+  border: 1px solid rgb(255 183 77 / 50%);
 }
 
 .queue-item ul {
-  margin: 0;
   padding: 0;
+  margin: 0;
   list-style: none;
 }
 
 .queue-item li {
   display: flex;
   gap: 8px;
-  color: #c5e4f7;
   font-size: 11px;
   line-height: 1.7;
+  color: #c5e4f7;
 }
 
 .queue-item label {

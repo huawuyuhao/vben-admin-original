@@ -3,10 +3,10 @@ import { ref } from 'vue';
 
 import { ElMessage } from 'element-plus';
 
+defineOptions({ name: 'ContentFaq' });
+
 /** 常见问题列表（待对接接口） */
 const faqs: never[] = [];
-
-defineOptions({ name: 'ContentFaq' });
 
 const category = ref('全部');
 const categories = [
@@ -83,7 +83,7 @@ const categories = [
         <table>
           <thead>
             <tr>
-              <th />
+              <th></th>
               <th>问题标题</th>
               <th>分类</th>
               <th>是否置顶</th>
@@ -133,8 +133,8 @@ const categories = [
 
 .cat-tag {
   padding: 6px 12px;
-  color: #606266;
   font-size: 13px;
+  color: #606266;
   cursor: pointer;
   background: #f5f7fa;
   border: 1px solid #e4e7ed;

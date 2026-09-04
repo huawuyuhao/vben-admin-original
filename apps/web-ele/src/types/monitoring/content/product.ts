@@ -4,7 +4,7 @@ import type {
   ProductListResult,
 } from '#/types/service/product';
 
-export type { ProductInfo, ProductListResult, ProductListResponseBody };
+export type { ProductInfo, ProductListResponseBody, ProductListResult };
 
 /** 上下架状态：0 下架 / 1 上架 */
 export type AdminProductShelfStatus = 0 | 1;

@@ -1,10 +1,11 @@
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus';
 
+defineOptions({ name: 'ContentCase' });
+
 /** 案例列表（待对接接口） */
 const cases: never[] = [];
 
-defineOptions({ name: 'ContentCase' });
 </script>
 
 <template>
@@ -57,7 +58,7 @@ defineOptions({ name: 'ContentCase' });
         <table>
           <thead>
             <tr>
-              <th />
+              <th></th>
               <th>案例标题</th>
               <th>封面图</th>
               <th>分类</th>
@@ -73,7 +74,7 @@ defineOptions({ name: 'ContentCase' });
             <tr v-for="r in cases" :key="r.id">
               <td><input type="checkbox" /></td>
               <td>{{ r.title }}</td>
-              <td><div class="thumb" /></td>
+              <td><div class="thumb"></div></td>
               <td><span class="tag info">{{ r.category }}</span></td>
               <td>{{ r.customer }}</td>
               <td>{{ r.recommend ? '★' : '☆' }}</td>

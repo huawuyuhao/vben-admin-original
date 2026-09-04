@@ -3,16 +3,17 @@ import type { FavoriteItem } from '#/types/mine/favorites/products';
 
 import { computed, ref, watch } from 'vue';
 
-import { Star, StarFilled } from '@element-plus/icons-vue';
 import { $t } from '@vben/locales';
 
+import { Star, StarFilled } from '@element-plus/icons-vue';
+
+import { useFavoriteActions } from '../composables/use-favorite-actions';
 import {
   formatFavoriteGreenPowerRatio,
   formatFavoritePrice,
   hasFavoriteImage,
   splitFavoriteTags,
 } from '../data';
-import { useFavoriteActions } from '../composables/use-favorite-actions';
 
 defineOptions({ name: 'MineFavoritesProductsCard' });
 
@@ -229,8 +230,8 @@ async function handleUseNow() {
     background: linear-gradient(
       145deg,
       hsl(var(--primary)),
-      hsl(250 100% 76%) 55%,
-      hsl(190 90% 66%)
+      hsl(250deg 100% 76%) 55%,
+      hsl(190deg 90% 66%)
     );
 
     &--empty {
@@ -257,7 +258,7 @@ async function handleUseNow() {
   &__letter {
     font-size: 40px;
     font-weight: 750;
-    color: rgba(255, 255, 255, 0.92);
+    color: rgb(255 255 255 / 92%);
   }
 
   &__collect {
@@ -265,8 +266,8 @@ async function handleUseNow() {
     top: 12px;
     left: 12px;
     z-index: 1;
+    background: rgb(255 255 255 / 92%) !important;
     border: 0;
-    background: rgba(255, 255, 255, 0.92) !important;
 
     .is-collected {
       color: #e6a23c;
@@ -277,8 +278,8 @@ async function handleUseNow() {
     position: absolute;
     top: 12px;
     right: 12px;
+    background: rgb(15 26 46 / 55%) !important;
     border: 0;
-    background: rgba(15, 26, 46, 0.55) !important;
     backdrop-filter: blur(4px);
   }
 
@@ -293,11 +294,11 @@ async function handleUseNow() {
   &__name {
     margin: 0;
     overflow: hidden;
+    text-overflow: ellipsis;
     font-size: 16px;
     font-weight: 750;
     line-height: 1.4;
     color: hsl(var(--foreground));
-    text-overflow: ellipsis;
     white-space: nowrap;
   }
 
@@ -311,7 +312,7 @@ async function handleUseNow() {
     margin: 0;
     font-size: 12px;
     font-weight: 650;
-    color: hsl(145 70% 36%);
+    color: hsl(145deg 70% 36%);
   }
 
   &__desc {

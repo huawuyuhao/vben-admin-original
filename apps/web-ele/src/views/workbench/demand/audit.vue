@@ -25,7 +25,7 @@ const query = reactive({
   start: '',
   end: '',
   appType: '全部' as '全部' | '推理类' | '训练类',
-  dataType: '全部' as '全部' | '目标检测' | '图像识别' | '文档解析',
+  dataType: '全部' as '全部' | '图像识别' | '文档解析' | '目标检测',
 });
 
 const filtered = computed(() => {
@@ -313,6 +313,7 @@ function statusClass(s: string) {
 <style scoped>
 .page {
   --primary: #409eff;
+
   padding-bottom: 24px;
 }
 
@@ -326,8 +327,8 @@ function statusClass(s: string) {
 .tab {
   padding: 10px 16px;
   margin-bottom: -1px;
-  color: #606266;
   font-size: 14px;
+  color: #606266;
   cursor: pointer;
   background: none;
   border: none;
@@ -335,8 +336,8 @@ function statusClass(s: string) {
 }
 
 .tab.active {
-  color: var(--primary);
   font-weight: 600;
+  color: var(--primary);
   border-bottom-color: var(--primary);
 }
 
@@ -369,27 +370,27 @@ function statusClass(s: string) {
 }
 
 .dash {
-  color: #909399;
   font-size: 12px;
+  color: #909399;
 }
 
 .label {
   width: 120px;
-  color: #909399;
   font-size: 13px;
+  color: #909399;
 }
 
 .checks label {
   margin-right: 12px;
-  color: #606266;
   font-size: 13px;
+  color: #606266;
 }
 
 .btn {
   height: 32px;
   padding: 0 14px;
-  color: #606266;
   font-size: 13px;
+  color: #606266;
   cursor: pointer;
   background: #fff;
   border: 1px solid #dcdfe6;
@@ -418,21 +419,21 @@ function statusClass(s: string) {
 
 table {
   width: 100%;
-  border-collapse: collapse;
   font-size: 13px;
+  border-collapse: collapse;
 }
 
 th,
 td {
   padding: 12px 10px;
   text-align: left;
-  border-bottom: 1px solid #ebeef5;
   white-space: nowrap;
+  border-bottom: 1px solid #ebeef5;
 }
 
 th {
-  color: #909399;
   font-weight: 500;
+  color: #909399;
   background: #fafafa;
 }
 
@@ -476,8 +477,8 @@ th {
   align-items: center;
   justify-content: flex-end;
   margin-top: 14px;
-  color: #606266;
   font-size: 13px;
+  color: #606266;
 }
 
 .pages {

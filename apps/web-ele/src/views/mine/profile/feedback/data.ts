@@ -65,7 +65,7 @@ export function parseFeedbackStatusFilter(
  * @param data 接口分页结果
  * @returns records + total + current + size
  */
-export function normalizeFeedbackPage(data?: null | FeedbackListResult): {
+export function normalizeFeedbackPage(data?: FeedbackListResult | null): {
   current: number;
   records: FeedbackItem[];
   size: number;

@@ -117,9 +117,9 @@ function statusClass(s: string) {
 
 .policy p {
   margin: 0;
-  color: #606266;
   font-size: 13px;
   line-height: 1.6;
+  color: #606266;
 }
 
 .up {

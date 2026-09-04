@@ -53,7 +53,7 @@ onMounted(() => {
     yAxis: {
       axisLabel: { color: '#7eb6d9' },
       max: 100,
-      splitLine: { lineStyle: { color: 'rgba(0,120,180,0.2)' } },
+      splitLine: { lineStyle: { color: 'rgb(0 120 180 / 20%)' } },
       type: 'value',
     },
   });

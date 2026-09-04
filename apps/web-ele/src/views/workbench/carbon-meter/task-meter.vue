@@ -4,16 +4,17 @@ import type { EchartsUIType } from '@vben/plugins/echarts';
 import { computed, nextTick, onMounted, ref, watch } from 'vue';
 
 import { EchartsUI, useEcharts } from '@vben/plugins/echarts';
+
 import { ElMessage } from 'element-plus';
 
 import {
   carbonIntensityWeek,
   carbonMeterTasks,
+  type CarbonPeriod,
   carbonPeriodKpis,
   carbonRegionRows,
   carbonRules,
   carbonTrendWeek,
-  type CarbonPeriod,
 } from '#/views/_shared/data/carbon-meter';
 
 defineOptions({ name: 'CarbonTaskMeter' });
@@ -312,7 +313,7 @@ onMounted(async () => {
               <td>
                 <div class="prog-cell">
                   <div class="prog">
-                    <i :style="{ width: `${r.progress}%` }" />
+                    <i :style="{ width: `${r.progress}%` }"></i>
                   </div>
                   <em>{{ r.progress }}%</em>
                 </div>
@@ -387,8 +388,8 @@ onMounted(async () => {
 .period-tabs button {
   height: 32px;
   padding: 0 16px;
-  color: #606266;
   font-size: 13px;
+  color: #606266;
   cursor: pointer;
   background: #fff;
   border: 1px solid #dcdfe6;
@@ -450,22 +451,22 @@ onMounted(async () => {
 
 .stat-label {
   margin-bottom: 6px;
-  color: #909399;
   font-size: 13px;
+  color: #909399;
 }
 
 .stat-value {
   margin-bottom: 4px;
-  color: #303133;
   font-size: 24px;
   font-weight: 700;
+  color: #303133;
 }
 
 .stat-value small {
   margin-left: 4px;
-  color: #909399;
   font-size: 12px;
   font-weight: 400;
+  color: #909399;
 }
 
 .stat-trend {
@@ -520,11 +521,11 @@ onMounted(async () => {
 }
 
 .rules ul {
-  margin: 0 0 14px;
   padding-left: 18px;
-  color: #606266;
+  margin: 0 0 14px;
   font-size: 13px;
   line-height: 1.8;
+  color: #606266;
 }
 
 .table-wrap {
@@ -539,8 +540,8 @@ table {
 .type-tag {
   display: inline-block;
   padding: 2px 8px;
-  color: #52c41a;
   font-size: 12px;
+  color: #52c41a;
   background: #f6ffed;
   border-radius: 4px;
 }
@@ -597,8 +598,8 @@ table {
   justify-content: space-between;
   padding-top: 12px;
   margin-top: 12px;
-  color: #909399;
   font-size: 13px;
+  color: #909399;
   border-top: 1px solid #ebeef5;
 }
 

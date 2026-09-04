@@ -155,7 +155,7 @@ onMounted(fetchBillings);
     border: 1px solid var(--portal-gray-200);
     border-top: 3px solid var(--portal-primary);
     border-radius: var(--portal-radius-lg, 16px);
-    box-shadow: 0 8px 24px rgba(31, 36, 48, 0.04);
+    box-shadow: 0 8px 24px rgb(31 36 48 / 4%);
   }
 
   &__index {

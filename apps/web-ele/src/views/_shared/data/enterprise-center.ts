@@ -14,7 +14,7 @@ export interface SubAccount {
   status: SubAccountStatus;
 }
 
-export type DeviceRunStatus = '运行中' | '待修' | '维护中';
+export type DeviceRunStatus = '待修' | '维护中' | '运行中';
 
 export interface DeviceStatRow {
   id: string;

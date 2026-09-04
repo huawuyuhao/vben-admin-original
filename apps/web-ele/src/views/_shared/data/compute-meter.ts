@@ -3,8 +3,8 @@
 export interface ComputeMeterTask {
   id: string;
   name: string;
-  type: '训练' | '推理' | '批处理';
-  status: '计量中' | '已完成' | '暂停';
+  type: '批处理' | '推理' | '训练';
+  status: '已完成' | '暂停' | '计量中';
   gpus: number;
   gpuUtil: number;
   vramUtil: number;

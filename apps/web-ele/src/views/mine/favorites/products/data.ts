@@ -17,7 +17,7 @@ export const FAVORITES_PAGE_SIZE_OPTIONS = [6, 12, 18];
  * @returns 可展示列表
  */
 export function normalizeFavoriteList(
-  list?: null | FavoriteItem[],
+  list?: FavoriteItem[] | null,
 ): FavoriteItem[] {
   if (!list?.length) {
     return [];
@@ -30,7 +30,7 @@ export function normalizeFavoriteList(
  * @param data 接口分页结果
  * @returns records + total + current + size
  */
-export function normalizeFavoritesPage(data?: null | FavoritesListResult): {
+export function normalizeFavoritesPage(data?: FavoritesListResult | null): {
   current: number;
   records: FavoriteItem[];
   size: number;

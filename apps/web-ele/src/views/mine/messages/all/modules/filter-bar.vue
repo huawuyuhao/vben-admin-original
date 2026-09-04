@@ -1,30 +1,31 @@
 <script lang="ts" setup>
 import type { MessageReadFilter } from '../data';
 
-import { Delete, Check } from '@element-plus/icons-vue';
 import { $t } from '@vben/locales';
+
+import { Check, Delete } from '@element-plus/icons-vue';
 
 defineOptions({ name: 'MineMessagesFilterBar' });
 
-const readStatus = defineModel<MessageReadFilter>('readStatus', {
-  default: '',
-});
-
 defineProps<{
-  /** 已选条数 */
-  selectedCount: number;
   /** 批量操作进行中 */
   acting?: boolean;
+  /** 已选条数 */
+  selectedCount: number;
 }>();
 
 const emit = defineEmits<{
-  /** 已读筛选变化 */
-  search: [];
   /** 标记已读 */
   markRead: [];
   /** 删除 */
   remove: [];
+  /** 已读筛选变化 */
+  search: [];
 }>();
+
+const readStatus = defineModel<MessageReadFilter>('readStatus', {
+  default: '',
+});
 
 /**
  * 已读筛选变更后触发查询
@@ -111,9 +112,9 @@ function handleReadChange() {
   }
 
   &__label {
-    color: hsl(var(--foreground));
     font-size: 13px;
     font-weight: 600;
+    color: hsl(var(--foreground));
   }
 
   &__actions {
@@ -125,8 +126,8 @@ function handleReadChange() {
 
   &__selected {
     margin-right: 4px;
-    color: hsl(var(--muted-foreground));
     font-size: 13px;
+    color: hsl(var(--muted-foreground));
   }
 }
 </style>

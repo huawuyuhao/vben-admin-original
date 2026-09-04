@@ -24,7 +24,7 @@ function isFavoritesApiSuccess(code?: number): boolean {
  * @returns 标准化分页结果
  */
 function parseFavoritesListBody<T = FavoriteItem>(
-  body?: null | FavoritesListResponseBody<T>,
+  body?: FavoritesListResponseBody<T> | null,
 ): FavoritesListResult<T> {
   if (!body) {
     return { records: [], total: 0, current: 1, size: 10 };

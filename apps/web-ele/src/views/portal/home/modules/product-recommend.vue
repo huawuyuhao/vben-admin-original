@@ -244,7 +244,7 @@ onMounted(fetchProducts);
     background: var(--portal-surface, #fff);
     border: 1px solid var(--portal-gray-200);
     border-radius: var(--portal-radius-lg, 16px);
-    box-shadow: 0 8px 24px rgba(31, 36, 48, 0.04);
+    box-shadow: 0 8px 24px rgb(31 36 48 / 4%);
     transition:
       border-color 0.18s ease,
       box-shadow 0.18s ease,
@@ -256,7 +256,7 @@ onMounted(fetchProducts);
         var(--portal-primary) 32%,
         var(--portal-gray-200)
       );
-      box-shadow: 0 14px 32px rgba(107, 76, 255, 0.1);
+      box-shadow: 0 14px 32px rgb(107 76 255 / 10%);
       transform: translateY(-3px);
     }
   }
@@ -268,7 +268,7 @@ onMounted(fetchProducts);
     background:
       radial-gradient(
         circle at 30% 30%,
-        rgba(255, 255, 255, 0.2),
+        rgb(255 255 255 / 20%),
         transparent 45%
       ),
       linear-gradient(135deg, var(--portal-primary), #4a2fcc 55%, #2f6bff);
@@ -291,7 +291,7 @@ onMounted(fetchProducts);
       justify-content: center;
       font-size: 42px;
       font-weight: 750;
-      color: rgba(255, 255, 255, 0.92);
+      color: rgb(255 255 255 / 92%);
     }
   }
 
@@ -303,7 +303,7 @@ onMounted(fetchProducts);
     font-size: 12px;
     font-weight: 700;
     color: #fff;
-    background: rgba(15, 26, 46, 0.55);
+    background: rgb(15 26 46 / 55%);
     border-radius: 999px;
     backdrop-filter: blur(4px);
   }
@@ -319,11 +319,11 @@ onMounted(fetchProducts);
   &__name {
     margin: 0;
     overflow: hidden;
+    text-overflow: ellipsis;
     font-size: 17px;
     font-weight: 750;
     line-height: 1.4;
     color: var(--portal-gray-900);
-    text-overflow: ellipsis;
     white-space: nowrap;
   }
 

@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import { InfoFilled, Search } from '@element-plus/icons-vue';
 import { $t } from '@vben/locales';
+
+import { InfoFilled, Search } from '@element-plus/icons-vue';
 
 import {
   CASE_TYPE_GENERAL,
@@ -10,17 +11,16 @@ import {
 
 defineOptions({ name: 'ServiceCaseFilterBar' });
 
-/** 标签名称（与父级 v-model:tagName 同步，走接口） */
-const tagName = defineModel<string>('tagName', { default: '' });
-/** 案例类型（与父级 v-model:caseType 同步，前端筛当前页） */
-const caseType = defineModel<CaseTypeFilter>('caseType', { default: '' });
-
 const emit = defineEmits<{
   /** 重置筛选 */
   reset: [];
   /** 点击查询 */
   search: [];
 }>();
+/** 标签名称（与父级 v-model:tagName 同步，走接口） */
+const tagName = defineModel<string>('tagName', { default: '' });
+/** 案例类型（与父级 v-model:caseType 同步，前端筛当前页） */
+const caseType = defineModel<CaseTypeFilter>('caseType', { default: '' });
 
 /**
  * 回车触发搜索
@@ -136,15 +136,15 @@ function handleEnter() {
     align-items: center;
     min-width: 160px;
     margin: 0;
-    color: hsl(var(--muted-foreground));
     font-size: 13px;
     line-height: 1.5;
+    color: hsl(var(--muted-foreground));
   }
 
   &__scope-icon {
     flex-shrink: 0;
-    color: var(--el-color-info);
     font-size: 14px;
+    color: var(--el-color-info);
   }
 
   &__actions {

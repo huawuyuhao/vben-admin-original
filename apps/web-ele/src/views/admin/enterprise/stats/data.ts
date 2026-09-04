@@ -7,8 +7,8 @@ import type {
   EnterpriseStatType,
 } from '#/types/admin/enterprise/stats';
 
-import { isEmpty, isHttpUrl } from '@vben/utils';
 import { $t } from '@vben/locales';
+import { isEmpty, isHttpUrl } from '@vben/utils';
 
 /** 折线长表数据点（供 VChart seriesField） */
 export interface StatSeriesPoint {
@@ -228,7 +228,7 @@ export function buildAlertLevelPie(
  * @param overview 概览数据
  * @returns 卡片列表
  */
-export function buildOverviewCards(overview: null | EnterpriseStatOverview) {
+export function buildOverviewCards(overview: EnterpriseStatOverview | null) {
   return [
     {
       key: 'deviceCount' as const,

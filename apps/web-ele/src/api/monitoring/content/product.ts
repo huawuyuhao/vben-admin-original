@@ -1,8 +1,8 @@
 import type {
   AdminProductListParams,
+  ProductInfo,
   ProductListResponseBody,
   ProductListResult,
-  ProductInfo,
 } from '#/types/monitoring/content/product';
 
 import { ElMessage } from 'element-plus';

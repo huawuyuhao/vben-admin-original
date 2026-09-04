@@ -1,14 +1,14 @@
 /** 算力需求管理 mock 数据 */
 
-export type DemandAuditTab = '全部需求' | '待审核' | '已审批';
+export type DemandAuditTab = '全部需求' | '已审批' | '待审核';
 
 export type DemandStatus =
-  | '待确认'
   | '审核中'
   | '已通过'
-  | '已驳回';
+  | '已驳回'
+  | '待确认';
 
-export type TaskRunStatus = '未完成' | '已完成' | '已取消';
+export type TaskRunStatus = '已取消' | '已完成' | '未完成';
 
 export type SupplyStatus = '已审核' | '待查看' | '未受理';
 
@@ -36,7 +36,7 @@ export interface DemandConvertItem {
   gpuNeed: string;
   memNeed: string;
   extractAt: string;
-  queueStatus: '待入队' | '已入队' | '排队中' | '已下发';
+  queueStatus: '已下发' | '已入队' | '待入队' | '排队中';
   auto: boolean;
 }
 

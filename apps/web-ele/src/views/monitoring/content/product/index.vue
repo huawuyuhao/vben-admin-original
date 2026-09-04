@@ -5,11 +5,11 @@ import type { ProductInfo } from '#/types/service/product';
 import { ref } from 'vue';
 
 import { $t } from '@vben/locales';
-import { ElMessage } from 'element-plus';
+
 import { Plus } from '@element-plus/icons-vue';
+import { ElMessage } from 'element-plus';
 
 import ContentPageShell from '../home/modules/content-page-shell.vue';
-
 import { useAdminProductList } from './composables/use-admin-product-list';
 import FilterBar from './modules/filter-bar.vue';
 import ProductDetailDrawer from './modules/product-detail-drawer.vue';

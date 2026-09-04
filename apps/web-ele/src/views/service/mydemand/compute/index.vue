@@ -4,9 +4,10 @@ import type { ComputeDemandItem } from '#/types/service/mydemand/compute';
 import { onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-import { Download, Plus, Refresh } from '@element-plus/icons-vue';
 import { $t } from '@vben/locales';
 import { downloadFileFromUrl } from '@vben/utils';
+
+import { Download, Plus, Refresh } from '@element-plus/icons-vue';
 import { ElMessage } from 'element-plus';
 
 import {
@@ -435,8 +436,8 @@ onMounted(() => {
 
 .compute-page {
   &__export-tip {
-    color: hsl(var(--muted-foreground));
     font-size: 13px;
+    color: hsl(var(--muted-foreground));
     white-space: nowrap;
   }
 }

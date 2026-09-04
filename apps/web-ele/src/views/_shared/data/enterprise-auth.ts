@@ -8,7 +8,7 @@ export interface AuthHistoryItem {
   companyName: string;
   submittedAt: string;
   finishedAt: string;
-  result: '通过' | '审核中' | '驳回';
+  result: '审核中' | '通过' | '驳回';
   remark: string;
 }
 

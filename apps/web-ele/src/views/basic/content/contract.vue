@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus';
 
+defineOptions({ name: 'ContentContract' });
+
 /** 合同列表（待对接接口） */
 const contracts: never[] = [];
-
-defineOptions({ name: 'ContentContract' });
 
 function typeClass(t: string) {
   if (t.includes('GPU')) return 'info';
@@ -73,7 +73,7 @@ function statusClass(s: string) {
         <table>
           <thead>
             <tr>
-              <th />
+              <th></th>
               <th>合同编号</th>
               <th>合同名称</th>
               <th>算力类型</th>
@@ -126,8 +126,8 @@ function statusClass(s: string) {
 }
 
 .price {
-  color: #f56c6c;
   font-weight: 600;
+  color: #f56c6c;
 }
 
 @media (max-width: 1100px) {

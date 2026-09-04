@@ -16,12 +16,12 @@ import {
 defineOptions({ name: 'EnterpriseProductsTable' });
 
 defineProps<{
-  /** 列表数据 */
-  products: SupplyProductItem[];
   /** 加载中 */
   loading?: boolean;
   /** 正在监测资源状态的产品 ID */
   monitoringId?: null | number;
+  /** 列表数据 */
+  products: SupplyProductItem[];
   /** 正在上下架的产品 ID */
   shelvingId?: null | number;
 }>();
@@ -242,7 +242,7 @@ const emit = defineEmits<{
   }
 
   :deep(.el-table) {
-    --el-table-header-bg-color: hsl(var(--muted) / 0.35);
+    --el-table-header-bg-color: hsl(var(--muted) / 35%);
   }
 }
 </style>

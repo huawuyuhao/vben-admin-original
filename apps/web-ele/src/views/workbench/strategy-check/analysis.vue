@@ -4,8 +4,8 @@ import { computed, reactive, ref } from 'vue';
 import { ElMessage } from 'element-plus';
 
 import {
-  type StrategyAnalysisItem,
   strategyAnalyses as seed,
+  type StrategyAnalysisItem,
 } from '#/views/_shared/data/workbench-strategy-check';
 
 defineOptions({ name: 'WorkbenchStrategyAnalysis' });
@@ -13,7 +13,7 @@ defineOptions({ name: 'WorkbenchStrategyAnalysis' });
 const rows = ref<StrategyAnalysisItem[]>(seed.map((i) => ({ ...i })));
 const page = ref(1);
 const pageSize = 5;
-const current = ref<StrategyAnalysisItem | null>(null);
+const current = ref<null | StrategyAnalysisItem>(null);
 
 const query = reactive({
   keyword: '',
@@ -212,31 +212,37 @@ function runAnalysis() {
 <style scoped>
 .page {
   --primary: #409eff;
+
   padding-bottom: 24px;
 }
+
 .head {
   display: flex;
   gap: 16px;
   justify-content: space-between;
   margin-bottom: 14px;
 }
+
 .head h2 {
   margin: 0 0 6px;
   font-size: 20px;
 }
+
 .head p {
-  margin: 0;
   max-width: 740px;
-  color: #909399;
+  margin: 0;
   font-size: 13px;
   line-height: 1.5;
+  color: #909399;
 }
+
 .kpi-row {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 12px;
   margin-bottom: 12px;
 }
+
 .kpi {
   padding: 14px;
   text-align: center;
@@ -244,25 +250,29 @@ function runAnalysis() {
   border: 1px solid #ebeef5;
   border-radius: 6px;
 }
+
 .kpi strong {
   display: block;
-  color: var(--primary);
   font-size: 24px;
+  color: var(--primary);
 }
+
 .kpi span {
-  color: #909399;
   font-size: 12px;
+  color: #909399;
 }
+
 .filter {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-bottom: 12px;
   padding: 12px;
+  margin-bottom: 12px;
   background: #fff;
   border: 1px solid #ebeef5;
   border-radius: 6px;
 }
+
 .filter input,
 .filter select {
   height: 32px;
@@ -270,6 +280,7 @@ function runAnalysis() {
   border: 1px solid #dcdfe6;
   border-radius: 4px;
 }
+
 .btn {
   height: 32px;
   padding: 0 14px;
@@ -279,56 +290,67 @@ function runAnalysis() {
   border: 1px solid #dcdfe6;
   border-radius: 4px;
 }
+
 .btn.primary {
   color: #fff;
   background: var(--primary);
   border-color: var(--primary);
 }
+
 .table-wrap {
   overflow: auto;
   background: #fff;
   border: 1px solid #ebeef5;
   border-radius: 6px;
 }
+
 table {
   width: 100%;
-  border-collapse: collapse;
   font-size: 13px;
+  border-collapse: collapse;
 }
+
 th,
 td {
   padding: 11px 10px;
   text-align: left;
-  border-bottom: 1px solid #ebeef5;
   white-space: nowrap;
+  border-bottom: 1px solid #ebeef5;
 }
+
 th {
-  color: #909399;
   font-weight: 500;
+  color: #909399;
   background: #fafafa;
 }
+
 .badge {
   display: inline-block;
   padding: 2px 8px;
   font-size: 12px;
   border-radius: 4px;
 }
+
 .badge.ok {
   color: #67c23a;
   background: #f0f9eb;
 }
+
 .badge.info {
   color: #409eff;
   background: #ecf5ff;
 }
+
 .badge.warn {
   color: #e6a23c;
   background: #fdf6ec;
 }
+
 .badge.danger {
   color: #f56c6c;
   background: #fef0f0;
 }
+
 .ops button {
   padding: 0;
   color: var(--primary);
@@ -336,6 +358,7 @@ th {
   background: none;
   border: none;
 }
+
 .pager {
   display: flex;
   gap: 12px;
@@ -345,10 +368,12 @@ th {
   font-size: 13px;
   color: #606266;
 }
+
 .pages {
   display: flex;
   gap: 4px;
 }
+
 .pages button {
   min-width: 30px;
   height: 30px;
@@ -357,17 +382,20 @@ th {
   border: 1px solid #dcdfe6;
   border-radius: 4px;
 }
+
 .pages button.on {
   color: #fff;
   background: var(--primary);
   border-color: var(--primary);
 }
+
 .mask {
   position: fixed;
   inset: 0;
   z-index: 40;
   background: rgb(0 0 0 / 35%);
 }
+
 .drawer {
   position: absolute;
   top: 0;
@@ -378,62 +406,74 @@ th {
   overflow: auto;
   background: #fff;
 }
+
 .drawer header {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
+
 .drawer header h3 {
   margin: 0;
 }
+
 .drawer header button {
   font-size: 22px;
   cursor: pointer;
   background: none;
   border: none;
 }
+
 .summary {
   margin: 12px 0;
-  color: #606266;
   font-size: 13px;
   line-height: 1.6;
+  color: #606266;
 }
+
 .cards {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 8px;
   margin-bottom: 12px;
 }
+
 .cards > div {
   padding: 10px;
   text-align: center;
   background: #f5f7fa;
   border-radius: 6px;
 }
+
 .cards span {
   display: block;
-  color: #909399;
   font-size: 12px;
+  color: #909399;
 }
+
 .cards strong {
-  color: var(--primary);
   font-size: 18px;
+  color: var(--primary);
 }
+
 .drawer h4 {
   margin: 12px 0 6px;
   font-size: 14px;
 }
+
 .drawer ul {
-  margin: 0;
   padding-left: 18px;
-  color: #606266;
+  margin: 0;
   font-size: 13px;
   line-height: 1.7;
+  color: #606266;
 }
+
 @media (max-width: 900px) {
   .kpi-row {
     grid-template-columns: 1fr 1fr;
   }
+
   .head {
     flex-direction: column;
   }

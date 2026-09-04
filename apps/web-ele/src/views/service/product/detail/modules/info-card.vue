@@ -6,8 +6,8 @@ import { computed } from 'vue';
 import { $t } from '@vben/locales';
 
 import {
-  PRODUCT_STATUS_ENABLED,
   formatProductDateTime,
+  PRODUCT_STATUS_ENABLED,
 } from '../../data';
 
 defineOptions({ name: 'ServiceProductDetailInfo' });

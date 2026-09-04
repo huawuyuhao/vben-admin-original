@@ -133,7 +133,7 @@ export async function createPortalContentApi(data: PortalContentCreateParams) {
   // );
 
   assertPortalContentMutationSuccess(body);
-  return body?.data as { key: number } | undefined;
+  return body?.data as undefined | { key: number };
 }
 
 /**

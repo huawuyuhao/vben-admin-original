@@ -1,13 +1,14 @@
 <script lang="ts" setup>
-import type { EnterpriseInfo } from '#/types/admin/enterprise/info';
-
 import type { EnterpriseEditForm } from './data';
+
+import type { EnterpriseInfo } from '#/types/admin/enterprise/info';
 
 import { computed, onMounted, reactive, ref } from 'vue';
 
-import { Edit, Refresh } from '@element-plus/icons-vue';
 import { $t, useI18n } from '@vben/locales';
 import { isEmpty } from '@vben/utils';
+
+import { Edit, Refresh } from '@element-plus/icons-vue';
 import { ElMessage } from 'element-plus';
 
 import {
@@ -36,7 +37,7 @@ defineOptions({ name: 'AdminEnterpriseInfo' });
 const { locale } = useI18n();
 
 /** 企业信息 */
-const info = ref<null | EnterpriseInfo>(null);
+const info = ref<EnterpriseInfo | null>(null);
 /** 首次加载中 */
 const pageLoading = ref(true);
 /** 刷新中 */
@@ -341,8 +342,8 @@ onMounted(initPage);
     justify-content: center;
     min-height: 240px;
     padding: 40px 24px;
-    background: hsl(var(--card) / 0.72);
-    border: 1px dashed hsl(var(--primary) / 0.35);
+    background: hsl(var(--card) / 72%);
+    border: 1px dashed hsl(var(--primary) / 35%);
     border-radius: 20px;
     backdrop-filter: blur(8px);
   }
@@ -352,12 +353,12 @@ onMounted(initPage);
     grid-template-columns: minmax(0, 1fr) auto;
     gap: 20px;
     align-items: center;
-    margin-bottom: 18px;
     padding: 24px 28px;
-    background: hsl(var(--card) / 0.92);
+    margin-bottom: 18px;
+    background: hsl(var(--card) / 92%);
     border: 1px solid hsl(var(--border));
     border-radius: 22px;
-    box-shadow: 0 10px 30px hsl(var(--foreground) / 0.08);
+    box-shadow: 0 10px 30px hsl(var(--foreground) / 8%);
     backdrop-filter: blur(10px);
   }
 
@@ -413,7 +414,7 @@ onMounted(initPage);
 
   &__stat {
     padding: 12px 14px;
-    background: hsl(var(--background) / 0.72);
+    background: hsl(var(--background) / 72%);
     border: 1px solid hsl(var(--border));
     border-radius: 14px;
 
@@ -443,8 +444,8 @@ onMounted(initPage);
     }
 
     &--readonly {
-      margin-top: 16px;
       grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-top: 16px;
 
       > * {
         grid-column: auto;
@@ -456,10 +457,10 @@ onMounted(initPage);
   &__card {
     width: 100%;
     padding: 20px 22px 10px;
-    background: hsl(var(--card) / 0.92);
+    background: hsl(var(--card) / 92%);
     border: 1px solid hsl(var(--border));
     border-radius: 20px;
-    box-shadow: 0 8px 24px hsl(var(--foreground) / 0.05);
+    box-shadow: 0 8px 24px hsl(var(--foreground) / 5%);
     backdrop-filter: blur(8px);
   }
 
@@ -468,8 +469,8 @@ onMounted(initPage);
     gap: 12px;
     align-items: flex-start;
     justify-content: space-between;
-    margin-bottom: 8px;
     padding-bottom: 12px;
+    margin-bottom: 8px;
     border-bottom: 1px solid hsl(var(--border));
 
     h4 {

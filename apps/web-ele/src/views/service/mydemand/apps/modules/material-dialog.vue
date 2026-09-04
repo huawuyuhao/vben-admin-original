@@ -1,16 +1,20 @@
 <script lang="ts" setup>
 import type {
-  MyAppItem,
-  MyAppMaterialItem,
-} from '#/types/service/mydemand/apps';
-import type {
   FormInstance,
   FormRules,
   UploadProps,
   UploadUserFile,
 } from 'element-plus';
 
+import type {
+  MyAppItem,
+  MyAppMaterialItem,
+} from '#/types/service/mydemand/apps';
+
 import { computed, reactive, ref, watch } from 'vue';
+
+import { $t } from '@vben/locales';
+import { isEmpty } from '@vben/utils';
 
 import {
   Delete,
@@ -20,8 +24,6 @@ import {
   Refresh,
   View,
 } from '@element-plus/icons-vue';
-import { $t } from '@vben/locales';
-import { isEmpty } from '@vben/utils';
 import { ElMessage } from 'element-plus';
 
 import { uploadImageApi } from '#/api/common';
@@ -36,10 +38,6 @@ import {
 import {
   APP_STATUS_OFF,
   APP_STATUS_ON,
-  MATERIAL_MAX_FILE_SIZE_MB,
-  MATERIAL_PAGE_SIZE,
-  MATERIAL_PAGE_SIZE_OPTIONS,
-  MATERIAL_UPLOAD_ACCEPT,
   displayAppValue,
   formatAppDateTime,
   getAppStatusI18nKey,
@@ -49,6 +47,10 @@ import {
   isAppEnabled,
   isMaterialImageUrl,
   isMaterialPdfUrl,
+  MATERIAL_MAX_FILE_SIZE_MB,
+  MATERIAL_PAGE_SIZE,
+  MATERIAL_PAGE_SIZE_OPTIONS,
+  MATERIAL_UPLOAD_ACCEPT,
   normalizeMaterialPage,
   parseMaterialAttachmentUrls,
   resolveMaterialId,

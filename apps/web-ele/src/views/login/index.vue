@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { $t } from '@vben/locales';
+
 import { useLoginPage } from './data';
 import AccountForm from './modules/account-form.vue';
 import BrandAside from './modules/brand-aside.vue';
@@ -6,8 +8,6 @@ import ForgotForm from './modules/forgot-form.vue';
 import RegisterForm from './modules/register-form.vue';
 import RoleTabs from './modules/role-tabs.vue';
 import SmsForm from './modules/sms-form.vue';
-
-import { $t } from '@vben/locales';
 
 /**
  * 门户登录 / 注册页入口
@@ -186,7 +186,7 @@ const {
       height: 440px;
       background: radial-gradient(
         circle,
-        var(--portal-auth-orb-a, rgba(107, 76, 255, 0.38)),
+        var(--portal-auth-orb-a, rgb(107 76 255 / 38%)),
         transparent 70%
       );
       animation: portal-auth-orb-a 16s ease-in-out infinite;
@@ -199,7 +199,7 @@ const {
       height: 480px;
       background: radial-gradient(
         circle,
-        var(--portal-auth-orb-b, rgba(0, 200, 83, 0.24)),
+        var(--portal-auth-orb-b, rgb(0 200 83 / 24%)),
         transparent 70%
       );
       animation: portal-auth-orb-b 20s ease-in-out infinite;
@@ -212,7 +212,7 @@ const {
       height: 300px;
       background: radial-gradient(
         circle,
-        var(--portal-auth-orb-c, rgba(33, 150, 243, 0.18)),
+        var(--portal-auth-orb-c, rgb(33 150 243 / 18%)),
         transparent 70%
       );
       animation: portal-auth-orb-c 13s ease-in-out infinite;
@@ -224,12 +224,12 @@ const {
     inset: 0;
     background-image:
       linear-gradient(
-        var(--portal-auth-grid, rgba(107, 76, 255, 0.045)) 1px,
+        var(--portal-auth-grid, rgb(107 76 255 / 4.5%)) 1px,
         transparent 1px
       ),
       linear-gradient(
         90deg,
-        var(--portal-auth-grid, rgba(107, 76, 255, 0.045)) 1px,
+        var(--portal-auth-grid, rgb(107 76 255 / 4.5%)) 1px,
         transparent 1px
       );
     background-size: 48px 48px;
@@ -249,12 +249,12 @@ const {
 
   &__card {
     padding: 32px 34px 26px;
-    background: var(--portal-auth-card, rgba(255, 255, 255, 0.88));
-    border: 1px solid var(--portal-auth-border, rgba(107, 76, 255, 0.1));
+    background: var(--portal-auth-card, rgb(255 255 255 / 88%));
+    border: 1px solid var(--portal-auth-border, rgb(107 76 255 / 10%));
     border-radius: 16px;
     box-shadow:
-      0 20px 50px rgba(67, 56, 120, 0.1),
-      0 2px 8px rgba(0, 0, 0, 0.03);
+      0 20px 50px rgb(67 56 120 / 10%),
+      0 2px 8px rgb(0 0 0 / 3%);
     backdrop-filter: blur(16px);
   }
 

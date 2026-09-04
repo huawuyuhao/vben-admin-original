@@ -147,5 +147,5 @@ export interface EnterpriseStatExportResult {
 export interface EnterpriseStatMutationResponse {
   code?: number;
   msg?: string;
-  data?: null | EnterpriseStatExportResult | string;
+  data?: EnterpriseStatExportResult | null | string;
 }

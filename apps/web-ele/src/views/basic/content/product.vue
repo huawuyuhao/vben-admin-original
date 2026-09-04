@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus';
 
+defineOptions({ name: 'ContentProduct' });
+
 /** 算力产品列表（待对接接口） */
 const products: never[] = [];
-
-defineOptions({ name: 'ContentProduct' });
 
 function typeClass(t: string) {
   if (t.includes('GPU')) return 'info';
@@ -61,7 +61,7 @@ function typeClass(t: string) {
         <table>
           <thead>
             <tr>
-              <th />
+              <th></th>
               <th>产品名称</th>
               <th>产品类型</th>
               <th>规格配置</th>
@@ -116,13 +116,13 @@ function typeClass(t: string) {
 }
 
 .range i {
-  color: #909399;
   font-style: normal;
+  color: #909399;
 }
 
 .price {
-  color: #f56c6c;
   font-weight: 600;
+  color: #f56c6c;
 }
 
 .btn.warn {

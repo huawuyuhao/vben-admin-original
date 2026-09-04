@@ -10,8 +10,8 @@ export interface PortalSidebarItem {
 
 defineProps<{
   groups: Array<{
-    title: string;
     items: PortalSidebarItem[];
+    title: string;
   }>;
 }>();
 

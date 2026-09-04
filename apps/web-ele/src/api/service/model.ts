@@ -28,7 +28,7 @@ function isModelApiSuccess(code?: number): boolean {
  * @returns 标准化分页结果
  */
 function parseModelListBody<T = ModelInfo>(
-  body?: null | ModelListResponseBody<T>,
+  body?: ModelListResponseBody<T> | null,
 ): ModelListResult<T> {
   if (!body) {
     return { records: [], total: 0, current: 1, size: 10 };

@@ -246,8 +246,8 @@ const ip = ref('');
 .sub-tab {
   padding: 10px 0;
   margin-bottom: -1px;
-  color: #606266;
   font-size: 14px;
+  color: #606266;
   cursor: pointer;
   background: none;
   border: none;
@@ -255,8 +255,8 @@ const ip = ref('');
 }
 
 .sub-tab.active {
-  color: #409eff;
   font-weight: 600;
+  color: #409eff;
   border-bottom-color: #409eff;
 }
 
@@ -271,8 +271,8 @@ const ip = ref('');
   display: flex;
   flex-direction: column;
   gap: 6px;
-  color: #606266;
   font-size: 13px;
+  color: #606266;
 }
 
 .filter input,
@@ -290,14 +290,14 @@ const ip = ref('');
 }
 
 .dates i {
-  color: #909399;
   font-style: normal;
+  color: #909399;
 }
 
 .filter-actions {
   display: flex;
-  gap: 8px;
   grid-column: 1 / -1;
+  gap: 8px;
   justify-content: flex-end;
 }
 
@@ -338,8 +338,8 @@ table {
 .pager {
   padding-top: 12px;
   margin-top: 12px;
-  color: #909399;
   font-size: 13px;
+  color: #909399;
   border-top: 1px solid #ebeef5;
 }
 

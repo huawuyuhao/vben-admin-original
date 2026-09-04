@@ -3,17 +3,17 @@ import { MODEL_PAGE_SIZE_OPTIONS } from '../data';
 
 defineOptions({ name: 'ServiceModelPager' });
 
+defineProps<{
+  /** 禁用交互 */
+  disabled?: boolean;
+  /** 总条数（接口 total） */
+  total: number;
+}>();
 /** 当前页 */
 const page = defineModel<number>('page', { default: 1 });
 /** 每页条数 */
 const pageSize = defineModel<number>('pageSize', { default: 6 });
 
-defineProps<{
-  /** 总条数（接口 total） */
-  total: number;
-  /** 禁用交互 */
-  disabled?: boolean;
-}>();
 </script>
 
 <template>

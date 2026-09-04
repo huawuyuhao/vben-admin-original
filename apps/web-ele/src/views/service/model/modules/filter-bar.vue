@@ -1,11 +1,24 @@
 <script lang="ts" setup>
-import { Download, Search } from '@element-plus/icons-vue';
 import { $t } from '@vben/locales';
+
+import { Download, Search } from '@element-plus/icons-vue';
 
 defineOptions({ name: 'ServiceModelFilterBar' });
 
-/** 关键词（与父级 v-model:keyword 同步） */
-const keyword = defineModel<string>('keyword', { default: '' });
+defineProps<{
+  /** 已选对比数量 */
+  compareCount?: number;
+  /** 是否禁用对比 */
+  compareDisabled?: boolean;
+  /** 已选导出数量 */
+  exportCount?: number;
+  /** 导出按钮 loading */
+  exporting?: boolean;
+  /** 是否处于导出勾选模式 */
+  exportSelecting?: boolean;
+  /** 刷新按钮 loading */
+  refreshing?: boolean;
+}>();
 
 const emit = defineEmits<{
   /** 点击对比 */
@@ -22,20 +35,8 @@ const emit = defineEmits<{
   search: [];
 }>();
 
-defineProps<{
-  /** 已选对比数量 */
-  compareCount?: number;
-  /** 是否禁用对比 */
-  compareDisabled?: boolean;
-  /** 已选导出数量 */
-  exportCount?: number;
-  /** 是否处于导出勾选模式 */
-  exportSelecting?: boolean;
-  /** 导出按钮 loading */
-  exporting?: boolean;
-  /** 刷新按钮 loading */
-  refreshing?: boolean;
-}>();
+/** 关键词（与父级 v-model:keyword 同步） */
+const keyword = defineModel<string>('keyword', { default: '' });
 
 /**
  * 回车触发搜索

@@ -35,7 +35,7 @@ export interface SubAccountItem {
   /** 联系电话 */
   phone?: string;
   /** 状态（0-停用 1-启用） */
-  status?: SubAccountStatus | number;
+  status?: number | SubAccountStatus;
   /** 有效期（yyyy-MM-dd） */
   expireDate?: string;
 }

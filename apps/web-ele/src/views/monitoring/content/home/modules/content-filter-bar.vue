@@ -4,11 +4,26 @@ import type {
   PortalContentEnableStatusFilter,
 } from '../data';
 
-import { InfoFilled, Search } from '@element-plus/icons-vue';
 import { $t } from '@vben/locales';
+
+import { InfoFilled, Search } from '@element-plus/icons-vue';
 
 defineOptions({ name: 'PortalContentFilterBar' });
 
+defineProps<{
+  /** 关键词占位符 i18n 键（相对 page.monitoring.content.home） */
+  keywordPlaceholderKey: string;
+  /** 刷新 loading */
+  loading?: boolean;
+  /** 是否展示启用 / 审核状态筛选 */
+  showStatusFilters?: boolean;
+}>();
+const emit = defineEmits<{
+  /** 重置 */
+  reset: [];
+  /** 查询 */
+  search: [];
+}>();
 /** 关键词 */
 const keyword = defineModel<string>('keyword', { default: '' });
 /** 启用状态（空为全部） */
@@ -19,22 +34,6 @@ const enableStatus = defineModel<PortalContentEnableStatusFilter>('enableStatus'
 const auditStatus = defineModel<PortalContentAuditStatusFilter>('auditStatus', {
   default: '',
 });
-
-const emit = defineEmits<{
-  /** 查询 */
-  search: [];
-  /** 重置 */
-  reset: [];
-}>();
-
-defineProps<{
-  /** 关键词占位符 i18n 键（相对 page.monitoring.content.home） */
-  keywordPlaceholderKey: string;
-  /** 是否展示启用 / 审核状态筛选 */
-  showStatusFilters?: boolean;
-  /** 刷新 loading */
-  loading?: boolean;
-}>();
 
 /**
  * 回车触发查询
@@ -177,15 +176,15 @@ function handleEnter() {
     align-items: center;
     min-width: 160px;
     margin: 0;
-    color: hsl(var(--muted-foreground));
     font-size: 13px;
     line-height: 1.5;
+    color: hsl(var(--muted-foreground));
   }
 
   &__scope-icon {
     flex-shrink: 0;
-    color: var(--el-color-info);
     font-size: 14px;
+    color: var(--el-color-info);
   }
 
   &__actions {

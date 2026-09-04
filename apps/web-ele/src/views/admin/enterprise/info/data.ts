@@ -5,8 +5,8 @@ import type {
   EnterpriseType,
 } from '#/types/admin/enterprise/info';
 
-import { isEmpty } from '@vben/utils';
 import { $t } from '@vben/locales';
+import { isEmpty } from '@vben/utils';
 
 /** 资料分组 key */
 export type EnterpriseInfoGroupKey = 'basic' | 'contact' | 'meta';
@@ -156,7 +156,7 @@ export function formatStatusLabel(status?: EnterpriseStatus | number): string {
  * @returns 分组列表
  */
 export function buildEnterpriseFieldGroups(
-  info: null | EnterpriseInfo,
+  info: EnterpriseInfo | null,
 ): EnterpriseFieldGroup[] {
   return [
     {
@@ -240,7 +240,7 @@ export function buildEnterpriseFieldGroups(
  * @param info 企业信息
  * @returns 编辑表单
  */
-export function createEditForm(info: null | EnterpriseInfo): EnterpriseEditForm {
+export function createEditForm(info: EnterpriseInfo | null): EnterpriseEditForm {
   return {
     contactPhone: String(info?.contactPhone ?? ''),
     address: String(info?.address ?? ''),

@@ -3,8 +3,9 @@ import type { MyAppItem } from '#/types/service/mydemand/apps';
 
 import { onMounted, ref, watch } from 'vue';
 
-import { Plus, Refresh } from '@element-plus/icons-vue';
 import { $t } from '@vben/locales';
+
+import { Plus, Refresh } from '@element-plus/icons-vue';
 import { ElMessage } from 'element-plus';
 
 import {

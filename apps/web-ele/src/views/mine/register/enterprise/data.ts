@@ -1,7 +1,7 @@
 import type { EnterpriseAuthStatus } from '#/types/mine/register/enterprise';
 
-import { isEmpty } from '@vben/utils';
 import { $t } from '@vben/locales';
+import { isEmpty } from '@vben/utils';
 
 /** sessionStorage：最近一次企业认证 authId */
 export const ENTERPRISE_AUTH_ID_KEY = 'portal-enterprise-auth-id';
@@ -86,6 +86,9 @@ export function normalizeAuthStatus(
   const num = typeof status === 'number' ? status : Number(status);
   if (!Number.isNaN(num) && String(status).trim() !== '') {
     switch (num) {
+      case 0: {
+        return 'draft';
+      }
       case 1: {
         return 'reviewing';
       }
@@ -94,9 +97,6 @@ export function normalizeAuthStatus(
       }
       case 3: {
         return 'rejected';
-      }
-      case 0: {
-        return 'draft';
       }
       default: {
         break;
@@ -117,7 +117,7 @@ export function normalizeAuthStatus(
   }
 
   if (
-    ['rejected', 'reject', 'failed', '已驳回', '驳回', '未通过'].includes(
+    ['failed', 'reject', 'rejected', '已驳回', '未通过', '驳回'].includes(
       raw,
     ) ||
     raw.includes('reject') ||
@@ -128,10 +128,10 @@ export function normalizeAuthStatus(
 
   if (
     [
-      'reviewing',
-      'pending',
-      'auditing',
       'audit',
+      'auditing',
+      'pending',
+      'reviewing',
       '审核中',
       '待审核',
     ].includes(raw) ||
@@ -153,12 +153,12 @@ export function normalizeAuthStatus(
 export function sanitizeAuditRemark(remark?: null | string): string {
   const text = String(remark ?? '').trim();
   const placeholders = new Set([
-    'string',
-    'null',
-    'undefined',
-    'none',
-    'n/a',
     '-',
+    'n/a',
+    'none',
+    'null',
+    'string',
+    'undefined',
   ]);
   if (!text || placeholders.has(text.toLowerCase())) {
     return '';

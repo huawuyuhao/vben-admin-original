@@ -10,9 +10,10 @@ import type {
 
 import { computed, onMounted, ref } from 'vue';
 
-import { Download, Refresh } from '@element-plus/icons-vue';
 import { $t, useI18n } from '@vben/locales';
 import { downloadFileFromUrl } from '@vben/utils';
+
+import { Download, Refresh } from '@element-plus/icons-vue';
 import { ElMessage } from 'element-plus';
 
 import {
@@ -61,7 +62,7 @@ const chartsLoading = ref(false);
 const exporting = ref(false);
 
 /** 数据 */
-const overview = ref<null | EnterpriseStatOverview>(null);
+const overview = ref<EnterpriseStatOverview | null>(null);
 const deviceCountData = ref<EnterpriseDeviceCountStatItem[]>([]);
 const onlineTimeData = ref<EnterpriseOnlineTimeStatItem[]>([]);
 const powerUsageData = ref<EnterprisePowerUsageStatItem[]>([]);

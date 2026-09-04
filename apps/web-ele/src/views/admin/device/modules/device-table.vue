@@ -167,7 +167,7 @@ const emit = defineEmits<{
   }
 
   :deep(.el-table) {
-    --el-table-header-bg-color: hsl(var(--muted) / 0.35);
+    --el-table-header-bg-color: hsl(var(--muted) / 35%);
   }
 }
 </style>

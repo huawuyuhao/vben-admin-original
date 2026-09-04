@@ -221,6 +221,7 @@ function reset() {
 <style scoped>
 .wh-page {
   --primary: #409eff;
+
   padding-bottom: 24px;
 }
 
@@ -250,8 +251,8 @@ function reset() {
 .btn {
   height: 34px;
   padding: 0 14px;
-  color: #606266;
   font-size: 13px;
+  color: #606266;
   cursor: pointer;
   background: #fff;
   border: 1px solid #dcdfe6;
@@ -278,22 +279,22 @@ function reset() {
 
 .label {
   width: 64px;
-  color: #909399;
   font-size: 13px;
+  color: #909399;
 }
 
 .chip {
   padding: 2px 8px;
-  color: #606266;
   font-size: 13px;
+  color: #606266;
   cursor: pointer;
   background: none;
   border: none;
 }
 
 .chip.on {
-  color: var(--primary);
   font-weight: 600;
+  color: var(--primary);
 }
 
 .date {
@@ -308,8 +309,8 @@ function reset() {
 }
 
 .more {
-  color: #909399;
   font-size: 13px;
+  color: #909399;
   cursor: pointer;
   background: none;
   border: none;
@@ -344,8 +345,8 @@ function reset() {
 
 .meta {
   margin: 0 0 4px;
-  color: #909399;
   font-size: 12px;
+  color: #909399;
 }
 
 .ok {
@@ -354,13 +355,13 @@ function reset() {
 }
 
 .desc {
-  margin: 10px 0 0;
-  color: #606266;
-  font-size: 13px;
-  line-height: 1.55;
   display: -webkit-box;
+  margin: 10px 0 0;
   overflow: hidden;
   -webkit-line-clamp: 3;
+  font-size: 13px;
+  line-height: 1.55;
+  color: #606266;
   -webkit-box-orient: vertical;
 }
 
@@ -373,8 +374,8 @@ function reset() {
 
 .side-act {
   padding: 2px 0;
-  color: #409eff;
   font-size: 13px;
+  color: #409eff;
   cursor: pointer;
   background: none;
   border: none;
@@ -386,8 +387,8 @@ function reset() {
   width: 72px;
   height: 72px;
   margin-top: auto;
-  color: #c0c4cc;
   font-size: 28px;
+  color: #c0c4cc;
   background: #f5f7fa;
   border: 1px dashed #dcdfe6;
   border-radius: 6px;
@@ -408,8 +409,8 @@ function reset() {
   align-items: center;
   justify-content: flex-end;
   margin-top: 16px;
-  color: #606266;
   font-size: 13px;
+  color: #606266;
 }
 
 .pages {

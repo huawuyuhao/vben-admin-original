@@ -128,7 +128,7 @@ onMounted(fetchServices);
     background: var(--portal-surface, #fff);
     border: 1px solid var(--portal-gray-200);
     border-radius: var(--portal-radius-lg, 16px);
-    box-shadow: 0 8px 24px rgba(31, 36, 48, 0.04);
+    box-shadow: 0 8px 24px rgb(31 36 48 / 4%);
   }
 
   &__visual {
@@ -138,7 +138,7 @@ onMounted(fetchServices);
     background:
       radial-gradient(
         circle at 30% 30%,
-        rgba(255, 255, 255, 0.22),
+        rgb(255 255 255 / 22%),
         transparent 45%
       ),
       linear-gradient(135deg, var(--portal-primary), #4a2fcc 55%, #2f6bff);
@@ -161,7 +161,7 @@ onMounted(fetchServices);
   &__placeholder {
     font-size: 42px;
     font-weight: 750;
-    color: rgba(255, 255, 255, 0.92);
+    color: rgb(255 255 255 / 92%);
     letter-spacing: 0.04em;
   }
 

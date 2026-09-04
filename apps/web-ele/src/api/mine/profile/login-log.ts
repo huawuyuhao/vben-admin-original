@@ -25,7 +25,7 @@ function isLoginLogApiSuccess(code?: number): boolean {
  * @param body 响应体
  */
 function assertLoginLogMutationSuccess(
-  body?: null | LoginLogMutationResponse,
+  body?: LoginLogMutationResponse | null,
 ) {
   if (!isLoginLogApiSuccess(body?.code)) {
     const message = String(body?.msg || 'Request failed');
@@ -40,7 +40,7 @@ function assertLoginLogMutationSuccess(
  * @returns 标准化分页结果
  */
 function parseLoginLogListBody<T>(
-  body?: null | LoginLogListResponseBody<T>,
+  body?: LoginLogListResponseBody<T> | null,
 ): LoginLogListResult<T> {
   if (!body) {
     return { records: [], total: 0, current: 1, size: 10 };

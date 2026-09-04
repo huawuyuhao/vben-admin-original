@@ -38,17 +38,17 @@ export function resolveSearchDetailPath(
   }
 
   switch (item.type) {
-    case 'product': {
-      return `/service/product/${id}`;
+    case 'case': {
+      return `/service/case/${id}`;
     }
     case 'model': {
       return `/service/model/${id}`;
     }
-    case 'case': {
-      return `/service/case/${id}`;
-    }
     case 'news': {
       return `/portal/news/${id}`;
+    }
+    case 'product': {
+      return `/service/product/${id}`;
     }
     default: {
       return '';

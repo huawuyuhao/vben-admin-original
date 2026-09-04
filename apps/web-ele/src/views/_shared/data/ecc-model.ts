@@ -3,12 +3,12 @@
 export const predictProfiles: Record<
   string,
   {
+    columns: string[];
     desc: string;
-    unit: string;
     formHints: string[];
     kpis: Array<{ label: string; value: string }>;
     rows: Array<Record<string, string>>;
-    columns: string[];
+    unit: string;
   }
 > = {
   'train-compute': {
@@ -195,13 +195,13 @@ export const qaFaq = [
 export const modelCards: Record<
   string,
   {
-    desc: string;
-    version: string;
-    metric: string;
     accuracy: string;
-    features: string[];
-    samples: Array<Record<string, string>>;
     columns: string[];
+    desc: string;
+    features: string[];
+    metric: string;
+    samples: Array<Record<string, string>>;
+    version: string;
   }
 > = {
   'compute-max': {

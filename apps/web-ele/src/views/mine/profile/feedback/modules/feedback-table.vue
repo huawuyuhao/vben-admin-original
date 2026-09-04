@@ -217,8 +217,8 @@ function getRowImages(row: FeedbackItem): string[] {
     width: 120px;
     height: 68px;
     overflow: hidden;
-    border-radius: 6px;
     cursor: zoom-in;
+    border-radius: 6px;
 
     :deep(.el-image__inner) {
       width: 100%;
@@ -236,7 +236,7 @@ function getRowImages(row: FeedbackItem): string[] {
     font-size: 13px;
     font-weight: 600;
     color: hsl(var(--primary));
-    background: hsl(var(--primary) / 0.08);
+    background: hsl(var(--primary) / 8%);
     border-radius: 6px;
   }
 
@@ -249,7 +249,7 @@ function getRowImages(row: FeedbackItem): string[] {
   }
 
   :deep(.el-table) {
-    --el-table-header-bg-color: hsl(var(--muted) / 0.35);
+    --el-table-header-bg-color: hsl(var(--muted) / 35%);
   }
 }
 </style>

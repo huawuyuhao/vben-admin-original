@@ -2,17 +2,17 @@
 
 export type AppShelfStatus =
   | '全部应用'
-  | '未上架'
   | '审核中'
   | '已上架'
+  | '未上架'
   | '素材合集';
 
 export type AppBelongType =
   | '全部'
-  | '预置垂直'
-  | '终端通用'
   | '官方创建'
-  | '用户上传';
+  | '用户上传'
+  | '终端通用'
+  | '预置垂直';
 
 export interface WorkbenchAppItem {
   id: string;

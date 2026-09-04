@@ -13,6 +13,12 @@ import {
 
 defineOptions({ name: 'AdminDeviceFilterBar' });
 
+const emit = defineEmits<{
+  /** 重置筛选 */
+  reset: [];
+  /** 点击查询 */
+  search: [];
+}>();
 /** 设备编号 */
 const deviceCode = defineModel<string>('deviceCode', { default: '' });
 /** 设备名称 */
@@ -23,13 +29,6 @@ const deviceType = defineModel<string>('deviceType', { default: '' });
 const onlineStatus = defineModel<DeviceOnlineFilter>('onlineStatus', {
   default: '',
 });
-
-const emit = defineEmits<{
-  /** 重置筛选 */
-  reset: [];
-  /** 点击查询 */
-  search: [];
-}>();
 
 /** 设备类型选项加载中 */
 const typeLoading = ref(false);

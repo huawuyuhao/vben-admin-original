@@ -1,10 +1,12 @@
 import type { NotificationItem } from '@vben/layouts';
+
 import type { MessageItem } from '#/types/mine/messages/all';
 
 import { computed, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { $t } from '@vben/locales';
+
 import { ElMessage, ElMessageBox } from 'element-plus';
 
 import {
@@ -33,7 +35,7 @@ function isMessageUnread(isRead?: number): boolean {
  * @param item 消息条目
  * @returns 合法 ID；无效返回 null
  */
-function resolveMessageId(item?: null | MessageItem): null | number {
+function resolveMessageId(item?: MessageItem | null): null | number {
   const id = Number(item?.messageId);
   if (!Number.isFinite(id) || id <= 0) {
     return null;

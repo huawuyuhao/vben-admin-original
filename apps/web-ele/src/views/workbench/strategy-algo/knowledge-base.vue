@@ -4,6 +4,7 @@ import type { EchartsUIType } from '@vben/plugins/echarts';
 import { onMounted, ref } from 'vue';
 
 import { EchartsUI, useEcharts } from '@vben/plugins/echarts';
+
 import { ElMessage } from 'element-plus';
 
 import {
@@ -109,7 +110,7 @@ function toneClass(t: string) {
           class="feed-item"
           @click="ElMessage.info(`查看 ${u.id}`)"
         >
-          <span class="dot" :class="toneClass(u.tone)" />
+          <span class="dot" :class="toneClass(u.tone)"></span>
           <span class="feed-body">
             <strong>{{ u.title }}</strong>
             <em>{{ u.time }} · {{ u.id }}</em>
@@ -186,20 +187,20 @@ function toneClass(t: string) {
 }
 
 .stat-value {
-  color: #303133;
   font-size: 22px;
   font-weight: 700;
+  color: #303133;
 }
 
 .stat-label {
-  color: #909399;
   font-size: 12px;
+  color: #909399;
 }
 
 .spark {
   margin-left: auto;
-  color: #67c23a;
   font-size: 12px;
+  color: #67c23a;
   letter-spacing: 1px;
 }
 
@@ -212,8 +213,8 @@ function toneClass(t: string) {
 
 .chart-card .sub {
   margin: -4px 0 8px;
-  color: #909399;
   font-size: 12px;
+  color: #909399;
 }
 
 .feed-item {
@@ -254,35 +255,35 @@ function toneClass(t: string) {
 }
 
 .feed-body {
-  flex: 1;
   display: flex;
+  flex: 1;
   flex-direction: column;
   gap: 4px;
 }
 
 .feed-body strong {
-  color: #303133;
   font-size: 13px;
   font-weight: 500;
   line-height: 1.5;
+  color: #303133;
 }
 
 .feed-body em {
-  color: #909399;
   font-size: 12px;
   font-style: normal;
+  color: #909399;
 }
 
 .chev {
-  color: #c0c4cc;
   font-size: 18px;
+  color: #c0c4cc;
 }
 
 .cat {
   display: inline-block;
   padding: 2px 8px;
-  color: #6b4cff;
   font-size: 12px;
+  color: #6b4cff;
   background: #f3f0ff;
   border-radius: 4px;
 }

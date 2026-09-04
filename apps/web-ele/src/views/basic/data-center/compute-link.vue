@@ -7,7 +7,7 @@ import { computeDevices, subscriptions } from '#/views/_shared/data/basic-data-c
 
 defineOptions({ name: 'DcComputeLink' });
 
-const tab = ref<'resource' | 'device' | 'subscribe'>('resource');
+const tab = ref<'device' | 'resource' | 'subscribe'>('resource');
 const deviceStatus = ref('全部');
 
 const filteredDevices = computed(() => {
@@ -59,7 +59,7 @@ function statusClass(s: string) {
             <span>供电容量</span>
             <strong>4.8 / 6.1 MW</strong>
           </div>
-          <div class="progress-bar"><div class="progress-fill" style="width: 78.7%" /></div>
+          <div class="progress-bar"><div class="progress-fill" style="width: 78.7%"></div></div>
           <span class="progress-label">使用率 78.7%</span>
         </div>
         <div class="progress-card">
@@ -67,7 +67,7 @@ function statusClass(s: string) {
             <span>制冷容量</span>
             <strong>4.2 / 5.3 MW</strong>
           </div>
-          <div class="progress-bar"><div class="progress-fill cooling" style="width: 79.2%" /></div>
+          <div class="progress-bar"><div class="progress-fill cooling" style="width: 79.2%"></div></div>
           <span class="progress-label">使用率 79.2%</span>
         </div>
         <div class="progress-card">
@@ -75,7 +75,7 @@ function statusClass(s: string) {
             <span>算力容量</span>
             <strong>1,180 / 1,380 GPU</strong>
           </div>
-          <div class="progress-bar"><div class="progress-fill compute" style="width: 85.5%" /></div>
+          <div class="progress-bar"><div class="progress-fill compute" style="width: 85.5%"></div></div>
           <span class="progress-label">使用率 85.5%</span>
         </div>
       </div>
@@ -92,15 +92,15 @@ function statusClass(s: string) {
         <div class="bar-chart">
           <div v-for="(label, i) in ['周一', '周二', '周三', '周四', '周五', '周六', '周日']" :key="label" class="bar-col">
             <div class="bar-group">
-              <div class="bar pue" :style="{ height: `${40 + i * 3}%` }" />
-              <div class="bar power" :style="{ height: `${55 + i * 2}%` }" />
+              <div class="bar pue" :style="{ height: `${40 + i * 3}%` }"></div>
+              <div class="bar power" :style="{ height: `${55 + i * 2}%` }"></div>
             </div>
             <span>{{ label }}</span>
           </div>
         </div>
         <div class="chart-legend">
-          <span><i class="dot pue" />PUE</span>
-          <span><i class="dot power" />功耗(MW)</span>
+          <span><i class="dot pue"></i>PUE</span>
+          <span><i class="dot power"></i>功耗(MW)</span>
         </div>
       </section>
 
@@ -311,8 +311,8 @@ function statusClass(s: string) {
   align-items: center;
   padding: 10px 14px;
   margin-bottom: 12px;
-  color: #e6a23c;
   font-size: 13px;
+  color: #e6a23c;
   background: #fdf6ec;
   border: 1px solid #f5dab1;
   border-radius: 8px;
@@ -338,8 +338,8 @@ function statusClass(s: string) {
 .page-tabs button {
   flex: 1;
   height: 40px;
-  color: #606266;
   font-size: 13px;
+  color: #606266;
   cursor: pointer;
   background: #fff;
   border: none;
@@ -351,8 +351,8 @@ function statusClass(s: string) {
 }
 
 .page-tabs button.active {
-  color: #409eff;
   font-weight: 500;
+  color: #409eff;
   background: #ecf5ff;
 }
 
@@ -383,8 +383,8 @@ function statusClass(s: string) {
 }
 
 .progress-head strong {
-  color: #303133;
   font-size: 14px;
+  color: #303133;
 }
 
 .progress-bar {
@@ -411,8 +411,8 @@ function statusClass(s: string) {
 .progress-label {
   display: block;
   margin-top: 6px;
-  color: #909399;
   font-size: 12px;
+  color: #909399;
 }
 
 .section-title {
@@ -438,8 +438,8 @@ function statusClass(s: string) {
   flex-direction: column;
   gap: 4px;
   align-items: center;
-  height: 100%;
   justify-content: flex-end;
+  height: 100%;
 }
 
 .bar-group {
@@ -465,8 +465,8 @@ function statusClass(s: string) {
 }
 
 .bar-col span {
-  color: #c0c4cc;
   font-size: 11px;
+  color: #c0c4cc;
 }
 
 .chart-legend {
@@ -474,8 +474,8 @@ function statusClass(s: string) {
   gap: 16px;
   justify-content: center;
   margin-top: 12px;
-  color: #909399;
   font-size: 12px;
+  color: #909399;
 }
 
 .chart-legend span {

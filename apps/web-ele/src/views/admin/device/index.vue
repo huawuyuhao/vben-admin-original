@@ -3,17 +3,18 @@ import type { DeviceItem } from '#/types/admin/device';
 
 import { onMounted, ref, watch } from 'vue';
 
-import { Plus, Refresh } from '@element-plus/icons-vue';
 import { $t } from '@vben/locales';
+
+import { Plus, Refresh } from '@element-plus/icons-vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 
 import { deleteDeviceApi, getDeviceListApi } from '#/api/admin/device';
 
 import {
   DEVICE_PAGE_SIZE,
+  type DeviceOnlineFilter,
   normalizeDevicePage,
   parseDeviceOnlineFilter,
-  type DeviceOnlineFilter,
 } from './data';
 import DetailDrawer from './modules/detail-drawer.vue';
 import DevicePager from './modules/device-pager.vue';

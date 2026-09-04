@@ -110,7 +110,7 @@ function statusClass(s: string) {
         <table>
           <thead>
             <tr>
-              <th />
+              <th></th>
               <th>序号</th>
               <th>申请单号</th>
               <th>企业名称</th>
@@ -162,8 +162,8 @@ function statusClass(s: string) {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  color: #606266;
   font-size: 13px;
+  color: #606266;
 }
 
 .filter input,
@@ -187,8 +187,8 @@ function statusClass(s: string) {
 
 .count {
   margin-left: auto;
-  color: #909399;
   font-size: 13px;
+  color: #909399;
 }
 
 .table-wrap {
@@ -254,8 +254,8 @@ function statusClass(s: string) {
 .pager {
   padding-top: 12px;
   margin-top: 12px;
-  color: #909399;
   font-size: 13px;
+  color: #909399;
   border-top: 1px solid #ebeef5;
 }
 

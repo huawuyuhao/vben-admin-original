@@ -31,28 +31,28 @@ const summary = [
         <div class="bar-row">
           <span>CPU</span>
           <div class="bar-track">
-            <div class="bar-fill" :style="{ width: `${pool.cpu}%` }" />
+            <div class="bar-fill" :style="{ width: `${pool.cpu}%` }"></div>
           </div>
           <span>{{ pool.cpu }}%</span>
         </div>
         <div class="bar-row">
           <span>GPU</span>
           <div class="bar-track">
-            <div class="bar-fill" :style="{ width: `${pool.gpu}%` }" />
+            <div class="bar-fill" :style="{ width: `${pool.gpu}%` }"></div>
           </div>
           <span>{{ pool.gpu }}%</span>
         </div>
         <div class="bar-row">
           <span>内存</span>
           <div class="bar-track">
-            <div class="bar-fill" :style="{ width: `${pool.mem}%` }" />
+            <div class="bar-fill" :style="{ width: `${pool.mem}%` }"></div>
           </div>
           <span>{{ pool.mem }}%</span>
         </div>
         <div class="bar-row">
           <span>存储</span>
           <div class="bar-track">
-            <div class="bar-fill" :style="{ width: `${pool.storage}%` }" />
+            <div class="bar-fill" :style="{ width: `${pool.storage}%` }"></div>
           </div>
           <span>{{ pool.storage }}%</span>
         </div>

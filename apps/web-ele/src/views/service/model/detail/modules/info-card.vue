@@ -6,8 +6,8 @@ import { computed } from 'vue';
 import { $t } from '@vben/locales';
 
 import {
-  MODEL_STATUS_ENABLED,
   formatModelDateTime,
+  MODEL_STATUS_ENABLED,
 } from '../../data';
 
 defineOptions({ name: 'ServiceModelDetailInfo' });

@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 import type { MyAppItem } from '#/types/service/mydemand/apps';
 
-import { Delete, Star, StarFilled } from '@element-plus/icons-vue';
 import { $t } from '@vben/locales';
+
+import { Delete, Star, StarFilled } from '@element-plus/icons-vue';
 
 import {
   displayAppValue,
@@ -18,12 +19,12 @@ defineOptions({ name: 'MyDemandAppsGrid' });
 defineProps<{
   /** 列表数据 */
   apps: MyAppItem[];
+  /** 正在收藏操作的应用 ID */
+  collectingId?: null | number;
   /** 加载中 */
   loading?: boolean;
   /** 正在启停的应用 ID */
   togglingId?: null | number;
-  /** 正在收藏操作的应用 ID */
-  collectingId?: null | number;
 }>();
 
 const emit = defineEmits<{
@@ -273,7 +274,7 @@ function appCoverLetter(row: MyAppItem): string {
     background: linear-gradient(
       145deg,
       hsl(var(--primary) / 14%),
-      hsl(190 90% 66% / 20%) 55%,
+      hsl(190deg 90% 66% / 20%) 55%,
       hsl(var(--primary) / 10%)
     );
   }
@@ -286,11 +287,11 @@ function appCoverLetter(row: MyAppItem): string {
     height: 64px;
     font-size: 28px;
     font-weight: 750;
-    color: rgba(255, 255, 255, 0.96);
+    color: rgb(255 255 255 / 96%);
     background: linear-gradient(
       145deg,
       hsl(var(--primary)),
-      hsl(190 90% 66%)
+      hsl(190deg 90% 66%)
     );
     border-radius: 18px;
     box-shadow: 0 10px 24px hsl(var(--foreground) / 12%);
@@ -301,8 +302,8 @@ function appCoverLetter(row: MyAppItem): string {
     top: 12px;
     left: 12px;
     z-index: 1;
+    background: rgb(255 255 255 / 92%) !important;
     border: 0;
-    background: rgba(255, 255, 255, 0.92) !important;
 
     .is-collected {
       color: #e6a23c;
@@ -327,11 +328,11 @@ function appCoverLetter(row: MyAppItem): string {
   &__title {
     margin: 0;
     overflow: hidden;
+    text-overflow: ellipsis;
     font-size: 16px;
     font-weight: 750;
     line-height: 1.4;
     color: hsl(var(--foreground));
-    text-overflow: ellipsis;
     white-space: nowrap;
   }
 
@@ -365,10 +366,10 @@ function appCoverLetter(row: MyAppItem): string {
     dd {
       margin: 0;
       overflow: hidden;
+      text-overflow: ellipsis;
       font-weight: 650;
       color: hsl(var(--foreground));
       text-align: right;
-      text-overflow: ellipsis;
       white-space: nowrap;
     }
   }

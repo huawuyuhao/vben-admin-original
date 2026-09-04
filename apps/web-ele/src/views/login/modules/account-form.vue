@@ -1,18 +1,14 @@
 <script lang="ts" setup>
 import type { AccountLoginForm } from '#/types/login';
 
-import { Lock, User } from '@element-plus/icons-vue';
 import { $t } from '@vben/locales';
+
+import { Lock, User } from '@element-plus/icons-vue';
 
 /**
  * 账号密码登录表单
  */
 defineOptions({ name: 'LoginAccountForm' });
-
-/** 表单数据 */
-const form = defineModel<AccountLoginForm>({ required: true });
-/** 是否同意用户协议 */
-const agreed = defineModel<boolean>('agreed', { required: true });
 
 defineProps<{
   /** 提交 loading */
@@ -20,11 +16,15 @@ defineProps<{
   /** 提交按钮文案 */
   submitText: string;
 }>();
-
 const emit = defineEmits<{
   /** 提交表单 */
   submit: [];
 }>();
+/** 表单数据 */
+const form = defineModel<AccountLoginForm>({ required: true });
+/** 是否同意用户协议 */
+const agreed = defineModel<boolean>('agreed', { required: true });
+
 </script>
 
 <template>

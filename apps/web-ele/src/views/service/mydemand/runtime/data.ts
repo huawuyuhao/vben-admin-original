@@ -121,7 +121,7 @@ export function resolveRunningTaskId(
 ): null | string {
   const raw =
     (row as RunningTaskItem | undefined)?.taskId ??
-    (row as { id?: number | string } | undefined)?.id;
+    (row as undefined | { id?: number | string })?.id;
   return normalizeRunningTaskId(raw);
 }
 

@@ -71,7 +71,7 @@ function handleDetail() {
  * 切换对比勾选
  * @param checked 是否勾选
  */
-function handleCompareChange(checked: boolean | string | number) {
+function handleCompareChange(checked: boolean | number | string) {
   emit('compareChange', {
     modelId: props.item.modelId,
     checked: !!checked,
@@ -82,7 +82,7 @@ function handleCompareChange(checked: boolean | string | number) {
  * 切换导出勾选
  * @param checked 是否勾选
  */
-function handleExportChange(checked: boolean | string | number) {
+function handleExportChange(checked: boolean | number | string) {
   emit('exportChange', {
     modelId: props.item.modelId,
     checked: !!checked,
@@ -227,7 +227,7 @@ function handleEvaluate() {
     background: linear-gradient(
       145deg,
       hsl(var(--primary) / 12%),
-      hsl(190 90% 66% / 18%) 55%,
+      hsl(190deg 90% 66% / 18%) 55%,
       hsl(var(--primary) / 8%)
     );
   }
@@ -237,9 +237,9 @@ function handleEvaluate() {
     top: 12px;
     z-index: 1;
     height: auto;
-    margin: 0;
     padding: 4px 8px;
-    background: rgba(255, 255, 255, 0.92);
+    margin: 0;
+    background: rgb(255 255 255 / 92%);
     border-radius: 999px;
 
     :deep(.el-checkbox__label) {
@@ -259,8 +259,8 @@ function handleEvaluate() {
       box-shadow: 0 0 0 1px hsl(var(--primary) / 28%);
 
       :deep(.el-checkbox__label) {
-        color: hsl(var(--primary));
         font-weight: 650;
+        color: hsl(var(--primary));
       }
     }
   }
@@ -284,7 +284,7 @@ function handleEvaluate() {
       background: linear-gradient(
         145deg,
         hsl(var(--primary)),
-        hsl(190 90% 66%)
+        hsl(190deg 90% 66%)
       );
     }
   }
@@ -306,7 +306,7 @@ function handleEvaluate() {
   &__letter {
     font-size: 42px;
     font-weight: 750;
-    color: rgba(255, 255, 255, 0.94);
+    color: rgb(255 255 255 / 94%);
   }
 
   &__body {
@@ -320,11 +320,11 @@ function handleEvaluate() {
   &__name {
     margin: 0;
     overflow: hidden;
+    text-overflow: ellipsis;
     font-size: 16px;
     font-weight: 750;
     line-height: 1.4;
     color: hsl(var(--foreground));
-    text-overflow: ellipsis;
     white-space: nowrap;
   }
 

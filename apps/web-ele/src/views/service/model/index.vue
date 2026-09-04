@@ -11,10 +11,10 @@ import { ElMessage } from 'element-plus';
 import { getModelListApi } from '#/api/service/model';
 
 import {
-  MODEL_COMPARE_MAX,
-  MODEL_PAGE_SIZE,
   canEvaluateModel,
   exportModelInfoTemplate,
+  MODEL_COMPARE_MAX,
+  MODEL_PAGE_SIZE,
   normalizeModelPage,
 } from './data';
 import CompareDialog from './modules/compare-dialog.vue';
@@ -51,7 +51,7 @@ const compareVisible = ref(false);
 /** 评价弹窗 */
 const evaluateVisible = ref(false);
 /** 当前评价目标 */
-const evaluateTarget = ref<null | ModelInfo>(null);
+const evaluateTarget = ref<ModelInfo | null>(null);
 /** 是否处于导出勾选模式 */
 const exportSelecting = ref(false);
 /** 已选导出模型 ID（仅当前页） */

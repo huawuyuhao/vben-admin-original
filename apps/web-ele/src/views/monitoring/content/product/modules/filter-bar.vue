@@ -1,33 +1,32 @@
 <script lang="ts" setup>
 import type { AdminProductShelfStatus } from '#/types/monitoring/content/product';
 
-import { Search } from '@element-plus/icons-vue';
 import { $t } from '@vben/locales';
+
+import { Search } from '@element-plus/icons-vue';
 
 import { ADMIN_PRODUCT_SHELF_FILTER_OPTIONS } from '../data';
 
 defineOptions({ name: 'AdminProductFilterBar' });
 
+defineProps<{
+  /** 刷新按钮 loading */
+  refreshing?: boolean;
+}>();
+const emit = defineEmits<{
+  /** 点击刷新 */
+  refresh: [];
+  /** 点击重置 */
+  reset: [];
+  /** 点击查询 */
+  search: [];
+}>();
 /** 产品名称 */
 const productName = defineModel<string>('productName', { default: '' });
 /** 上下架状态（空串表示全部） */
 const shelfStatus = defineModel<'' | AdminProductShelfStatus>('shelfStatus', {
   default: '',
 });
-
-const emit = defineEmits<{
-  /** 点击查询 */
-  search: [];
-  /** 点击重置 */
-  reset: [];
-  /** 点击刷新 */
-  refresh: [];
-}>();
-
-defineProps<{
-  /** 刷新按钮 loading */
-  refreshing?: boolean;
-}>();
 
 /**
  * 回车触发搜索

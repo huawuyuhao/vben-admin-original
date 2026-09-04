@@ -7,7 +7,7 @@ defineOptions({ name: 'EccQa' });
 
 const input = ref('');
 const listRef = ref<HTMLElement | null>(null);
-const messages = ref<Array<{ role: 'user' | 'bot'; text: string }>>([
+const messages = ref<Array<{ role: 'bot' | 'user'; text: string }>>([
   {
     role: 'bot',
     text: '你好，我是电碳算知识库助手。可以问我调度策略、碳排测算、算力预测等问题。',
@@ -101,8 +101,8 @@ async function send(text?: string) {
   width: 100%;
   padding: 10px 12px;
   margin-bottom: 8px;
-  color: #606266;
   font-size: 13px;
+  color: #606266;
   text-align: left;
   cursor: pointer;
   background: #f5f7fa;
@@ -125,14 +125,14 @@ async function send(text?: string) {
 .messages {
   flex: 1;
   max-height: 440px;
-  overflow: auto;
   padding: 8px 4px 16px;
+  overflow: auto;
 }
 
 .bubble {
   max-width: 80%;
-  margin-bottom: 10px;
   padding: 10px 12px;
+  margin-bottom: 10px;
   font-size: 13px;
   line-height: 1.6;
   border-radius: 8px;

@@ -199,10 +199,10 @@ export function displayAppValue(
  * @param item 类型选项
  * @returns 合法数字；无效返回 undefined
  */
-export function resolveAppTypeOptionValue(item?: {
+export function resolveAppTypeOptionValue(item?: null | {
   typeCode?: null | string;
   typeId?: null | number | string;
-} | null): number | undefined {
+}): number | undefined {
   if (!item) {
     return undefined;
   }
@@ -355,7 +355,7 @@ export function resolveMaterialId(
  * @returns URL 数组
  */
 export function parseMaterialAttachmentUrls(
-  item?: null | MyAppMaterialItem,
+  item?: MyAppMaterialItem | null,
 ): string[] {
   if (!item) {
     return [];

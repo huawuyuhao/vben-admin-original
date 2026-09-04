@@ -17,6 +17,12 @@ import {
 
 defineOptions({ name: 'MyDemandAppsFilterBar' });
 
+const emit = defineEmits<{
+  /** 重置筛选 */
+  reset: [];
+  /** 点击查询 */
+  search: [];
+}>();
 /** 应用名称筛选 */
 const appName = defineModel<string>('appName', { default: '' });
 /** 应用类型筛选 */
@@ -25,13 +31,6 @@ const appType = defineModel<AppTypeFilter>('appType', { default: '' });
 const appStatus = defineModel<AppStatusFilter>('appStatus', { default: '' });
 /** 收藏筛选 */
 const isCollect = defineModel<AppCollectFilter>('isCollect', { default: '' });
-
-const emit = defineEmits<{
-  /** 重置筛选 */
-  reset: [];
-  /** 点击查询 */
-  search: [];
-}>();
 
 const { typeOptions, typeLoading, fetchTypeOptions, handleTypeRemoteSearch } =
   useAppTypeOptions();

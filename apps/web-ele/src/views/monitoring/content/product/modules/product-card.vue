@@ -10,11 +10,11 @@ import {
   formatProductDateTime,
   formatProductPrice,
   hasProductImage,
-  splitProductTags,
   resolveAdminProductAuditLabelKey,
   resolveAdminProductAuditTagType,
   resolveAdminProductShelfLabelKey,
   resolveAdminProductShelfTagType,
+  splitProductTags,
 } from '../data';
 
 defineOptions({ name: 'AdminProductCard' });
@@ -199,8 +199,8 @@ function handleDetail() {
     background: linear-gradient(
       145deg,
       hsl(var(--primary)),
-      hsl(250 100% 76%) 55%,
-      hsl(190 90% 66%)
+      hsl(250deg 100% 76%) 55%,
+      hsl(190deg 90% 66%)
     );
 
     &--empty {
@@ -227,7 +227,7 @@ function handleDetail() {
   &__letter {
     font-size: 40px;
     font-weight: 750;
-    color: rgba(255, 255, 255, 0.92);
+    color: rgb(255 255 255 / 92%);
   }
 
   &__shelf {
@@ -242,8 +242,8 @@ function handleDetail() {
     position: absolute;
     top: 12px;
     right: 12px;
+    background: rgb(15 26 46 / 55%) !important;
     border: 0;
-    background: rgba(15, 26, 46, 0.55) !important;
     backdrop-filter: blur(4px);
   }
 
@@ -267,11 +267,11 @@ function handleDetail() {
     min-width: 0;
     margin: 0;
     overflow: hidden;
+    text-overflow: ellipsis;
     font-size: 16px;
     font-weight: 750;
     line-height: 1.4;
     color: hsl(var(--foreground));
-    text-overflow: ellipsis;
     white-space: nowrap;
   }
 
@@ -285,7 +285,7 @@ function handleDetail() {
     margin: 0;
     font-size: 12px;
     font-weight: 650;
-    color: hsl(145 70% 36%);
+    color: hsl(145deg 70% 36%);
   }
 
   &__desc {

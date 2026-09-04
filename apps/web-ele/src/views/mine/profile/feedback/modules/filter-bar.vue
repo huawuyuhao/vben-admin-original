@@ -10,15 +10,16 @@ import {
 
 defineOptions({ name: 'MineProfileFeedbackFilterBar' });
 
-/** 处理状态 */
-const status = defineModel<FeedbackStatusFilter>('status', { default: '' });
-
 const emit = defineEmits<{
   /** 重置筛选 */
   reset: [];
   /** 点击查询 */
   search: [];
 }>();
+
+/** 处理状态 */
+const status = defineModel<FeedbackStatusFilter>('status', { default: '' });
+
 </script>
 
 <template>

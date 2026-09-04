@@ -1,30 +1,32 @@
 <script lang="ts" setup>
 import type { FormInstance, FormRules } from 'element-plus';
+
 import type { ModelMarketItem } from '#/types/service/product/order';
 
 import { computed, onMounted, reactive, ref, watch } from 'vue';
 
-import { Search } from '@element-plus/icons-vue';
 import { $t } from '@vben/locales';
+
+import { Search } from '@element-plus/icons-vue';
 
 import { getModelMarketListApi } from '#/api/service/product/order';
 
 import { MODEL_PAGE_SIZE } from '../data';
 
 const props = defineProps<{
+  confirmPassword: string;
   demandName: string;
   instanceName: string;
   loginPassword: string;
-  confirmPassword: string;
   /** 已选模型 ID 列表（模型市场） */
   selectedModelIds: number[];
 }>();
 
 const emit = defineEmits<{
+  'update:confirmPassword': [string];
   'update:demandName': [string];
   'update:instanceName': [string];
   'update:loginPassword': [string];
-  'update:confirmPassword': [string];
   'update:selectedModelIds': [number[]];
 }>();
 
@@ -423,9 +425,9 @@ defineExpose({ validate });
 
     p {
       margin: 6px 0 0;
-      color: hsl(var(--muted-foreground));
       font-size: 13px;
       line-height: 1.5;
+      color: hsl(var(--muted-foreground));
     }
   }
 
@@ -475,8 +477,8 @@ defineExpose({ validate });
     width: 48px;
     height: 48px;
     overflow: hidden;
-    border-radius: 10px;
     background: var(--el-color-primary-light-9);
+    border-radius: 10px;
   }
 
   &__model-img {
@@ -490,9 +492,9 @@ defineExpose({ validate });
     justify-content: center;
     width: 100%;
     height: 100%;
-    color: var(--el-color-primary);
     font-size: 18px;
     font-weight: 700;
+    color: var(--el-color-primary);
   }
 
   &__model-body {
@@ -516,10 +518,10 @@ defineExpose({ validate });
     display: -webkit-box;
     margin: 6px 0 0;
     overflow: hidden;
-    color: hsl(var(--muted-foreground));
+    -webkit-line-clamp: 2;
     font-size: 12px;
     line-height: 1.5;
-    -webkit-line-clamp: 2;
+    color: hsl(var(--muted-foreground));
     -webkit-box-orient: vertical;
   }
 

@@ -3,17 +3,17 @@ import { FEEDBACK_PAGE_SIZE_OPTIONS } from '../data';
 
 defineOptions({ name: 'MineProfileFeedbackPager' });
 
-/** 当前页 */
-const page = defineModel<number>('page', { default: 1 });
-/** 每页条数 */
-const pageSize = defineModel<number>('pageSize', { default: 10 });
-
 defineProps<{
   /** 禁用交互 */
   disabled?: boolean;
   /** 总条数（接口 total） */
   total: number;
 }>();
+/** 当前页 */
+const page = defineModel<number>('page', { default: 1 });
+/** 每页条数 */
+const pageSize = defineModel<number>('pageSize', { default: 10 });
+
 </script>
 
 <template>

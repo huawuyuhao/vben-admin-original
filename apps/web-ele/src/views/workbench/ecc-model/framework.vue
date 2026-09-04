@@ -108,8 +108,8 @@ function convert() {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  color: #606266;
   font-size: 13px;
+  color: #606266;
 }
 
 .form-row select {
@@ -128,15 +128,15 @@ function convert() {
 
 .flow span {
   padding: 8px 12px;
-  color: #409eff;
   font-size: 13px;
+  color: #409eff;
   background: #ecf5ff;
   border-radius: 4px;
 }
 
 .flow i {
-  color: #909399;
   font-style: normal;
+  color: #909399;
 }
 
 .badge.danger {

@@ -293,6 +293,7 @@ function goCreate() {
 <style scoped>
 .app-info-page {
   --primary: #409eff;
+
   padding: 4px 2px 24px;
 }
 
@@ -306,8 +307,8 @@ function goCreate() {
 .tab {
   padding: 10px 16px;
   margin-bottom: -1px;
-  color: #606266;
   font-size: 14px;
+  color: #606266;
   cursor: pointer;
   background: none;
   border: none;
@@ -315,8 +316,8 @@ function goCreate() {
 }
 
 .tab.active {
-  color: var(--primary);
   font-weight: 600;
+  color: var(--primary);
   border-bottom-color: var(--primary);
 }
 
@@ -346,8 +347,8 @@ function goCreate() {
 .btn {
   height: 34px;
   padding: 0 14px;
-  color: #606266;
   font-size: 13px;
+  color: #606266;
   cursor: pointer;
   background: #fff;
   border: 1px solid #dcdfe6;
@@ -375,22 +376,22 @@ function goCreate() {
 
 .label {
   width: 64px;
-  color: #909399;
   font-size: 13px;
+  color: #909399;
 }
 
 .chip {
   padding: 2px 8px;
-  color: #606266;
   font-size: 13px;
+  color: #606266;
   cursor: pointer;
   background: none;
   border: none;
 }
 
 .chip.on {
-  color: var(--primary);
   font-weight: 600;
+  color: var(--primary);
 }
 
 .date {
@@ -406,16 +407,16 @@ function goCreate() {
 
 .more {
   margin-top: 4px;
-  color: #909399;
   font-size: 13px;
+  color: #909399;
   cursor: pointer;
   background: none;
   border: none;
 }
 
 .hint {
-  color: #909399;
   font-size: 13px;
+  color: #909399;
 }
 
 .actions {
@@ -446,8 +447,8 @@ function goCreate() {
 
 .app-card:hover,
 .app-card.selected {
-  box-shadow: 0 4px 16px rgb(64 158 255 / 12%);
   border-color: #b3d8ff;
+  box-shadow: 0 4px 16px rgb(64 158 255 / 12%);
 }
 
 .check {
@@ -458,8 +459,8 @@ function goCreate() {
   place-items: center;
   width: 22px;
   height: 22px;
-  color: transparent;
   font-size: 12px;
+  color: transparent;
   cursor: pointer;
   background: #f2f3f5;
   border: 1px solid #dcdfe6;
@@ -473,15 +474,15 @@ function goCreate() {
 }
 
 .card-main h3 {
-  margin: 0 0 8px;
   padding-right: 28px;
+  margin: 0 0 8px;
   font-size: 18px;
 }
 
 .meta {
   margin: 0 0 4px;
-  color: #909399;
   font-size: 12px;
+  color: #909399;
 }
 
 .ok {
@@ -490,13 +491,13 @@ function goCreate() {
 }
 
 .desc {
-  margin: 10px 0 0;
-  color: #606266;
-  font-size: 13px;
-  line-height: 1.55;
   display: -webkit-box;
+  margin: 10px 0 0;
   overflow: hidden;
   -webkit-line-clamp: 3;
+  font-size: 13px;
+  line-height: 1.55;
+  color: #606266;
   -webkit-box-orient: vertical;
 }
 
@@ -509,8 +510,8 @@ function goCreate() {
 
 .side-tag {
   padding: 2px 8px;
-  color: #409eff;
   font-size: 12px;
+  color: #409eff;
   background: #ecf5ff;
   border-radius: 4px;
 }
@@ -526,8 +527,8 @@ function goCreate() {
   width: 72px;
   height: 72px;
   margin-top: auto;
-  color: #c0c4cc;
   font-size: 28px;
+  color: #c0c4cc;
   background: #f5f7fa;
   border: 1px dashed #dcdfe6;
   border-radius: 6px;
@@ -548,8 +549,8 @@ function goCreate() {
   align-items: center;
   justify-content: flex-end;
   margin-top: 16px;
-  color: #606266;
   font-size: 13px;
+  color: #606266;
 }
 
 .pages {

@@ -67,7 +67,7 @@ export function parseDeviceOnlineFilter(
  * @param data 接口分页结果
  * @returns records + total + current + size
  */
-export function normalizeDevicePage(data?: null | DeviceListResult): {
+export function normalizeDevicePage(data?: DeviceListResult | null): {
   current: number;
   records: DeviceItem[];
   size: number;

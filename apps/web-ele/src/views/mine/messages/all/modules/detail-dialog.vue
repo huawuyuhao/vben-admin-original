@@ -4,6 +4,7 @@ import type { MessageItem } from '#/types/mine/messages/all';
 import { ref } from 'vue';
 
 import { $t } from '@vben/locales';
+
 import { ElMessage } from 'element-plus';
 
 import { getMessageDetailApi } from '#/api/mine/messages/all';
@@ -205,15 +206,15 @@ defineExpose({ open });
 
   &__label {
     margin: 0 0 6px;
-    color: hsl(var(--muted-foreground));
     font-size: 12px;
+    color: hsl(var(--muted-foreground));
   }
 
   &__value {
     margin: 0;
-    color: hsl(var(--foreground));
     font-size: 14px;
     line-height: 1.5;
+    color: hsl(var(--foreground));
     word-break: break-word;
 
     &--strong {
@@ -224,12 +225,12 @@ defineExpose({ open });
 
   &__content {
     padding: 12px 14px;
-    color: hsl(var(--foreground));
     font-size: 14px;
     line-height: 1.7;
+    color: hsl(var(--foreground));
     word-break: break-word;
     white-space: pre-wrap;
-    background: hsl(var(--muted) / 0.45);
+    background: hsl(var(--muted) / 45%);
     border-radius: 8px;
   }
 }

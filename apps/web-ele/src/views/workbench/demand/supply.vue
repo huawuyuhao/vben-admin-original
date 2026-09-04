@@ -4,8 +4,8 @@ import { computed, ref } from 'vue';
 import { ElMessage } from 'element-plus';
 
 import {
-  type SupplyListItem,
   supplyLists as seed,
+  type SupplyListItem,
 } from '#/views/_shared/data/workbench-demand';
 
 defineOptions({ name: 'WorkbenchDemandSupply' });
@@ -114,7 +114,7 @@ function audit() {
         <table>
           <thead>
             <tr>
-              <th style="width: 40px" />
+              <th style="width: 40px"></th>
               <th>清单名称</th>
               <th>设备类型</th>
               <th>型号规格</th>
@@ -248,6 +248,7 @@ function audit() {
 <style scoped>
 .page {
   --primary: #409eff;
+
   padding-bottom: 24px;
 }
 
@@ -266,8 +267,8 @@ function audit() {
 .tab {
   padding: 10px 16px;
   margin-bottom: -1px;
-  color: #606266;
   font-size: 14px;
+  color: #606266;
   cursor: pointer;
   background: none;
   border: none;
@@ -275,8 +276,8 @@ function audit() {
 }
 
 .tab.active {
-  color: var(--primary);
   font-weight: 600;
+  color: var(--primary);
   border-bottom-color: var(--primary);
 }
 
@@ -300,8 +301,8 @@ function audit() {
 .btn {
   height: 34px;
   padding: 0 16px;
-  color: #606266;
   font-size: 13px;
+  color: #606266;
   cursor: pointer;
   background: #fff;
   border: 1px solid #dcdfe6;
@@ -323,8 +324,8 @@ function audit() {
 
 table {
   width: 100%;
-  border-collapse: collapse;
   font-size: 13px;
+  border-collapse: collapse;
 }
 
 th,
@@ -335,8 +336,8 @@ td {
 }
 
 th {
-  color: #909399;
   font-weight: 500;
+  color: #909399;
   background: #fafafa;
 }
 
@@ -382,8 +383,8 @@ th {
   align-items: center;
   justify-content: space-between;
   margin-top: 14px;
-  color: #606266;
   font-size: 13px;
+  color: #606266;
 }
 
 .pages {

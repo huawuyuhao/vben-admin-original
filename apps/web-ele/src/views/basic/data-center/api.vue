@@ -12,7 +12,7 @@ import {
 
 defineOptions({ name: 'DcApi' });
 
-const tab = ref<'api' | 'log' | 'security' | 'auth'>('api');
+const tab = ref<'api' | 'auth' | 'log' | 'security'>('api');
 const apiKeyword = ref('');
 const logCode = ref('全部');
 
@@ -285,8 +285,8 @@ function codeClass(c: number) {
 <style scoped>
 .service-badge {
   padding: 6px 12px;
-  color: #67c23a;
   font-size: 13px;
+  color: #67c23a;
   background: #f0f9eb;
   border: 1px solid #c2e7b0;
   border-radius: 4px;
@@ -302,8 +302,8 @@ function codeClass(c: number) {
 .page-tabs button {
   flex: 1;
   height: 40px;
-  color: #606266;
   font-size: 13px;
+  color: #606266;
   cursor: pointer;
   background: #fff;
   border: none;
@@ -315,15 +315,15 @@ function codeClass(c: number) {
 }
 
 .page-tabs button.active {
-  color: #409eff;
   font-weight: 500;
+  color: #409eff;
   background: #ecf5ff;
 }
 
 .path {
   padding: 2px 6px;
-  color: #606266;
   font-size: 12px;
+  color: #606266;
   background: #f4f4f5;
   border-radius: 3px;
 }

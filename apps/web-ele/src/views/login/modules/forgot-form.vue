@@ -1,18 +1,14 @@
 <script lang="ts" setup>
 import type { ForgotForm } from '#/types/login';
 
-import { Iphone, Key, Lock } from '@element-plus/icons-vue';
 import { $t } from '@vben/locales';
+
+import { Iphone, Key, Lock } from '@element-plus/icons-vue';
 
 /**
  * 找回密码表单
  */
 defineOptions({ name: 'LoginForgotForm' });
-
-/** 表单数据 */
-const form = defineModel<ForgotForm>({ required: true });
-/** 是否同意用户协议 */
-const agreed = defineModel<boolean>('agreed', { required: true });
 
 defineProps<{
   /** 短信倒计时剩余秒数 */
@@ -24,13 +20,17 @@ defineProps<{
   /** 提交按钮文案 */
   submitText: string;
 }>();
-
 const emit = defineEmits<{
   /** 点击获取验证码 */
   sendCode: [];
   /** 提交表单 */
   submit: [];
 }>();
+/** 表单数据 */
+const form = defineModel<ForgotForm>({ required: true });
+/** 是否同意用户协议 */
+const agreed = defineModel<boolean>('agreed', { required: true });
+
 </script>
 
 <template>

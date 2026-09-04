@@ -60,7 +60,7 @@ export function formatDeviceOptionLabel(item: DeviceOptionItem): string {
  * @returns 合法状态数字；全部时返回 undefined
  */
 export function parseSupplyStatusFilter(
-  status?: SupplyStatusFilter | null,
+  status?: null | SupplyStatusFilter,
 ): SupplyDeviceStatus | undefined {
   if (status === String(SUPPLY_STATUS_PENDING)) {
     return SUPPLY_STATUS_PENDING;

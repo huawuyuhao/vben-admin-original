@@ -201,8 +201,8 @@ function statusClass(s: string) {
 .page-tabs button {
   flex: 1;
   height: 40px;
-  color: #606266;
   font-size: 13px;
+  color: #606266;
   cursor: pointer;
   background: #fff;
   border: none;
@@ -214,8 +214,8 @@ function statusClass(s: string) {
 }
 
 .page-tabs button.active {
-  color: #409eff;
   font-weight: 500;
+  color: #409eff;
   background: #ecf5ff;
 }
 
@@ -249,13 +249,13 @@ function statusClass(s: string) {
 .stat-card strong {
   display: block;
   margin-bottom: 6px;
-  color: #409eff;
   font-size: 26px;
+  color: #409eff;
 }
 
 .stat-card span {
-  color: #909399;
   font-size: 13px;
+  color: #909399;
 }
 
 @media (max-width: 1100px) {

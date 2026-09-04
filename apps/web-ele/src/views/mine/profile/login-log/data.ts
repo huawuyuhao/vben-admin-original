@@ -64,7 +64,7 @@ export function buildLoginLogTimeParams(
  * @param data 接口分页结果
  * @returns records + total + current + size
  */
-export function normalizeLoginLogPage(data?: null | LoginLogListResult): {
+export function normalizeLoginLogPage(data?: LoginLogListResult | null): {
   current: number;
   records: LoginLogItem[];
   size: number;

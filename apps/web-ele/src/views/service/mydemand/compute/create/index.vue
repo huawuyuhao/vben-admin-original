@@ -1,12 +1,14 @@
 <script lang="ts" setup>
-import type { ComputeDemandItem } from '#/types/service/mydemand/compute';
 import type { FormInstance, FormRules } from 'element-plus';
+
+import type { ComputeDemandItem } from '#/types/service/mydemand/compute';
 
 import { computed, onMounted, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-import { ArrowLeft } from '@element-plus/icons-vue';
 import { $t } from '@vben/locales';
+
+import { ArrowLeft } from '@element-plus/icons-vue';
 import { ElMessage } from 'element-plus';
 
 import {
@@ -401,9 +403,9 @@ onMounted(() => {
 
     p {
       margin: 6px 0 0;
-      color: hsl(var(--muted-foreground));
       font-size: 13px;
       line-height: 1.5;
+      color: hsl(var(--muted-foreground));
     }
   }
 

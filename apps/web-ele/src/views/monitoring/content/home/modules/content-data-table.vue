@@ -6,8 +6,6 @@ import { computed } from 'vue';
 import { $t } from '@vben/locales';
 
 import {
-  PORTAL_CONTENT_STATUS_DISABLED,
-  PORTAL_CONTENT_STATUS_ENABLED,
   canSubmitPortalContentAudit,
   formatPortalContentDateTime,
   getPortalContentAuditLabelKey,
@@ -15,6 +13,8 @@ import {
   getPortalContentStatusLabelKey,
   getPortalContentStatusTagType,
   hasPortalContentImage,
+  PORTAL_CONTENT_STATUS_DISABLED,
+  PORTAL_CONTENT_STATUS_ENABLED,
   resolvePortalContentRowImageUrl,
   showsPortalContentImageColumn,
   supportsPortalContentSort,
@@ -25,31 +25,31 @@ defineOptions({ name: 'PortalContentDataTable' });
 const props = defineProps<{
   /** 内容类型 */
   contentType: PortalContentType;
-  /** 表格数据 */
-  records: PortalContentItem[];
   /** 加载中 */
   loading?: boolean;
+  /** 表格数据 */
+  records: PortalContentItem[];
+}>();
+
+const emit = defineEmits<{
+  /** 编辑 */
+  edit: [row: PortalContentItem];
+  /** 下线（停用） */
+  offline: [row: PortalContentItem];
+  /** 上线（启用） */
+  online: [row: PortalContentItem];
+  /** 删除 */
+  remove: [row: PortalContentItem];
+  /** 提交审核 */
+  submitAudit: [row: PortalContentItem];
+  /** 查看 */
+  view: [row: PortalContentItem];
 }>();
 
 /** 排序草稿（contentId -> sortOrder） */
 const sortDrafts = defineModel<Record<number, number>>('sortDrafts', {
   required: true,
 });
-
-const emit = defineEmits<{
-  /** 编辑 */
-  edit: [row: PortalContentItem];
-  /** 查看 */
-  view: [row: PortalContentItem];
-  /** 上线（启用） */
-  online: [row: PortalContentItem];
-  /** 下线（停用） */
-  offline: [row: PortalContentItem];
-  /** 提交审核 */
-  submitAudit: [row: PortalContentItem];
-  /** 删除 */
-  remove: [row: PortalContentItem];
-}>();
 
 /** 是否展示排序序号列 */
 const showSort = computed(() => supportsPortalContentSort(props.contentType));
@@ -494,8 +494,8 @@ function updateSortDraft(contentId: number, value?: number) {
     width: 120px;
     height: 68px;
     margin: 0 auto;
-    border-radius: 6px;
     cursor: zoom-in;
+    border-radius: 6px;
 
     :deep(.el-image__inner) {
       width: 100%;
@@ -532,8 +532,8 @@ function updateSortDraft(contentId: number, value?: number) {
   }
 
   &__placeholder {
-    color: hsl(var(--muted-foreground));
     font-size: 13px;
+    color: hsl(var(--muted-foreground));
   }
 }
 </style>

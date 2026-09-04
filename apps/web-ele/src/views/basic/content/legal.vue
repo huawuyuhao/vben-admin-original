@@ -1,10 +1,11 @@
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus';
 
+defineOptions({ name: 'ContentLegal' });
+
 /** 法律条款列表（待对接接口） */
 const legalTerms: never[] = [];
 
-defineOptions({ name: 'ContentLegal' });
 </script>
 
 <template>
@@ -52,7 +53,7 @@ defineOptions({ name: 'ContentLegal' });
         <table>
           <thead>
             <tr>
-              <th />
+              <th></th>
               <th>条款标题</th>
               <th>类型</th>
               <th>版本号</th>

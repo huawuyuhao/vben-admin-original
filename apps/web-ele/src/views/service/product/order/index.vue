@@ -10,9 +10,10 @@ import type {
 import { computed, onMounted, reactive, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-import { ArrowLeft } from '@element-plus/icons-vue';
 import { $t } from '@vben/locales';
 import { debounce } from '@vben/utils';
+
+import { ArrowLeft } from '@element-plus/icons-vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 
 import {
@@ -26,8 +27,8 @@ import {
   APP_SOURCE_MODEL_MARKET,
   DEFAULT_BANDWIDTH,
   DEFAULT_SYSTEM_DISK,
-  type OrderStepIndex,
   formatFee,
+  type OrderStepIndex,
   parsePositiveId,
 } from './data';
 import StepAdvanced from './modules/step-advanced.vue';
@@ -70,7 +71,7 @@ const form = reactive({
   selectedModelIds: [] as number[],
 });
 
-const fee = ref<null | DemandFeeResult>(null);
+const fee = ref<DemandFeeResult | null>(null);
 const advancedRef = ref<InstanceType<typeof StepAdvanced>>();
 
 /** 步骤标题 */
@@ -658,8 +659,8 @@ onMounted(async () => {
 
     small {
       margin-left: 2px;
-      color: hsl(var(--muted-foreground));
       font-weight: 400;
+      color: hsl(var(--muted-foreground));
     }
   }
 

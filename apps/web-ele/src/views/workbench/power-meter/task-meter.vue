@@ -4,13 +4,14 @@ import type { EchartsUIType } from '@vben/plugins/echarts';
 import { computed, nextTick, onMounted, ref, watch } from 'vue';
 
 import { EchartsUI, useEcharts } from '@vben/plugins/echarts';
+
 import { ElMessage } from 'element-plus';
 
 import {
   powerMeterTasks,
+  type PowerPeriod,
   powerPeriodKpis,
   powerTrendWeek,
-  type PowerPeriod,
 } from '#/views/_shared/data/power-meter';
 
 defineOptions({ name: 'PowerTaskMeter' });
@@ -239,7 +240,7 @@ onMounted(async () => {
               <td>
                 <div class="prog-cell">
                   <div class="prog">
-                    <i :style="{ width: `${r.progress}%` }" />
+                    <i :style="{ width: `${r.progress}%` }"></i>
                   </div>
                   <em>{{ r.progress }}%</em>
                   <button
@@ -310,15 +311,15 @@ onMounted(async () => {
 
 .period-tabs {
   display: flex;
-  gap: 0;
   flex-shrink: 0;
+  gap: 0;
 }
 
 .period-tabs button {
   height: 32px;
   padding: 0 16px;
-  color: #606266;
   font-size: 13px;
+  color: #606266;
   cursor: pointer;
   background: #fff;
   border: 1px solid #dcdfe6;
@@ -380,23 +381,23 @@ onMounted(async () => {
 
 .stat-label {
   margin-bottom: 6px;
-  color: #909399;
   font-size: 13px;
+  color: #909399;
 }
 
 .stat-value {
   margin-bottom: 4px;
-  color: #303133;
   font-size: 24px;
   font-weight: 700;
   line-height: 1.2;
+  color: #303133;
 }
 
 .stat-value small {
   margin-left: 4px;
-  color: #909399;
   font-size: 12px;
   font-weight: 400;
+  color: #909399;
 }
 
 .stat-trend {
@@ -462,8 +463,8 @@ table {
 .type-tag {
   display: inline-block;
   padding: 2px 8px;
-  color: #409eff;
   font-size: 12px;
+  color: #409eff;
   background: #ecf5ff;
   border-radius: 4px;
 }
@@ -471,8 +472,8 @@ table {
 .stage-tag {
   display: inline-block;
   padding: 2px 10px;
-  color: #606266;
   font-size: 12px;
+  color: #606266;
   background: #f5f7fa;
   border: 1px solid #ebeef5;
   border-radius: 12px;
@@ -488,8 +489,8 @@ table {
 .status-dot::before {
   width: 8px;
   height: 8px;
-  border-radius: 50%;
   content: '';
+  border-radius: 50%;
 }
 
 .status-dot.ok {
@@ -597,8 +598,8 @@ table {
   justify-content: space-between;
   padding-top: 12px;
   margin-top: 12px;
-  color: #909399;
   font-size: 13px;
+  color: #909399;
   border-top: 1px solid #ebeef5;
 }
 

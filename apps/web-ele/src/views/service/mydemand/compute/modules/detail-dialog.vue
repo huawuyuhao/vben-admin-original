@@ -5,6 +5,7 @@ import { computed, ref } from 'vue';
 
 import { $t } from '@vben/locales';
 import { downloadFileFromUrl, isHttpUrl } from '@vben/utils';
+
 import { ElMessage } from 'element-plus';
 
 import {
@@ -317,9 +318,9 @@ defineExpose({ open });
   &__preview {
     min-height: 120px;
     padding: 12px;
+    background: hsl(var(--muted) / 25%);
     border: 1px solid hsl(var(--border));
     border-radius: 8px;
-    background: hsl(var(--muted) / 0.25);
   }
 
   &__preview-link {
@@ -330,19 +331,19 @@ defineExpose({ open });
 
   &__preview-path {
     margin: 0;
-    color: hsl(var(--muted-foreground));
     font-size: 13px;
+    color: hsl(var(--muted-foreground));
     word-break: break-all;
   }
 
   &__preview-text {
-    margin: 0;
     max-height: 320px;
+    margin: 0;
     overflow: auto;
-    white-space: pre-wrap;
-    word-break: break-word;
     font-size: 13px;
     line-height: 1.6;
+    word-break: break-word;
+    white-space: pre-wrap;
   }
 }
 </style>

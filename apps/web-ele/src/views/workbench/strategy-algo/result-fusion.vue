@@ -4,6 +4,7 @@ import type { EchartsUIType } from '@vben/plugins/echarts';
 import { computed, onMounted, ref } from 'vue';
 
 import { EchartsUI, useEcharts } from '@vben/plugins/echarts';
+
 import { ElMessage } from 'element-plus';
 
 import {
@@ -81,7 +82,7 @@ onMounted(() => {
             </span>
           </div>
           <div class="weight-bar">
-            <i :style="{ width: `${m.weight}%` }" />
+            <i :style="{ width: `${m.weight}%` }"></i>
             <em>{{ m.weight }}%</em>
           </div>
           <div class="score">模型得分 {{ m.score }}</div>
@@ -172,8 +173,8 @@ onMounted(() => {
 
 .score {
   margin-top: 4px;
-  color: #909399;
   font-size: 12px;
+  color: #909399;
 }
 
 .em {

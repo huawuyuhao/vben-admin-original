@@ -5,9 +5,9 @@ import { useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
 
 import {
+  type AppMaterialRow,
   appMaterials,
   appTypeOptions,
-  type AppMaterialRow,
 } from '#/views/_shared/data/workbench-apps';
 
 defineOptions({ name: 'WorkbenchAppInfoForm' });
@@ -102,7 +102,7 @@ function create() {
           <div class="cron-row">
             <label class="switch">
               <input v-model="form.cronEnabled" type="checkbox" />
-              <i />
+              <i></i>
             </label>
             <input v-model="form.cronFrom" type="time" :disabled="!form.cronEnabled" />
             <span>-</span>
@@ -115,7 +115,7 @@ function create() {
             v-model="form.desc"
             rows="4"
             placeholder="请输入应用描述"
-          />
+          ></textarea>
         </label>
       </div>
     </section>
@@ -194,23 +194,24 @@ function create() {
 <style scoped>
 .form-page {
   --primary: #409eff;
+
   max-width: 1100px;
   padding-bottom: 28px;
 }
 
 .block {
-  margin-bottom: 16px;
   padding: 16px 18px 20px;
+  margin-bottom: 16px;
   background: #fff;
   border: 1px solid #ebeef5;
   border-radius: 8px;
 }
 
 .block h3 {
-  margin: 0 0 16px;
   padding-left: 10px;
-  color: #303133;
+  margin: 0 0 16px;
   font-size: 15px;
+  color: #303133;
   border-left: 3px solid var(--primary);
 }
 
@@ -240,9 +241,9 @@ function create() {
 }
 
 .field.required > span::before {
-  content: '*';
   margin-right: 4px;
   color: #f56c6c;
+  content: '*';
 }
 
 .field.full {
@@ -283,9 +284,9 @@ function create() {
 }
 
 .switch input {
-  opacity: 0;
   width: 0;
   height: 0;
+  opacity: 0;
 }
 
 .switch i {
@@ -297,12 +298,12 @@ function create() {
 }
 
 .switch i::after {
-  content: '';
   position: absolute;
   top: 2px;
   left: 2px;
   width: 18px;
   height: 18px;
+  content: '';
   background: #fff;
   border-radius: 50%;
   transition: 0.2s;
@@ -332,8 +333,8 @@ function create() {
 .btn {
   height: 34px;
   padding: 0 16px;
-  color: #606266;
   font-size: 13px;
+  color: #606266;
   cursor: pointer;
   background: #fff;
   border: 1px solid #dcdfe6;
@@ -353,14 +354,14 @@ function create() {
 
 .file-name {
   margin: 0;
-  color: #409eff;
   font-size: 13px;
+  color: #409eff;
 }
 
 .note {
   margin: 0;
-  color: #909399;
   font-size: 12px;
+  color: #909399;
 }
 
 .top-note {
@@ -369,8 +370,8 @@ function create() {
 
 .table {
   width: 100%;
-  border-collapse: collapse;
   font-size: 13px;
+  border-collapse: collapse;
 }
 
 .table th,
@@ -381,8 +382,8 @@ function create() {
 }
 
 .table th {
-  color: #909399;
   font-weight: 500;
+  color: #909399;
   background: #fafafa;
 }
 
@@ -415,8 +416,8 @@ function create() {
   display: flex;
   gap: 12px;
   align-items: center;
-  color: #606266;
   font-size: 14px;
+  color: #606266;
 }
 
 .footer-btns {

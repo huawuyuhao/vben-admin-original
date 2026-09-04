@@ -3,8 +3,9 @@ import type { DemandDiskPayload, ProductSpecItem } from '#/types/service/product
 
 import { computed, onMounted, reactive, ref, watch } from 'vue';
 
-import { Delete, Plus, Search } from '@element-plus/icons-vue';
 import { $t } from '@vben/locales';
+
+import { Delete, Plus, Search } from '@element-plus/icons-vue';
 
 import {
   getSpecFilterOptionsApi,
@@ -15,9 +16,9 @@ import {
   DISK_TYPE_OPTIONS,
   DISK_USAGE_DATA,
   DISK_USAGE_SYSTEM,
+  formatFee,
   MAX_DATA_DISKS,
   SPEC_PAGE_SIZE,
-  formatFee,
 } from '../data';
 
 const props = defineProps<{
@@ -28,9 +29,9 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
+  'spec-change': [null | ProductSpecItem];
   'update:disks': [DemandDiskPayload[]];
   'update:specId': [null | number];
-  'spec-change': [null | ProductSpecItem];
 }>();
 
 /** 筛选项 */
@@ -550,9 +551,9 @@ defineExpose({
 
     p {
       margin: 6px 0 0;
-      color: hsl(var(--muted-foreground));
       font-size: 13px;
       line-height: 1.5;
+      color: hsl(var(--muted-foreground));
     }
   }
 
@@ -573,9 +574,9 @@ defineExpose({
     flex-shrink: 0;
     width: 72px;
     padding-top: 4px;
-    color: hsl(var(--muted-foreground));
     font-size: 13px;
     line-height: 1.4;
+    color: hsl(var(--muted-foreground));
   }
 
   &__chips {
@@ -586,8 +587,8 @@ defineExpose({
   }
 
   &__filter-empty {
-    color: hsl(var(--muted-foreground));
     font-size: 13px;
+    color: hsl(var(--muted-foreground));
   }
 
   &__search {
@@ -600,13 +601,13 @@ defineExpose({
   }
 
   &__price {
-    color: var(--el-color-primary);
     font-weight: 650;
+    color: var(--el-color-primary);
 
     small {
       margin-left: 2px;
-      color: hsl(var(--muted-foreground));
       font-weight: 400;
+      color: hsl(var(--muted-foreground));
     }
   }
 

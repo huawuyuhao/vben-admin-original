@@ -6,13 +6,11 @@ import { setBeforeNavigationHook } from '@vben/layouts';
 import { preferences } from '@vben/preferences';
 import { initStores } from '@vben/stores';
 import '@vben/styles';
+/** 覆盖 EP 的应用层样式，须放在全量样式之后 */
+import '@vben/styles/ele';
 
 import { useTitle } from '@vueuse/core';
 import ElementPlus from 'element-plus';
-/** Element Plus 全量样式（业务页多，按需引入成本更高） */
-import 'element-plus/dist/index.css';
-/** 覆盖 EP 的应用层样式，须放在全量样式之后 */
-import '@vben/styles/ele';
 
 import { $t, setupI18n } from '#/locales';
 import { ensureLoggedIn } from '#/store/common';
@@ -21,6 +19,9 @@ import { initComponentAdapter } from './adapter/component';
 import { initSetupVbenForm } from './adapter/form';
 import App from './app.vue';
 import { router } from './router';
+
+/** Element Plus 全量样式（业务页多，按需引入成本更高） */
+import 'element-plus/dist/index.css';
 
 async function bootstrap(namespace: string) {
   // 初始化组件适配器

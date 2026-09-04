@@ -26,7 +26,7 @@ onMounted(() => {
     grid: { bottom: 28, containLabel: true, left: 40, right: 16, top: 28 },
     series: [
       {
-        areaStyle: { color: 'rgba(0,216,255,0.18)' },
+        areaStyle: { color: 'rgb(0 216 255 / 18%)' },
         data: taskLoadSeries,
         name: '调度负荷',
         smooth: true,
@@ -42,7 +42,7 @@ onMounted(() => {
     },
     yAxis: {
       axisLabel: { color: '#7eb6d9' },
-      splitLine: { lineStyle: { color: 'rgba(0,120,180,0.2)' } },
+      splitLine: { lineStyle: { color: 'rgb(0 120 180 / 20%)' } },
       type: 'value',
     },
   });

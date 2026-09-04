@@ -10,7 +10,7 @@ defineOptions({ name: 'FeedbackReply' });
 const list = ref(replyQueue.map((r) => ({ ...r, replyDraft: r.reply })));
 const status = ref('全部');
 const keyword = ref('');
-const currentId = ref<number | null>(list.value[0]?.id ?? null);
+const currentId = ref<null | number>(list.value[0]?.id ?? null);
 
 const filtered = computed(() => {
   let rows = [...list.value];
@@ -167,7 +167,7 @@ function submitReply(asDone = false) {
             v-model="current.replyDraft"
             rows="5"
             placeholder="请输入回复/处理方案"
-          />
+          ></textarea>
         </div>
 
         <div v-if="current.history.length" class="block">
@@ -249,23 +249,23 @@ function submitReply(asDone = false) {
   gap: 6px;
   align-items: center;
   margin-bottom: 6px;
-  color: #606266;
   font-size: 12px;
+  color: #606266;
 }
 
 .queue-content {
   display: -webkit-box;
   overflow: hidden;
-  color: #303133;
-  font-size: 13px;
   -webkit-line-clamp: 2;
+  font-size: 13px;
+  color: #303133;
   -webkit-box-orient: vertical;
 }
 
 .queue-time {
   margin-top: 6px;
-  color: #909399;
   font-size: 12px;
+  color: #909399;
 }
 
 .section-title {
@@ -283,8 +283,8 @@ function submitReply(asDone = false) {
 .info-grid label {
   display: block;
   margin-bottom: 4px;
-  color: #909399;
   font-size: 12px;
+  color: #909399;
 }
 
 .block {
@@ -296,21 +296,21 @@ function submitReply(asDone = false) {
   gap: 8px;
   align-items: center;
   margin-bottom: 8px;
-  color: #606266;
   font-size: 13px;
+  color: #606266;
 }
 
 .content-box,
 .block textarea {
+  box-sizing: border-box;
   width: 100%;
   padding: 12px;
-  color: #303133;
   font-size: 13px;
   line-height: 1.6;
+  color: #303133;
   background: #f5f7fa;
   border: 1px solid #e4e7ed;
   border-radius: 6px;
-  box-sizing: border-box;
 }
 
 .block textarea {
@@ -319,21 +319,21 @@ function submitReply(asDone = false) {
 }
 
 .history {
-  margin: 0;
   padding: 0;
+  margin: 0;
   list-style: none;
 }
 
 .history li {
   padding: 10px 0;
-  border-bottom: 1px dashed #ebeef5;
   font-size: 13px;
+  border-bottom: 1px dashed #ebeef5;
 }
 
 .history-meta {
   margin-bottom: 4px;
-  color: #909399;
   font-size: 12px;
+  color: #909399;
 }
 
 .detail-actions {

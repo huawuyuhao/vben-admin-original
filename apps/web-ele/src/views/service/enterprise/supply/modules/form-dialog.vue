@@ -1,10 +1,12 @@
 <script lang="ts" setup>
-import type { DeviceOptionItem } from '#/types/admin/device';
 import type { FormInstance, FormRules } from 'element-plus';
+
+import type { DeviceOptionItem } from '#/types/admin/device';
 
 import { computed, reactive, ref, watch } from 'vue';
 
 import { $t } from '@vben/locales';
+
 import { ElMessage } from 'element-plus';
 
 import {

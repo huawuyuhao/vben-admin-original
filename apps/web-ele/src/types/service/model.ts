@@ -114,7 +114,7 @@ export interface ModelListResponseBody<T = ModelInfo>
   code?: number;
   msg?: string;
   /** 兼容旧版：分页包在 data 内，或 data 直接为数组 */
-  data?: T[] | ModelListResult<T>;
+  data?: ModelListResult<T> | T[];
 }
 
 /**

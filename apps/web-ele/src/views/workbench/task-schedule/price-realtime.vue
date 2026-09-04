@@ -7,7 +7,7 @@ import { realtimePlanRows } from '#/views/_shared/data/task-schedule';
 
 defineOptions({ name: 'TsPriceRealtime' });
 
-const tab = ref<'当前轮次' | '调度依据' | '历史记录'>('当前轮次');
+const tab = ref<'历史记录' | '当前轮次' | '调度依据'>('当前轮次');
 const steps = [
   '调度触发',
   '电价采集',

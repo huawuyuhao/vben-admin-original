@@ -3,8 +3,9 @@ import type { CaseListItem } from '#/types/service/case';
 
 import { computed } from 'vue';
 
-import { Delete, Edit } from '@element-plus/icons-vue';
 import { $t } from '@vben/locales';
+
+import { Delete, Edit } from '@element-plus/icons-vue';
 
 import {
   CASE_TYPE_GENERAL,
@@ -237,7 +238,7 @@ function handleRemove() {
     background: linear-gradient(
       145deg,
       hsl(var(--primary) / 12%),
-      hsl(190 90% 66% / 18%) 55%,
+      hsl(190deg 90% 66% / 18%) 55%,
       hsl(var(--primary) / 8%)
     );
 
@@ -285,11 +286,11 @@ function handleRemove() {
   &__title {
     margin: 0;
     overflow: hidden;
+    text-overflow: ellipsis;
     font-size: 16px;
     font-weight: 750;
     line-height: 1.4;
     color: hsl(var(--foreground));
-    text-overflow: ellipsis;
     white-space: nowrap;
   }
 
@@ -339,9 +340,9 @@ function handleRemove() {
 
   &__meta-time {
     overflow: hidden;
+    text-overflow: ellipsis;
     font-size: 12px;
     color: hsl(var(--muted-foreground));
-    text-overflow: ellipsis;
     white-space: nowrap;
   }
 

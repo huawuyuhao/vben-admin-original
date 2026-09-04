@@ -150,8 +150,8 @@ function levelClass(l: string) {
 
 .card-title select {
   height: 30px;
-  margin-left: 8px;
   padding: 0 8px;
+  margin-left: 8px;
   border: 1px solid #dcdfe6;
   border-radius: 4px;
 }

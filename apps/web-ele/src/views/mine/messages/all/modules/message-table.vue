@@ -1,9 +1,9 @@
 <script lang="ts" setup>
+import type { TableInstance } from 'element-plus';
+
 import type { MessageItem } from '#/types/mine/messages/all';
 
 import { nextTick, ref, watch } from 'vue';
-
-import type { TableInstance } from 'element-plus';
 
 import { $t } from '@vben/locales';
 
@@ -99,7 +99,7 @@ defineExpose({ clearSelection });
               v-if="isMessageUnread(row.isRead)"
               class="msg-table__unread-dot"
               aria-hidden="true"
-            />
+            ></i>
             <span
               class="msg-table__title"
               :class="{ 'msg-table__title--unread': isMessageUnread(row.isRead) }"

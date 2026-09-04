@@ -4,6 +4,7 @@ import type { EchartsUIType } from '@vben/plugins/echarts';
 import { onMounted, ref } from 'vue';
 
 import { EchartsUI, useEcharts } from '@vben/plugins/echarts';
+
 import { ElMessage } from 'element-plus';
 
 import {
@@ -180,8 +181,8 @@ onMounted(() => {
   flex-wrap: wrap;
   gap: 10px;
   align-items: center;
-  margin-bottom: 12px;
   padding: 12px;
+  margin-bottom: 12px;
   font-size: 13px;
   color: #606266;
 }
@@ -205,8 +206,8 @@ onMounted(() => {
   padding: 16px;
   background: #fff;
   border: 1px solid #ebeef5;
-  border-radius: 10px;
   border-left-width: 4px;
+  border-radius: 10px;
 }
 
 .stat-card.blue {
@@ -226,8 +227,8 @@ onMounted(() => {
 }
 
 .stat-label {
-  color: #909399;
   font-size: 13px;
+  color: #909399;
 }
 
 .stat-value {
@@ -242,13 +243,13 @@ onMounted(() => {
 }
 
 .stat-trend.up {
-  color: #67c23a;
   font-size: 12px;
+  color: #67c23a;
 }
 
 .stat-trend.down {
-  color: #f56c6c;
   font-size: 12px;
+  color: #f56c6c;
 }
 
 .donut-grid,
@@ -288,8 +289,8 @@ onMounted(() => {
 }
 
 .mini span {
-  color: #909399;
   font-size: 12px;
+  color: #909399;
 }
 
 @media (max-width: 1000px) {

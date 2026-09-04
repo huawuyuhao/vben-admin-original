@@ -10,21 +10,21 @@ import {
   formatProductDateTime,
   formatProductPrice,
   hasProductImage,
-  splitProductTags,
   resolveAdminProductAuditLabelKey,
   resolveAdminProductAuditTagType,
   resolveAdminProductShelfLabelKey,
   resolveAdminProductShelfTagType,
+  splitProductTags,
 } from '../data';
 
 defineOptions({ name: 'AdminProductDetailDrawer' });
-
-const visible = defineModel<boolean>('visible', { default: false });
 
 const props = defineProps<{
   /** 当前查看的产品 */
   item?: null | ProductInfo;
 }>();
+
+const visible = defineModel<boolean>('visible', { default: false });
 
 /** 标签列表 */
 const tags = computed(() => splitProductTags(props.item?.tags));
@@ -209,13 +209,13 @@ function formatId(value?: number | string): string {
     height: 180px;
     margin-bottom: 16px;
     overflow: hidden;
-    border-radius: 12px;
     background: linear-gradient(
       145deg,
       hsl(var(--primary)),
-      hsl(250 100% 76%) 55%,
-      hsl(190 90% 66%)
+      hsl(250deg 100% 76%) 55%,
+      hsl(190deg 90% 66%)
     );
+    border-radius: 12px;
 
     &--empty {
       display: flex;
@@ -233,7 +233,7 @@ function formatId(value?: number | string): string {
   &__letter {
     font-size: 48px;
     font-weight: 750;
-    color: rgba(255, 255, 255, 0.92);
+    color: rgb(255 255 255 / 92%);
   }
 
   &__name {

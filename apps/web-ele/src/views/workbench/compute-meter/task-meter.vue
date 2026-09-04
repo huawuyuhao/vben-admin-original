@@ -4,12 +4,13 @@ import type { EchartsUIType } from '@vben/plugins/echarts';
 import { computed, nextTick, ref, watch } from 'vue';
 
 import { EchartsUI, useEcharts } from '@vben/plugins/echarts';
+
 import { ElMessage } from 'element-plus';
 
 import {
+  type ComputeMeterTask,
   computeMeterTasks,
   meterSeries,
-  type ComputeMeterTask,
 } from '#/views/_shared/data/compute-meter';
 
 defineOptions({ name: 'ComputeTaskMeter' });
@@ -306,8 +307,8 @@ watch(selected, async (v) => {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-bottom: 12px;
   padding: 12px;
+  margin-bottom: 12px;
 }
 
 .filter input,
@@ -349,8 +350,8 @@ watch(selected, async (v) => {
   flex-wrap: wrap;
   gap: 12px 20px;
   margin-bottom: 14px;
-  color: #606266;
   font-size: 13px;
+  color: #606266;
 }
 
 .metric-kpis {
@@ -369,14 +370,14 @@ watch(selected, async (v) => {
 .mk em {
   display: block;
   margin-bottom: 4px;
-  color: #909399;
   font-size: 12px;
   font-style: normal;
+  color: #909399;
 }
 
 .mk strong {
-  color: #303133;
   font-size: 18px;
+  color: #303133;
 }
 
 .chart-block {
@@ -385,9 +386,9 @@ watch(selected, async (v) => {
 
 .sub-title {
   margin-bottom: 6px;
-  color: #606266;
   font-size: 13px;
   font-weight: 600;
+  color: #606266;
 }
 
 @media (max-width: 900px) {

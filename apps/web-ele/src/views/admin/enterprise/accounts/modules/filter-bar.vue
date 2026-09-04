@@ -9,6 +9,12 @@ import {
 
 defineOptions({ name: 'AdminEnterpriseAccountsFilterBar' });
 
+const emit = defineEmits<{
+  /** 重置筛选 */
+  reset: [];
+  /** 点击查询 */
+  search: [];
+}>();
 /** 用户名 */
 const username = defineModel<string>('username', { default: '' });
 /** 部门 */
@@ -16,12 +22,6 @@ const department = defineModel<string>('department', { default: '' });
 /** 状态 */
 const status = defineModel<SubAccountStatusFilter>('status', { default: '' });
 
-const emit = defineEmits<{
-  /** 重置筛选 */
-  reset: [];
-  /** 点击查询 */
-  search: [];
-}>();
 </script>
 
 <template>

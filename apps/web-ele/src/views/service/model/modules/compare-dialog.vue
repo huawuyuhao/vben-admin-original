@@ -3,6 +3,8 @@ import type { ModelInfo } from '#/types/service/model';
 
 import { computed, ref, watch } from 'vue';
 
+import { $t } from '@vben/locales';
+
 import {
   Cpu,
   DataAnalysis,
@@ -10,7 +12,6 @@ import {
   Odometer,
   Star,
 } from '@element-plus/icons-vue';
-import { $t } from '@vben/locales';
 
 import { compareModelsApi } from '#/api/service/model';
 
@@ -24,12 +25,12 @@ import {
 
 defineOptions({ name: 'ServiceModelCompareDialog' });
 
-const visible = defineModel<boolean>('visible', { default: false });
-
 const props = defineProps<{
   /** 待对比模型 ID */
   modelIds: number[];
 }>();
+
+const visible = defineModel<boolean>('visible', { default: false });
 
 /** 对比加载中 */
 const loading = ref(false);
@@ -130,14 +131,14 @@ const tableRows = computed<CompareRow[]>(() => {
  */
 function baseRowIcon(type?: BaseRowType) {
   switch (type) {
-    case 'score': {
-      return Star;
-    }
     case 'callCount': {
       return Odometer;
     }
     case 'description': {
       return Document;
+    }
+    case 'score': {
+      return Star;
     }
     default: {
       return DataAnalysis;
@@ -340,9 +341,9 @@ watch(visible, (open) => {
 
   &__cell {
     overflow: hidden;
+    text-overflow: ellipsis;
     font-size: 13px;
     line-height: 1.5;
-    text-overflow: ellipsis;
     white-space: nowrap;
 
     &--desc {
@@ -354,8 +355,8 @@ watch(visible, (open) => {
       -webkit-line-clamp: 3;
       line-clamp: 3;
       line-height: 1.6;
-      white-space: normal;
       word-break: break-word;
+      white-space: normal;
       -webkit-box-orient: vertical;
     }
   }
@@ -395,7 +396,7 @@ watch(visible, (open) => {
     background: linear-gradient(
       145deg,
       hsl(var(--primary)),
-      hsl(190 90% 66%)
+      hsl(190deg 90% 66%)
     );
     border-radius: 10px;
 
@@ -407,10 +408,10 @@ watch(visible, (open) => {
 
   &__model-name {
     overflow: hidden;
+    text-overflow: ellipsis;
     font-size: 13px;
     font-weight: 700;
     line-height: 1.35;
-    text-overflow: ellipsis;
     white-space: nowrap;
   }
 }

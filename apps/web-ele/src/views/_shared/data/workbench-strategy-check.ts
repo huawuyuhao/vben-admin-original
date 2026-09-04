@@ -1,14 +1,14 @@
 /** 策略校核 mock 数据 */
 
-export type Feasibility = '高' | '中' | '低';
-export type MatchLevel = '优' | '良' | '一般' | '差';
+export type Feasibility = '中' | '低' | '高';
+export type MatchLevel = '一般' | '优' | '差' | '良';
 export type ProcessStatus =
-  | '已登记'
-  | '排队中'
   | '分析中'
+  | '失败'
   | '已完成'
-  | '失败';
-export type ConfirmStatus = '待确认' | '已通过' | '已驳回';
+  | '已登记'
+  | '排队中';
+export type ConfirmStatus = '已通过' | '已驳回' | '待确认';
 
 export interface StrategyAnalysisItem {
   id: string;
@@ -31,7 +31,7 @@ export interface StrategyProcessItem {
   schemeName: string;
   status: ProcessStatus;
   queue: string;
-  priority: '高' | '中' | '低';
+  priority: '中' | '低' | '高';
   createdAt: string;
   updatedAt: string;
   context: string;

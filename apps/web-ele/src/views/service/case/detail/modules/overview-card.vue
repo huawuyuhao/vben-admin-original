@@ -157,13 +157,13 @@ function handleTagClick(tag: string) {
     width: 100%;
     aspect-ratio: 16 / 10;
     overflow: hidden;
-    border-radius: 12px;
     background: linear-gradient(
       145deg,
       hsl(var(--primary) / 12%),
-      hsl(190 90% 66% / 18%) 55%,
+      hsl(190deg 90% 66% / 18%) 55%,
       hsl(var(--primary) / 8%)
     );
+    border-radius: 12px;
 
     &--empty {
       display: flex;

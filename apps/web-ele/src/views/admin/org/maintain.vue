@@ -224,8 +224,8 @@ function save() {
 .modal-foot {
   gap: 8px;
   justify-content: flex-end;
-  border-bottom: none;
   border-top: 1px solid #ebeef5;
+  border-bottom: none;
 }
 
 .modal-body {
@@ -239,8 +239,8 @@ function save() {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  color: #606266;
   font-size: 13px;
+  color: #606266;
 }
 
 .modal-body input,

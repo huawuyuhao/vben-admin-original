@@ -3,8 +3,9 @@ import type { RegisterForm } from '#/types/login';
 
 import { computed } from 'vue';
 
-import { Iphone, Key, Lock, OfficeBuilding, User } from '@element-plus/icons-vue';
 import { $t } from '@vben/locales';
+
+import { Iphone, Key, Lock, OfficeBuilding, User } from '@element-plus/icons-vue';
 
 import { getRegisterIndustryOptions } from '../data';
 
@@ -13,11 +14,6 @@ import { getRegisterIndustryOptions } from '../data';
  * 密码等校验在提交时由页面逻辑用 ElMessage 提示，避免错误文案挤占行高
  */
 defineOptions({ name: 'LoginRegisterForm' });
-
-/** 表单数据 */
-const form = defineModel<RegisterForm>({ required: true });
-/** 是否同意用户协议 */
-const agreed = defineModel<boolean>('agreed', { required: true });
 
 defineProps<{
   /** 短信倒计时剩余秒数 */
@@ -29,13 +25,16 @@ defineProps<{
   /** 提交按钮文案 */
   submitText: string;
 }>();
-
 const emit = defineEmits<{
   /** 点击获取验证码 */
   sendCode: [];
   /** 提交表单 */
   submit: [];
 }>();
+/** 表单数据 */
+const form = defineModel<RegisterForm>({ required: true });
+/** 是否同意用户协议 */
+const agreed = defineModel<boolean>('agreed', { required: true });
 
 /** 行业属性下拉选项（value 为接口枚举） */
 const industryOptions = computed(() => getRegisterIndustryOptions());

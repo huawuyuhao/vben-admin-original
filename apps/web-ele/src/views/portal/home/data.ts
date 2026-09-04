@@ -5,9 +5,9 @@ import type { PortalNews } from '#/types/portal/home/news';
 import type { PortalProductRecommend } from '#/types/portal/home/product';
 import type { PortalServiceIntro } from '#/types/portal/home/service';
 
-import dayjs from 'dayjs';
-
 import { formatDate, isEmpty, isHttpUrl } from '@vben/utils';
+
+import dayjs from 'dayjs';
 
 /** 门户内容启用 / 已发布 / 上架 / 审核通过 */
 export const PORTAL_STATUS_ENABLED = 1;
