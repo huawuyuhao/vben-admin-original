@@ -1,13 +1,16 @@
 <script lang="ts" setup>
 import type { RegisterForm } from '#/types/login';
 
+import { computed } from 'vue';
+
 import { Iphone, Key, Lock, OfficeBuilding, User } from '@element-plus/icons-vue';
 import { $t } from '@vben/locales';
 
-import { REGISTER_INDUSTRY_OPTIONS } from '../data';
+import { getRegisterIndustryOptions } from '../data';
 
 /**
  * 账号注册表单（字段与 POST /auth/register 对齐）
+ * 密码等校验在提交时由页面逻辑用 ElMessage 提示，避免错误文案挤占行高
  */
 defineOptions({ name: 'LoginRegisterForm' });
 
@@ -33,6 +36,9 @@ const emit = defineEmits<{
   /** 提交表单 */
   submit: [];
 }>();
+
+/** 行业属性下拉选项（value 为接口枚举） */
+const industryOptions = computed(() => getRegisterIndustryOptions());
 </script>
 
 <template>
@@ -120,10 +126,10 @@ const emit = defineEmits<{
           <el-icon><OfficeBuilding /></el-icon>
         </template>
         <el-option
-          v-for="item in REGISTER_INDUSTRY_OPTIONS"
-          :key="item"
-          :label="item"
-          :value="item"
+          v-for="item in industryOptions"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
         />
       </el-select>
     </el-form-item>

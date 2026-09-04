@@ -15,8 +15,11 @@ import { rootRequestClient } from '#/api/request';
  * @returns 个人信息（user / roleGroup / postGroup）
  */
 export async function getUserProfileApi() {
+  // return rootRequestClient.get<UserProfileResult>(
+  //   '/mock/system/user/profile',
+  // );
   return rootRequestClient.get<UserProfileResult>(
-    '/mock/system/user/profile',
+    '/pwq-mock/system/user/profile',
   );
   // return rootRequestClient.get<UserProfileResult>('/system/user/profile');
 }
@@ -29,8 +32,12 @@ export async function getUserProfileApi() {
  * @returns 业务 data（文档为 string）
  */
 export async function updateUserProfileApi(data: UpdateUserProfileParams) {
+  // return rootRequestClient.put<UpdateUserProfileResult>(
+  //   '/mock/system/user/profile',
+  //   data,
+  // );
   return rootRequestClient.put<UpdateUserProfileResult>(
-    '/mock/system/user/profile',
+    '/pwq-mock/system/user/profile',
     data,
   );
   // return rootRequestClient.put<UpdateUserProfileResult>(
@@ -47,8 +54,12 @@ export async function updateUserProfileApi(data: UpdateUserProfileParams) {
  * @returns 业务 data（文档为 string）
  */
 export async function updatePasswordApi(data: UpdatePasswordParams) {
+  // return rootRequestClient.put<UpdatePasswordResult>(
+  //   '/mock/system/user/profile/updatePwd',
+  //   data,
+  // );
   return rootRequestClient.put<UpdatePasswordResult>(
-    '/mock/system/user/profile/updatePwd',
+    '/pwq-mock/system/user/profile/updatePwd',
     data,
   );
   // return rootRequestClient.put<UpdatePasswordResult>(

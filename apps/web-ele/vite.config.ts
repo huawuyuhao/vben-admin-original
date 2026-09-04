@@ -18,6 +18,13 @@ export default defineConfig(async () => {
             target: 'http://127.0.0.1:4523/m1/8748305-8536319-8439918',
             ws: true,
           },
+          '/pwq-mock': {
+            changeOrigin: true,
+            rewrite: (path) => path.replace(/^\/pwq-mock/, ''),
+            target: 'http://192.168.0.116:8089',
+            // target: 'http://127.0.0.1:4523/m1/8748305-8536319-8439918',
+            ws: true,
+          },
           // '/api': {
           //   changeOrigin: true,
           //   rewrite: (path) => path.replace(/^\/api/, ''),

@@ -460,10 +460,21 @@
       "usernamePlaceholder": "Enter username",
       "realNamePlaceholder": "Enter real name",
       "industryPlaceholder": "Select industry",
-      "setPasswordPlaceholder": "Set password (8+ chars with upper, lower, number & symbol)",
+      "setPasswordPlaceholder": "Password (8+ chars, upper/lower, number, and {'@'}$!%*?&)",
       "confirmPasswordPlaceholder": "Confirm password",
       "newPasswordPlaceholder": "Set new password (at least 6 characters)",
-      "confirmNewPasswordPlaceholder": "Confirm new password"
+      "confirmNewPasswordPlaceholder": "Confirm new password",
+      "industry": {
+        "electricity": "Electricity",
+        "computing": "Computing",
+        "carbon": "Carbon",
+        "new_energy": "New Energy",
+        "manufacturing": "Manufacturing",
+        "internet": "Internet",
+        "research": "Research",
+        "government": "Government",
+        "other": "Other"
+      }
     },
     "message": {
       "invalidPhone": "Please enter a valid mobile number",
@@ -477,7 +488,7 @@
       "usernameRequired": "Please enter username",
       "realNameRequired": "Please enter real name",
       "industryRequired": "Please select industry",
-      "passwordRule": "Password must be at least 8 characters and include upper/lowercase letters, numbers, and special characters (@$!%*?&)",
+      "passwordRule": "Password must be at least 8 characters and include upper/lowercase letters, numbers, and special characters ({'@'}$!%*?&)",
       "passwordMismatch": "The two passwords do not match",
       "registerSuccess": "Registration successful",
       "newPasswordMinLength": "New password must be at least {0} characters",
@@ -561,7 +572,7 @@
         "oldPasswordRequired": "Please enter current password",
         "newPasswordRequired": "Please enter new password",
         "confirmPasswordRequired": "Please enter new password again",
-        "passwordRule": "At least 8 characters with upper/lowercase letters, numbers, and special characters (@$!%*?&)",
+        "passwordRule": "At least 8 characters with upper/lowercase letters, numbers, and special characters ({'@'}$!%*?&)",
         "sameAsOld": "New password cannot be the same as current password",
         "confirmMismatch": "The two new passwords do not match",
         "oldPasswordPlaceholder": "Enter current password",

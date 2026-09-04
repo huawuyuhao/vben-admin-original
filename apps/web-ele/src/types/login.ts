@@ -153,6 +153,56 @@ export interface AccountLoginForm {
 }
 
 /**
+ * 授权类型（注册 / 登录 grantType）
+ */
+export enum AuthGrantType {
+  /** 密码 */
+  Password = 'password',
+  /** 短信 */
+  Sms = 'sms',
+  /** 邮箱 */
+  Email = 'email',
+  /** 小程序 */
+  Xcx = 'xcx',
+  /** 社交账号 */
+  Social = 'social',
+}
+
+/**
+ * 行业属性（注册 industryType）
+ */
+export enum IndustryType {
+  /** 电力 */
+  Electricity = 'electricity',
+  /** 算力 */
+  Computing = 'computing',
+  /** 碳 */
+  Carbon = 'carbon',
+  /** 新能源 */
+  NewEnergy = 'new_energy',
+  /** 制造业 */
+  Manufacturing = 'manufacturing',
+  /** 互联网 */
+  Internet = 'internet',
+  /** 科研 */
+  Research = 'research',
+  /** 政务 */
+  Government = 'government',
+  /** 其他 */
+  Other = 'other',
+}
+
+/**
+ * 用户类型（注册 userType）
+ */
+export enum AuthUserType {
+  /** 系统用户 */
+  SysUser = 'sys_user',
+  /** 应用用户 */
+  AppUser = 'app_user',
+}
+
+/**
  * 注册表单（页面字段；提交时映射为 RegisterParams）
  */
 export interface RegisterForm {
@@ -164,8 +214,8 @@ export interface RegisterForm {
   phone: string;
   /** 短信验证码 */
   code: string;
-  /** 行业属性 */
-  industryType: string;
+  /** 行业属性（提交值为 IndustryType 枚举） */
+  industryType: '' | IndustryType;
   /** 登录密码 */
   password: string;
   /** 确认密码（仅前端校验，不提交） */
@@ -173,23 +223,23 @@ export interface RegisterForm {
 }
 
 /**
- * 用户注册请求体（与 OpenAPI /auth/register 对齐）
+ * 用户注册请求体（与 OpenAPI POST /auth/register 对齐）
  */
 export interface RegisterParams {
   /** 客户端 id（必填） */
   clientId: string;
   /** 授权类型（必填） */
-  grantType: string;
+  grantType: AuthGrantType;
   /** 用户名（必填） */
   username: string;
   /** 密码（必填，需含大小写、数字、特殊字符，至少 8 位） */
   password: string;
   /** 真实姓名（必填） */
   realName: string;
-  /** 手机号（必填） */
+  /** 手机号（必填，1[3-9] 开头 11 位） */
   phonenumber: string;
   /** 行业属性（必填） */
-  industryType: string;
+  industryType: IndustryType;
   /** 短信验证码（必填） */
   smsCode: string;
   /** 租户 ID */
@@ -200,8 +250,12 @@ export interface RegisterParams {
   uuid?: string;
   /** 用户入驻类型：demand / supply */
   userEnterType?: UserEnterType;
-  /** 用户类型 */
-  userType?: string;
+  /**
+   * 用户类型（按端区分，不可写死）
+   * - sys_user：PC / Web
+   * - app_user：移动客户端
+   */
+  userType: AuthUserType;
   /** 是否勾选用户协议与隐私政策 */
   agreementAccepted?: boolean;
 }
@@ -215,7 +269,31 @@ export type RegisterResult = string;
 export const AUTH_CLIENT_ID = 'pc';
 
 /** 注册授权类型（注册必填，与后端约定） */
-export const AUTH_REGISTER_GRANT_TYPE = 'password';
+export const AUTH_REGISTER_GRANT_TYPE = AuthGrantType.Password;
+
+/**
+ * 是否为移动端 UA（用于注册 userType 区分 PC / 移动）
+ */
+export function isMobileClientUserAgent(
+  userAgent = typeof navigator === 'undefined' ? '' : navigator.userAgent,
+): boolean {
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    userAgent,
+  );
+}
+
+/**
+ * 按端解析注册 userType：PC/Web → sys_user，移动客户端 → app_user
+ * @param isMobileClient 是否移动端；默认根据 UA 判断
+ */
+export function resolveRegisterUserType(
+  isMobileClient = isMobileClientUserAgent(),
+): AuthUserType {
+  return isMobileClient ? AuthUserType.AppUser : AuthUserType.SysUser;
+}
+
+/** 注册页行业属性可选值（与 OpenAPI enum 一致） */
+export const INDUSTRY_TYPE_VALUES = Object.values(IndustryType);
 
 
 /**

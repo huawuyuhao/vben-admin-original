@@ -1,0 +1,304 @@
+---
+inclusion: always
+---
+
+# AI 编程规范（vben-admin-suite）
+
+## 工具方法优先复用
+
+编写或修改代码前，**先在共享工具目录中查找是否已有合适方法**，禁止重复实现同类逻辑。
+
+### 首选目录
+
+`packages/@core/base/shared/src/utils/`
+
+常用模块：
+
+| 文件 | 用途 |
+|------|------|
+| `inference.ts` | 类型判断：`isEmpty`、`isHttpUrl`、`isBoolean`、`isWindow` 等 |
+| `cn.ts` | className 合并（`cn`） |
+| `date.ts` | 日期格式化 |
+| `tree.ts` | 树遍历 / 转换 |
+| `dom.ts` / `download.ts` / `window.ts` | DOM、下载、窗口 |
+| `merge.ts` / `unique.ts` / `to.ts` / `util.ts` | 合并、去重、通用工具 |
+| `index.ts` | 统一导出；另导出 `cloneDeep`、`debounce`、`get`、`set`、`isEqual` |
+
+同级还可按需使用：`cache/`、`color/`、`constants/`。
+
+### 导入方式
+
+```ts
+// ✅ 应用层（apps/*）优先
+import { isEmpty, cloneDeep, cn } from '@vben/utils';
+
+// ✅ 内部 packages 可用
+import { isEmpty, cn } from '@vben-core/shared/utils';
+
+// ❌ 禁止：自行再写 isEmpty / 深拷贝 / 树遍历等已有能力
+function isEmpty(v) { ... }
+```
+
+查找顺序：`utils/index.ts` 导出 → 对应源文件实现 → 确认语义匹配后再写新函数。
+
+仅当共享层**确实没有**且该能力会被多处复用时，再考虑向 `packages/@core/base/shared/src/utils/` 补充，并同步 `index.ts` 导出。
+
+## 语法与浏览器兼容
+
+- **优先使用 ES6+ 现代语法**（`const`/`let`、箭头函数、解构、`Promise`/`async-await`、模块 `import`/`export`、展开运算等），保持可读与可维护。
+- 实现页面与交互时，须考虑 **Chrome / Edge / Firefox / Safari 各自最新两个大版本** 的兼容；避免仅某一引擎可用的 API，或未充分普及的实验特性。
+- 不确定兼容性时：查 MDN / Can I Use；必要时用项目已有封装或构建产物能力，**不要**直接依赖未转译的过新语法（如仅最新引擎支持的特性），也**不要**为兼容倒退到 `var`、回调地狱等过时写法。
+- CSS 同理：优先标准属性与项目已有方案，避免无前缀且兼容面窄的实验特性。
+
+## 中文注释
+
+- **每个方法 / 函数**（含导出函数、组件内较完整的业务方法）须有**简体中文**注释，说明用途、关键参数与返回值（可参考 `inference.ts` 的 JSDoc 风格）。
+- 注释写清「做什么」，避免无信息量的废话；不要用英文注释替代中文要求。
+- 简单一行回调、显而易见的 getter 可从简，但公开 API 与业务方法必须有中文说明。
+
+```ts
+/**
+ * 判断传入值是否为空（null、undefined、空串、空数组/对象等）。
+ * @param value 待检查的值
+ * @returns 为空时返回 true
+ */
+function isEmpty<T = unknown>(value?: T): value is T {
+  // ...
+}
+```
+
+## 中文编码（防止乱码）
+
+- 源码、文案、注释、JSON、Markdown **一律 UTF-8**（无 BOM）保存与写入。
+- 新增/编辑含中文的文件时，确认编辑器与落盘编码为 UTF-8；禁止用系统默认 ANSI/GBK 覆盖已有 UTF-8 文件。
+- 勿对中文字符串做错误转码（如二次 `escape`/`decode`、错误的 `Buffer` 编码）；HTTP 响应与静态资源声明与 UTF-8 一致。
+- 发现乱码（如 `锟斤拷`、`Ã¤Â¸Â­`）时先修编码再改逻辑，不要把乱码文案当正常内容提交。
+
+## Vue 样式（SCSS 层级）
+
+- Vue 单文件组件（`.vue`）中的样式，**除非任务明确要求其它写法**，否则一律使用 `<style lang="scss" scoped>`（或按需去掉 `scoped`），并用 **SCSS 嵌套层级** 组织选择器，禁止平铺一长串互不嵌套的类名规则。
+- 推荐 BEM / 块级根类 + `&__` / `&--` / `&:hover` 等嵌套写法，保持结构与模板层级一致、便于维护。
+
+```vue
+<!-- ✅ 推荐 -->
+<style lang="scss" scoped>
+.portal-auth {
+  padding: 40px 24px;
+
+  &__card {
+    border-radius: 16px;
+
+    &:hover {
+      filter: brightness(1.02);
+    }
+  }
+}
+</style>
+
+<!-- ❌ 禁止（无要求时不要用普通 CSS 平铺） -->
+<style scoped>
+.portal-auth { padding: 40px 24px; }
+.portal-auth__card { border-radius: 16px; }
+</style>
+```
+
+## 功能目录结构（views 页面）
+
+### 目录与路由 URL 对齐（强制）
+
+业务页在 `apps/web-ele/src/views/` 下的**目录路径必须与路由 path 一致**（去掉开头的 `/`），便于按 URL 定位源码。
+
+| 路由 path | views 目录 |
+|-----------|------------|
+| `/service/product` | `views/service/product/` |
+| `/service/enterprise/supply` | `views/service/enterprise/supply/` |
+| `/mine/favorites` | `views/mine/favorites/` |
+| `/service/mydemand/compute/create` | `views/service/mydemand/compute/create.vue` 或 `create/index.vue` |
+
+- 多级路由逐级建子目录；**禁止**把 `/service/enterprise/supply` 的页面放在 `views/enterprise/supply/` 等与 URL 不一致的位置。
+- 页面入口统一为目录下的 `index.vue`（或单层路由对应的 `xxx.vue`），路由 `component` 引用路径与上述规则保持一致。
+
+### api / types 与功能路径对齐（强制）
+
+页面专用的 **API、类型、页面 data、modules** 也必须与该功能的路由 / views 路径对齐，**禁止**业务页主要依赖其它功能目录下的 api / types / modules。
+
+| 路由 path | views | api | types |
+|-----------|-------|-----|-------|
+| `/mine/favorites` | `views/mine/favorites/` | `api/mine/favorites.ts` | `types/mine/favorites.ts` |
+| `/mine/profile/feedback` | `views/mine/profile/feedback/` | `api/mine/profile/feedback.ts` | `types/mine/profile/feedback.ts` |
+| `/admin/device` | `views/admin/device/` | `api/admin/device.ts` | `types/admin/device.ts` |
+| `/service/enterprise/supply` | `views/service/enterprise/supply/` | `api/service/enterprise/supply.ts` | `types/service/enterprise/supply.ts` |
+| `/service/enterprise/products` | `views/service/enterprise/products/` | `api/service/enterprise/products.ts` | `types/service/enterprise/products.ts` |
+
+```ts
+// ✅ 收藏页（/mine/favorites）
+import type { FavoriteItem } from '#/types/mine/favorites';
+import { getFavoritesListApi } from '#/api/mine/favorites';
+import { FAVORITES_PAGE_SIZE } from './data';
+import FavoriteGrid from './modules/favorite-grid.vue';
+
+// ❌ 禁止：收藏页却从门户产品目录引用页面专用能力
+import { getProductCollectListApi } from '#/api/service/product';
+import ProductGrid from '#/views/service/product/modules/product-grid.vue';
+```
+
+- **例外**：真正跨功能复用的领域模型（如产品卡片里的 `ProductInfo` 字段）或全仓工具（`#/api/common`、`@vben/utils`）可引用；但本页列表接口、分页 data、本页拆分组件仍须落在本功能目录。
+- 从 A 功能拆到 B 功能时，同步迁移（或复制后收敛）对应 api / types / modules，并更新引用；不要只改路由留下跨目录硬依赖。
+
+功能页目录（如 `views/login/`）按需拆分，规则如下：
+
+- **页面拆分的子模块**：放在该功能下的 `modules/`（如从 `index.vue` 拆出的表单、侧栏等）；没有可拆分内容时**不要**空建。
+- **功能内可复用的封装组件**：放在该功能下的 `components/`；没有共用组件时**不要**空建。
+- **共用 SCSS**：抽到该功能下的 `scss/common.scss`；禁止把 `.scss` 与 `.vue` 放在同一目录，以免难维护。
+- **非公共样式**：一律写在对应 `.vue` 的 `<style lang="scss">` 中，不要另起零散 scss 文件。
+
+```text
+views/login/
+├── index.vue          # 页面入口
+├── data.ts            # 页面逻辑
+├── modules/           # 本页拆分出的子模块（无则不建）
+│   ├── sms-form.vue
+│   └── ...
+├── components/        # 本功能内可复用的封装组件（无则不建）
+└── scss/
+    └── common.scss    # 本功能共用样式（无共用则不建）
+```
+
+## 业务与页面约定
+
+- 主应用：`apps/web-ele`；默认展示语言为**简体中文**（通过 i18n 语言包控制，见下文）。
+- 演示用假数据放在 `apps/web-ele/src/views/_shared/data/`，通过 `#/views/_shared/data/...` 引用；不要散落在各页面硬编码大段 mock。
+- 优先沿用同模块已有样式（如 `portal.css`、`shared.css`）与布局/组件模式，避免另起一套 UI 风格。
+- 只改与任务相关的文件；不擅自大范围重构。
+
+## 优先使用 Element Plus
+
+主应用 `apps/web-ele` 已 **全局注册** Element Plus 组件（`app.use(ElementPlus)`），并 **全局引入** 全量样式（`element-plus/dist/index.css`）。业务页实现交互与展示时，**优先使用 Element Plus 现成能力**，禁止在 EP 已有组件/能力时自行手写等价实现。
+
+### 原则
+
+- 表单、输入、选择、按钮、表格、分页、对话框、抽屉、消息提示、空状态、骨架屏、卡片、标签、图片、上传等，**一律优先** `el-*` 组件（文档：[Element Plus](https://element-plus.org/zh-CN/component/overview.html)）。
+- 卡片式容器优先 `el-card`（可用 `header` / `footer` 插槽、`shadow`、`body-style`），不要再用自定义白盒 + 圆角边框冒充卡片。
+- 反馈类优先 `ElMessage` / `ElMessageBox` / `ElNotification` / `el-empty` / `el-skeleton` / `v-loading`，不要自写 Toast、空态块、加载转圈。
+- 仅当 EP **确实没有**对应能力，或任务明确要求自定义视觉时，才允许手写；并尽量保持与现有页（如 `mine-shell`）风格一致。
+
+```vue
+<!-- ✅ 推荐 -->
+<el-card shadow="hover">
+  <template #header>{{ $t('page.service.product.title') }}</template>
+  <el-empty v-if="!list.length" :description="$t('page.service.product.empty')" />
+  <el-pagination v-else v-model:current-page="page" :total="total" />
+</el-card>
+
+<!-- ❌ 禁止：EP 已有卡片 / 空态 / 分页时仍手写壳子 -->
+<div class="my-card">
+  <div class="my-empty">暂无数据</div>
+  <div class="my-pager">...</div>
+</div>
+```
+
+### 引入约定
+
+- **组件**：全局可用，模板中直接写 `<el-button>` 等，无需在页面再 `import { ElButton }`（`ElMessage` 等命令式 API 仍需从 `element-plus` 导入）。
+- **样式**：已在 `bootstrap.ts` 全量引入；**禁止**再在业务页按需 `import 'element-plus/es/components/*/style/css'`。
+- 应用层对 EP 的微调放在 `@vben/styles/ele`（或局部 `scoped` 覆盖），不要复制一套平行 UI 库。
+
+## 国际化（i18n）
+
+**登录、注册、个人信息及后续所有页面**，面向用户的文案（标题、按钮、占位符、提示、Toast/Message、确认框、空状态、表单校验信息等）**一律通过 `$t` 读取**，禁止在模板或脚本中硬编码中文/英文字符串。
+
+### 导入与调用
+
+```ts
+import { $t } from '@vben/locales';
+
+// 简单文案
+$t('ui.actionMessage.operationSuccess');
+
+// 带占位参数（语言包中用 {0}、{1} … 占位）
+$t('ui.actionMessage.deleteSuccess', [row.name]);
+```
+
+```vue
+<template>
+  <h2>{{ $t('page.mine.profile.title') }}</h2>
+  <el-button>{{ $t('authentication.signUp') }}</el-button>
+  <el-input :placeholder="$t('authentication.usernameTip')" />
+</template>
+
+<script lang="ts" setup>
+import { $t } from '@vben/locales';
+
+ElMessage.success($t('authentication.loginSuccess'));
+</script>
+```
+
+- **应用层 views / layouts / store** 也可 `import { $t } from '#/locales'`（与 `@vben/locales` 同源 re-export），但**禁止**再写 `'登录成功'` 这类字面量。
+- 注释、变量名、路由 path、API 字段等非 UI 文案不在此限；**仅用户可见文案必须 i18n**。
+
+### 语言包位置与键名
+
+| 范围 | 目录 | 键前缀示例 |
+|------|------|------------|
+| 框架通用（表单、操作反馈、验证码等） | `packages/locales/src/langs/{zh-CN,en-US}/` | `ui.*`、`authentication.*`、`common.*`、`profile.*` |
+| web-ele 业务页 | `apps/web-ele/src/locales/langs/{zh-CN,en-US}/` | `page.*`（可按模块再分子键，如 `page.mine.profile.*`） |
+
+- 新增键名使用 **小驼峰 + 点分层级**，语义清晰、与功能目录对应；**能复用框架键则复用**（如 `ui.formRules.required`、`ui.actionMessage.operationSuccess`），避免同义重复。
+- **每次新增或修改键，必须同时维护 `zh-CN` 与 `en-US` 两份 JSON**，保持键结构一致。
+- 业务页专用文案优先落在 `apps/web-ele/src/locales/langs/`，不要改 `packages/locales` 除非确属全仓共用。
+
+### 实施范围（强制）
+
+以下模块及后续新建页面均须遵守，存量页面在改动相关文件时顺带补齐 i18n：
+
+- `views/login/`（登录 / 注册 / 找回密码）
+- `views/mine/profile/`（个人信息及子模块）
+- 其余 `apps/web-ele/src/views/**` 业务页
+
+```text
+<!-- ❌ 禁止 -->
+<el-button>修改资料</el-button>
+ElMessage.success('保存成功');
+
+<!-- ✅ 必须 -->
+<el-button>{{ $t('page.mine.profile.editProfile') }}</el-button>
+ElMessage.success($t('ui.actionMessage.operationSuccess'));
+```
+
+## 图表（VisActor VChart）
+
+- 官方站点：[VisActor](https://www.visactor.io/)；图表库为 **VChart**。
+- **后续新页面 / 新功能中的图表，一律使用 `@vben/plugins/vchart`**（`VchartUI` + `useVChart`），禁止在新代码中再引入 ECharts。
+- 存量 ECharts 页面（如部分工作台 / 旧统计页）可暂保留；重做或新开发时迁移到 VChart。
+- 不要在业务页直接 `new VChart(...)`，统一走插件封装，便于主题、resize、keep-alive。
+
+```vue
+<script lang="ts" setup>
+import type { VchartUIType } from '@vben/plugins/vchart';
+
+import { onMounted, ref } from 'vue';
+
+import { useVChart, VchartUI } from '@vben/plugins/vchart';
+
+const chartRef = ref<VchartUIType>();
+const { renderVChart } = useVChart(chartRef);
+
+onMounted(() => {
+  void renderVChart({
+    type: 'line',
+    data: [{ id: 'line', values: [{ x: 'A', y: 1 }] }],
+    xField: 'x',
+    yField: 'y',
+  });
+});
+</script>
+
+<template>
+  <VchartUI ref="chartRef" height="280px" />
+</template>
+```
+
+## 修改共享工具时的注意
+
+- 改 `packages/@core/base/shared` 会影响全仓；评估调用面，保持 API 兼容。
+- 有单测的模块（如 `utils/__tests__/`）应同步更新测试。

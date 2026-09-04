@@ -16,7 +16,8 @@ import { rootRequestClient } from '#/api/request';
  * @returns 登录结果（access_token 等）
  */
 export async function loginApi(data: LoginParams) {
-  return rootRequestClient.post<LoginResult>('/mock/api/auth/login', data);
+  // return rootRequestClient.post<LoginResult>('/mock/api/auth/login', data);
+  return rootRequestClient.post<LoginResult>('/pwq-mock/api/auth/login', data);
   // return rootRequestClient.post<LoginResult>('/api/auth/login', data);
 }
 
@@ -28,7 +29,8 @@ export async function loginApi(data: LoginParams) {
  * @returns 业务 data（文档为 string）
  */
 export async function registerApi(data: RegisterParams) {
-  return rootRequestClient.post<RegisterResult>('/mock/auth/register', data);
+  // return rootRequestClient.post<RegisterResult>('/mock/auth/register', data);
+  return rootRequestClient.post<RegisterResult>('/pwq-mock/auth/register', data);
   // return rootRequestClient.post<RegisterResult>('/auth/register', data);
 }
 
@@ -40,7 +42,8 @@ export async function registerApi(data: RegisterParams) {
  */
 export async function sendSmsCodeApi(data: SmsCodeParams) {
   return rootRequestClient.post<null | undefined>(
-    '/mock/auth/sms-code',
+    // '/mock/auth/sms-code',
+    '/pwq-mock/auth/sms-code',
     data,
   );
   // return rootRequestClient.post<null | undefined>('/auth/sms-code', data);
@@ -53,6 +56,7 @@ export async function sendSmsCodeApi(data: SmsCodeParams) {
  * @returns 业务 data（成功时可为 null/空）
  */
 export async function logoutApi() {
-  return rootRequestClient.post<null | undefined>('/mock/auth/logout');
+  // return rootRequestClient.post<null | undefined>('/mock/auth/logout');
+  return rootRequestClient.post<null | undefined>('/pwq-mock/auth/logout');
   // return rootRequestClient.post<null | undefined>('/auth/logout');
 }

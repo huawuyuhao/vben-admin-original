@@ -3,6 +3,7 @@ import type {
   AuthMode,
   AuthPageMeta,
   ForgotForm,
+  IndustryType,
   RegisterForm,
   SmsLoginForm,
   TenantRoleOption,
@@ -21,10 +22,11 @@ import { useLoginStore } from '#/store/login';
 import {
   AUTH_CLIENT_ID,
   AUTH_REGISTER_GRANT_TYPE,
+  INDUSTRY_TYPE_VALUES,
   LoginType,
+  resolveRegisterUserType,
   UserEnterType,
 } from '#/types/login';
-import { INDUSTRY_OPTIONS } from '#/views/_shared/data/enterprise-auth';
 
 /** 中国大陆手机号正则（与注册接口 phonenumber 规则对齐） */
 const PHONE_REGEXP = /^1[3-9]\d{9}$/;
@@ -37,13 +39,24 @@ const MIN_PASSWORD_LENGTH = 6;
 
 /**
  * 注册密码规则：至少 8 位，含大小写、数字与特殊字符 @$!%*?&
- * 与 OpenAPI password pattern 一致
+ * 与 OpenAPI password pattern 一致（不含 + 等其它符号）
  */
-const REGISTER_PASSWORD_REGEXP =
+export const REGISTER_PASSWORD_REGEXP =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
-/** 注册页行业属性选项 */
-export const REGISTER_INDUSTRY_OPTIONS = [...INDUSTRY_OPTIONS];
+/**
+ * 注册页行业属性选项（value 为接口枚举，label 走 i18n）
+ * @returns 行业下拉选项
+ */
+export function getRegisterIndustryOptions(): Array<{
+  label: string;
+  value: IndustryType;
+}> {
+  return INDUSTRY_TYPE_VALUES.map((value) => ({
+    value,
+    label: $t(`page.login.form.industry.${value}`),
+  }));
+}
 
 /**
  * 登录页身份 Tab 选项（对应入参 userEnterType）
@@ -336,7 +349,11 @@ export function useLoginPage() {
       return;
     }
     if (!REGISTER_PASSWORD_REGEXP.test(registerForm.password)) {
-      ElMessage.warning($t('page.login.message.passwordRule'));
+      ElMessage.warning({
+        message: $t('page.login.message.passwordRule'),
+        duration: 5000,
+        showClose: true,
+      });
       return;
     }
     if (registerForm.password !== registerForm.confirmPassword) {
@@ -350,9 +367,10 @@ export function useLoginPage() {
       password: registerForm.password,
       realName: registerForm.realName.trim(),
       phonenumber: registerForm.phone.trim(),
-      industryType: registerForm.industryType,
+      industryType: registerForm.industryType as IndustryType,
       smsCode: registerForm.code.trim(),
       userEnterType: userEnterType.value,
+      userType: resolveRegisterUserType(),
       agreementAccepted: agreed.value,
     });
   }
