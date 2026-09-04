@@ -21,7 +21,8 @@ export function mapProfileToUserInfo(
   return {
     avatar: String(user?.avatar ?? ''),
     desc: '',
-    homePath: '',
+    // 门户默认进首页；空字符串会导致部分跳转逻辑不稳定
+    homePath: '/portal',
     realName: String(user?.nickName ?? user?.userName ?? ''),
     roles,
     token: '',

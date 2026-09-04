@@ -35,6 +35,7 @@ function createRequestClient(baseURL: string, options?: RequestClientOptions) {
     const accessStore = useAccessStore();
     const authStore = useAuthStore();
     accessStore.setAccessToken(null);
+    accessStore.setClientId(null);
     if (
       preferences.app.loginExpiredMode === 'modal' &&
       accessStore.isAccessChecked
@@ -67,6 +68,10 @@ function createRequestClient(baseURL: string, options?: RequestClientOptions) {
 
       config.headers.Authorization = formatToken(accessStore.accessToken);
       config.headers['Accept-Language'] = preferences.app.locale;
+      // 后端要求：登录返回的 client_id 以 clientid 请求头带到所有接口
+      if (accessStore.clientId) {
+        config.headers.clientid = accessStore.clientId;
+      }
       return config;
     },
   });

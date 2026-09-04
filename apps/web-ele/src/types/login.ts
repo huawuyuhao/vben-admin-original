@@ -50,21 +50,31 @@ export interface AuthPageMeta {
 }
 
 /**
- * 用户登录请求体
+ * 用户登录请求体（与 OpenAPI POST /auth/login 对齐）
  */
 export interface LoginParams {
-  /** 用户名（短信登录时传手机号） */
-  username?: string;
-  /** 密码（短信登录时可传验证码） */
+  /** 客户端 key（必填，如 pc、app） */
+  clientKey: string;
+  /** 授权类型（必填；密码登录 password，短信登录 sms） */
+  grantType: AuthGrantType;
+  /** 用户名（必填；账号密码登录传账号） */
+  username: string;
+  /** 密码（密码登录必填；明文传输，开启 ApiEncrypt 时由后端加密） */
   password?: string;
-  /** 验证码 */
-  captcha?: string;
-  /** 登录类型 */
-  loginType?: LoginType | string;
-  /** 租户编号（多租户场景） */
-  tenantId?: LoginTenantId | string;
-  /** 登录页切换选项卡（必填：demand / supply） */
-  userEnterType: UserEnterType;
+  /** 短信验证码（短信登录必填） */
+  smsCode?: string;
+  /** 登录手机号（短信登录必填） */
+  phonenumber?: string;
+  /** 客户端 ID（可选，如 e5cd7e4891bf95d1d19206ce24a7b32e） */
+  clientId?: string;
+  /** 租户 ID（多租户场景；不传走默认） */
+  tenantId?: string;
+  /** 用户入驻类型：demand / supply */
+  userEnterType?: UserEnterType;
+  /** 图形验证码答案（captcha.enable=true 时必填） */
+  code?: string;
+  /** 图形验证码唯一标识（与 code 配对） */
+  uuid?: string;
 }
 
 /**
@@ -96,7 +106,7 @@ export interface LoginUserInfo {
 }
 
 /**
- * 登录接口 data 结构（与最新 OpenAPI 对齐）
+ * 登录接口 data 结构（与 OpenAPI POST /auth/login 对齐）
  */
 export interface LoginResult {
   /** 授权令牌，后续请求需携带 */
@@ -265,8 +275,14 @@ export interface RegisterParams {
  */
 export type RegisterResult = string;
 
-/** 门户 OAuth 客户端 ID（注册必填，与后端约定） */
+/** 门户 OAuth 客户端 ID（注册等接口沿用） */
 export const AUTH_CLIENT_ID = 'pc';
+
+/** 门户登录客户端 key（POST /auth/login 必填：pc / app） */
+export const AUTH_CLIENT_KEY = 'pc';
+
+/** 门户默认租户 ID（登录未显式传入时使用） */
+export const AUTH_DEFAULT_TENANT_ID = '000000';
 
 /** 注册授权类型（注册必填，与后端约定） */
 export const AUTH_REGISTER_GRANT_TYPE = AuthGrantType.Password;

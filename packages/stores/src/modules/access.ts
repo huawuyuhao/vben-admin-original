@@ -24,6 +24,10 @@ interface AccessState {
    */
   accessToken: AccessToken;
   /**
+   * 登录返回的 client_id（后续请求头 clientid 使用）
+   */
+  clientId: AccessToken;
+  /**
    * 是否已经检查过权限
    */
   isAccessChecked: boolean;
@@ -85,6 +89,9 @@ export const useAccessStore = defineStore('core-access', {
     setAccessToken(token: AccessToken) {
       this.accessToken = token;
     },
+    setClientId(clientId: AccessToken) {
+      this.clientId = clientId;
+    },
     setIsAccessChecked(isAccessChecked: boolean) {
       this.isAccessChecked = isAccessChecked;
     },
@@ -105,6 +112,7 @@ export const useAccessStore = defineStore('core-access', {
       'accessToken',
       'refreshToken',
       'accessCodes',
+      'clientId',
       'isLockScreen',
       'lockScreenPassword',
     ],
@@ -114,6 +122,7 @@ export const useAccessStore = defineStore('core-access', {
     accessMenus: [],
     accessRoutes: [],
     accessToken: null,
+    clientId: null,
     isAccessChecked: false,
     isLockScreen: false,
     lockScreenPassword: undefined,

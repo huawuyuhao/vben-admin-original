@@ -21,9 +21,10 @@ import { useAuthStore } from '#/store';
 import { useLoginStore } from '#/store/login';
 import {
   AUTH_CLIENT_ID,
+  AUTH_CLIENT_KEY,
   AUTH_REGISTER_GRANT_TYPE,
+  AuthGrantType,
   INDUSTRY_TYPE_VALUES,
-  LoginType,
   resolveRegisterUserType,
   UserEnterType,
 } from '#/types/login';
@@ -292,10 +293,11 @@ export function useLoginPage() {
       return;
     }
     await authStore.authLogin({
+      clientKey: AUTH_CLIENT_KEY,
+      grantType: AuthGrantType.Sms,
       username: smsForm.phone.trim(),
-      password: smsForm.code.trim(),
-      captcha: smsForm.code.trim(),
-      loginType: LoginType.Sms,
+      phonenumber: smsForm.phone.trim(),
+      smsCode: smsForm.code.trim(),
       userEnterType: userEnterType.value,
     });
   }
@@ -313,9 +315,10 @@ export function useLoginPage() {
       return;
     }
     await authStore.authLogin({
+      clientKey: AUTH_CLIENT_KEY,
+      grantType: AuthGrantType.Password,
       username: accountForm.account.trim(),
       password: accountForm.password,
-      loginType: LoginType.Password,
       userEnterType: userEnterType.value,
     });
   }

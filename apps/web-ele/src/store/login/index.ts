@@ -1,11 +1,17 @@
 import type { RegisterParams } from '#/types/login';
 
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
+import { preferences } from '@vben/preferences';
 import { defineStore } from 'pinia';
 
 import { registerApi, sendSmsCodeApi } from '#/api/login';
-import { LoginType, UserEnterType } from '#/types/login';
+import {
+  AUTH_CLIENT_KEY,
+  AuthGrantType,
+  UserEnterType,
+} from '#/types/login';
 
 import { useAuthStore } from '../auth';
 
@@ -14,6 +20,8 @@ import { useAuthStore } from '../auth';
  * token / 用户信息一律走 vben 的 accessStore、userStore，不在此持久化。
  */
 export const useLoginStore = defineStore('login', () => {
+  const router = useRouter();
+
   /** 登录页身份选项卡（demand / supply） */
   const userEnterType = ref<UserEnterType>(UserEnterType.Demand);
   /** 注册请求中 */
@@ -22,7 +30,7 @@ export const useLoginStore = defineStore('login', () => {
   const smsLoading = ref(false);
 
   /**
-   * 调用注册接口；成功后走 vben authLogin 完成登录态写入。
+   * 调用注册接口；成功后自动登录并跳转门户首页。
    * @param params 注册入参
    */
   async function register(params: RegisterParams) {
@@ -30,12 +38,19 @@ export const useLoginStore = defineStore('login', () => {
     registerLoading.value = true;
     try {
       await registerApi(params);
-      await authStore.authLogin({
-        username: params.username,
-        password: params.password,
-        loginType: LoginType.Password,
-        userEnterType: params.userEnterType ?? UserEnterType.Demand,
-      });
+      // 注册成功后自动登录；显式跳门户首页，避免依赖用户信息里的空 homePath
+      await authStore.authLogin(
+        {
+          clientKey: AUTH_CLIENT_KEY,
+          grantType: AuthGrantType.Password,
+          username: params.username,
+          password: params.password,
+          userEnterType: params.userEnterType ?? UserEnterType.Demand,
+        },
+        async () => {
+          await router.replace(preferences.app.defaultHomePath || '/portal');
+        },
+      );
     } finally {
       registerLoading.value = false;
     }

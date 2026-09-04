@@ -7,18 +7,25 @@ import type {
 } from '#/types/login';
 
 import { rootRequestClient } from '#/api/request';
+import { AUTH_DEFAULT_TENANT_ID } from '#/types/login';
 
 /**
  * 用户登录
- * 开发态走 Apifox Mock：/api/mock/auth/login → 代理到 Mock 服务
- * 正式接口：POST /api/auth/login（文档路径自带 /api）
- * @param data 登录参数（必填 userEnterType：demand | supply）
- * @returns 登录结果（access_token 等）
+ * 开发态走 Apifox Mock：/mock/auth/login
+ * 正式接口：POST /auth/login（文档路径不带 /api）
+ * 必填：clientKey、grantType、username；密码登录传 password，短信登录传 smsCode + phonenumber
+ * tenantId 未传时默认 '000000'
+ * @param data 登录参数
+ * @returns 登录结果 data（access_token / refresh_token 等）
  */
 export async function loginApi(data: LoginParams) {
-  // return rootRequestClient.post<LoginResult>('/mock/api/auth/login', data);
-  return rootRequestClient.post<LoginResult>('/pwq-mock/api/auth/login', data);
-  // return rootRequestClient.post<LoginResult>('/api/auth/login', data);
+  const payload: LoginParams = {
+    ...data,
+    tenantId: data.tenantId || AUTH_DEFAULT_TENANT_ID,
+  };
+  // return rootRequestClient.post<LoginResult>('/mock/auth/login', payload);
+  return rootRequestClient.post<LoginResult>('/pwq-mock/auth/login', payload);
+  // return rootRequestClient.post<LoginResult>('/auth/login', payload);
 }
 
 /**

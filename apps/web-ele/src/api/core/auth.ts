@@ -4,16 +4,14 @@ import { loginApi as portalLoginApi, logoutApi as portalLogoutApi } from '#/api/
 import { baseRequestClient } from '#/api/request';
 
 export namespace AuthApi {
-  /** 登录接口参数（vben 标准字段；门户会额外携带 loginType / userEnterType 等） */
-  export interface LoginParams {
-    password?: string;
-    username?: string;
-    [key: string]: unknown;
-  }
+  /** 登录接口参数（对齐门户 POST /auth/login） */
+  export type LoginParams = PortalLoginParams;
 
   /** 登录接口返回值（对齐 vben authLogin：使用 accessToken） */
   export interface LoginResult {
     accessToken: string;
+    /** 登录返回的 client_id，后续请求头 clientid 使用 */
+    clientId?: null | string;
     refreshToken?: null | string;
   }
 
@@ -25,15 +23,24 @@ export namespace AuthApi {
 
 /**
  * 登录（vben 标准入口）。
- * 实际请求走门户登录接口，再把 access_token 规范成 accessToken，供 accessStore 持久化。
+ * 实际请求走门户登录接口，再把 access_token / accessToken 规范成 accessToken，供 accessStore 持久化。
  * @param data 登录表单数据
  * @returns 含 accessToken 的登录结果
  */
 export async function loginApi(data: AuthApi.LoginParams) {
-  const result = await portalLoginApi(data as unknown as PortalLoginParams);
+  const result = (await portalLoginApi(data)) as null | {
+    access_token?: string;
+    accessToken?: string;
+    client_id?: null | string;
+    clientId?: null | string;
+    refresh_token?: null | string;
+    refreshToken?: null | string;
+  };
+
   return {
-    accessToken: result?.access_token ?? '',
-    refreshToken: result?.refresh_token ?? null,
+    accessToken: result?.access_token || result?.accessToken || '',
+    clientId: result?.client_id || result?.clientId || null,
+    refreshToken: result?.refresh_token ?? result?.refreshToken ?? null,
   } satisfies AuthApi.LoginResult;
 }
 
