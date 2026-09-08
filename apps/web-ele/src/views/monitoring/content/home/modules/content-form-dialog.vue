@@ -1,7 +1,16 @@
 <script lang="ts" setup>
-import type { FormInstance, FormRules, UploadProps } from 'element-plus';
+import type {
+  FormInstance,
+  FormRules,
+  UploadInstance,
+  UploadProps,
+} from 'element-plus';
 
-import type { PortalContentItem, PortalContentType } from '#/types/monitoring/content/home/common';
+import type {
+  PortalContentItem,
+  PortalContentType,
+  PortalContentWriteParams,
+} from '#/types/monitoring/content/home/common';
 
 import { computed, reactive, ref, watch } from 'vue';
 
@@ -19,10 +28,13 @@ import {
 
 import {
   isAllowedPortalContentImageFile,
+  isPortalBannerContent,
+  PORTAL_BANNER_DATETIME_FORMAT,
   PORTAL_CONTENT_IMAGE_ACCEPT,
   resolvePortalContentImageUrl,
   supportsPortalContentImage,
   supportsPortalContentSort,
+  supportsPortalContentText,
 } from '../data';
 
 defineOptions({ name: 'PortalContentFormDialog' });
@@ -50,12 +62,17 @@ const submitting = ref(false);
 const imageUploading = ref(false);
 /** 表单引用 */
 const formRef = ref<FormInstance>();
+/** 图片上传组件引用（失败时清空内部文件列表，避免 limit=1 误拦截） */
+const uploadRef = ref<UploadInstance>();
 
 const form = reactive({
   title: '',
   contentText: '',
   imageUrl: '',
+  linkUrl: '',
   sortOrder: 0,
+  startTime: null as null | string,
+  endTime: null as null | string,
 });
 
 /** 图片预览可见 */
@@ -66,6 +83,12 @@ const imagePreviewUrl = ref('');
 const isReadonly = computed(() => mode.value === 'view');
 const showImage = computed(() => supportsPortalContentImage(props.contentType));
 const showSort = computed(() => supportsPortalContentSort(props.contentType));
+const showContentText = computed(() =>
+  supportsPortalContentText(props.contentType),
+);
+const showBannerFields = computed(() =>
+  isPortalBannerContent(props.contentType),
+);
 
 /** 表单图片展示地址 */
 const displayImageUrl = computed(() => resolveFormImageUrl(form.imageUrl));
@@ -109,17 +132,43 @@ function resolveFormImageUrl(raw?: string): string {
 }
 
 /**
+ * 用行数据回填表单
+ * @param row 行数据
+ */
+function fillForm(row: PortalContentItem) {
+  form.title = row.title || '';
+  form.contentText = row.content || '';
+  form.imageUrl = row.imageUrl || row.coverImage || '';
+  form.linkUrl = row.linkUrl || '';
+  form.sortOrder = Number(row.sortOrder) || 0;
+  form.startTime = row.startTime?.trim() || null;
+  form.endTime = row.endTime?.trim() || null;
+}
+
+/**
  * 重置表单
  */
 function resetForm() {
   form.title = '';
   form.contentText = '';
   form.imageUrl = '';
+  form.linkUrl = '';
   form.sortOrder = 0;
+  form.startTime = null;
+  form.endTime = null;
   editingRow.value = null;
   imagePreviewVisible.value = false;
   imagePreviewUrl.value = '';
   formRef.value?.clearValidate();
+  uploadRef.value?.clearFiles();
+}
+
+/**
+ * 清空上传组件内部文件列表
+ * el-upload 在自定义上传失败后仍会占用 limit 名额，需主动清理
+ */
+function clearUploadFiles() {
+  uploadRef.value?.clearFiles();
 }
 
 /**
@@ -138,10 +187,7 @@ function openCreate() {
 function openEdit(row: PortalContentItem) {
   mode.value = 'edit';
   editingRow.value = row;
-  form.title = row.title || '';
-  form.contentText = row.content || '';
-  form.imageUrl = row.imageUrl || row.coverImage || '';
-  form.sortOrder = Number(row.sortOrder) || 0;
+  fillForm(row);
   visible.value = true;
 }
 
@@ -152,10 +198,7 @@ function openEdit(row: PortalContentItem) {
 function openView(row: PortalContentItem) {
   mode.value = 'view';
   editingRow.value = row;
-  form.title = row.title || '';
-  form.contentText = row.content || '';
-  form.imageUrl = row.imageUrl || row.coverImage || '';
-  form.sortOrder = Number(row.sortOrder) || 0;
+  fillForm(row);
   visible.value = true;
 }
 
@@ -178,11 +221,15 @@ watch(visible, (val) => {
  */
 const beforeUpload: UploadProps['beforeUpload'] = (raw) => {
   if (!isAllowedPortalContentImageFile(raw)) {
-    ElMessage.warning($t('page.monitoring.content.home.common.form.imageTypeInvalid'));
+    ElMessage.warning(
+      $t('page.monitoring.content.home.common.form.imageTypeInvalid'),
+    );
     return false;
   }
   if (raw.size / 1024 / 1024 > 5) {
-    ElMessage.warning($t('page.monitoring.content.home.common.form.imageSizeInvalid'));
+    ElMessage.warning(
+      $t('page.monitoring.content.home.common.form.imageSizeInvalid'),
+    );
     return false;
   }
   return true;
@@ -190,9 +237,18 @@ const beforeUpload: UploadProps['beforeUpload'] = (raw) => {
 
 /**
  * 超出上传数量限制
+ * @param files 本次选择的超出文件
  */
-const handleUploadExceed: UploadProps['onExceed'] = () => {
-  ElMessage.warning($t('page.monitoring.content.home.common.form.imageLimit'));
+const handleUploadExceed: UploadProps['onExceed'] = (files) => {
+  if (!isEmpty(form.imageUrl)) {
+    ElMessage.warning($t('page.monitoring.content.home.common.form.imageLimit'));
+    return;
+  }
+  clearUploadFiles();
+  const raw = files[0];
+  if (raw && beforeUpload(raw)) {
+    void handleImageUpload({ file: raw });
+  }
 };
 
 /**
@@ -206,12 +262,15 @@ async function handleImageUpload(options: { file: File }) {
     const url = String(result?.url ?? '').trim();
     if (isEmpty(url)) {
       ElMessage.error($t('page.monitoring.content.home.common.form.uploadFail'));
+      clearUploadFiles();
       return;
     }
     form.imageUrl = url;
     formRef.value?.clearValidate('imageUrl');
+    clearUploadFiles();
   } catch {
     form.imageUrl = '';
+    clearUploadFiles();
   } finally {
     imageUploading.value = false;
   }
@@ -222,6 +281,7 @@ async function handleImageUpload(options: { file: File }) {
  */
 function handleImageRemove() {
   form.imageUrl = '';
+  clearUploadFiles();
 }
 
 /**
@@ -244,6 +304,31 @@ function closeImagePreview() {
 }
 
 /**
+ * 组装写接口参数
+ */
+function buildWriteParams(): PortalContentWriteParams {
+  const payload: PortalContentWriteParams = {
+    content: props.contentType,
+    title: form.title.trim(),
+    imageUrl: form.imageUrl.trim() || undefined,
+    sortOrder: showSort.value ? Number(form.sortOrder) || 0 : 0,
+  };
+
+  if (showContentText.value) {
+    payload.contentText = form.contentText.trim() || undefined;
+  }
+
+  if (showBannerFields.value) {
+    payload.linkUrl = form.linkUrl.trim() || undefined;
+    payload.startTime = form.startTime?.trim() || undefined;
+    payload.endTime = form.endTime?.trim() || undefined;
+    // targetRegion / targetUserType：后端字段暂保留，前端暂不采集、不传
+  }
+
+  return payload;
+}
+
+/**
  * 提交表单
  */
 async function handleSubmit() {
@@ -259,20 +344,18 @@ async function handleSubmit() {
 
   submitting.value = true;
   try {
-    const payload = {
-      content: props.contentType,
-      title: form.title.trim(),
-      contentText: form.contentText.trim() || undefined,
-      imageUrl: form.imageUrl.trim() || undefined,
-      sortOrder: showSort.value ? Number(form.sortOrder) || 0 : 0,
-    };
+    const payload = buildWriteParams();
 
     if (mode.value === 'create') {
       await createPortalContentApi(payload);
-      ElMessage.success($t('page.monitoring.content.home.common.form.createSuccess'));
+      ElMessage.success(
+        $t('page.monitoring.content.home.common.form.createSuccess'),
+      );
     } else if (editingRow.value) {
       await updatePortalContentApi(editingRow.value.contentId, payload);
-      ElMessage.success($t('page.monitoring.content.home.common.form.updateSuccess'));
+      ElMessage.success(
+        $t('page.monitoring.content.home.common.form.updateSuccess'),
+      );
     }
 
     visible.value = false;
@@ -301,7 +384,7 @@ defineExpose({ openCreate, openEdit, openView });
     <el-form
       ref="formRef"
       class="content-form-dialog__form"
-      label-width="96px"
+      :label-width="showBannerFields ? '120px' : '96px'"
       :model="form"
       :rules="rules"
       :disabled="isReadonly"
@@ -315,7 +398,9 @@ defineExpose({ openCreate, openEdit, openView });
           clearable
           maxlength="120"
           show-word-limit
-          :placeholder="$t('page.monitoring.content.home.common.form.titlePlaceholder')"
+          :placeholder="
+            $t('page.monitoring.content.home.common.form.titlePlaceholder')
+          "
         />
       </el-form-item>
 
@@ -326,11 +411,11 @@ defineExpose({ openCreate, openEdit, openView });
         <div class="content-form-dialog__image-picker">
           <div class="content-form-dialog__image-slot">
             <div v-if="displayImageUrl" class="content-form-dialog__image-card">
-            <el-image
-              class="content-form-dialog__image-thumb"
-              fit="contain"
-              :src="displayImageUrl"
-            />
+              <el-image
+                class="content-form-dialog__image-thumb"
+                fit="contain"
+                :src="displayImageUrl"
+              />
               <div class="content-form-dialog__image-actions">
                 <button
                   class="content-form-dialog__image-action"
@@ -352,6 +437,7 @@ defineExpose({ openCreate, openEdit, openView });
 
             <el-upload
               v-else-if="!isReadonly"
+              ref="uploadRef"
               v-loading="imageUploading"
               drag
               :accept="PORTAL_CONTENT_IMAGE_ACCEPT"
@@ -368,7 +454,9 @@ defineExpose({ openCreate, openEdit, openView });
               </el-icon>
               <div class="el-upload__text">
                 {{ $t('page.monitoring.content.home.common.form.dragDropText') }}
-                <em>{{ $t('page.monitoring.content.home.common.form.dragDropClick') }}</em>
+                <em>{{
+                  $t('page.monitoring.content.home.common.form.dragDropClick')
+                }}</em>
               </div>
             </el-upload>
           </div>
@@ -379,6 +467,66 @@ defineExpose({ openCreate, openEdit, openView });
       </el-form-item>
 
       <el-form-item
+        v-if="showBannerFields"
+        :label="$t('page.monitoring.content.home.common.fields.linkUrl')"
+        prop="linkUrl"
+      >
+        <el-input
+          v-model="form.linkUrl"
+          clearable
+          maxlength="500"
+          :placeholder="
+            $t('page.monitoring.content.home.common.form.linkUrlPlaceholder')
+          "
+        />
+      </el-form-item>
+
+      <el-form-item
+        v-if="showBannerFields"
+        :label="$t('page.monitoring.content.home.common.fields.startTime')"
+        prop="startTime"
+      >
+        <el-date-picker
+          v-model="form.startTime"
+          type="datetime"
+          clearable
+          teleported
+          popper-class="content-form-dialog__popper"
+          style="width: 100%"
+          :value-format="PORTAL_BANNER_DATETIME_FORMAT"
+          :placeholder="
+            $t('page.monitoring.content.home.common.form.startTimePlaceholder')
+          "
+        />
+        <p class="content-form-dialog__hint">
+          {{ $t('page.monitoring.content.home.common.form.startTimeHint') }}
+        </p>
+      </el-form-item>
+
+      <el-form-item
+        v-if="showBannerFields"
+        :label="$t('page.monitoring.content.home.common.fields.endTime')"
+        prop="endTime"
+      >
+        <el-date-picker
+          v-model="form.endTime"
+          type="datetime"
+          clearable
+          teleported
+          popper-class="content-form-dialog__popper"
+          style="width: 100%"
+          :value-format="PORTAL_BANNER_DATETIME_FORMAT"
+          :placeholder="
+            $t('page.monitoring.content.home.common.form.endTimePlaceholder')
+          "
+        />
+        <p class="content-form-dialog__hint">
+          {{ $t('page.monitoring.content.home.common.form.endTimeHint') }}
+        </p>
+      </el-form-item>
+
+      <el-form-item
+        v-if="showContentText"
         :label="$t('page.monitoring.content.home.common.fields.content')"
         prop="contentText"
       >
@@ -388,7 +536,9 @@ defineExpose({ openCreate, openEdit, openView });
           maxlength="2000"
           show-word-limit
           type="textarea"
-          :placeholder="$t('page.monitoring.content.home.common.form.contentPlaceholder')"
+          :placeholder="
+            $t('page.monitoring.content.home.common.form.contentPlaceholder')
+          "
         />
       </el-form-item>
 
@@ -411,7 +561,11 @@ defineExpose({ openCreate, openEdit, openView });
 
     <template #footer>
       <el-button @click="handleClose">
-        {{ isReadonly ? $t('page.monitoring.content.home.common.form.close') : $t('page.monitoring.content.home.common.form.cancel') }}
+        {{
+          isReadonly
+            ? $t('page.monitoring.content.home.common.form.close')
+            : $t('page.monitoring.content.home.common.form.cancel')
+        }}
       </el-button>
       <el-button
         v-if="!isReadonly"
@@ -546,5 +700,12 @@ defineExpose({ openCreate, openEdit, openView });
     font-size: 12px;
     color: hsl(var(--muted-foreground));
   }
+}
+</style>
+
+<!-- 挂到 body 的弹出层需非 scoped，保证盖过 dialog 的 z-index:4000 -->
+<style lang="scss">
+.content-form-dialog__popper {
+  z-index: 4200 !important;
 }
 </style>

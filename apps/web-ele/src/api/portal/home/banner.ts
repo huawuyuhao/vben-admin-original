@@ -9,6 +9,7 @@ import { rootRequestClient } from '#/api/request';
  * @returns 轮播图列表（业务 data）
  */
 export async function getPortalBannersApi() {
-  return rootRequestClient.get<PortalBanner[]>('/mock/portal/banners');
+  return rootRequestClient.get<PortalBanner[]>('/pwq-mock/portal/banners');
+  // return rootRequestClient.get<PortalBanner[]>('/mock/portal/banners');
   // return rootRequestClient.get<PortalBanner[]>('/portal/banners');
 }

@@ -30,7 +30,9 @@ const page = ref(1);
 const loading = ref(false);
 /** 当前页资讯（已过滤） */
 const newsList = ref<PortalNews[]>([]);
-/** 接口原始返回条数（用于判断是否还有下一页） */
+/** 接口返回总条数 */
+const total = ref(0);
+/** 当前页原始条数（无 total 时兜底判断下一页） */
 const rawCount = ref(0);
 /** 分页器入场 */
 const pagerMotion = createSectionReveal(120);
@@ -45,7 +47,7 @@ function cardMotion(index: number) {
 
 /** 是否可点下一页 */
 const canNext = computed(() =>
-  hasNewsNextPage(NEWS_PAGE_SIZE, rawCount.value),
+  hasNewsNextPage(page.value, NEWS_PAGE_SIZE, total.value, rawCount.value),
 );
 
 /** 是否可点上一页 */
@@ -58,16 +60,18 @@ const canPrev = computed(() => page.value > 1);
 async function fetchNews(targetPage: number) {
   loading.value = true;
   try {
-    const data = await getPortalNewsPageApi({
+    const pageData = await getPortalNewsPageApi({
       page: targetPage,
       pageSize: NEWS_PAGE_SIZE,
     });
-    const list = Array.isArray(data) ? data : [];
+    const list = pageData.records ?? [];
     rawCount.value = list.length;
+    total.value = Math.max(0, Number(pageData.total) || 0);
     newsList.value = normalizeNewsList(list);
     page.value = targetPage;
   } catch {
     rawCount.value = 0;
+    total.value = 0;
     newsList.value = [];
   } finally {
     loading.value = false;

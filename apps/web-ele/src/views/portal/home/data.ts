@@ -1,7 +1,11 @@
 import type { PortalAboutUs } from '#/types/portal/home/about';
 import type { PortalBanner } from '#/types/portal/home/banner';
 import type { PortalBillingInfo } from '#/types/portal/home/billing';
-import type { PortalNews } from '#/types/portal/home/news';
+import type {
+  PortalNews,
+  PortalNewsId,
+  PortalNewsPageResult,
+} from '#/types/portal/home/news';
 import type { PortalProductRecommend } from '#/types/portal/home/product';
 import type { PortalServiceIntro } from '#/types/portal/home/service';
 
@@ -199,32 +203,137 @@ export function normalizeBillingList(
 }
 
 /**
- * 过滤已发布且含标题的资讯列表
+ * 归一化资讯主键：保留字符串雪花 ID，避免 Number 精度丢失
+ * @param value 原始主键
+ * @returns 可用主键；无法识别时 undefined
+ */
+export function normalizePortalNewsId(
+  value: unknown,
+): PortalNewsId | undefined {
+  if (typeof value === 'number') {
+    return Number.isFinite(value) ? value : undefined;
+  }
+  if (typeof value === 'string') {
+    const text = value.trim();
+    if (!/^\d+$/.test(text)) {
+      return undefined;
+    }
+    // 安全整数范围内可保留 number；超长雪花 ID 必须保持字符串
+    if (text.length <= 15) {
+      const num = Number(text);
+      if (Number.isSafeInteger(num)) {
+        return num;
+      }
+    }
+    return text;
+  }
+  return undefined;
+}
+
+/**
+ * 从资讯原始项解析 newsId（兼容 newsId / id / contentId）
+ * @param raw 接口原始列表项
+ * @returns 有效主键；无法识别时 undefined
+ */
+export function resolvePortalNewsId(
+  raw?: null | Record<string, unknown>,
+): PortalNewsId | undefined {
+  if (!raw) {
+    return undefined;
+  }
+  const candidates = [raw.newsId, raw.id, raw.contentId];
+  for (const candidate of candidates) {
+    const id = normalizePortalNewsId(candidate);
+    if (id !== undefined) {
+      return id;
+    }
+  }
+  return undefined;
+}
+
+/**
+ * 从分页 / 列表接口 data 解析资讯数组
+ * 兼容：直接数组、{ records } / { rows } / { list }
+ * @param data 接口 data
+ * @returns 原始列表数组
+ */
+export function pickPortalNewsRecords(
+  data?: null | PortalNews[] | PortalNewsPageResult | Record<string, unknown>,
+): PortalNews[] {
+  if (!data) {
+    return [];
+  }
+  if (Array.isArray(data)) {
+    return data;
+  }
+  const source = data as Record<string, unknown>;
+  if (Array.isArray(source.records)) {
+    return source.records as PortalNews[];
+  }
+  if (Array.isArray(source.rows)) {
+    return source.rows as PortalNews[];
+  }
+  if (Array.isArray(source.list)) {
+    return source.list as PortalNews[];
+  }
+  return [];
+}
+
+/**
+ * 过滤已发布且含标题的资讯列表，并补齐 newsId
  * @param list 接口原始列表
  * @returns 可展示的资讯列表
  */
-export function normalizeNewsList(list?: null | PortalNews[]): PortalNews[] {
+export function normalizeNewsList(
+  list?: null | PortalNews[] | Record<string, unknown>[],
+): PortalNews[] {
   if (!list?.length) {
     return [];
   }
 
-  return list.filter(
-    (item) =>
-      isPortalItemEnabled(item.status) && !isEmpty(item.title?.trim()),
-  );
+  const result: PortalNews[] = [];
+  for (const item of list) {
+    const raw = item as Record<string, unknown>;
+    const newsId = resolvePortalNewsId(raw);
+    if (newsId === undefined) {
+      continue;
+    }
+    const title = String(raw.title ?? '').trim();
+    if (isEmpty(title)) {
+      continue;
+    }
+    if (!isPortalItemEnabled(raw.status as number | string | undefined)) {
+      continue;
+    }
+    result.push({
+      ...(item as PortalNews),
+      newsId,
+      title,
+    });
+  }
+  return result;
 }
 
 /**
- * 是否还有下一页（当前页无数据或不足一页时视为末页）
+ * 是否还有下一页（优先按接口 total；无 total 时回退当前页条数判断）
+ * @param page 当前页码（从 1 开始）
  * @param pageSize 每页大小
- * @param currentCount 当前页条数
+ * @param total 总条数（可选）
+ * @param currentCount 当前页条数（无 total 时用于兜底）
  * @returns 还有下一页返回 true
  */
 export function hasNewsNextPage(
+  page: number,
   pageSize: number,
-  currentCount: number,
+  total?: number,
+  currentCount?: number,
 ): boolean {
-  return currentCount >= pageSize;
+  const safePage = Math.max(1, Number(page) || 1);
+  const safeSize = Math.max(1, Number(pageSize) || 1);
+  if (total != null && Number.isFinite(Number(total))) {
+    return safePage * safeSize < Number(total);
+  }
+  return (Number(currentCount) || 0) >= safeSize;
 }
 
 /**
@@ -264,7 +373,7 @@ export function formatNewsDateTime(publishTime?: string): string {
  * 打开资讯详情（新窗口，无侧栏公开壳）
  * @param newsId 资讯 ID
  */
-export function openNewsDetailWindow(newsId: number) {
+export function openNewsDetailWindow(newsId: PortalNewsId) {
   const url = `/portal/news/${newsId}`;
   window.open(url, '_blank', 'noopener,noreferrer');
 }

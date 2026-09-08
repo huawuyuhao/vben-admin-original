@@ -1,5 +1,10 @@
 <script lang="ts" setup>
-import type { FormInstance, FormRules, UploadProps } from 'element-plus';
+import type {
+  FormInstance,
+  FormRules,
+  UploadInstance,
+  UploadProps,
+} from 'element-plus';
 
 import type { CaseInfo, CaseListItem, CaseWriteParams } from '#/types/service/case';
 
@@ -51,6 +56,8 @@ const detailLoading = ref(false);
 const imageUploading = ref(false);
 /** 表单引用 */
 const formRef = ref<FormInstance>();
+/** 封面上传组件引用（失败时清空内部文件列表，避免 limit=1 误拦截） */
+const uploadRef = ref<UploadInstance>();
 
 const form = reactive({
   title: '',
@@ -120,6 +127,15 @@ function resetForm() {
   imagePreviewVisible.value = false;
   imagePreviewUrl.value = '';
   formRef.value?.clearValidate();
+  uploadRef.value?.clearFiles();
+}
+
+/**
+ * 清空上传组件内部文件列表
+ * el-upload 在自定义上传失败后仍会占用 limit 名额，需主动清理
+ */
+function clearUploadFiles() {
+  uploadRef.value?.clearFiles();
 }
 
 /**
@@ -215,9 +231,20 @@ const beforeUpload: UploadProps['beforeUpload'] = (raw) => {
 
 /**
  * 超出上传数量限制
+ * 若当前并无成功封面，说明是失败残留占位，清掉后自动重试本次选择
+ * @param files 本次选择的超出文件
  */
-const handleUploadExceed: UploadProps['onExceed'] = () => {
-  ElMessage.warning($t('page.service.case.form.imageLimit'));
+const handleUploadExceed: UploadProps['onExceed'] = (files) => {
+  if (!isEmpty(form.coverImage)) {
+    ElMessage.warning($t('page.service.case.form.imageLimit'));
+    return;
+  }
+
+  clearUploadFiles();
+  const raw = files[0];
+  if (raw && beforeUpload(raw)) {
+    void handleImageUpload({ file: raw });
+  }
 };
 
 /**
@@ -231,11 +258,14 @@ async function handleImageUpload(options: { file: File }) {
     const url = String(result?.url ?? '').trim();
     if (isEmpty(url)) {
       ElMessage.error($t('page.service.case.form.uploadFail'));
+      clearUploadFiles();
       return;
     }
     form.coverImage = url;
+    clearUploadFiles();
   } catch {
     form.coverImage = '';
+    clearUploadFiles();
   } finally {
     imageUploading.value = false;
   }
@@ -246,6 +276,7 @@ async function handleImageUpload(options: { file: File }) {
  */
 function handleImageRemove() {
   form.coverImage = '';
+  clearUploadFiles();
 }
 
 /**
@@ -408,6 +439,7 @@ defineExpose({ openCreate, openEdit });
 
               <el-upload
                 v-else
+                ref="uploadRef"
                 v-loading="imageUploading"
                 drag
                 :accept="CASE_IMAGE_ACCEPT"

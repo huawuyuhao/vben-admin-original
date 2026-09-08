@@ -316,12 +316,14 @@ async function handleFileUpload(options: { file: File }) {
     const url = String(result?.url ?? '').trim();
     if (isEmpty(url)) {
       ElMessage.error($t('page.service.mydemand.apps.material.uploadFail'));
+      uploadFileList.value = [];
       return;
     }
     form.attachmentUrls.push(url);
     uploadFileList.value = [];
   } catch {
-    // 错误提示由接口层处理
+    // 错误提示由接口层处理；清空残留，避免影响后续选择
+    uploadFileList.value = [];
   } finally {
     uploading.value = false;
   }

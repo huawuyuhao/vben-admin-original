@@ -9,12 +9,17 @@ export type PortalContentType =
   | 'service';
 
 /**
+ * 门户内容主键（后端雪花 ID 可能以字符串返回，不可强转 Number 以免精度丢失）
+ */
+export type PortalContentId = number | string;
+
+/**
  * 门户内容统一视图对象
  * 包含 banner / news / service / billing / about 全部字段，按 contentType 与非空字段渲染
  */
 export interface PortalContentItem {
-  /** 内容 ID（统一主键） */
-  contentId: number;
+  /** 内容 ID（统一主键；兼容数字与字符串雪花 ID） */
+  contentId: PortalContentId;
   /** 内容类型 */
   contentType?: PortalContentType | string;
   /** 标题 */
@@ -27,8 +32,16 @@ export interface PortalContentItem {
   linkUrl?: string;
   /** 排序（banner / service / billing / about） */
   sortOrder?: number;
-  /** 状态（banner / news / service：0-停用 1-启用） */
-  status?: number;
+  /** 开始展示时间（banner，自动上线） */
+  startTime?: string;
+  /** 结束展示时间（banner，自动下线） */
+  endTime?: string;
+  /** 目标区域（banner；前端暂不展示/不传） */
+  targetRegion?: string;
+  /** 目标用户类型（banner；前端暂不展示/不传） */
+  targetUserType?: string;
+  /** 状态（banner / news / service：0-停用 1-启用；null / 未返回表示无需上下线） */
+  status?: null | number;
   /** 审核状态（0-待审核 1-已通过 2-已驳回；billing/about 可能为 null） */
   auditStatus?: null | number;
   /** 摘要（news） */
@@ -43,6 +56,10 @@ export interface PortalContentItem {
   createTime?: string;
   /** 更新时间 */
   updateTime?: string;
+  /** 部分后端可能直接返回 id */
+  id?: PortalContentId;
+  /** 轮播图场景可能返回 bannerId */
+  bannerId?: PortalContentId;
 }
 
 /**
@@ -92,12 +109,28 @@ export interface PortalContentWriteParams {
   content: PortalContentType;
   /** 标题 */
   title: string;
-  /** 内容（大文本） */
+  /** 内容（大文本，news / service / billing / about 使用） */
   contentText?: string;
-  /** 图片 URL */
+  /** 图片 URL（banner / service / about 用 imageUrl，news 映射到 coverImage） */
   imageUrl?: string;
+  /** 跳转链接（banner 专用） */
+  linkUrl?: string;
   /** 排序（默认 0，值越小越靠前） */
   sortOrder: number;
+  /** 开始展示时间（banner 专用，自动上线） */
+  startTime?: string;
+  /** 结束展示时间（banner 专用，自动下线） */
+  endTime?: string;
+  /**
+   * 目标区域（banner 专用，发布范围，多个用逗号分隔）
+   * 后端字段暂保留；前端暂不采集、写请求不传
+   */
+  targetRegion?: string;
+  /**
+   * 目标用户类型（banner 专用，如 sys_user / app_user / all）
+   * 后端字段暂保留；前端暂不采集、写请求不传
+   */
+  targetUserType?: string;
 }
 
 /**
@@ -116,22 +149,25 @@ export interface PortalContentDeleteParams {
 }
 
 /**
- * 门户内容上下架操作类型
- * PUT /admin/content/product/{id}/shelf
+ * 门户内容上下架操作类型：shelf 上架 / unshelf 下架
  */
 export type PortalContentShelfAction = 'shelf' | 'unshelf';
 
 /**
  * 门户内容上下架请求体
- * PUT /admin/content/product/{id}/shelf
+ * PUT /admin/content/portal/{id}/shelf
  */
 export interface PortalContentShelfParams {
+  /** 内容类型枚举（banner / news / service / billing / about） */
+  content: PortalContentType;
   /** 操作类型：shelf 上架 / unshelf 下架 */
   action: PortalContentShelfAction;
 }
 
 /**
- * 门户内容审核状态（0-待审核 1-已通过 2-已驳回）
+ * 门户内容审核状态
+ * - 列表展示：0-待审核 1-已通过 2-已驳回
+ * - 提交审核接口入参：后端约定传 1
  * PUT /admin/content/portal/{id}/audit
  */
 export type PortalContentAuditStatus = 0 | 1 | 2;
@@ -143,7 +179,7 @@ export type PortalContentAuditStatus = 0 | 1 | 2;
 export interface PortalContentAuditParams {
   /** 内容类型枚举 */
   content: PortalContentType;
-  /** 审核状态 */
+  /** 审核状态（提交审核时传 1） */
   auditStatus: PortalContentAuditStatus;
 }
 
@@ -157,8 +193,8 @@ export type PortalContentUpdateParams = PortalContentWriteParams;
  * 新增门户内容响应 data
  */
 export interface PortalContentCreateResult {
-  /** 新建内容 ID */
-  key: number;
+  /** 新建内容 ID（兼容数字与字符串雪花 ID） */
+  key: PortalContentId;
 }
 
 /**

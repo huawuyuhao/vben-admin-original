@@ -12,11 +12,25 @@ defineProps<{
   loading?: boolean;
   /** 产品列表 */
   products: ProductInfo[];
+  /** 正在上下架的产品 ID */
+  shelfActingId?: null | number | string;
 }>();
 
 const emit = defineEmits<{
   /** 查看详情 */
   detail: [item: ProductInfo];
+  /** 管理评价 */
+  eval: [item: ProductInfo];
+  /** 上架 */
+  shelfOn: [item: ProductInfo];
+  /** 下架 */
+  shelfOff: [item: ProductInfo];
+  /** 编辑 */
+  edit: [item: ProductInfo];
+  /** 删除 */
+  remove: [item: ProductInfo];
+  /** 提交审核 */
+  submitAudit: [item: ProductInfo];
 }>();
 </script>
 
@@ -63,7 +77,14 @@ const emit = defineEmits<{
         :key="item.productId"
         class="product-grid__item"
         :item="item"
+        :shelf-acting="shelfActingId === item.productId"
         @detail="emit('detail', $event)"
+        @eval="emit('eval', $event)"
+        @shelf-on="emit('shelfOn', $event)"
+        @shelf-off="emit('shelfOff', $event)"
+        @edit="emit('edit', $event)"
+        @remove="emit('remove', $event)"
+        @submit-audit="emit('submitAudit', $event)"
       />
     </div>
   </div>

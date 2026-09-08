@@ -9,7 +9,10 @@ import { isEmpty } from '@vben/utils';
 
 import { getPortalNewsDetailApi } from '#/api/portal/home/news';
 
-import { formatNewsDateTime } from '../../home/data';
+import {
+  formatNewsDateTime,
+  normalizePortalNewsId,
+} from '../../home/data';
 
 /**
  * 门户行业资讯详情（公开页，无侧栏；通常由首页新窗口打开）
@@ -25,11 +28,11 @@ const loadError = ref(false);
 /** 资讯详情 */
 const detail = ref<null | PortalNews>(null);
 
-/** 路由中的资讯 ID */
+/** 路由中的资讯 ID（保留雪花字符串，禁止 Number 强转） */
 const newsId = computed(() => {
   const raw = route.params.id;
-  const id = Number(Array.isArray(raw) ? raw[0] : raw);
-  return Number.isFinite(id) && id > 0 ? id : Number.NaN;
+  const text = String(Array.isArray(raw) ? raw[0] : raw ?? '').trim();
+  return normalizePortalNewsId(text);
 });
 
 /**
@@ -54,7 +57,7 @@ function isHtmlContent(content?: string): boolean {
  * 拉取资讯详情
  */
 async function fetchDetail() {
-  if (Number.isNaN(newsId.value)) {
+  if (newsId.value === undefined) {
     detail.value = null;
     loadError.value = true;
     loading.value = false;
@@ -65,10 +68,13 @@ async function fetchDetail() {
   loadError.value = false;
   try {
     const data = await getPortalNewsDetailApi(newsId.value);
-    detail.value = data ?? null;
-    if (!data?.newsId) {
+    const id = normalizePortalNewsId(data?.newsId ?? data?.id);
+    if (!data || id === undefined) {
+      detail.value = null;
       loadError.value = true;
+      return;
     }
+    detail.value = { ...data, newsId: id };
   } catch {
     detail.value = null;
     loadError.value = true;

@@ -1,7 +1,9 @@
 import type {
+  PortalContentId,
   PortalContentItem,
   PortalContentListResult,
   PortalContentType,
+  PortalContentWriteParams,
 } from '#/types/monitoring/content/home/common';
 
 import { formatDate, isEmpty, isHttpUrl } from '@vben/utils';
@@ -60,17 +62,46 @@ export const PORTAL_CONTENT_TYPE = {
   ABOUT: 'about',
 } as const satisfies Record<string, PortalContentType>;
 
+/** 轮播图展示时间提交格式 */
+export const PORTAL_BANNER_DATETIME_FORMAT = 'YYYY-MM-DD HH:mm:ss';
+
+/**
+ * 是否为轮播图内容类型
+ * @param contentType 内容类型
+ */
+export function isPortalBannerContent(
+  contentType: PortalContentType,
+): boolean {
+  return contentType === PORTAL_CONTENT_TYPE.BANNER;
+}
+
+/**
+ * 是否展示大文本内容字段（news / service / billing / about）
+ * @param contentType 内容类型
+ */
+export function supportsPortalContentText(
+  contentType: PortalContentType,
+): boolean {
+  return !isPortalBannerContent(contentType);
+}
+
 /** 启用状态值 */
 export const PORTAL_CONTENT_STATUS_ENABLED = 1;
 
 /** 停用状态值 */
 export const PORTAL_CONTENT_STATUS_DISABLED = 0;
 
-/** 审核通过状态值 */
+/** 审核通过状态值（列表展示） */
 export const PORTAL_CONTENT_AUDIT_PASSED = 1;
 
-/** 待审核状态值 */
+/** 待审核状态值（列表展示） */
 export const PORTAL_CONTENT_AUDIT_PENDING = 0;
+
+/**
+ * 提交审核接口入参 auditStatus（后端约定固定传 1）
+ * PUT /admin/content/portal/{id}/audit
+ */
+export const PORTAL_CONTENT_AUDIT_SUBMIT_STATUS = 1;
 
 /**
  * 判断是否可以提交审核（已通过不可再提交）
@@ -84,17 +115,107 @@ export function canSubmitPortalContentAudit(
 }
 
 /**
- * 过滤含主键的门户内容条目
+ * 列表行是否具备上下线状态（接口返回了 status 且有值）
+ * status 为 null / undefined / 空串时不展示上下线按钮
+ * @param status 状态字段
+ * @returns 需要展示上下线时返回 true
+ */
+export function hasPortalContentStatusValue(
+  status?: null | number | string,
+): boolean {
+  return status !== null && status !== undefined && status !== '';
+}
+
+/**
+ * 归一化内容主键：保留字符串雪花 ID，避免 Number 精度丢失
+ * @param value 原始主键
+ * @returns 可用主键；无法识别时 undefined
+ */
+export function normalizePortalContentId(
+  value: unknown,
+): PortalContentId | undefined {
+  if (typeof value === 'number') {
+    return Number.isFinite(value) ? value : undefined;
+  }
+  if (typeof value === 'string') {
+    const text = value.trim();
+    if (!/^\d+$/.test(text)) {
+      return undefined;
+    }
+    // 安全整数范围内可保留 number；超长雪花 ID 必须保持字符串
+    if (text.length <= 15) {
+      const num = Number(text);
+      if (Number.isSafeInteger(num)) {
+        return num;
+      }
+    }
+    return text;
+  }
+  return undefined;
+}
+
+/**
+ * 从列表原始项解析统一主键 contentId
+ * 兼容后端返回 contentId / id / bannerId 等；字符串数字不做 Number 强转（防雪花精度丢失）
+ * @param raw 接口原始列表项
+ * @returns 有效主键；无法识别时 undefined
+ */
+export function resolvePortalContentId(
+  raw?: null | Record<string, unknown>,
+): PortalContentId | undefined {
+  if (!raw) {
+    return undefined;
+  }
+
+  const candidates = [
+    raw.contentId,
+    raw.id,
+    raw.bannerId,
+    raw.newsId,
+    raw.serviceId,
+    raw.billingId,
+    raw.aboutId,
+  ];
+
+  for (const candidate of candidates) {
+    const id = normalizePortalContentId(candidate);
+    if (id !== undefined) {
+      return id;
+    }
+  }
+
+  return undefined;
+}
+
+/**
+ * 过滤并归一化门户内容条目（补齐 contentId）
  * @param list 接口原始列表
  * @returns 可展示列表
  */
 export function normalizePortalContentList(
-  list?: null | PortalContentItem[],
+  list?: null | PortalContentItem[] | Record<string, unknown>[],
 ): PortalContentItem[] {
   if (!list?.length) {
     return [];
   }
-  return list.filter((item) => Number.isFinite(item.contentId));
+
+  const result: PortalContentItem[] = [];
+  for (const item of list) {
+    if (!item || typeof item !== 'object') {
+      continue;
+    }
+    const contentId = resolvePortalContentId(
+      item as Record<string, unknown>,
+    );
+    if (contentId === undefined) {
+      continue;
+    }
+    result.push({
+      ...(item as PortalContentItem),
+      contentId,
+    });
+  }
+  return result;
 }
 
 /**
@@ -265,6 +386,51 @@ export function pickPortalContentImageRaw(
 }
 
 /**
+ * 从列表行组装写接口参数（排序保存等场景保留 banner 扩展字段）
+ * @param row 内容行
+ * @param contentType 内容类型
+ * @param sortOrder 排序值
+ * @returns 写接口请求体
+ */
+export function buildPortalContentWritePayloadFromRow(
+  row: PortalContentItem,
+  contentType: PortalContentType,
+  sortOrder: number,
+): PortalContentWriteParams {
+  const payload: PortalContentWriteParams = {
+    content: contentType,
+    title: row.title?.trim() || '',
+    imageUrl: pickPortalContentImageRaw(row, contentType) || undefined,
+    sortOrder,
+  };
+
+  if (supportsPortalContentText(contentType)) {
+    const text = row.content?.trim();
+    if (text) {
+      payload.contentText = text;
+    }
+  }
+
+  if (isPortalBannerContent(contentType)) {
+    const linkUrl = row.linkUrl?.trim();
+    const startTime = row.startTime?.trim();
+    const endTime = row.endTime?.trim();
+    if (linkUrl) {
+      payload.linkUrl = linkUrl;
+    }
+    if (startTime) {
+      payload.startTime = startTime;
+    }
+    if (endTime) {
+      payload.endTime = endTime;
+    }
+    // targetRegion / targetUserType：后端字段暂保留，前端暂不传
+  }
+
+  return payload;
+}
+
+/**
  * 解析列表行图片地址
  * @param row 行数据
  * @param contentType 内容类型
@@ -319,20 +485,21 @@ export function showsPortalContentImageColumn(
 }
 
 /**
- * 同步排序草稿与基线
+ * 同步排序草稿与基线（contentId 统一用 string 作 map key，兼容雪花字符串）
  * @param records 当前页列表
  * @returns draft 与 baseline 映射
  */
 export function buildPortalContentSortMaps(records: PortalContentItem[]): {
-  baseline: Record<number, number>;
-  draft: Record<number, number>;
+  baseline: Record<string, number>;
+  draft: Record<string, number>;
 } {
-  const draft: Record<number, number> = {};
-  const baseline: Record<number, number> = {};
+  const draft: Record<string, number> = {};
+  const baseline: Record<string, number> = {};
   for (const row of records) {
     const order = Number(row.sortOrder) || 0;
-    draft[row.contentId] = order;
-    baseline[row.contentId] = order;
+    const key = String(row.contentId);
+    draft[key] = order;
+    baseline[key] = order;
   }
   return { draft, baseline };
 }
@@ -343,12 +510,10 @@ export function buildPortalContentSortMaps(records: PortalContentItem[]): {
  * @param baseline 基线
  */
 export function hasPortalContentSortChanges(
-  draft: Record<number, number>,
-  baseline: Record<number, number>,
+  draft: Record<string, number>,
+  baseline: Record<string, number>,
 ): boolean {
-  return Object.keys(draft).some(
-    (id) => draft[Number(id)] !== baseline[Number(id)],
-  );
+  return Object.keys(draft).some((id) => draft[id] !== baseline[id]);
 }
 
 /**

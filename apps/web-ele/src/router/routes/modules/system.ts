@@ -316,12 +316,23 @@ const routes: RouteRecordRaw[] = [
                 ],
               },
               {
+                name: 'ContentProduct',
+                path: '/monitoring/content/product',
+                component: () =>
+                  import('#/views/monitoring/content/product/index.vue'),
+                meta: {
+                  icon: 'ep:cpu',
+                  order: 2,
+                  title: '算力产品管理',
+                },
+              },
+              {
                 name: 'ContentModelCard',
                 path: '/monitoring/content/model-card',
                 component: () => import('#/views/basic/content/model-card.vue'),
                 meta: {
                   icon: 'ep:grid',
-                  order: 2,
+                  order: 3,
                   title: '应用模型卡片管理',
                 },
               },
@@ -329,7 +340,7 @@ const routes: RouteRecordRaw[] = [
                 name: 'ContentCase',
                 path: '/monitoring/content/case',
                 component: () => import('#/views/basic/content/case.vue'),
-                meta: { icon: 'ep:collection', order: 3, title: '案例内容管理' },
+                meta: { icon: 'ep:collection', order: 4, title: '案例内容管理' },
               },
               {
                 name: 'ContentFaq',
@@ -337,7 +348,7 @@ const routes: RouteRecordRaw[] = [
                 component: () => import('#/views/basic/content/faq.vue'),
                 meta: {
                   icon: 'ep:question-filled',
-                  order: 4,
+                  order: 5,
                   title: '常见问题管理',
                 },
               },
@@ -347,7 +358,7 @@ const routes: RouteRecordRaw[] = [
                 component: () => import('#/views/basic/content/announce.vue'),
                 meta: {
                   icon: 'ep:bell',
-                  order: 5,
+                  order: 6,
                   title: '活动公告管理',
                 },
               },
@@ -357,7 +368,7 @@ const routes: RouteRecordRaw[] = [
                 component: () => import('#/views/basic/content/partner.vue'),
                 meta: {
                   icon: 'ep:office-building',
-                  order: 6,
+                  order: 7,
                   title: '合作伙伴展示管理',
                 },
               },
@@ -367,7 +378,7 @@ const routes: RouteRecordRaw[] = [
                 component: () => import('#/views/basic/content/legal.vue'),
                 meta: {
                   icon: 'ep:document-checked',
-                  order: 7,
+                  order: 8,
                   title: '法律条款与协议管理',
                 },
               },
@@ -377,19 +388,8 @@ const routes: RouteRecordRaw[] = [
                 component: () => import('#/views/basic/content/audit.vue'),
                 meta: {
                   icon: 'ep:finished',
-                  order: 8,
-                  title: '门户内容审核管理',
-                },
-              },
-              {
-                name: 'ContentProduct',
-                path: '/monitoring/content/product',
-                component: () =>
-                  import('#/views/monitoring/content/product/index.vue'),
-                meta: {
-                  icon: 'ep:cpu',
                   order: 9,
-                  title: '算力产品管理',
+                  title: '门户内容审核管理',
                 },
               },
               {

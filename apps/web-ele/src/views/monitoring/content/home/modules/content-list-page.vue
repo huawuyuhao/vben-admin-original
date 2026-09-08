@@ -24,11 +24,11 @@ import {
 import { usePortalContentList } from '../composables/use-portal-content-list';
 import {
   buildPortalContentSortMaps,
+  buildPortalContentWritePayloadFromRow,
   filterPortalContentRecords,
   hasPortalContentActiveFilters,
   hasPortalContentSortChanges,
-  pickPortalContentImageRaw,
-  PORTAL_CONTENT_AUDIT_PENDING,
+  PORTAL_CONTENT_AUDIT_SUBMIT_STATUS,
   PORTAL_CONTENT_TYPE,
   supportsPortalContentSort,
 } from '../data';
@@ -56,8 +56,8 @@ const appliedFilters = ref<PortalContentListFilters>({
   enableStatus: '',
   auditStatus: '',
 });
-const sortDrafts = ref<Record<number, number>>({});
-const sortBaseline = ref<Record<number, number>>({});
+const sortDrafts = ref<Record<string, number>>({});
+const sortBaseline = ref<Record<string, number>>({});
 const savingSort = ref(false);
 const formDialogRef = ref<InstanceType<typeof ContentFormDialog>>();
 
@@ -177,7 +177,7 @@ async function handleSubmitAudit(row: PortalContentItem) {
   try {
     await auditPortalContentApi(row.contentId, {
       content: props.contentType,
-      auditStatus: PORTAL_CONTENT_AUDIT_PENDING,
+      auditStatus: PORTAL_CONTENT_AUDIT_SUBMIT_STATUS,
     });
     ElMessage.success(
       $t('page.monitoring.content.home.common.submitAuditSuccess', [label]),
@@ -196,7 +196,10 @@ async function handleOnline(row: PortalContentItem) {
   const label = row.title?.trim() || String(row.contentId);
 
   try {
-    await updatePortalContentShelfApi(row.contentId, { action: 'shelf' });
+    await updatePortalContentShelfApi(row.contentId, {
+      content: props.contentType,
+      action: 'shelf',
+    });
     ElMessage.success(
       $t('page.monitoring.content.home.common.onlineSuccess', [label]),
     );
@@ -214,7 +217,10 @@ async function handleOffline(row: PortalContentItem) {
   const label = row.title?.trim() || String(row.contentId);
 
   try {
-    await updatePortalContentShelfApi(row.contentId, { action: 'unshelf' });
+    await updatePortalContentShelfApi(row.contentId, {
+      content: props.contentType,
+      action: 'unshelf',
+    });
     ElMessage.success(
       $t('page.monitoring.content.home.common.offlineSuccess', [label]),
     );
@@ -251,7 +257,9 @@ async function handleSaveSort() {
   }
 
   const changedRows = displayRecords.value.filter(
-    (row) => sortDrafts.value[row.contentId] !== sortBaseline.value[row.contentId],
+    (row) =>
+      sortDrafts.value[String(row.contentId)] !==
+      sortBaseline.value[String(row.contentId)],
   );
 
   if (!changedRows.length) {
@@ -262,13 +270,15 @@ async function handleSaveSort() {
   try {
     await Promise.all(
       changedRows.map((row) =>
-        updatePortalContentApi(row.contentId, {
-          content: props.contentType,
-          title: row.title || '',
-          contentText: row.content,
-          imageUrl: pickPortalContentImageRaw(row, props.contentType),
-          sortOrder: sortDrafts.value[row.contentId] ?? (Number(row.sortOrder) || 0),
-        }),
+        updatePortalContentApi(
+          row.contentId,
+          buildPortalContentWritePayloadFromRow(
+            row,
+            props.contentType,
+            sortDrafts.value[String(row.contentId)] ??
+              (Number(row.sortOrder) || 0),
+          ),
+        ),
       ),
     );
     ElMessage.success($t('page.monitoring.content.home.common.saveSortSuccess'));

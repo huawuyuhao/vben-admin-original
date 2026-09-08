@@ -1,5 +1,11 @@
 <script lang="ts" setup>
-import type { FormInstance, FormRules, UploadProps } from 'element-plus';
+import type {
+  FormInstance,
+  FormRules,
+  UploadInstance,
+  UploadProps,
+  UploadRawFile,
+} from 'element-plus';
 
 import { computed, reactive, ref } from 'vue';
 
@@ -36,6 +42,8 @@ const submitting = ref(false);
 const uploadingCount = ref(0);
 /** 表单引用 */
 const formRef = ref<FormInstance>();
+/** 图片上传组件引用（失败后清空内部列表，避免 limit 被占用） */
+const uploadRef = ref<UploadInstance>();
 /** 已上传成功的图片 URL（多图） */
 const imageUrls = ref<string[]>([]);
 /** 预览可见 */
@@ -50,6 +58,11 @@ const form = reactive({
 /** 是否仍可继续上传 */
 const canUploadMore = computed(
   () => imageUrls.value.length < FEEDBACK_IMAGE_MAX_COUNT,
+);
+
+/** 当前还可上传的剩余名额（供 el-upload limit 使用） */
+const remainingUploadSlots = computed(() =>
+  Math.max(0, FEEDBACK_IMAGE_MAX_COUNT - imageUrls.value.length),
 );
 
 /** 是否有图片正在上传 */
@@ -88,6 +101,15 @@ function resetForm() {
   previewVisible.value = false;
   previewIndex.value = 0;
   formRef.value?.clearValidate();
+  uploadRef.value?.clearFiles();
+}
+
+/**
+ * 清空上传组件内部文件列表
+ * 成功图已落在 imageUrls，内部列表仅占 limit 名额，需及时清理
+ */
+function clearUploadFiles() {
+  uploadRef.value?.clearFiles();
 }
 
 /**
@@ -132,11 +154,29 @@ const beforeUpload: UploadProps['beforeUpload'] = (raw) => {
 
 /**
  * 超出上传数量限制
+ * @param files 本次选择的超出文件
  */
-const handleUploadExceed: UploadProps['onExceed'] = () => {
-  ElMessage.warning(
-    $t('page.mine.feedback.form.imageLimit', [FEEDBACK_IMAGE_MAX_COUNT]),
-  );
+const handleUploadExceed: UploadProps['onExceed'] = (files) => {
+  if (!canUploadMore.value) {
+    ElMessage.warning(
+      $t('page.mine.feedback.form.imageLimit', [FEEDBACK_IMAGE_MAX_COUNT]),
+    );
+    return;
+  }
+
+  // 内部列表被失败文件占满时：清掉残留，按剩余名额重试
+  clearUploadFiles();
+  const slots = remainingUploadSlots.value;
+  const retryFiles = files.slice(0, slots) as UploadRawFile[];
+  for (const raw of retryFiles) {
+    if (beforeUpload(raw)) {
+      void handleImageUpload({
+        file: raw,
+        onError: () => undefined,
+        onSuccess: () => undefined,
+      });
+    }
+  }
 };
 
 /**
@@ -153,6 +193,7 @@ async function handleImageUpload(options: {
       $t('page.mine.feedback.form.imageLimit', [FEEDBACK_IMAGE_MAX_COUNT]),
     );
     options.onError(new Error('limit exceeded'));
+    clearUploadFiles();
     return;
   }
 
@@ -178,6 +219,8 @@ async function handleImageUpload(options: {
     options.onError(error as Error);
   } finally {
     uploadingCount.value = Math.max(0, uploadingCount.value - 1);
+    // 成功图已写入 imageUrls；失败也不应占用 limit
+    clearUploadFiles();
   }
 }
 
@@ -282,6 +325,7 @@ defineExpose({ open });
         <div class="feedback-submit-dialog__image-picker">
           <el-upload
             v-if="canUploadMore"
+            ref="uploadRef"
             v-loading="imageUploading"
             :accept="FEEDBACK_IMAGE_ACCEPT"
             :before-upload="beforeUpload"
@@ -289,7 +333,7 @@ defineExpose({ open });
             drag
             :disabled="imageUploading"
             :http-request="handleImageUpload"
-            :limit="FEEDBACK_IMAGE_MAX_COUNT"
+            :limit="remainingUploadSlots"
             multiple
             :on-exceed="handleUploadExceed"
             :show-file-list="false"

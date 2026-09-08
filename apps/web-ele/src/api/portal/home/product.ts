@@ -10,8 +10,11 @@ import { rootRequestClient } from '#/api/request';
  */
 export async function getPortalProductsRecommendApi() {
   return rootRequestClient.get<PortalProductRecommend[]>(
-    '/mock/portal/products/recommend',
+    '/pwq-mock/portal/products/recommend',
   );
+  // return rootRequestClient.get<PortalProductRecommend[]>(
+  //   '/mock/portal/products/recommend',
+  // );
   // return rootRequestClient.get<PortalProductRecommend[]>(
   //   '/portal/products/recommend',
   // );

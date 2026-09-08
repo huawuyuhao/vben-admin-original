@@ -5,7 +5,11 @@ import { computed } from 'vue';
 
 import { $t } from '@vben/locales';
 
+import { Delete, Edit } from '@element-plus/icons-vue';
+
 import {
+  ADMIN_PRODUCT_SHELF_ON,
+  canSubmitAdminProductAudit,
   formatGreenPowerRatio,
   formatProductDateTime,
   formatProductPrice,
@@ -22,11 +26,25 @@ defineOptions({ name: 'AdminProductCard' });
 const props = defineProps<{
   /** 产品条目 */
   item: ProductInfo;
+  /** 上下架操作中 */
+  shelfActing?: boolean;
 }>();
 
 const emit = defineEmits<{
   /** 查看详情 */
   detail: [item: ProductInfo];
+  /** 管理评价 */
+  eval: [item: ProductInfo];
+  /** 上架 */
+  shelfOn: [item: ProductInfo];
+  /** 下架 */
+  shelfOff: [item: ProductInfo];
+  /** 编辑 */
+  edit: [item: ProductInfo];
+  /** 删除 */
+  remove: [item: ProductInfo];
+  /** 提交审核 */
+  submitAudit: [item: ProductInfo];
 }>();
 
 /** 标签列表 */
@@ -69,11 +87,63 @@ const auditLabelKey = computed(() =>
   resolveAdminProductAuditLabelKey(props.item.status),
 );
 
+/** 当前是否已上架 */
+const isOnShelf = computed(
+  () => props.item.shelfStatus === ADMIN_PRODUCT_SHELF_ON,
+);
+
+/** 是否可提交审核 */
+const canSubmitAudit = computed(() =>
+  canSubmitAdminProductAudit(props.item.status),
+);
+
 /**
  * 触发详情
  */
 function handleDetail() {
   emit('detail', props.item);
+}
+
+/**
+ * 触发评价管理
+ */
+function handleEval() {
+  emit('eval', props.item);
+}
+
+/**
+ * 确认上架
+ */
+function handleShelfOn() {
+  emit('shelfOn', props.item);
+}
+
+/**
+ * 确认下架
+ */
+function handleShelfOff() {
+  emit('shelfOff', props.item);
+}
+
+/**
+ * 触发编辑
+ */
+function handleEdit() {
+  emit('edit', props.item);
+}
+
+/**
+ * 触发删除
+ */
+function handleRemove() {
+  emit('remove', props.item);
+}
+
+/**
+ * 触发提交审核
+ */
+function handleSubmitAudit() {
+  emit('submitAudit', props.item);
 }
 </script>
 
@@ -163,9 +233,118 @@ function handleDetail() {
     <template #footer>
       <div class="product-card__foot">
         <span class="product-card__price">{{ priceText }}</span>
-        <el-button size="small" @click.stop="handleDetail">
-          {{ $t('page.monitoring.content.product.viewDetail') }}
-        </el-button>
+        <div class="product-card__actions">
+          <el-button
+            circle
+            plain
+            size="small"
+            type="primary"
+            :title="$t('page.monitoring.content.product.edit')"
+            @click.stop="handleEdit"
+          >
+            <el-icon><Edit /></el-icon>
+          </el-button>
+          <el-popconfirm
+            :title="
+              $t('page.monitoring.content.product.deleteConfirm', [
+                item.productName,
+              ])
+            "
+            width="260"
+            :confirm-button-text="$t('common.confirm')"
+            :cancel-button-text="$t('common.cancel')"
+            confirm-button-type="danger"
+            @confirm="handleRemove"
+          >
+            <template #reference>
+              <el-button
+                circle
+                plain
+                size="small"
+                type="danger"
+                :title="$t('page.monitoring.content.product.delete')"
+                @click.stop
+              >
+                <el-icon><Delete /></el-icon>
+              </el-button>
+            </template>
+          </el-popconfirm>
+          <el-popconfirm
+            v-if="!isOnShelf"
+            :title="
+              $t('page.monitoring.content.product.shelfOnConfirm', [
+                item.productName,
+              ])
+            "
+            width="240"
+            :confirm-button-text="$t('common.confirm')"
+            :cancel-button-text="$t('common.cancel')"
+            @confirm="handleShelfOn"
+          >
+            <template #reference>
+              <el-button
+                size="small"
+                type="success"
+                plain
+                :loading="shelfActing"
+                @click.stop
+              >
+                {{ $t('page.monitoring.content.product.shelfOn') }}
+              </el-button>
+            </template>
+          </el-popconfirm>
+          <el-popconfirm
+            v-else
+            :title="
+              $t('page.monitoring.content.product.shelfOffConfirm', [
+                item.productName,
+              ])
+            "
+            width="240"
+            :confirm-button-text="$t('common.confirm')"
+            :cancel-button-text="$t('common.cancel')"
+            @confirm="handleShelfOff"
+          >
+            <template #reference>
+              <el-button
+                size="small"
+                type="warning"
+                plain
+                :loading="shelfActing"
+                @click.stop
+              >
+                {{ $t('page.monitoring.content.product.shelfOff') }}
+              </el-button>
+            </template>
+          </el-popconfirm>
+          <el-popconfirm
+            v-if="canSubmitAudit"
+            :title="
+              $t('page.monitoring.content.product.submitAuditConfirm', [
+                item.productName,
+              ])
+            "
+            width="260"
+            :confirm-button-text="$t('common.confirm')"
+            :cancel-button-text="$t('common.cancel')"
+            @confirm="handleSubmitAudit"
+          >
+            <template #reference>
+              <el-button size="small" @click.stop>
+                {{ $t('page.monitoring.content.product.submitAudit') }}
+              </el-button>
+            </template>
+          </el-popconfirm>
+          <el-button v-else size="small" disabled @click.stop>
+            {{ $t('page.monitoring.content.product.submitAudit') }}
+          </el-button>
+          <el-button size="small" @click.stop="handleEval">
+            {{ $t('page.monitoring.content.product.eval.cardAction') }}
+          </el-button>
+          <el-button size="small" @click.stop="handleDetail">
+            {{ $t('page.monitoring.content.product.viewDetail') }}
+          </el-button>
+        </div>
       </div>
     </template>
   </el-card>
@@ -312,6 +491,15 @@ function handleDetail() {
     gap: 12px;
     align-items: center;
     justify-content: space-between;
+  }
+
+  &__actions {
+    display: flex;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    justify-content: flex-end;
   }
 
   &__price {

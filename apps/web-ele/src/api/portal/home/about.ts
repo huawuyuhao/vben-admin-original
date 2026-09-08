@@ -9,6 +9,7 @@ import { rootRequestClient } from '#/api/request';
  * @returns 关于我们列表（业务 data）
  */
 export async function getPortalAboutUsApi() {
-  return rootRequestClient.get<PortalAboutUs[]>('/mock/portal/about-us');
+  return rootRequestClient.get<PortalAboutUs[]>('/pwq-mock/portal/about-us');
+  // return rootRequestClient.get<PortalAboutUs[]>('/mock/portal/about-us');
   // return rootRequestClient.get<PortalAboutUs[]>('/portal/about-us');
 }

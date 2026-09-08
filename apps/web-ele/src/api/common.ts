@@ -10,8 +10,11 @@ import { rootRequestClient } from '#/api/request';
  * @returns 含 url / fileName / ossId 的业务 data
  */
 export async function uploadImageApi(file: Blob | File) {
-  return rootRequestClient.upload<UploadImageResult>('/mock/upload', {
+  return rootRequestClient.upload<UploadImageResult>('/pwq-mock/upload', {
     file,
   });
+  // return rootRequestClient.upload<UploadImageResult>('/mock/upload', {
+  //   file,
+  // });
   // return rootRequestClient.upload<UploadImageResult>('/upload', { file });
 }

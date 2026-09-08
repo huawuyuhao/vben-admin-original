@@ -1,5 +1,9 @@
 <script lang="ts" setup>
-import type { PortalContentItem, PortalContentType } from '#/types/monitoring/content/home/common';
+import type {
+  PortalContentId,
+  PortalContentItem,
+  PortalContentType,
+} from '#/types/monitoring/content/home/common';
 
 import { computed } from 'vue';
 
@@ -13,6 +17,7 @@ import {
   getPortalContentStatusLabelKey,
   getPortalContentStatusTagType,
   hasPortalContentImage,
+  hasPortalContentStatusValue,
   PORTAL_CONTENT_STATUS_DISABLED,
   PORTAL_CONTENT_STATUS_ENABLED,
   resolvePortalContentRowImageUrl,
@@ -46,8 +51,8 @@ const emit = defineEmits<{
   view: [row: PortalContentItem];
 }>();
 
-/** 排序草稿（contentId -> sortOrder） */
-const sortDrafts = defineModel<Record<number, number>>('sortDrafts', {
+/** 排序草稿（contentId -> sortOrder，key 统一为 string） */
+const sortDrafts = defineModel<Record<string, number>>('sortDrafts', {
   required: true,
 });
 
@@ -74,7 +79,7 @@ const titleColWidth = 140;
 const datetimeColWidth = 168;
 /** 排序列宽 */
 const sortColWidth = 148;
-/** 操作列宽（多枚 link 按钮单行展示） */
+/** 操作列宽（编辑 / 查看 / 提交审核 / 上下线 / 删除） */
 const opsColWidth = 360;
 
 /** 是否展示图片列 */
@@ -166,10 +171,10 @@ function previewIndex(url: string) {
  * @param contentId 内容 ID
  * @param value 排序值
  */
-function updateSortDraft(contentId: number, value?: number) {
+function updateSortDraft(contentId: PortalContentId, value?: number) {
   sortDrafts.value = {
     ...sortDrafts.value,
-    [contentId]: Number(value) || 0,
+    [String(contentId)]: Number(value) || 0,
   };
 }
 </script>
@@ -277,6 +282,32 @@ function updateSortDraft(contentId: number, value?: number) {
       </el-table-column>
 
       <el-table-column
+        v-if="contentType === 'banner'"
+        prop="startTime"
+        :width="datetimeColWidth"
+        align="center"
+        header-align="center"
+        :label="$t('page.monitoring.content.home.common.fields.startTime')"
+      >
+        <template #default="{ row }">
+          {{ formatPortalContentDateTime(row.startTime) }}
+        </template>
+      </el-table-column>
+
+      <el-table-column
+        v-if="contentType === 'banner'"
+        prop="endTime"
+        :width="datetimeColWidth"
+        align="center"
+        header-align="center"
+        :label="$t('page.monitoring.content.home.common.fields.endTime')"
+      >
+        <template #default="{ row }">
+          {{ formatPortalContentDateTime(row.endTime) }}
+        </template>
+      </el-table-column>
+
+      <el-table-column
         v-if="contentType === 'news'"
         prop="viewCount"
         min-width="90"
@@ -377,7 +408,7 @@ function updateSortDraft(contentId: number, value?: number) {
           <el-input-number
             class="content-table__sort-input"
             :min="0"
-            :model-value="sortDrafts[row.contentId]"
+            :model-value="sortDrafts[String(row.contentId)]"
             controls-position="right"
             size="small"
             @update:model-value="(v) => updateSortDraft(row.contentId, v as number)"
@@ -420,7 +451,10 @@ function updateSortDraft(contentId: number, value?: number) {
               {{ $t('page.monitoring.content.home.common.actions.submitAudit') }}
             </el-button>
             <el-popconfirm
-              v-if="showStatus && row.status === PORTAL_CONTENT_STATUS_DISABLED"
+              v-if="
+                hasPortalContentStatusValue(row.status) &&
+                Number(row.status) === PORTAL_CONTENT_STATUS_DISABLED
+              "
               :title="onlineConfirmTitle(row)"
               width="220"
               :confirm-button-text="$t('common.confirm')"
@@ -434,7 +468,10 @@ function updateSortDraft(contentId: number, value?: number) {
               </template>
             </el-popconfirm>
             <el-popconfirm
-              v-else-if="showStatus && row.status === PORTAL_CONTENT_STATUS_ENABLED"
+              v-else-if="
+                hasPortalContentStatusValue(row.status) &&
+                Number(row.status) === PORTAL_CONTENT_STATUS_ENABLED
+              "
               :title="offlineConfirmTitle(row)"
               width="220"
               :confirm-button-text="$t('common.confirm')"

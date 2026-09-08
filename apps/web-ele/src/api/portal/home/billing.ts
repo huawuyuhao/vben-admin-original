@@ -9,6 +9,7 @@ import { rootRequestClient } from '#/api/request';
  * @returns 计费说明列表（业务 data）
  */
 export async function getPortalBillingApi() {
-  return rootRequestClient.get<PortalBillingInfo[]>('/mock/portal/billing');
+  return rootRequestClient.get<PortalBillingInfo[]>('/pwq-mock/portal/billing');
+  // return rootRequestClient.get<PortalBillingInfo[]>('/mock/portal/billing');
   // return rootRequestClient.get<PortalBillingInfo[]>('/portal/billing');
 }

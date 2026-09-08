@@ -2,6 +2,7 @@ import type {
   PortalContentAuditParams,
   PortalContentCreateParams,
   PortalContentDeleteParams,
+  PortalContentId,
   PortalContentItem,
   PortalContentListParams,
   PortalContentListResponseBody,
@@ -9,7 +10,6 @@ import type {
   PortalContentMutationResponse,
   PortalContentShelfParams,
   PortalContentUpdateParams,
-  PortalContentWriteParams,
 } from '#/types/monitoring/content/home/common';
 
 import { ElMessage } from 'element-plus';
@@ -40,6 +40,29 @@ function assertPortalContentMutationSuccess(
 }
 
 /**
+ * 从分页对象中取出列表数组（兼容 records / rows / list）
+ * @param source 分页对象或响应体
+ * @returns 列表数组；无则 undefined
+ */
+function pickPortalContentRecords(
+  source?: null | Record<string, unknown>,
+): PortalContentItem[] | undefined {
+  if (!source) {
+    return undefined;
+  }
+  if (Array.isArray(source.records)) {
+    return source.records as PortalContentItem[];
+  }
+  if (Array.isArray(source.rows)) {
+    return source.rows as PortalContentItem[];
+  }
+  if (Array.isArray(source.list)) {
+    return source.list as PortalContentItem[];
+  }
+  return undefined;
+}
+
+/**
  * 从列表接口响应体解析分页结果（兼容扁平结构与 data 包裹）
  * @param body 响应体
  * @returns 标准化分页结果
@@ -51,23 +74,37 @@ function parsePortalContentListBody(
     return { records: [], total: 0, current: 1, size: 10 };
   }
 
-  if (Array.isArray(body.records)) {
+  const flatRecords = pickPortalContentRecords(
+    body as unknown as Record<string, unknown>,
+  );
+  if (flatRecords) {
     return {
-      records: body.records,
+      records: flatRecords,
       total: Number(body.total) || 0,
-      current: Number(body.current) || 1,
-      size: Number(body.size) || 10,
+      current: Number(body.current) || Number((body as { pageNum?: number }).pageNum) || 1,
+      size: Number(body.size) || Number((body as { pageSize?: number }).pageSize) || 10,
     };
   }
 
   const nested = body.data;
-  if (nested && !Array.isArray(nested) && Array.isArray(nested.records)) {
-    return {
-      records: nested.records,
-      total: Number(nested.total) || 0,
-      current: Number(nested.current) || 1,
-      size: Number(nested.size) || 10,
-    };
+  if (nested && !Array.isArray(nested)) {
+    const nestedRecords = pickPortalContentRecords(
+      nested as unknown as Record<string, unknown>,
+    );
+    if (nestedRecords) {
+      return {
+        records: nestedRecords,
+        total: Number(nested.total) || 0,
+        current:
+          Number(nested.current) ||
+          Number((nested as { pageNum?: number }).pageNum) ||
+          1,
+        size:
+          Number(nested.size) ||
+          Number((nested as { pageSize?: number }).pageSize) ||
+          10,
+      };
+    }
   }
 
   if (Array.isArray(nested)) {
@@ -91,12 +128,19 @@ function parsePortalContentListBody(
  */
 export async function getPortalContentListApi(params: PortalContentListParams) {
   const body = await rootRequestClient.get<PortalContentListResponseBody>(
-    '/mock/admin/content/portal',
+    '/pwq-mock/admin/content/portal',
     {
       params,
       responseReturn: 'body',
     },
   );
+  // const body = await rootRequestClient.get<PortalContentListResponseBody>(
+  //   '/mock/admin/content/portal',
+  //   {
+  //     params,
+  //     responseReturn: 'body',
+  //   },
+  // );
   // const body = await rootRequestClient.get<PortalContentListResponseBody>(
   //   '/admin/content/portal',
   //   { params, responseReturn: 'body' },
@@ -120,12 +164,19 @@ export async function getPortalContentListApi(params: PortalContentListParams) {
  */
 export async function createPortalContentApi(data: PortalContentCreateParams) {
   const body = await rootRequestClient.post<PortalContentMutationResponse>(
-    '/mock/admin/content/portal',
+    '/pwq-mock/admin/content/portal',
     data,
     {
       responseReturn: 'body',
     },
   );
+  // const body = await rootRequestClient.post<PortalContentMutationResponse>(
+  //   '/mock/admin/content/portal',
+  //   data,
+  //   {
+  //     responseReturn: 'body',
+  //   },
+  // );
   // const body = await rootRequestClient.post<PortalContentMutationResponse>(
   //   '/admin/content/portal',
   //   data,
@@ -133,7 +184,7 @@ export async function createPortalContentApi(data: PortalContentCreateParams) {
   // );
 
   assertPortalContentMutationSuccess(body);
-  return body?.data as undefined | { key: number };
+  return body?.data as undefined | { key: PortalContentId };
 }
 
 /**
@@ -144,16 +195,23 @@ export async function createPortalContentApi(data: PortalContentCreateParams) {
  * @param data 修改参数（JSON body）
  */
 export async function updatePortalContentApi(
-  id: number,
+  id: PortalContentId,
   data: PortalContentUpdateParams,
 ) {
   const body = await rootRequestClient.put<PortalContentMutationResponse>(
-    `/mock/admin/content/portal/${id}`,
+    `/pwq-mock/admin/content/portal/${id}`,
     data,
     {
       responseReturn: 'body',
     },
   );
+  // const body = await rootRequestClient.put<PortalContentMutationResponse>(
+  //   `/mock/admin/content/portal/${id}`,
+  //   data,
+  //   {
+  //     responseReturn: 'body',
+  //   },
+  // );
   // const body = await rootRequestClient.put<PortalContentMutationResponse>(
   //   `/admin/content/portal/${id}`,
   //   data,
@@ -171,46 +229,26 @@ export async function updatePortalContentApi(
  * @param params 删除参数（query：content）
  */
 export async function deletePortalContentApi(
-  id: number,
+  id: PortalContentId,
   params: PortalContentDeleteParams,
 ) {
   const body = await rootRequestClient.delete<PortalContentMutationResponse>(
-    `/mock/admin/content/portal/${id}`,
+    `/pwq-mock/admin/content/portal/${id}`,
     {
       params,
       responseReturn: 'body',
     },
   );
   // const body = await rootRequestClient.delete<PortalContentMutationResponse>(
+  //   `/mock/admin/content/portal/${id}`,
+  //   {
+  //     params,
+  //     responseReturn: 'body',
+  //   },
+  // );
+  // const body = await rootRequestClient.delete<PortalContentMutationResponse>(
   //   `/admin/content/portal/${id}`,
   //   { params, responseReturn: 'body' },
-  // );
-
-  assertPortalContentMutationSuccess(body);
-}
-
-/**
- * 门户内容上下架
- * 开发态：PUT /mock/admin/content/product/{id}/shelf
- * 正式：PUT /admin/content/product/{id}/shelf
- * @param id 内容 ID
- * @param data 上下架参数（JSON body：action = shelf | unshelf）
- */
-export async function updatePortalContentShelfApi(
-  id: number,
-  data: PortalContentShelfParams,
-) {
-  const body = await rootRequestClient.put<PortalContentMutationResponse>(
-    `/mock/admin/content/product/${id}/shelf`,
-    data,
-    {
-      responseReturn: 'body',
-    },
-  );
-  // const body = await rootRequestClient.put<PortalContentMutationResponse>(
-  //   `/admin/content/product/${id}/shelf`,
-  //   data,
-  //   { responseReturn: 'body' },
   // );
 
   assertPortalContentMutationSuccess(body);
@@ -221,21 +259,65 @@ export async function updatePortalContentShelfApi(
  * 开发态：PUT /mock/admin/content/portal/{id}/audit
  * 正式：PUT /admin/content/portal/{id}/audit
  * @param id 内容 ID
- * @param data 审核参数（JSON body：content / auditStatus）
+ * @param data 审核参数（JSON body：content / auditStatus；提交审核时 auditStatus 须为 1）
  */
 export async function auditPortalContentApi(
-  id: number,
+  id: PortalContentId,
   data: PortalContentAuditParams,
 ) {
   const body = await rootRequestClient.put<PortalContentMutationResponse>(
-    `/mock/admin/content/portal/${id}/audit`,
+    `/pwq-mock/admin/content/portal/${id}/audit`,
+    {
+      content: data.content,
+      // 后端约定：提交审核 auditStatus 固定传 1
+      auditStatus: data.auditStatus ?? 1,
+    },
+    {
+      responseReturn: 'body',
+    },
+  );
+  // const body = await rootRequestClient.put<PortalContentMutationResponse>(
+  //   `/mock/admin/content/portal/${id}/audit`,
+  //   data,
+  //   {
+  //     responseReturn: 'body',
+  //   },
+  // );
+  // const body = await rootRequestClient.put<PortalContentMutationResponse>(
+  //   `/admin/content/portal/${id}/audit`,
+  //   data,
+  //   { responseReturn: 'body' },
+  // );
+
+  assertPortalContentMutationSuccess(body);
+}
+
+/**
+ * 门户内容上下架（banner / news / service / billing / about 通用）
+ * 正式：PUT /admin/content/portal/{id}/shelf
+ * @param id 内容 ID
+ * @param data 上下架参数（JSON body：content / action）
+ */
+export async function updatePortalContentShelfApi(
+  id: PortalContentId,
+  data: PortalContentShelfParams,
+) {
+  const body = await rootRequestClient.put<PortalContentMutationResponse>(
+    `/pwq-mock/admin/content/portal/${id}/shelf`,
     data,
     {
       responseReturn: 'body',
     },
   );
   // const body = await rootRequestClient.put<PortalContentMutationResponse>(
-  //   `/admin/content/portal/${id}/audit`,
+  //   `/mock/admin/content/portal/${id}/shelf`,
+  //   data,
+  //   {
+  //     responseReturn: 'body',
+  //   },
+  // );
+  // const body = await rootRequestClient.put<PortalContentMutationResponse>(
+  //   `/admin/content/portal/${id}/shelf`,
   //   data,
   //   { responseReturn: 'body' },
   // );
@@ -253,4 +335,4 @@ export type {
   PortalContentShelfParams,
   PortalContentUpdateParams,
   PortalContentWriteParams,
-};
+} from '#/types/monitoring/content/home/common';
