@@ -8,7 +8,7 @@ import type {
 } from '#/types/admin/enterprise/stats';
 
 import { $t } from '@vben/locales';
-import { isEmpty, isHttpUrl } from '@vben/utils';
+import { isEmpty } from '@vben/utils';
 
 /** 折线长表数据点（供 VChart seriesField） */
 export interface StatSeriesPoint {
@@ -296,23 +296,4 @@ export function getStatExportTypeOptions() {
   ];
 }
 
-/**
- * 解析导出下载 URL
- * @param value fileUrl
- * @returns 可下载地址
- */
-export function resolveStatExportDownloadUrl(
-  value?: null | string,
-): string | undefined {
-  const text = value?.trim();
-  if (!text) {
-    return undefined;
-  }
-  if (isHttpUrl(text)) {
-    return text;
-  }
-  if (text.startsWith('/')) {
-    return `${window.location.origin}${text}`;
-  }
-  return undefined;
-}
+export { resolveExportDownloadUrl as resolveStatExportDownloadUrl } from '#/store/common';

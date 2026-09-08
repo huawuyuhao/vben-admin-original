@@ -4,7 +4,7 @@ import type { ComputeDemandItem } from '#/types/service/mydemand/compute';
 import { computed, ref } from 'vue';
 
 import { $t } from '@vben/locales';
-import { downloadFileFromUrl, isHttpUrl } from '@vben/utils';
+import { isHttpUrl } from '@vben/utils';
 
 import { ElMessage } from 'element-plus';
 
@@ -13,6 +13,7 @@ import {
   getComputeDemandDetailApi,
   previewComputeDemandResultApi,
 } from '#/api/service/mydemand/compute';
+import { downloadExportFile } from '#/store/common';
 
 import {
   formatComputeDateTime,
@@ -22,7 +23,6 @@ import {
   isComputeDemandDone,
   isComputePreviewUrl,
   resolveComputeDemandId,
-  resolveComputeDownloadUrl,
 } from '../data';
 
 defineOptions({ name: 'MyDemandComputeDetailDialog' });
@@ -140,15 +140,17 @@ async function handleDownload() {
   downloading.value = true;
   try {
     const result = await downloadComputeDemandResultApi(id);
-    const downloadUrl = resolveComputeDownloadUrl(result?.fileUrl);
-    if (!downloadUrl) {
+    const ok = await downloadExportFile({
+      fileUrl: result?.fileUrl,
+      fileName: result?.fileName,
+    });
+    if (!ok) {
       ElMessage.error($t('page.service.mydemand.compute.result.noUrl'));
       return;
     }
-    await downloadFileFromUrl({ source: downloadUrl });
     ElMessage.success($t('page.service.mydemand.compute.result.downloadSuccess'));
   } catch {
-    // 错误提示由接口层处理
+    // 错误提示由接口层 / 下载工具处理
   } finally {
     downloading.value = false;
   }

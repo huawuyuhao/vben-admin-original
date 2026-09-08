@@ -4,7 +4,6 @@ import type { SupplyDeviceItem } from '#/types/service/enterprise/supply';
 import { onMounted, ref, watch } from 'vue';
 
 import { $t } from '@vben/locales';
-import { downloadFileFromUrl } from '@vben/utils';
 
 import { Download, Plus, Refresh } from '@element-plus/icons-vue';
 import { ElMessage } from 'element-plus';
@@ -13,11 +12,11 @@ import {
   exportSupplyDeviceApi,
   getSupplyDeviceListApi,
 } from '#/api/service/enterprise/supply';
+import { downloadExportFile } from '#/store/common';
 
 import {
   normalizeSupplyPage,
   parseSupplyStatusFilter,
-  resolveSupplyExportDownloadUrl,
   SUPPLY_PAGE_SIZE,
   type SupplyStatusFilter,
 } from './data';
@@ -148,18 +147,17 @@ async function handleExport() {
     const result = await exportSupplyDeviceApi({
       status: parseSupplyStatusFilter(appliedStatus.value),
     });
-    const downloadUrl = resolveSupplyExportDownloadUrl(result?.fileUrl);
-    if (!downloadUrl) {
+    const ok = await downloadExportFile({
+      fileUrl: result?.fileUrl,
+      fileName: result?.fileName,
+    });
+    if (!ok) {
       ElMessage.error($t('page.service.enterprise.supply.export.noUrl'));
       return;
     }
-    await downloadFileFromUrl({
-      source: downloadUrl,
-      fileName: result?.fileName?.trim() || undefined,
-    });
     ElMessage.success($t('page.service.enterprise.supply.export.success'));
   } catch {
-    // 错误提示由接口层处理
+    // 错误提示由接口层 / 下载工具处理
   } finally {
     exporting.value = false;
   }

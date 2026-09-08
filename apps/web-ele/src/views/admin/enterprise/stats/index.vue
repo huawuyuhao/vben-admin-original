@@ -11,7 +11,6 @@ import type {
 import { computed, onMounted, ref } from 'vue';
 
 import { $t, useI18n } from '@vben/locales';
-import { downloadFileFromUrl } from '@vben/utils';
 
 import { Download, Refresh } from '@element-plus/icons-vue';
 import { ElMessage } from 'element-plus';
@@ -24,11 +23,11 @@ import {
   getEnterprisePowerUsageStatApi,
   getEnterpriseStatOverviewApi,
 } from '#/api/admin/enterprise/stats';
+import { downloadExportFile } from '#/store/common';
 
 import {
   getCurrentStatYear,
   getStatExportTypeOptions,
-  resolveStatExportDownloadUrl,
 } from './data';
 import AlertChart from './modules/alert-chart.vue';
 import DeviceCountChart from './modules/device-count-chart.vue';
@@ -179,18 +178,17 @@ async function handleExport(statType: EnterpriseStatType) {
       ...buildPeriodParams(),
       statType,
     });
-    const downloadUrl = resolveStatExportDownloadUrl(result?.fileUrl);
-    if (!downloadUrl) {
+    const ok = await downloadExportFile({
+      fileUrl: result?.fileUrl,
+      fileName: result?.fileName || `enterprise-stat-${statType}.xlsx`,
+    });
+    if (!ok) {
       ElMessage.warning($t('page.admin.enterprise.stats.export.invalidUrl'));
       return;
     }
-    await downloadFileFromUrl({
-      source: downloadUrl,
-      fileName: result?.fileName || `enterprise-stat-${statType}.xlsx`,
-    });
     ElMessage.success($t('page.admin.enterprise.stats.export.success'));
   } catch {
-    // 错误提示由接口层处理
+    // 错误提示由接口层 / 下载工具处理
   } finally {
     exporting.value = false;
   }

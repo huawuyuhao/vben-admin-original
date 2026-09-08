@@ -5,7 +5,6 @@ import { onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import { $t } from '@vben/locales';
-import { downloadFileFromUrl } from '@vben/utils';
 
 import { Download, Plus, Refresh } from '@element-plus/icons-vue';
 import { ElMessage } from 'element-plus';
@@ -16,6 +15,7 @@ import {
   exportComputeDemandApi,
   getComputeDemandListApi,
 } from '#/api/service/mydemand/compute';
+import { downloadExportFile } from '#/store/common';
 
 import {
   COMPUTE_PAGE_SIZE,
@@ -24,7 +24,6 @@ import {
   normalizeComputePage,
   parseComputeStatusFilter,
   resolveComputeDemandId,
-  resolveComputeDownloadUrl,
 } from './data';
 import DemandPager from './modules/demand-pager.vue';
 import DemandTable from './modules/demand-table.vue';
@@ -274,18 +273,17 @@ async function handleExport() {
   exporting.value = true;
   try {
     const result = await exportComputeDemandApi(buildFilterParams());
-    const downloadUrl = resolveComputeDownloadUrl(result?.fileUrl);
-    if (!downloadUrl) {
+    const ok = await downloadExportFile({
+      fileUrl: result?.fileUrl,
+      fileName: result?.fileName,
+    });
+    if (!ok) {
       ElMessage.error($t('page.service.mydemand.compute.export.noUrl'));
       return;
     }
-    await downloadFileFromUrl({
-      source: downloadUrl,
-      fileName: result?.fileName?.trim() || undefined,
-    });
     ElMessage.success($t('page.service.mydemand.compute.export.success'));
   } catch {
-    // 错误提示由接口层处理
+    // 错误提示由接口层 / 下载工具处理
   } finally {
     exporting.value = false;
   }

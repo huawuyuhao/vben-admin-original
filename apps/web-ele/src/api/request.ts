@@ -21,6 +21,9 @@ import { refreshTokenApi } from './core';
 
 const { apiURL } = useAppConfig(import.meta.env, import.meta.env.PROD);
 
+/** 避免 401 连锁请求反复触发登出 */
+let isReAuthenticating = false;
+
 function createRequestClient(baseURL: string, options?: RequestClientOptions) {
   const client = new RequestClient({
     ...options,
@@ -28,21 +31,23 @@ function createRequestClient(baseURL: string, options?: RequestClientOptions) {
   });
 
   /**
-   * 重新认证逻辑
+   * 重新认证逻辑（token 失效 / 业务码 401）
    */
   async function doReAuthenticate() {
+    if (isReAuthenticating) {
+      return;
+    }
+    isReAuthenticating = true;
     console.warn('Access token or refresh token is invalid or expired. ');
     const accessStore = useAccessStore();
     const authStore = useAuthStore();
-    accessStore.setAccessToken(null);
-    accessStore.setClientId(null);
-    if (
-      preferences.app.loginExpiredMode === 'modal' &&
-      accessStore.isAccessChecked
-    ) {
-      accessStore.setLoginExpired(true);
-    } else {
-      await authStore.logout();
+    try {
+      accessStore.setAccessToken(null);
+      accessStore.setClientId(null);
+      // 认证失败统一退出到登录页，避免停在空白业务页
+      await authStore.logout(false);
+    } finally {
+      isReAuthenticating = false;
     }
   }
 
@@ -59,6 +64,18 @@ function createRequestClient(baseURL: string, options?: RequestClientOptions) {
 
   function formatToken(token: null | string) {
     return token ? `Bearer ${token}` : null;
+  }
+
+  /**
+   * 是否为认证失败（HTTP 401 或业务体 code=401）
+   */
+  function isUnauthorizedError(error: any): boolean {
+    const httpStatus = error?.response?.status ?? error?.status;
+    if (httpStatus === 401) {
+      return true;
+    }
+    const responseData = error?.response?.data ?? error?.data ?? {};
+    return Number(responseData?.code) === 401;
   }
 
   // 请求头处理
@@ -85,7 +102,7 @@ function createRequestClient(baseURL: string, options?: RequestClientOptions) {
     }),
   );
 
-  // token过期的处理
+  // token过期的处理（HTTP 401）
   client.addResponseInterceptor(
     authenticateResponseInterceptor({
       client,
@@ -96,9 +113,32 @@ function createRequestClient(baseURL: string, options?: RequestClientOptions) {
     }),
   );
 
+  // 业务码 401（如 HTTP 200 + code:401「认证失败，无法访问系统资源」）同样触发退出
+  client.addResponseInterceptor({
+    rejected: async (error) => {
+      if (isUnauthorizedError(error)) {
+        const responseData = error?.response?.data ?? error?.data ?? {};
+        const tip =
+          responseData?.msg ||
+          responseData?.error ||
+          responseData?.message ||
+          '';
+        if (tip) {
+          ElMessage.error(tip);
+        }
+        await doReAuthenticate();
+      }
+      throw error;
+    },
+  });
+
   // 通用的错误处理,如果没有进入上面的错误处理逻辑，就会进入这里
   client.addResponseInterceptor(
     errorMessageResponseInterceptor((msg: string, error) => {
+      // 401 已在上方拦截并退出，避免重复弹错
+      if (isUnauthorizedError(error)) {
+        return;
+      }
       // 门户接口业务错误多为 { code, msg }；兼容 error / message
       const responseData = error?.response?.data ?? error?.data ?? {};
       const errorMessage =

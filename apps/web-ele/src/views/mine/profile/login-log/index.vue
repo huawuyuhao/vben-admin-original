@@ -4,7 +4,6 @@ import type { LoginLogItem } from '#/types/mine/profile/login-log';
 import { onMounted, ref, watch } from 'vue';
 
 import { $t } from '@vben/locales';
-import { downloadFileFromUrl } from '@vben/utils';
 
 import { Download, Refresh } from '@element-plus/icons-vue';
 import { ElMessage } from 'element-plus';
@@ -13,6 +12,7 @@ import {
   exportLoginLogApi,
   getLoginLogListApi,
 } from '#/api/mine/profile/login-log';
+import { downloadExportFile } from '#/store/common';
 
 import {
   buildLoginLogTimeParams,
@@ -21,7 +21,6 @@ import {
   type LoginLogTimeRange,
   normalizeLoginLogPage,
   parseLoginLogStatusFilter,
-  resolveLoginLogExportDownloadUrl,
 } from './data';
 import FilterBar from './modules/filter-bar.vue';
 import LogPager from './modules/log-pager.vue';
@@ -161,18 +160,17 @@ async function handleExport() {
   exporting.value = true;
   try {
     const result = await exportLoginLogApi(buildAppliedFilterParams());
-    const downloadUrl = resolveLoginLogExportDownloadUrl(result?.fileUrl);
-    if (!downloadUrl) {
+    const ok = await downloadExportFile({
+      fileUrl: result?.fileUrl,
+      fileName: result?.fileName,
+    });
+    if (!ok) {
       ElMessage.error($t('page.mine.loginLog.export.noUrl'));
       return;
     }
-    await downloadFileFromUrl({
-      source: downloadUrl,
-      fileName: result?.fileName?.trim() || undefined,
-    });
     ElMessage.success($t('page.mine.loginLog.export.success'));
   } catch {
-    // 错误提示由接口层处理
+    // 错误提示由接口层 / 下载工具处理
   } finally {
     exporting.value = false;
   }

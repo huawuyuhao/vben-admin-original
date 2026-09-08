@@ -86,12 +86,19 @@ function parseLoginLogListBody<T>(
  */
 export async function getLoginLogListApi(params: LoginLogListParams) {
   const body = await rootRequestClient.get<LoginLogListResponseBody>(
-    '/mock/monitor/logininfor/list',
+    '/pwq-mock/monitor/logininfor/list',
     {
       params,
       responseReturn: 'body',
     },
   );
+  // const body = await rootRequestClient.get<LoginLogListResponseBody>(
+  //   '/mock/monitor/logininfor/list',
+  //   {
+  //     params,
+  //     responseReturn: 'body',
+  //   },
+  // );
   // const body = await rootRequestClient.get<LoginLogListResponseBody>(
   //   '/monitor/logininfor/list',
   //   { params, responseReturn: 'body' },
@@ -116,13 +123,21 @@ export async function getLoginLogListApi(params: LoginLogListParams) {
  */
 export async function exportLoginLogApi(params?: LoginLogExportParams) {
   const body = await rootRequestClient.post<LoginLogMutationResponse>(
-    '/mock/monitor/logininfor/export',
+    '/pwq-mock/monitor/logininfor/export',
     {},
     {
       params: params ?? {},
       responseReturn: 'body',
     },
   );
+  // const body = await rootRequestClient.post<LoginLogMutationResponse>(
+  //   '/mock/monitor/logininfor/export',
+  //   {},
+  //   {
+  //     params: params ?? {},
+  //     responseReturn: 'body',
+  //   },
+  // );
   // const body = await rootRequestClient.post<LoginLogMutationResponse>(
   //   '/monitor/logininfor/export',
   //   {},

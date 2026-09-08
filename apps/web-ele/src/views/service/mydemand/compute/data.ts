@@ -270,26 +270,7 @@ export function isComputeDemandDone(status?: null | number): boolean {
   return Number(status) === COMPUTE_STATUS_DONE;
 }
 
-/**
- * 将导出 / 下载接口返参解析为可下载 URL
- * @param value 接口 data.fileUrl
- * @returns 可下载地址；无法识别时 undefined
- */
-export function resolveComputeDownloadUrl(
-  value?: null | string,
-): string | undefined {
-  const text = value?.trim();
-  if (!text) {
-    return undefined;
-  }
-  if (isHttpUrl(text)) {
-    return text;
-  }
-  if (text.startsWith('/')) {
-    return `${window.location.origin}${text}`;
-  }
-  return undefined;
-}
+export { resolveExportDownloadUrl as resolveComputeDownloadUrl } from '#/store/common';
 
 /**
  * 判断预览内容是否为可打开的链接

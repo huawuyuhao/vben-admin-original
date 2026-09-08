@@ -5,7 +5,9 @@ import type {
   LoginLogStatus,
 } from '#/types/mine/profile/login-log';
 
-import { formatDate, isEmpty, isHttpUrl } from '@vben/utils';
+import { formatDate, isEmpty } from '@vben/utils';
+
+export { resolveExportDownloadUrl as resolveLoginLogExportDownloadUrl } from '#/store/common';
 
 /** 登录日志默认每页条数 */
 export const LOGIN_LOG_PAGE_SIZE = 10;
@@ -141,25 +143,4 @@ export function displayLoginLogValue(
   }
   const text = String(value).trim();
   return text || emptyText;
-}
-
-/**
- * 将导出接口返参解析为可下载 URL
- * @param value 接口 data.fileUrl
- * @returns 可下载地址；无法识别时 undefined
- */
-export function resolveLoginLogExportDownloadUrl(
-  value?: null | string,
-): string | undefined {
-  const text = value?.trim();
-  if (!text) {
-    return undefined;
-  }
-  if (isHttpUrl(text)) {
-    return text;
-  }
-  if (text.startsWith('/')) {
-    return `${window.location.origin}${text}`;
-  }
-  return undefined;
 }

@@ -5,7 +5,7 @@ import type {
 } from '#/types/admin/enterprise/accounts';
 
 import { $t } from '@vben/locales';
-import { formatDate, isEmpty, isHttpUrl } from '@vben/utils';
+import { formatDate, isEmpty } from '@vben/utils';
 
 /** 列表默认每页条数 */
 export const SUB_ACCOUNT_PAGE_SIZE = 10;
@@ -237,26 +237,7 @@ export function joinMenuIds(ids: Array<number | string>): string {
     .join(',');
 }
 
-/**
- * 将导出接口返参解析为可下载 URL
- * @param value 接口 data.fileUrl
- * @returns 可下载地址；无法识别时 undefined
- */
-export function resolveSubAccountExportDownloadUrl(
-  value?: null | string,
-): string | undefined {
-  const text = value?.trim();
-  if (!text) {
-    return undefined;
-  }
-  if (isHttpUrl(text)) {
-    return text;
-  }
-  if (text.startsWith('/')) {
-    return `${window.location.origin}${text}`;
-  }
-  return undefined;
-}
+export { resolveExportDownloadUrl as resolveSubAccountExportDownloadUrl } from '#/store/common';
 
 /**
  * 状态选项（表单用）

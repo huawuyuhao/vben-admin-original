@@ -5,7 +5,7 @@ import type {
   SupplyDeviceStatus,
 } from '#/types/service/enterprise/supply';
 
-import { formatDate, isEmpty, isHttpUrl } from '@vben/utils';
+import { formatDate, isEmpty } from '@vben/utils';
 
 /** 供给设备列表默认每页条数 */
 export const SUPPLY_PAGE_SIZE = 10;
@@ -138,23 +138,4 @@ export function getSupplyStatusTagType(
   return 'info';
 }
 
-/**
- * 将导出接口返参解析为可下载 URL
- * @param value 接口 data.fileUrl
- * @returns 可下载地址；无法识别时 undefined
- */
-export function resolveSupplyExportDownloadUrl(
-  value?: null | string,
-): string | undefined {
-  const text = value?.trim();
-  if (!text) {
-    return undefined;
-  }
-  if (isHttpUrl(text)) {
-    return text;
-  }
-  if (text.startsWith('/')) {
-    return `${window.location.origin}${text}`;
-  }
-  return undefined;
-}
+export { resolveExportDownloadUrl as resolveSupplyExportDownloadUrl } from '#/store/common';

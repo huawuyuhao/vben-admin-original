@@ -4,7 +4,6 @@ import type { SubAccountItem } from '#/types/admin/enterprise/accounts';
 import { onMounted, ref, watch } from 'vue';
 
 import { $t } from '@vben/locales';
-import { downloadFileFromUrl } from '@vben/utils';
 
 import { Download, Plus, Refresh } from '@element-plus/icons-vue';
 import { ElMessage } from 'element-plus';
@@ -14,11 +13,11 @@ import {
   exportSubAccountApi,
   getSubAccountListApi,
 } from '#/api/admin/enterprise/accounts';
+import { downloadExportFile } from '#/store/common';
 
 import {
   normalizeSubAccountPage,
   parseSubAccountStatusFilter,
-  resolveSubAccountExportDownloadUrl,
   SUB_ACCOUNT_PAGE_SIZE,
   type SubAccountStatusFilter,
 } from './data';
@@ -202,20 +201,19 @@ async function handleExport() {
       username: appliedUsername.value.trim() || undefined,
       status: parseSubAccountStatusFilter(appliedStatus.value),
     });
-    const downloadUrl = resolveSubAccountExportDownloadUrl(result?.fileUrl);
-    if (!downloadUrl) {
+    const ok = await downloadExportFile({
+      fileUrl: result?.fileUrl,
+      fileName: result?.fileName || 'sub-accounts.xlsx',
+    });
+    if (!ok) {
       ElMessage.warning(
         $t('page.admin.enterprise.accounts.export.invalidUrl'),
       );
       return;
     }
-    await downloadFileFromUrl({
-      source: downloadUrl,
-      fileName: result?.fileName || 'sub-accounts.xlsx',
-    });
     ElMessage.success($t('page.admin.enterprise.accounts.export.success'));
   } catch {
-    // 错误提示由接口层处理
+    // 错误提示由接口层 / 下载工具处理
   } finally {
     exporting.value = false;
   }
