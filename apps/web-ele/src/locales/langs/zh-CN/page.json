@@ -1079,8 +1079,14 @@
         "empty": "暂无匹配产品",
         "viewDetail": "详情",
         "submitAudit": "提交审核",
-        "submitAuditConfirm": "确认提交「{0}」审核？",
-        "submitAuditPending": "产品审核接口尚未就绪，功能已预留",
+        "submitAuditSuccess": "「{0}」已提交审核",
+        "auditDialog": {
+          "title": "提交审核",
+          "titleWithName": "提交审核 · {0}",
+          "remark": "审核意见",
+          "remarkPlaceholder": "请输入审核意见（可选）",
+          "submit": "确认提交"
+        },
         "shelfOn": "上架",
         "shelfOff": "下架",
         "shelfOnConfirm": "确认上架「{0}」？",

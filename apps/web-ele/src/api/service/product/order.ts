@@ -85,8 +85,11 @@ function parseFlatPageBody<T>(
  */
 export async function getSpecFilterOptionsApi() {
   return rootRequestClient.get<SpecFilterOptions>(
-    '/mock/product/spec/filter-options',
+    '/pwq-mock/product/spec/filter-options',
   );
+  // return rootRequestClient.get<SpecFilterOptions>(
+  //   '/mock/product/spec/filter-options',
+  // );
   // return rootRequestClient.get<SpecFilterOptions>(
   //   '/product/spec/filter-options',
   // );
@@ -101,12 +104,19 @@ export async function getSpecFilterOptionsApi() {
  */
 export async function getSpecListApi(params: SpecListParams) {
   const body = await rootRequestClient.get<SpecListResponseBody>(
-    '/mock/product/spec/list',
+    '/pwq-mock/product/spec/list',
     {
       params,
       responseReturn: 'body',
     },
   );
+  // const body = await rootRequestClient.get<SpecListResponseBody>(
+  //   '/mock/product/spec/list',
+  //   {
+  //     params,
+  //     responseReturn: 'body',
+  //   },
+  // );
   // const body = await rootRequestClient.get<SpecListResponseBody>(
   //   '/product/spec/list',
   //   { params, responseReturn: 'body' },
@@ -132,11 +142,17 @@ export async function getSpecListApi(params: SpecListParams) {
  */
 export async function getProductImageListApi(imageType?: number) {
   return rootRequestClient.get<ProductImageItem[]>(
-    '/mock/product/image/list',
+    '/pwq-mock/product/image/list',
     {
       params: imageType == null ? undefined : { imageType },
     },
   );
+  // return rootRequestClient.get<ProductImageItem[]>(
+  //   '/mock/product/image/list',
+  //   {
+  //     params: imageType == null ? undefined : { imageType },
+  //   },
+  // );
   // return rootRequestClient.get<ProductImageItem[]>('/product/image/list', {
   //   params: imageType == null ? undefined : { imageType },
   // });
@@ -151,12 +167,19 @@ export async function getProductImageListApi(imageType?: number) {
  */
 export async function getModelMarketListApi(params: ModelMarketListParams) {
   const body = await rootRequestClient.get<ModelMarketListResponseBody>(
-    '/mock/model/market/list',
+    '/pwq-mock/model/market/list',
     {
       params,
       responseReturn: 'body',
     },
   );
+  // const body = await rootRequestClient.get<ModelMarketListResponseBody>(
+  //   '/mock/model/market/list',
+  //   {
+  //     params,
+  //     responseReturn: 'body',
+  //   },
+  // );
   // const body = await rootRequestClient.get<ModelMarketListResponseBody>(
   //   '/model/market/list',
   //   { params, responseReturn: 'body' },
@@ -182,9 +205,13 @@ export async function getModelMarketListApi(params: ModelMarketListParams) {
  */
 export async function calcDemandConfigFeeApi(params: DemandFeeParams) {
   return rootRequestClient.post<DemandFeeResult>(
-    '/mock/demand/config/fee',
+    '/pwq-mock/demand/config/fee',
     params,
   );
+  // return rootRequestClient.post<DemandFeeResult>(
+  //   '/mock/demand/config/fee',
+  //   params,
+  // );
   // return rootRequestClient.post<DemandFeeResult>('/demand/config/fee', params);
 }
 
@@ -197,9 +224,13 @@ export async function calcDemandConfigFeeApi(params: DemandFeeParams) {
  */
 export async function saveDemandConfigDraftApi(params: DemandConfigPayload) {
   return rootRequestClient.post<DemandConfigSaveResult>(
-    '/mock/demand/config/draft',
+    '/pwq-mock/demand/config/draft',
     params,
   );
+  // return rootRequestClient.post<DemandConfigSaveResult>(
+  //   '/mock/demand/config/draft',
+  //   params,
+  // );
   // return rootRequestClient.post<DemandConfigSaveResult>(
   //   '/demand/config/draft',
   //   params,
@@ -215,9 +246,13 @@ export async function saveDemandConfigDraftApi(params: DemandConfigPayload) {
  */
 export async function submitDemandConfigApi(params: DemandConfigPayload) {
   return rootRequestClient.post<DemandConfigSaveResult>(
-    '/mock/demand/config/submit',
+    '/pwq-mock/demand/config/submit',
     params,
   );
+  // return rootRequestClient.post<DemandConfigSaveResult>(
+  //   '/mock/demand/config/submit',
+  //   params,
+  // );
   // return rootRequestClient.post<DemandConfigSaveResult>(
   //   '/demand/config/submit',
   //   params,
@@ -233,8 +268,11 @@ export async function submitDemandConfigApi(params: DemandConfigPayload) {
  */
 export async function getDemandConfigDetailApi(demandId: number) {
   return rootRequestClient.get<DemandConfigDetail>(
-    `/mock/demand/config/${demandId}`,
+    `/pwq-mock/demand/config/${demandId}`,
   );
+  // return rootRequestClient.get<DemandConfigDetail>(
+  //   `/mock/demand/config/${demandId}`,
+  // );
   // return rootRequestClient.get<DemandConfigDetail>(
   //   `/demand/config/${demandId}`,
   // );

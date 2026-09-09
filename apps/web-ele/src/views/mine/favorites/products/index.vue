@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { FavoriteItem } from '#/types/mine/favorites/products';
+import type { ProductId } from '#/types/service/product';
 
 import { onMounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
@@ -90,13 +91,13 @@ function goDetail(item: FavoriteItem) {
  */
 function handleCollectChange(payload: {
   collected: boolean;
-  productId: number;
+  productId: ProductId;
 }) {
   if (payload.collected) {
     return;
   }
   products.value = products.value.filter(
-    (item) => item.productId !== payload.productId,
+    (item) => String(item.productId) !== String(payload.productId),
   );
   total.value = Math.max(0, total.value - 1);
   if (products.value.length === 0 && currentPage.value > 1) {

@@ -177,6 +177,7 @@ async function handleSubmitAudit(row: PortalContentItem) {
   try {
     await auditPortalContentApi(row.contentId, {
       content: props.contentType,
+      // 未传时 API 默认 auditStatus = 1；显式传入便于后续统一调整
       auditStatus: PORTAL_CONTENT_AUDIT_SUBMIT_STATUS,
     });
     ElMessage.success(

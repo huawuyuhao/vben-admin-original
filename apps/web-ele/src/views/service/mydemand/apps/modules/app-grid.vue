@@ -3,7 +3,7 @@ import type { MyAppItem } from '#/types/service/mydemand/apps';
 
 import { $t } from '@vben/locales';
 
-import { Delete, Star, StarFilled } from '@element-plus/icons-vue';
+import { Delete, Edit, Star, StarFilled } from '@element-plus/icons-vue';
 
 import {
   displayAppValue,
@@ -172,9 +172,6 @@ function appCoverLetter(row: MyAppItem): string {
         <template #footer>
           <div class="apps-grid__foot">
             <div class="apps-grid__actions">
-              <el-button size="small" @click="emit('edit', row)">
-                {{ $t('page.service.mydemand.apps.actions.edit') }}
-              </el-button>
               <el-button
                 size="small"
                 :loading="togglingId === row.appId"
@@ -197,34 +194,46 @@ function appCoverLetter(row: MyAppItem): string {
               </el-button>
             </div>
 
-            <el-popconfirm
-              width="240"
-              confirm-button-type="danger"
-              :cancel-button-text="
-                $t('page.service.mydemand.apps.delete.cancelBtn')
-              "
-              :confirm-button-text="
-                $t('page.service.mydemand.apps.delete.confirmBtn')
-              "
-              :title="
-                $t('page.service.mydemand.apps.delete.confirm', [
-                  appDisplayName(row),
-                ])
-              "
-              @confirm="emit('delete', row)"
-            >
-              <template #reference>
-                <el-button
-                  circle
-                  plain
-                  size="small"
-                  type="danger"
-                  :title="$t('page.service.mydemand.apps.actions.delete')"
-                >
-                  <el-icon><Delete /></el-icon>
-                </el-button>
-              </template>
-            </el-popconfirm>
+            <div class="apps-grid__ops">
+              <el-button
+                circle
+                plain
+                size="small"
+                type="primary"
+                :title="$t('page.service.mydemand.apps.actions.edit')"
+                @click="emit('edit', row)"
+              >
+                <el-icon><Edit /></el-icon>
+              </el-button>
+              <el-popconfirm
+                width="240"
+                confirm-button-type="danger"
+                :cancel-button-text="
+                  $t('page.service.mydemand.apps.delete.cancelBtn')
+                "
+                :confirm-button-text="
+                  $t('page.service.mydemand.apps.delete.confirmBtn')
+                "
+                :title="
+                  $t('page.service.mydemand.apps.delete.confirm', [
+                    appDisplayName(row),
+                  ])
+                "
+                @confirm="emit('delete', row)"
+              >
+                <template #reference>
+                  <el-button
+                    circle
+                    plain
+                    size="small"
+                    type="danger"
+                    :title="$t('page.service.mydemand.apps.actions.delete')"
+                  >
+                    <el-icon><Delete /></el-icon>
+                  </el-button>
+                </template>
+              </el-popconfirm>
+            </div>
           </div>
         </template>
       </el-card>
@@ -387,6 +396,15 @@ function appCoverLetter(row: MyAppItem): string {
     flex-wrap: wrap;
     gap: 8px;
     min-width: 0;
+  }
+
+  &__ops {
+    display: flex;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    justify-content: flex-end;
   }
 }
 

@@ -1079,8 +1079,14 @@
         "empty": "No matching products",
         "viewDetail": "Details",
         "submitAudit": "Submit review",
-        "submitAuditConfirm": "Submit “{0}” for review?",
-        "submitAuditPending": "Product audit API is not ready yet; UI is reserved",
+        "submitAuditSuccess": "“{0}” has been submitted for review",
+        "auditDialog": {
+          "title": "Submit for review",
+          "titleWithName": "Submit for review · {0}",
+          "remark": "Review comment",
+          "remarkPlaceholder": "Enter review comment (optional)",
+          "submit": "Confirm"
+        },
         "shelfOn": "Publish",
         "shelfOff": "Unpublish",
         "shelfOnConfirm": "Publish “{0}”?",

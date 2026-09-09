@@ -98,7 +98,8 @@ export const PORTAL_CONTENT_AUDIT_PASSED = 1;
 export const PORTAL_CONTENT_AUDIT_PENDING = 0;
 
 /**
- * 提交审核接口入参 auditStatus（后端约定固定传 1）
+ * 提交审核接口入参 auditStatus 默认值（当前为 1）
+ * 后续若甲方要求变更，只改此处与 API 默认参数即可
  * PUT /admin/content/portal/{id}/audit
  */
 export const PORTAL_CONTENT_AUDIT_SUBMIT_STATUS = 1;

@@ -1,4 +1,5 @@
 import type {
+  AdminProductAuditParams,
   AdminProductEvalId,
   AdminProductEvalListParams,
   AdminProductEvalListResponseBody,
@@ -372,6 +373,48 @@ export async function updateAdminProductShelfApi(
   // const body = await rootRequestClient.put<AdminProductMutationResponse>(
   //   `/admin/content/product/${id}/shelf`,
   //   data,
+  //   { responseReturn: 'body' },
+  // );
+
+  assertAdminProductMutationSuccess(body);
+}
+
+/**
+ * 审核算力产品（含提交审核）
+ * 正式：PUT /admin/content/product/{id}/audit
+ * @param id 产品 ID
+ * @param data 审核参数（auditStatus 默认 1；auditRemark 为审核意见）
+ */
+export async function auditAdminProductApi(
+  id: AdminProductId,
+  { auditStatus = 1, auditRemark }: AdminProductAuditParams = {},
+) {
+  const body = await rootRequestClient.put<AdminProductMutationResponse>(
+    `/pwq-mock/admin/content/product/${id}/audit`,
+    {
+      auditStatus,
+      auditRemark,
+    },
+    {
+      responseReturn: 'body',
+    },
+  );
+  // const body = await rootRequestClient.put<AdminProductMutationResponse>(
+  //   `/mock/admin/content/product/${id}/audit`,
+  //   {
+  //     auditStatus,
+  //     auditRemark,
+  //   },
+  //   {
+  //     responseReturn: 'body',
+  //   },
+  // );
+  // const body = await rootRequestClient.put<AdminProductMutationResponse>(
+  //   `/admin/content/product/${id}/audit`,
+  //   {
+  //     auditStatus,
+  //     auditRemark,
+  //   },
   //   { responseReturn: 'body' },
   // );
 

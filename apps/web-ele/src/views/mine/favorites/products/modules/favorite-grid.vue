@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { FavoriteItem } from '#/types/mine/favorites/products';
+import type { ProductId } from '#/types/service/product';
 
 import { $t } from '@vben/locales';
 
@@ -30,7 +31,7 @@ withDefaults(
 
 const emit = defineEmits<{
   /** 收藏状态变化 */
-  collectChange: [payload: { collected: boolean; productId: number }];
+  collectChange: [payload: { collected: boolean; productId: ProductId }];
   /** 查看详情 */
   detail: [item: FavoriteItem];
 }>();

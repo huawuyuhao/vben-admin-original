@@ -259,18 +259,17 @@ export async function deletePortalContentApi(
  * 开发态：PUT /mock/admin/content/portal/{id}/audit
  * 正式：PUT /admin/content/portal/{id}/audit
  * @param id 内容 ID
- * @param data 审核参数（JSON body：content / auditStatus；提交审核时 auditStatus 须为 1）
+ * @param data 审核参数（JSON body：content / auditStatus，auditStatus 默认 1）
  */
 export async function auditPortalContentApi(
   id: PortalContentId,
-  data: PortalContentAuditParams,
+  { content, auditStatus = 1 }: PortalContentAuditParams,
 ) {
   const body = await rootRequestClient.put<PortalContentMutationResponse>(
     `/pwq-mock/admin/content/portal/${id}/audit`,
     {
-      content: data.content,
-      // 后端约定：提交审核 auditStatus 固定传 1
-      auditStatus: data.auditStatus ?? 1,
+      content,
+      auditStatus,
     },
     {
       responseReturn: 'body',

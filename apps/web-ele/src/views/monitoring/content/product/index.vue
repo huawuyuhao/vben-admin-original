@@ -20,6 +20,7 @@ import {
 import ContentPageShell from '../home/modules/content-page-shell.vue';
 import { useAdminProductList } from './composables/use-admin-product-list';
 import FilterBar from './modules/filter-bar.vue';
+import ProductAuditDialog from './modules/product-audit-dialog.vue';
 import ProductDetailDrawer from './modules/product-detail-drawer.vue';
 import ProductFormDialog from './modules/product-form-dialog.vue';
 import ProductGrid from './modules/product-grid.vue';
@@ -35,6 +36,7 @@ const detailItem = ref<null | ProductInfo>(null);
 /** 正在上下架的产品 ID */
 const shelfActingId = ref<AdminProductId | null>(null);
 const formDialogRef = ref<InstanceType<typeof ProductFormDialog>>();
+const auditDialogRef = ref<InstanceType<typeof ProductAuditDialog>>();
 
 const {
   applyFilters,
@@ -95,11 +97,11 @@ function handleEdit(item: ProductInfo) {
 }
 
 /**
- * 提交审核（接口未就绪，仅预留入口）
+ * 打开提交审核弹窗
  * @param item 产品条目
  */
-function handleSubmitAudit(_item: ProductInfo) {
-  ElMessage.info($t('page.monitoring.content.product.submitAuditPending'));
+function handleSubmitAudit(item: ProductInfo) {
+  auditDialogRef.value?.open(item);
 }
 
 /**
@@ -216,5 +218,10 @@ async function handleShelfOff(item: ProductInfo) {
     />
 
     <ProductFormDialog ref="formDialogRef" @success="handleFormSuccess" />
+
+    <ProductAuditDialog
+      ref="auditDialogRef"
+      @success="handleFormSuccess"
+    />
   </ContentPageShell>
 </template>

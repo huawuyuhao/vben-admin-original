@@ -1,4 +1,5 @@
 import type {
+  ProductId,
   ProductInfo,
   ProductListResult,
   ProductSortField,
@@ -173,14 +174,37 @@ export function hasProductImage(imageUrl?: string): boolean {
 }
 
 /**
- * 解析路由中的产品 ID
- * @param raw 路由 params.id
- * @returns 合法正整数；否则 NaN
+ * 归一化产品主键：保留字符串雪花 ID，避免 Number 精度丢失
+ * @param value 原始主键
+ * @returns 可用主键；无法识别时 undefined
  */
-export function parseProductRouteId(raw: unknown): number {
+export function normalizeProductId(value: unknown): ProductId | undefined {
+  if (typeof value === 'number') {
+    return Number.isFinite(value) && value > 0 ? value : undefined;
+  }
+  if (typeof value === 'string') {
+    const text = value.trim();
+    if (!/^\d+$/.test(text) || text === '0') {
+      return undefined;
+    }
+    // 安全整数范围内可保留 number；超长雪花 ID 必须保持字符串
+    if (text.length <= 15) {
+      const num = Number(text);
+      if (Number.isSafeInteger(num) && num > 0) {
+        return num;
+      }
+    }
+    return text;
+  }
+  return undefined;
+}
+
+/**
+ * 解析路由中的产品 ID（不做 Number 强转，防止雪花字符串精度丢失）
+ * @param raw 路由 params.id
+ * @returns 可用主键；非法时 undefined
+ */
+export function parseProductRouteId(raw: unknown): ProductId | undefined {
   const value = Array.isArray(raw) ? raw[0] : raw;
-  const id = Number(value);
-  return Number.isFinite(id) && Number.isInteger(id) && id > 0
-    ? id
-    : Number.NaN;
+  return normalizeProductId(value);
 }

@@ -166,3 +166,17 @@ export interface AdminProductShelfParams {
   /** 操作类型：shelf 上架 / unshelf 下架 */
   action: AdminProductShelfAction;
 }
+
+/**
+ * 审核算力产品请求体
+ * PUT /admin/content/product/{id}/audit
+ */
+export interface AdminProductAuditParams {
+  /**
+   * 审核状态（0-待审核 1-审核通过 2-审核不通过）
+   * 默认 1；后续若业务变更只需调整调用方默认值
+   */
+  auditStatus?: AdminProductAuditStatus;
+  /** 审核意见 */
+  auditRemark?: string;
+}

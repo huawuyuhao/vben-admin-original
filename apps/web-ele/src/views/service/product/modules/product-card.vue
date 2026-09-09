@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { ProductInfo } from '#/types/service/product';
+import type { ProductId, ProductInfo } from '#/types/service/product';
 
 import { computed, ref, watch } from 'vue';
 
@@ -34,7 +34,7 @@ const props = withDefaults(
 
 const emit = defineEmits<{
   /** 收藏状态变化 */
-  collectChange: [payload: { collected: boolean; productId: number }];
+  collectChange: [payload: { collected: boolean; productId: ProductId }];
   /** 查看详情 */
   detail: [item: ProductInfo];
 }>();

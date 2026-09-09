@@ -225,41 +225,6 @@ function handleSubmitAudit() {
       <div class="product-card__foot">
         <span class="product-card__price">{{ priceText }}</span>
         <div class="product-card__actions">
-          <el-button
-            circle
-            plain
-            size="small"
-            type="primary"
-            :title="$t('page.monitoring.content.product.edit')"
-            @click.stop="handleEdit"
-          >
-            <el-icon><Edit /></el-icon>
-          </el-button>
-          <el-popconfirm
-            :title="
-              $t('page.monitoring.content.product.deleteConfirm', [
-                item.productName,
-              ])
-            "
-            width="260"
-            :confirm-button-text="$t('common.confirm')"
-            :cancel-button-text="$t('common.cancel')"
-            confirm-button-type="danger"
-            @confirm="handleRemove"
-          >
-            <template #reference>
-              <el-button
-                circle
-                plain
-                size="small"
-                type="danger"
-                :title="$t('page.monitoring.content.product.delete')"
-                @click.stop
-              >
-                <el-icon><Delete /></el-icon>
-              </el-button>
-            </template>
-          </el-popconfirm>
           <el-popconfirm
             v-if="!isOnShelf"
             :title="
@@ -308,30 +273,54 @@ function handleSubmitAudit() {
               </el-button>
             </template>
           </el-popconfirm>
-          <el-popconfirm
+          <el-button
             v-if="canSubmitAudit"
-            :title="
-              $t('page.monitoring.content.product.submitAuditConfirm', [
-                item.productName,
-              ])
-            "
-            width="260"
-            :confirm-button-text="$t('common.confirm')"
-            :cancel-button-text="$t('common.cancel')"
-            @confirm="handleSubmitAudit"
+            size="small"
+            @click.stop="handleSubmitAudit"
           >
-            <template #reference>
-              <el-button size="small" @click.stop>
-                {{ $t('page.monitoring.content.product.submitAudit') }}
-              </el-button>
-            </template>
-          </el-popconfirm>
+            {{ $t('page.monitoring.content.product.submitAudit') }}
+          </el-button>
           <el-button v-else size="small" disabled @click.stop>
             {{ $t('page.monitoring.content.product.submitAudit') }}
           </el-button>
           <el-button size="small" @click.stop="handleDetail">
             {{ $t('page.monitoring.content.product.viewDetail') }}
           </el-button>
+          <el-button
+            circle
+            plain
+            size="small"
+            type="primary"
+            :title="$t('page.monitoring.content.product.edit')"
+            @click.stop="handleEdit"
+          >
+            <el-icon><Edit /></el-icon>
+          </el-button>
+          <el-popconfirm
+            :title="
+              $t('page.monitoring.content.product.deleteConfirm', [
+                item.productName,
+              ])
+            "
+            width="260"
+            :confirm-button-text="$t('common.confirm')"
+            :cancel-button-text="$t('common.cancel')"
+            confirm-button-type="danger"
+            @confirm="handleRemove"
+          >
+            <template #reference>
+              <el-button
+                circle
+                plain
+                size="small"
+                type="danger"
+                :title="$t('page.monitoring.content.product.delete')"
+                @click.stop
+              >
+                <el-icon><Delete /></el-icon>
+              </el-button>
+            </template>
+          </el-popconfirm>
         </div>
       </div>
     </template>

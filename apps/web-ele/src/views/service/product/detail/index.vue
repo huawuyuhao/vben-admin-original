@@ -41,7 +41,8 @@ function goBack() {
  * 拉取产品详情
  */
 async function fetchDetail() {
-  if (Number.isNaN(productId.value)) {
+  const id = productId.value;
+  if (id === undefined) {
     product.value = null;
     loadError.value = true;
     loading.value = false;
@@ -51,7 +52,7 @@ async function fetchDetail() {
   loading.value = true;
   loadError.value = false;
   try {
-    const data = await getProductDetailApi(productId.value);
+    const data = await getProductDetailApi(id);
     product.value = data ?? null;
     if (!data?.productId) {
       loadError.value = true;

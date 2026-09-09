@@ -1,4 +1,4 @@
-import type { ProductInfo } from '#/types/service/product';
+import type { ProductId, ProductInfo } from '#/types/service/product';
 
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
@@ -20,17 +20,17 @@ import { ensureLoggedIn } from '#/store/common';
 export function useProductActions() {
   const router = useRouter();
   /** 收藏请求中的产品 ID 集合 */
-  const collectingIds = ref<Set<number>>(new Set());
+  const collectingIds = ref<Set<ProductId>>(new Set());
   /** 生成需求意向中的产品 ID 集合 */
-  const usingIds = ref<Set<number>>(new Set());
+  const usingIds = ref<Set<ProductId>>(new Set());
 
   /**
    * 是否正在收藏操作中
    * @param productId 产品 ID
    * @returns 进行中返回 true
    */
-  function isCollecting(productId?: number): boolean {
-    return !!productId && collectingIds.value.has(productId);
+  function isCollecting(productId?: ProductId): boolean {
+    return productId !== undefined && productId !== '' && collectingIds.value.has(productId);
   }
 
   /**
@@ -38,8 +38,8 @@ export function useProductActions() {
    * @param productId 产品 ID
    * @returns 进行中返回 true
    */
-  function isUsing(productId?: number): boolean {
-    return !!productId && usingIds.value.has(productId);
+  function isUsing(productId?: ProductId): boolean {
+    return productId !== undefined && productId !== '' && usingIds.value.has(productId);
   }
 
   /**
@@ -49,10 +49,10 @@ export function useProductActions() {
    * @returns 成功后的新收藏态；失败或未登录返回 null
    */
   async function toggleCollect(
-    productId: number,
+    productId: ProductId,
     collected: boolean,
   ): Promise<boolean | null> {
-    if (!productId) {
+    if (productId === undefined || productId === '' || productId === 0) {
       return null;
     }
     if (!ensureLoggedIn(`/service/product/${productId}`)) {

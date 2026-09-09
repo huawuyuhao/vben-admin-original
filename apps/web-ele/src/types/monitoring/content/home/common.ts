@@ -167,7 +167,7 @@ export interface PortalContentShelfParams {
 /**
  * 门户内容审核状态
  * - 列表展示：0-待审核 1-已通过 2-已驳回
- * - 提交审核接口入参：后端约定传 1
+ * - 提交审核接口入参默认：1
  * PUT /admin/content/portal/{id}/audit
  */
 export type PortalContentAuditStatus = 0 | 1 | 2;
@@ -179,8 +179,11 @@ export type PortalContentAuditStatus = 0 | 1 | 2;
 export interface PortalContentAuditParams {
   /** 内容类型枚举 */
   content: PortalContentType;
-  /** 审核状态（提交审核时传 1） */
-  auditStatus: PortalContentAuditStatus;
+  /**
+   * 审核状态（0-待审核 1-已通过 2-已驳回）
+   * 默认 1；后续若业务变更只需调整调用方默认值
+   */
+  auditStatus?: PortalContentAuditStatus;
 }
 
 /**

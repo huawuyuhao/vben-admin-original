@@ -1,4 +1,5 @@
 import type {
+  ProductId,
   ProductInfo,
   ProductListParams,
   ProductListResponseBody,
@@ -74,12 +75,19 @@ function parseProductListBody<T extends ProductInfo = ProductInfo>(
  */
 export async function getProductListApi(params: ProductListParams) {
   const body = await rootRequestClient.get<ProductListResponseBody>(
-    '/mock/product/list',
+    '/pwq-mock/product/list',
     {
       params,
       responseReturn: 'body',
     },
   );
+  // const body = await rootRequestClient.get<ProductListResponseBody>(
+  //   '/mock/product/list',
+  //   {
+  //     params,
+  //     responseReturn: 'body',
+  //   },
+  // );
   // const body = await rootRequestClient.get<ProductListResponseBody>(
   //   '/product/list',
   //   { params, responseReturn: 'body' },
@@ -98,11 +106,12 @@ export async function getProductListApi(params: ProductListParams) {
  * 产品详情查询
  * 开发态走 Apifox Mock：GET /mock/product/{id}
  * 正式接口：GET /product/{id}
- * @param id 产品 ID
+ * @param id 产品 ID（数字或雪花字符串，路径拼接不做 Number 强转）
  * @returns 算力产品信息（业务 data）
  */
-export async function getProductDetailApi(id: number) {
-  return rootRequestClient.get<ProductInfo>(`/mock/product/${id}`);
+export async function getProductDetailApi(id: ProductId) {
+  return rootRequestClient.get<ProductInfo>(`/pwq-mock/product/${id}`);
+  // return rootRequestClient.get<ProductInfo>(`/mock/product/${id}`);
   // return rootRequestClient.get<ProductInfo>(`/product/${id}`);
 }
 
@@ -115,13 +124,17 @@ export async function getProductDetailApi(id: number) {
  * @returns 业务 data（字符串）
  */
 export async function toggleProductCollectApi(
-  productId: number,
+  productId: ProductId,
   action: 'collect' | 'uncollect',
 ) {
-  return rootRequestClient.post<string>('/mock/product/collect', {
+  return rootRequestClient.post<string>('/pwq-mock/product/collect', {
     productId,
     action,
   });
+  // return rootRequestClient.post<string>('/mock/product/collect', {
+  //   productId,
+  //   action,
+  // });
   // return rootRequestClient.post<string>('/product/collect', {
   //   productId,
   //   action,
@@ -138,13 +151,17 @@ export async function toggleProductCollectApi(
 export async function createProductDemandIntentApi(params: {
   demandDesc?: string;
   demandName: string;
-  productId: number;
+  productId: ProductId;
 }) {
-  return rootRequestClient.post<{ key: number }>(
-    '/mock/product/demand-intent',
+  return rootRequestClient.post<{ key: number | string }>(
+    '/pwq-mock/product/demand-intent',
     params,
   );
-  // return rootRequestClient.post<{ key: number }>(
+  // return rootRequestClient.post<{ key: number | string }>(
+  //   '/mock/product/demand-intent',
+  //   params,
+  // );
+  // return rootRequestClient.post<{ key: number | string }>(
   //   '/product/demand-intent',
   //   params,
   // );

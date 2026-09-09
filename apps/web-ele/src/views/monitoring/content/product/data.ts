@@ -78,6 +78,12 @@ export const ADMIN_PRODUCT_AUDIT_PASSED = 1;
 /** 审核不通过 */
 export const ADMIN_PRODUCT_AUDIT_REJECTED = 2;
 
+/**
+ * 提交审核接口入参 auditStatus 默认值（当前为 1）
+ * 后续若甲方要求变更，只改此处即可
+ */
+export const ADMIN_PRODUCT_AUDIT_SUBMIT_STATUS = ADMIN_PRODUCT_AUDIT_PASSED;
+
 /** 评价待审核 */
 export const ADMIN_PRODUCT_EVAL_PENDING = 0;
 

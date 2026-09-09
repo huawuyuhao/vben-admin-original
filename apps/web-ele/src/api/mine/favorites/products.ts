@@ -70,12 +70,19 @@ function parseFavoritesListBody<T = FavoriteItem>(
  */
 export async function getFavoritesListApi(params: FavoritesListParams) {
   const body = await rootRequestClient.get<FavoritesListResponseBody>(
-    '/mock/product/collect/list',
+    '/pwq-mock/product/collect/list',
     {
       params,
       responseReturn: 'body',
     },
   );
+  // const body = await rootRequestClient.get<FavoritesListResponseBody>(
+  //   '/mock/product/collect/list',
+  //   {
+  //     params,
+  //     responseReturn: 'body',
+  //   },
+  // );
   // const body = await rootRequestClient.get<FavoritesListResponseBody>(
   //   '/product/collect/list',
   //   { params, responseReturn: 'body' },

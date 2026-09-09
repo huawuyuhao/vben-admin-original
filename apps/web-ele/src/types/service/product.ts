@@ -1,10 +1,13 @@
+/** 产品主键（兼容数字与雪花字符串） */
+export type ProductId = number | string;
+
 /**
  * 算力产品信息（product_info）
  * GET /product/list、GET /product/{id}
  */
 export interface ProductInfo {
-  /** 产品 ID */
-  productId: number;
+  /** 产品 ID（兼容数字与雪花字符串，避免 Number 精度丢失） */
+  productId: ProductId;
   /** 产品名称 */
   productName: string;
   /** 产品简介 */
