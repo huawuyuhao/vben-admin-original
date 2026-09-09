@@ -33,8 +33,6 @@ const props = defineProps<{
 const emit = defineEmits<{
   /** 查看详情 */
   detail: [item: ProductInfo];
-  /** 管理评价 */
-  eval: [item: ProductInfo];
   /** 上架 */
   shelfOn: [item: ProductInfo];
   /** 下架 */
@@ -102,13 +100,6 @@ const canSubmitAudit = computed(() =>
  */
 function handleDetail() {
   emit('detail', props.item);
-}
-
-/**
- * 触发评价管理
- */
-function handleEval() {
-  emit('eval', props.item);
 }
 
 /**
@@ -337,9 +328,6 @@ function handleSubmitAudit() {
           </el-popconfirm>
           <el-button v-else size="small" disabled @click.stop>
             {{ $t('page.monitoring.content.product.submitAudit') }}
-          </el-button>
-          <el-button size="small" @click.stop="handleEval">
-            {{ $t('page.monitoring.content.product.eval.cardAction') }}
           </el-button>
           <el-button size="small" @click.stop="handleDetail">
             {{ $t('page.monitoring.content.product.viewDetail') }}

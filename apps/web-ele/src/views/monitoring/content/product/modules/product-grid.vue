@@ -19,8 +19,6 @@ defineProps<{
 const emit = defineEmits<{
   /** 查看详情 */
   detail: [item: ProductInfo];
-  /** 管理评价 */
-  eval: [item: ProductInfo];
   /** 上架 */
   shelfOn: [item: ProductInfo];
   /** 下架 */
@@ -79,7 +77,6 @@ const emit = defineEmits<{
         :item="item"
         :shelf-acting="shelfActingId === item.productId"
         @detail="emit('detail', $event)"
-        @eval="emit('eval', $event)"
         @shelf-on="emit('shelfOn', $event)"
         @shelf-off="emit('shelfOff', $event)"
         @edit="emit('edit', $event)"

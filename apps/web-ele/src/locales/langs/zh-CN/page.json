@@ -2140,7 +2140,7 @@
       "service": {
         "tag": "BUSINESS SERVICE",
         "title": "业务服务",
-        "subtitle": "业务服务介绍，仅展示内容，不支持跳转",
+        "subtitle": "汇聚算力交易、碳计量与监测告警等核心业务能力",
         "loading": "服务介绍加载中…",
         "empty": "暂无业务服务介绍"
       },

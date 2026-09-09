@@ -107,7 +107,6 @@ onMounted(fetchBanners);
             :alt="item.title || $t('page.portal.home.banner.slideLabel')"
             loading="lazy"
           />
-          <div class="home-banner__mask" aria-hidden="true"></div>
           <div v-if="item.title" class="home-banner__caption">
             <h2 class="home-banner__title">{{ item.title }}</h2>
             <span
@@ -215,25 +214,6 @@ onMounted(fetchBanners);
     object-position: center;
   }
 
-  &__mask {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background:
-      linear-gradient(
-        90deg,
-        rgb(8 14 28 / 72%) 0%,
-        rgb(8 14 28 / 28%) 42%,
-        rgb(8 14 28 / 8%) 68%,
-        transparent 100%
-      ),
-      linear-gradient(
-        0deg,
-        rgb(8 14 28 / 55%) 0%,
-        transparent 42%
-      );
-  }
-
   &__caption {
     position: absolute;
     right: auto;
@@ -255,7 +235,9 @@ onMounted(fetchBanners);
     line-height: 1.25;
     color: #fff;
     letter-spacing: 0.02em;
-    text-shadow: 0 8px 28px rgb(0 0 0 / 35%);
+    text-shadow:
+      0 1px 4px rgb(0 0 0 / 28%),
+      0 4px 16px rgb(0 0 0 / 18%);
   }
 
   &__cta {
@@ -268,7 +250,7 @@ onMounted(fetchBanners);
     color: #0f1a2e;
     background: #fff;
     border-radius: 10px;
-    box-shadow: 0 10px 28px rgb(0 0 0 / 18%);
+    box-shadow: 0 6px 16px rgb(0 0 0 / 10%);
   }
 
   &__skeleton,

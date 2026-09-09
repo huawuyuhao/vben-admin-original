@@ -2140,7 +2140,7 @@
       "service": {
         "tag": "BUSINESS SERVICE",
         "title": "Business Services",
-        "subtitle": "Service introductions for browsing only; no navigation",
+        "subtitle": "Compute trading, carbon accounting, monitoring and more",
         "loading": "Loading services…",
         "empty": "No business services available"
       },

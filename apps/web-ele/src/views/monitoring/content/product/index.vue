@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type {
-  AdminProductEvalId,
+  AdminProductId,
   AdminProductShelfStatus,
 } from '#/types/monitoring/content/product';
 import type { ProductInfo } from '#/types/service/product';
@@ -9,14 +9,16 @@ import { ref } from 'vue';
 
 import { $t } from '@vben/locales';
 
-import { ChatDotRound, Plus } from '@element-plus/icons-vue';
+import { Plus } from '@element-plus/icons-vue';
 import { ElMessage } from 'element-plus';
 
-import { deleteAdminProductApi, updateAdminProductShelfApi } from '#/api/monitoring/content/product';
+import {
+  deleteAdminProductApi,
+  updateAdminProductShelfApi,
+} from '#/api/monitoring/content/product';
 
 import ContentPageShell from '../home/modules/content-page-shell.vue';
 import { useAdminProductList } from './composables/use-admin-product-list';
-import EvalDialog from './modules/eval-dialog.vue';
 import FilterBar from './modules/filter-bar.vue';
 import ProductDetailDrawer from './modules/product-detail-drawer.vue';
 import ProductFormDialog from './modules/product-form-dialog.vue';
@@ -30,11 +32,8 @@ const shelfStatus = ref<'' | AdminProductShelfStatus>('');
 const detailVisible = ref(false);
 const detailItem = ref<null | ProductInfo>(null);
 
-const evalVisible = ref(false);
-const evalProductId = ref<AdminProductEvalId | null>(null);
-const evalProductName = ref<null | string>(null);
 /** 正在上下架的产品 ID */
-const shelfActingId = ref<AdminProductEvalId | null>(null);
+const shelfActingId = ref<AdminProductId | null>(null);
 const formDialogRef = ref<InstanceType<typeof ProductFormDialog>>();
 
 const {
@@ -78,25 +77,6 @@ function handleRefresh() {
 function handleDetail(item: ProductInfo) {
   detailItem.value = item;
   detailVisible.value = true;
-}
-
-/**
- * 打开全部评价管理弹窗
- */
-function handleOpenEvalManage() {
-  evalProductId.value = null;
-  evalProductName.value = null;
-  evalVisible.value = true;
-}
-
-/**
- * 打开指定产品的评价管理弹窗
- * @param item 产品条目
- */
-function handleOpenProductEval(item: ProductInfo) {
-  evalProductId.value = item.productId;
-  evalProductName.value = item.productName || null;
-  evalVisible.value = true;
 }
 
 /**
@@ -191,10 +171,6 @@ async function handleShelfOff(item: ProductInfo) {
     :desc="$t('page.monitoring.content.product.desc')"
   >
     <template #actions>
-      <el-button class="mine-shell__action-btn" @click="handleOpenEvalManage">
-        <el-icon><ChatDotRound /></el-icon>
-        {{ $t('page.monitoring.content.product.eval.manage') }}
-      </el-button>
       <el-button
         class="mine-shell__action-btn"
         type="primary"
@@ -219,7 +195,6 @@ async function handleShelfOff(item: ProductInfo) {
       :products="records"
       :shelf-acting-id="shelfActingId"
       @detail="handleDetail"
-      @eval="handleOpenProductEval"
       @shelf-on="handleShelfOn"
       @shelf-off="handleShelfOff"
       @edit="handleEdit"
@@ -238,12 +213,6 @@ async function handleShelfOff(item: ProductInfo) {
     <ProductDetailDrawer
       v-model:visible="detailVisible"
       :item="detailItem"
-    />
-
-    <EvalDialog
-      v-model:visible="evalVisible"
-      :product-id="evalProductId"
-      :product-name="evalProductName"
     />
 
     <ProductFormDialog ref="formDialogRef" @success="handleFormSuccess" />
