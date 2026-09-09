@@ -6,7 +6,12 @@ import type {
   UploadProps,
 } from 'element-plus';
 
-import type { CaseInfo, CaseListItem, CaseWriteParams } from '#/types/service/case';
+import type {
+  CaseId,
+  CaseInfo,
+  CaseListItem,
+  CaseWriteParams,
+} from '#/types/monitoring/content/case';
 
 import { computed, reactive, ref, watch } from 'vue';
 
@@ -21,7 +26,7 @@ import {
   createCaseApi,
   getCaseDetailApi,
   updateCaseApi,
-} from '#/api/service/case';
+} from '#/api/monitoring/content/case';
 
 import {
   CASE_IMAGE_ACCEPT,
@@ -30,11 +35,12 @@ import {
   CASE_TYPE_GENERAL,
   CASE_TYPE_SMART,
   isAllowedCaseImageFile,
+  isCaseListDraft,
   joinCaseTags,
   normalizeCaseTags,
 } from '../data';
 
-defineOptions({ name: 'ServiceCaseFormDialog' });
+defineOptions({ name: 'AdminCaseFormDialog' });
 
 const emit = defineEmits<{
   /** 保存成功 */
@@ -47,10 +53,10 @@ const visible = defineModel<boolean>('visible', { default: false });
 /** 模式：新增 / 编辑 */
 const mode = ref<'create' | 'edit'>('create');
 /** 当前编辑案例 ID */
-const editingId = ref<null | number>(null);
+const editingId = ref<CaseId | null>(null);
 /** 提交中 */
 const submitting = ref(false);
-/** 详情加载中（编辑回填） */
+/** 详情加载中（编辑回显） */
 const detailLoading = ref(false);
 /** 图片上传中 */
 const imageUploading = ref(false);
@@ -76,8 +82,8 @@ const imagePreviewUrl = ref('');
 
 const dialogTitle = computed(() =>
   mode.value === 'create'
-    ? $t('page.service.case.form.createTitle')
-    : $t('page.service.case.form.editTitle'),
+    ? $t('page.monitoring.content.case.form.createTitle')
+    : $t('page.monitoring.content.case.form.editTitle'),
 );
 
 /** 表单校验规则 */
@@ -85,28 +91,28 @@ const rules = computed<FormRules>(() => ({
   title: [
     {
       required: true,
-      message: () => $t('page.service.case.form.titleRequired'),
+      message: () => $t('page.monitoring.content.case.form.titleRequired'),
       trigger: 'blur',
     },
   ],
   content: [
     {
       required: true,
-      message: () => $t('page.service.case.form.contentRequired'),
+      message: () => $t('page.monitoring.content.case.form.contentRequired'),
       trigger: 'blur',
     },
   ],
   caseType: [
     {
       required: true,
-      message: () => $t('page.service.case.form.caseTypeRequired'),
+      message: () => $t('page.monitoring.content.case.form.caseTypeRequired'),
       trigger: 'change',
     },
   ],
   status: [
     {
       required: true,
-      message: () => $t('page.service.case.form.statusRequired'),
+      message: () => $t('page.monitoring.content.case.form.statusRequired'),
       trigger: 'change',
     },
   ],
@@ -124,6 +130,7 @@ function resetForm() {
   form.status = CASE_STATUS_PUBLISHED;
   form.tags = [];
   editingId.value = null;
+  detailLoading.value = false;
   imagePreviewVisible.value = false;
   imagePreviewUrl.value = '';
   formRef.value?.clearValidate();
@@ -139,20 +146,19 @@ function clearUploadFiles() {
 }
 
 /**
- * 用案例数据回填表单（列表项无 content / status，详情可补全）
- * @param data 列表项或详情
+ * 用案例详情数据回填表单
+ * @param data 详情（含 content）
  */
-function fillForm(data: CaseInfo | CaseListItem) {
+function fillForm(data: CaseInfo) {
   form.title = data.title || '';
   form.summary = data.summary || '';
-  form.content = 'content' in data ? data.content || '' : form.content;
+  form.content = data.content || '';
   form.coverImage = data.coverImage || '';
   form.caseType = Number(data.caseType) || CASE_TYPE_GENERAL;
-  if ('status' in data && data.status === CASE_STATUS_DRAFT) {
-    form.status = CASE_STATUS_DRAFT;
-  } else if ('status' in data && data.status != null) {
-    form.status = CASE_STATUS_PUBLISHED;
-  }
+  // 详情 status 为审核态：0 视为草稿，其余按已发布回显
+  form.status = isCaseListDraft(data.status)
+    ? CASE_STATUS_DRAFT
+    : CASE_STATUS_PUBLISHED;
   form.tags = normalizeCaseTags(data.tags);
 }
 
@@ -166,35 +172,32 @@ function openCreate() {
 }
 
 /**
- * 打开编辑弹窗（列表已含 tags；再拉详情补全 content）
- * @param item 列表案例
+ * 打开编辑弹窗：先拉详情再回显
+ * @param item 列表案例（取 caseId）
  */
 async function openEdit(item: CaseListItem) {
   if (!item.caseId) {
+    ElMessage.warning($t('page.monitoring.content.case.form.invalidId'));
     return;
   }
 
   mode.value = 'edit';
   resetForm();
   editingId.value = item.caseId;
-  fillForm(item);
   visible.value = true;
-
   detailLoading.value = true;
+
   try {
     const detail = await getCaseDetailApi(item.caseId);
-    if (detail?.caseId) {
-      fillForm({
-        ...item,
-        ...detail,
-        summary: detail.summary ?? item.summary,
-        tags: detail.tags?.length ? detail.tags : item.tags,
-        createTime: detail.createTime ?? item.createTime,
-        viewCount: detail.viewCount ?? item.viewCount,
-      });
+    if (!detail?.caseId) {
+      ElMessage.error($t('page.monitoring.content.case.form.loadDetailFail'));
+      visible.value = false;
+      return;
     }
+    fillForm(detail);
   } catch {
-    // 详情失败时保留列表字段，可继续编辑
+    ElMessage.error($t('page.monitoring.content.case.form.loadDetailFail'));
+    visible.value = false;
   } finally {
     detailLoading.value = false;
   }
@@ -219,11 +222,11 @@ watch(visible, (val) => {
  */
 const beforeUpload: UploadProps['beforeUpload'] = (raw) => {
   if (!isAllowedCaseImageFile(raw)) {
-    ElMessage.warning($t('page.service.case.form.imageTypeInvalid'));
+    ElMessage.warning($t('page.monitoring.content.case.form.imageTypeInvalid'));
     return false;
   }
   if (raw.size / 1024 / 1024 > 5) {
-    ElMessage.warning($t('page.service.case.form.imageSizeInvalid'));
+    ElMessage.warning($t('page.monitoring.content.case.form.imageSizeInvalid'));
     return false;
   }
   return true;
@@ -236,7 +239,7 @@ const beforeUpload: UploadProps['beforeUpload'] = (raw) => {
  */
 const handleUploadExceed: UploadProps['onExceed'] = (files) => {
   if (!isEmpty(form.coverImage)) {
-    ElMessage.warning($t('page.service.case.form.imageLimit'));
+    ElMessage.warning($t('page.monitoring.content.case.form.imageLimit'));
     return;
   }
 
@@ -257,7 +260,7 @@ async function handleImageUpload(options: { file: File }) {
     const result = await uploadImageApi(options.file);
     const url = String(result?.url ?? '').trim();
     if (isEmpty(url)) {
-      ElMessage.error($t('page.service.case.form.uploadFail'));
+      ElMessage.error($t('page.monitoring.content.case.form.uploadFail'));
       clearUploadFiles();
       return;
     }
@@ -318,6 +321,10 @@ function buildWriteParams(): CaseWriteParams {
  * 提交表单
  */
 async function handleSubmit() {
+  if (detailLoading.value) {
+    return;
+  }
+
   const valid = await formRef.value?.validate().catch(() => false);
   if (!valid) {
     return;
@@ -329,10 +336,10 @@ async function handleSubmit() {
 
     if (mode.value === 'create') {
       await createCaseApi(payload);
-      ElMessage.success($t('page.service.case.form.createSuccess'));
+      ElMessage.success($t('page.monitoring.content.case.form.createSuccess'));
     } else if (editingId.value) {
       await updateCaseApi(editingId.value, payload);
-      ElMessage.success($t('page.service.case.form.updateSuccess'));
+      ElMessage.success($t('page.monitoring.content.case.form.updateSuccess'));
     }
 
     visible.value = false;
@@ -365,9 +372,10 @@ defineExpose({ openCreate, openEdit });
         label-width="96px"
         :model="form"
         :rules="rules"
+        :disabled="detailLoading"
       >
         <el-form-item
-          :label="$t('page.service.case.form.fields.title')"
+          :label="$t('page.monitoring.content.case.form.fields.title')"
           prop="title"
         >
           <el-input
@@ -375,39 +383,43 @@ defineExpose({ openCreate, openEdit });
             clearable
             maxlength="120"
             show-word-limit
-            :placeholder="$t('page.service.case.form.titlePlaceholder')"
+            :placeholder="
+              $t('page.monitoring.content.case.form.titlePlaceholder')
+            "
           />
         </el-form-item>
 
         <el-form-item
-          :label="$t('page.service.case.form.fields.caseType')"
+          :label="$t('page.monitoring.content.case.form.fields.caseType')"
           prop="caseType"
         >
           <el-radio-group v-model="form.caseType">
             <el-radio :value="CASE_TYPE_GENERAL">
-              {{ $t('page.service.case.type.general') }}
+              {{ $t('page.monitoring.content.case.type.general') }}
             </el-radio>
             <el-radio :value="CASE_TYPE_SMART">
-              {{ $t('page.service.case.type.smart') }}
+              {{ $t('page.monitoring.content.case.type.smart') }}
             </el-radio>
           </el-radio-group>
         </el-form-item>
 
         <el-form-item
-          :label="$t('page.service.case.form.fields.status')"
+          :label="$t('page.monitoring.content.case.form.fields.status')"
           prop="status"
         >
           <el-radio-group v-model="form.status">
             <el-radio :value="CASE_STATUS_PUBLISHED">
-              {{ $t('page.service.case.detail.statusPublished') }}
+              {{ $t('page.monitoring.content.case.status.published') }}
             </el-radio>
             <el-radio :value="CASE_STATUS_DRAFT">
-              {{ $t('page.service.case.detail.statusDraft') }}
+              {{ $t('page.monitoring.content.case.status.draft') }}
             </el-radio>
           </el-radio-group>
         </el-form-item>
 
-        <el-form-item :label="$t('page.service.case.form.fields.coverImage')">
+        <el-form-item
+          :label="$t('page.monitoring.content.case.form.fields.coverImage')"
+        >
           <div class="case-form-dialog__image-picker">
             <div class="case-form-dialog__image-slot">
               <div
@@ -455,30 +467,36 @@ defineExpose({ openCreate, openEdit });
                   <UploadFilled />
                 </el-icon>
                 <div class="el-upload__text">
-                  {{ $t('page.service.case.form.dragDropText') }}
-                  <em>{{ $t('page.service.case.form.dragDropClick') }}</em>
+                  {{ $t('page.monitoring.content.case.form.dragDropText') }}
+                  <em>{{
+                    $t('page.monitoring.content.case.form.dragDropClick')
+                  }}</em>
                 </div>
               </el-upload>
             </div>
             <p class="case-form-dialog__hint">
-              {{ $t('page.service.case.form.imageHint') }}
+              {{ $t('page.monitoring.content.case.form.imageHint') }}
             </p>
           </div>
         </el-form-item>
 
-        <el-form-item :label="$t('page.service.case.form.fields.summary')">
+        <el-form-item
+          :label="$t('page.monitoring.content.case.form.fields.summary')"
+        >
           <el-input
             v-model="form.summary"
             :autosize="{ minRows: 2, maxRows: 4 }"
             maxlength="300"
             show-word-limit
             type="textarea"
-            :placeholder="$t('page.service.case.form.summaryPlaceholder')"
+            :placeholder="
+              $t('page.monitoring.content.case.form.summaryPlaceholder')
+            "
           />
         </el-form-item>
 
         <el-form-item
-          :label="$t('page.service.case.form.fields.content')"
+          :label="$t('page.monitoring.content.case.form.fields.content')"
           prop="content"
         >
           <el-input
@@ -487,11 +505,15 @@ defineExpose({ openCreate, openEdit });
             maxlength="10000"
             show-word-limit
             type="textarea"
-            :placeholder="$t('page.service.case.form.contentPlaceholder')"
+            :placeholder="
+              $t('page.monitoring.content.case.form.contentPlaceholder')
+            "
           />
         </el-form-item>
 
-        <el-form-item :label="$t('page.service.case.form.fields.tags')">
+        <el-form-item
+          :label="$t('page.monitoring.content.case.form.fields.tags')"
+        >
           <el-select
             v-model="form.tags"
             allow-create
@@ -500,10 +522,12 @@ defineExpose({ openCreate, openEdit });
             multiple
             clearable
             class="case-form-dialog__tags"
-            :placeholder="$t('page.service.case.form.tagsPlaceholder')"
+            :placeholder="
+              $t('page.monitoring.content.case.form.tagsPlaceholder')
+            "
           />
           <p class="case-form-dialog__hint">
-            {{ $t('page.service.case.form.tagsHint') }}
+            {{ $t('page.monitoring.content.case.form.tagsHint') }}
           </p>
         </el-form-item>
       </el-form>
@@ -511,14 +535,15 @@ defineExpose({ openCreate, openEdit });
 
     <template #footer>
       <el-button @click="handleClose">
-        {{ $t('page.service.case.form.cancel') }}
+        {{ $t('page.monitoring.content.case.form.cancel') }}
       </el-button>
       <el-button
         type="primary"
+        :disabled="detailLoading"
         :loading="submitting || imageUploading || detailLoading"
         @click="handleSubmit"
       >
-        {{ $t('page.service.case.form.submit') }}
+        {{ $t('page.monitoring.content.case.form.submit') }}
       </el-button>
     </template>
   </el-dialog>

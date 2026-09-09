@@ -1,9 +1,11 @@
 <script lang="ts" setup>
-import type { CaseListItem } from '#/types/service/case';
+import type { CaseListItem } from '#/types/monitoring/content/case';
 
 import { computed } from 'vue';
 
 import { $t } from '@vben/locales';
+
+import { Delete, Edit } from '@element-plus/icons-vue';
 
 import {
   CASE_TYPE_GENERAL,
@@ -11,10 +13,13 @@ import {
   formatCaseDateTime,
   formatCaseViewCount,
   hasCaseCover,
+  isCaseListDraft,
   normalizeCaseTags,
+  resolveCaseAuditLabelKey,
+  resolveCaseAuditTagType,
 } from '../data';
 
-defineOptions({ name: 'ServiceCaseCard' });
+defineOptions({ name: 'AdminCaseCard' });
 
 const props = defineProps<{
   /** 案例列表条目 */
@@ -24,16 +29,22 @@ const props = defineProps<{
 const emit = defineEmits<{
   /** 查看详情 */
   detail: [item: CaseListItem];
+  /** 编辑 */
+  edit: [item: CaseListItem];
+  /** 删除（Popconfirm 确认后） */
+  remove: [item: CaseListItem];
+  /** 提交审核 */
+  submitAudit: [item: CaseListItem];
 }>();
 
 /** 案例类型文案 */
 const typeText = computed(() => {
   const type = Number(props.item.caseType);
   if (type === CASE_TYPE_GENERAL) {
-    return $t('page.service.case.type.general');
+    return $t('page.monitoring.content.case.type.general');
   }
   if (type === CASE_TYPE_SMART) {
-    return $t('page.service.case.type.smart');
+    return $t('page.monitoring.content.case.type.smart');
   }
   return '';
 });
@@ -57,17 +68,60 @@ const tags = computed(() => normalizeCaseTags(props.item.tags));
 const viewText = computed(
   () =>
     formatCaseViewCount(props.item.viewCount) ||
-    $t('page.service.case.viewPending'),
+    $t('page.monitoring.content.case.viewPending'),
 );
 
 /** 创建时间文案 */
 const createText = computed(() => formatCaseDateTime(props.item.createTime));
+
+/** 是否草稿 */
+const isDraft = computed(() => isCaseListDraft(props.item.status));
+
+/** 审核状态文案 */
+const auditText = computed(() =>
+  $t(
+    `page.monitoring.content.case.auditStatus.${resolveCaseAuditLabelKey(props.item.status)}`,
+  ),
+);
+
+/** 审核状态 Tag 类型 */
+const auditTagType = computed(() =>
+  resolveCaseAuditTagType(props.item.status),
+);
+
+/** 删除确认文案 */
+const deleteConfirmTitle = computed(() =>
+  $t('page.monitoring.content.case.deleteConfirm', [
+    props.item.title?.trim() || String(props.item.caseId),
+  ]),
+);
 
 /**
  * 触发详情
  */
 function handleDetail() {
   emit('detail', props.item);
+}
+
+/**
+ * 触发编辑
+ */
+function handleEdit() {
+  emit('edit', props.item);
+}
+
+/**
+ * 触发删除
+ */
+function handleRemove() {
+  emit('remove', props.item);
+}
+
+/**
+ * 触发提交审核
+ */
+function handleSubmitAudit() {
+  emit('submitAudit', props.item);
 }
 </script>
 
@@ -106,9 +160,25 @@ function handleDetail() {
     </div>
 
     <div class="case-card__body">
-      <h3 class="case-card__title" :title="item.title">
-        {{ item.title }}
-      </h3>
+      <div class="case-card__headline">
+        <h3 class="case-card__title" :title="item.title">
+          {{ item.title }}
+        </h3>
+        <div class="case-card__status">
+          <el-tag
+            v-if="isDraft"
+            type="info"
+            size="small"
+            effect="plain"
+            round
+          >
+            {{ $t('page.monitoring.content.case.draftStatus.yes') }}
+          </el-tag>
+          <el-tag :type="auditTagType" size="small" effect="plain" round>
+            {{ auditText }}
+          </el-tag>
+        </div>
+      </div>
 
       <p v-if="item.summary" class="case-card__summary">
         {{ item.summary }}
@@ -129,13 +199,13 @@ function handleDetail() {
       <div class="case-card__meta">
         <div class="case-card__meta-item">
           <span class="case-card__meta-label">
-            {{ $t('page.service.case.fields.viewCount') }}
+            {{ $t('page.monitoring.content.case.fields.viewCount') }}
           </span>
           <span class="case-card__meta-value">{{ viewText }}</span>
         </div>
         <div v-if="createText" class="case-card__meta-item">
           <span class="case-card__meta-label">
-            {{ $t('page.service.case.fields.createTime') }}
+            {{ $t('page.monitoring.content.case.fields.createTime') }}
           </span>
           <span class="case-card__meta-time">{{ createText }}</span>
         </div>
@@ -144,9 +214,47 @@ function handleDetail() {
 
     <template #footer>
       <div class="case-card__foot">
-        <el-button size="small" @click.stop="handleDetail">
-          {{ $t('page.service.case.viewDetail') }}
-        </el-button>
+        <div class="case-card__foot-main">
+          <el-button size="small" @click.stop="handleDetail">
+            {{ $t('page.monitoring.content.case.viewDetail') }}
+          </el-button>
+          <el-button size="small" @click.stop="handleSubmitAudit">
+            {{ $t('page.monitoring.content.case.submitAudit') }}
+          </el-button>
+        </div>
+        <div class="case-card__foot-actions">
+          <el-button
+            circle
+            plain
+            size="small"
+            type="primary"
+            :title="$t('page.monitoring.content.case.actions.edit')"
+            @click.stop="handleEdit"
+          >
+            <el-icon><Edit /></el-icon>
+          </el-button>
+          <el-popconfirm
+            :title="deleteConfirmTitle"
+            width="240"
+            :confirm-button-text="$t('common.confirm')"
+            :cancel-button-text="$t('common.cancel')"
+            confirm-button-type="danger"
+            @confirm="handleRemove"
+          >
+            <template #reference>
+              <el-button
+                circle
+                plain
+                size="small"
+                type="danger"
+                :title="$t('page.monitoring.content.case.actions.delete')"
+                @click.stop
+              >
+                <el-icon><Delete /></el-icon>
+              </el-button>
+            </template>
+          </el-popconfirm>
+        </div>
       </div>
     </template>
   </el-card>
@@ -225,7 +333,16 @@ function handleDetail() {
     padding: 16px;
   }
 
+  &__headline {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+
   &__title {
+    flex: 1;
+    min-width: 0;
     margin: 0;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -234,6 +351,15 @@ function handleDetail() {
     line-height: 1.4;
     color: hsl(var(--foreground));
     white-space: nowrap;
+  }
+
+  &__status {
+    display: inline-flex;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+    justify-content: flex-end;
   }
 
   &__summary {
@@ -292,7 +418,22 @@ function handleDetail() {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    justify-content: flex-end;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__foot-main {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
+
+  &__foot-actions {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
   }
 }
 </style>

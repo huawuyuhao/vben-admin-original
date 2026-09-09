@@ -1,4 +1,6 @@
 import type {
+  CaseAuditParams,
+  CaseId,
   CaseInfo,
   CaseListItem,
   CaseListParams,
@@ -91,12 +93,19 @@ function parseCaseListBody<T = CaseListItem>(
  */
 export async function getCaseListApi(params: CaseListParams) {
   const body = await rootRequestClient.get<CaseListResponseBody>(
-    '/mock/case/list',
+    '/pwq-mock/case/list',
     {
       params,
       responseReturn: 'body',
     },
   );
+  // const body = await rootRequestClient.get<CaseListResponseBody>(
+  //   '/mock/case/list',
+  //   {
+  //     params,
+  //     responseReturn: 'body',
+  //   },
+  // );
   // const body = await rootRequestClient.get<CaseListResponseBody>('/case/list', {
   //   params,
   //   responseReturn: 'body',
@@ -116,11 +125,12 @@ export async function getCaseListApi(params: CaseListParams) {
  * 开发态走 Apifox Mock：GET /mock/case/{id}
  * 正式接口：GET /case/{id}
  * 文档返参为 { code, msg, data }，默认 responseReturn: 'data'
- * @param id 案例 ID
+ * @param id 案例 ID（兼容数字与雪花字符串）
  * @returns 案例详情（含 tags）
  */
-export async function getCaseDetailApi(id: number) {
-  return rootRequestClient.get<CaseInfo>(`/mock/case/${id}`);
+export async function getCaseDetailApi(id: CaseId) {
+  return rootRequestClient.get<CaseInfo>(`/pwq-mock/case/${id}`);
+  // return rootRequestClient.get<CaseInfo>(`/mock/case/${id}`);
   // return rootRequestClient.get<CaseInfo>(`/case/${id}`);
 }
 
@@ -133,12 +143,19 @@ export async function getCaseDetailApi(id: number) {
  */
 export async function getCaseRelatedApi(params: CaseRelatedParams) {
   const body = await rootRequestClient.get<CaseRelatedResponseBody>(
-    '/mock/case/related',
+    '/pwq-mock/case/related',
     {
       params,
       responseReturn: 'body',
     },
   );
+  // const body = await rootRequestClient.get<CaseRelatedResponseBody>(
+  //   '/mock/case/related',
+  //   {
+  //     params,
+  //     responseReturn: 'body',
+  //   },
+  // );
   // const body = await rootRequestClient.get<CaseRelatedResponseBody>(
   //   '/case/related',
   //   { params, responseReturn: 'body' },
@@ -163,12 +180,19 @@ export async function getCaseRelatedApi(params: CaseRelatedParams) {
  */
 export async function createCaseApi(data: CaseWriteParams) {
   const body = await rootRequestClient.post<CaseMutationResponse>(
-    '/mock/admin/case',
+    '/pwq-mock/admin/case',
     data,
     {
       responseReturn: 'body',
     },
   );
+  // const body = await rootRequestClient.post<CaseMutationResponse>(
+  //   '/mock/admin/case',
+  //   data,
+  //   {
+  //     responseReturn: 'body',
+  //   },
+  // );
   // const body = await rootRequestClient.post<CaseMutationResponse>(
   //   '/admin/case',
   //   data,
@@ -178,7 +202,7 @@ export async function createCaseApi(data: CaseWriteParams) {
   assertCaseMutationSuccess(body);
   const result = body?.data;
   if (result && typeof result === 'object') {
-    return result as { key?: number };
+    return result as { key?: CaseId };
   }
   return undefined;
 }
@@ -188,17 +212,24 @@ export async function createCaseApi(data: CaseWriteParams) {
  * 开发态：PUT /mock/admin/case/{id}
  * 正式：PUT /admin/case/{id}
  * 入参走 JSON body（非 query）；id 在 path
- * @param id 案例 ID
+ * @param id 案例 ID（兼容数字与雪花字符串）
  * @param data 修改参数
  */
-export async function updateCaseApi(id: number, data: CaseWriteParams) {
+export async function updateCaseApi(id: CaseId, data: CaseWriteParams) {
   const body = await rootRequestClient.put<CaseMutationResponse>(
-    `/mock/admin/case/${id}`,
+    `/pwq-mock/admin/case/${id}`,
     data,
     {
       responseReturn: 'body',
     },
   );
+  // const body = await rootRequestClient.put<CaseMutationResponse>(
+  //   `/mock/admin/case/${id}`,
+  //   data,
+  //   {
+  //     responseReturn: 'body',
+  //   },
+  // );
   // const body = await rootRequestClient.put<CaseMutationResponse>(
   //   `/admin/case/${id}`,
   //   data,
@@ -212,17 +243,65 @@ export async function updateCaseApi(id: number, data: CaseWriteParams) {
  * 删除案例
  * 开发态：DELETE /mock/admin/case/{id}
  * 正式：DELETE /admin/case/{id}
- * @param id 案例 ID
+ * @param id 案例 ID（兼容数字与雪花字符串）
  */
-export async function deleteCaseApi(id: number) {
+export async function deleteCaseApi(id: CaseId) {
   const body = await rootRequestClient.delete<CaseMutationResponse>(
-    `/mock/admin/case/${id}`,
+    `/pwq-mock/admin/case/${id}`,
     {
       responseReturn: 'body',
     },
   );
   // const body = await rootRequestClient.delete<CaseMutationResponse>(
+  //   `/mock/admin/case/${id}`,
+  //   {
+  //     responseReturn: 'body',
+  //   },
+  // );
+  // const body = await rootRequestClient.delete<CaseMutationResponse>(
   //   `/admin/case/${id}`,
+  //   { responseReturn: 'body' },
+  // );
+
+  assertCaseMutationSuccess(body);
+}
+
+/**
+ * 审核案例（含提交审核）
+ * 正式：PUT /admin/case/{id}/audit
+ * @param id 案例 ID（兼容数字与雪花字符串）
+ * @param data 审核参数（auditStatus 默认 1；auditRemark 为审核意见）
+ */
+export async function auditCaseApi(
+  id: CaseId,
+  { auditStatus = 1, auditRemark }: CaseAuditParams = {},
+) {
+  const body = await rootRequestClient.put<CaseMutationResponse>(
+    `/pwq-mock/admin/case/${id}/audit`,
+    {
+      auditStatus,
+      auditRemark,
+    },
+    {
+      responseReturn: 'body',
+    },
+  );
+  // const body = await rootRequestClient.put<CaseMutationResponse>(
+  //   `/mock/admin/case/${id}/audit`,
+  //   {
+  //     auditStatus,
+  //     auditRemark,
+  //   },
+  //   {
+  //     responseReturn: 'body',
+  //   },
+  // );
+  // const body = await rootRequestClient.put<CaseMutationResponse>(
+  //   `/admin/case/${id}/audit`,
+  //   {
+  //     auditStatus,
+  //     auditRemark,
+  //   },
   //   { responseReturn: 'body' },
   // );
 

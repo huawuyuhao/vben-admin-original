@@ -1,10 +1,9 @@
 import type {
-  CaseId,
-  CaseInfo,
+  CaseAuditStatus,
   CaseListItem,
   CaseListResult,
   CaseType,
-} from '#/types/service/case';
+} from '#/types/monitoring/content/case';
 
 import { formatDate, isEmpty } from '@vben/utils';
 
@@ -17,17 +16,113 @@ export const CASE_PAGE_SIZE_OPTIONS = [6, 12, 18];
 /** 已发布状态 */
 export const CASE_STATUS_PUBLISHED = 1;
 
+/** 草稿状态 */
+export const CASE_STATUS_DRAFT = 0;
+
 /** 通算 */
 export const CASE_TYPE_GENERAL = 1 as CaseType;
 
 /** 智算 */
 export const CASE_TYPE_SMART = 2 as CaseType;
 
-/** 草稿状态 */
-export const CASE_STATUS_DRAFT = 0;
-
 /** 封面图上传 accept */
 export const CASE_IMAGE_ACCEPT = '.jpg,.jpeg,.png';
+
+/** 审核待审 / 草稿态（列表 status） */
+export const CASE_AUDIT_PENDING = 0;
+
+/** 审核通过 */
+export const CASE_AUDIT_PASSED = 1;
+
+/** 审核不通过 */
+export const CASE_AUDIT_REJECTED = 2;
+
+/**
+ * 提交审核接口入参 auditStatus 默认值（当前为 1）
+ * 后续若甲方要求变更，只改此处即可
+ */
+export const CASE_AUDIT_SUBMIT_STATUS = CASE_AUDIT_PASSED;
+
+/**
+ * 是否草稿筛选值（空串表示全部；走接口 isDraft）
+ */
+export type CaseDraftFilter = '' | 'false' | 'true';
+
+/**
+ * 将筛选值转为列表接口 isDraft 入参
+ * @param filter 筛选值
+ * @returns true / false；全部时 undefined（不传）
+ */
+export function resolveCaseListIsDraft(
+  filter?: CaseDraftFilter | null,
+): boolean | undefined {
+  if (filter === 'true') {
+    return true;
+  }
+  if (filter === 'false') {
+    return false;
+  }
+  return undefined;
+}
+
+/**
+ * 列表 status 是否视为草稿（0-待审核/草稿）
+ * @param status 审核状态
+ * @returns 草稿返回 true
+ */
+export function isCaseListDraft(
+  status?: CaseAuditStatus | null | number,
+): boolean {
+  return status === CASE_AUDIT_PENDING;
+}
+
+/**
+ * 解析审核状态文案 i18n 键后缀
+ * @param status 审核状态
+ * @returns labelKey
+ */
+export function resolveCaseAuditLabelKey(
+  status?: CaseAuditStatus | number,
+): string {
+  if (status === CASE_AUDIT_PENDING) {
+    return 'pending';
+  }
+  if (status === CASE_AUDIT_PASSED) {
+    return 'passed';
+  }
+  if (status === CASE_AUDIT_REJECTED) {
+    return 'rejected';
+  }
+  return 'unknown';
+}
+
+/**
+ * 解析审核状态 Tag 类型
+ * @param status 审核状态
+ * @returns Element Plus tag type
+ */
+export function resolveCaseAuditTagType(
+  status?: CaseAuditStatus | number,
+): 'danger' | 'info' | 'success' | 'warning' {
+  if (status === CASE_AUDIT_PASSED) {
+    return 'success';
+  }
+  if (status === CASE_AUDIT_PENDING) {
+    return 'warning';
+  }
+  if (status === CASE_AUDIT_REJECTED) {
+    return 'danger';
+  }
+  return 'info';
+}
+
+/**
+ * 案例类型前端筛选值（空串表示全部）
+ */
+export type CaseTypeFilter =
+  | ''
+  | `${typeof CASE_TYPE_GENERAL}`
+  | `${typeof CASE_TYPE_SMART}`;
 
 /**
  * 校验是否为允许的封面图文件类型
@@ -37,6 +132,18 @@ export const CASE_IMAGE_ACCEPT = '.jpg,.jpeg,.png';
 export function isAllowedCaseImageFile(file: File): boolean {
   const name = file.name.toLowerCase();
   return ['.jpg', '.jpeg', '.png'].some((ext) => name.endsWith(ext));
+}
+
+/**
+ * 规范化标签列表
+ * @param tags 标签数组
+ * @returns 去空后的标签
+ */
+export function normalizeCaseTags(tags?: null | string[]): string[] {
+  if (!tags?.length) {
+    return [];
+  }
+  return tags.map((t) => String(t).trim()).filter((t) => !isEmpty(t));
 }
 
 /**
@@ -50,17 +157,15 @@ export function joinCaseTags(tags?: null | string[]): string | undefined {
 }
 
 /**
- * 案例类型前端筛选值（空串表示全部）
- */
-export type CaseTypeFilter = '' | `${typeof CASE_TYPE_GENERAL}` | `${typeof CASE_TYPE_SMART}`;
-
-/**
  * 判断是否有生效的案例类型前端筛选
  * @param caseType 类型筛选值
  * @returns 有筛选返回 true
  */
 export function hasCaseTypeFilter(caseType?: CaseTypeFilter | null): boolean {
-  return caseType === String(CASE_TYPE_GENERAL) || caseType === String(CASE_TYPE_SMART);
+  return (
+    caseType === String(CASE_TYPE_GENERAL) ||
+    caseType === String(CASE_TYPE_SMART)
+  );
 }
 
 /**
@@ -143,92 +248,4 @@ export function formatCaseDateTime(time?: string): string {
     return '';
   }
   return formatDate(time!.trim(), 'YYYY-MM-DD HH:mm');
-}
-
-/**
- * 归一化案例主键：保留字符串雪花 ID，避免 Number 精度丢失
- * @param value 原始主键
- * @returns 可用主键；无法识别时 undefined
- */
-export function normalizeCaseId(value: unknown): CaseId | undefined {
-  if (typeof value === 'number') {
-    return Number.isFinite(value) && value > 0 ? value : undefined;
-  }
-  if (typeof value === 'string') {
-    const text = value.trim();
-    if (!/^\d+$/.test(text) || text === '0') {
-      return undefined;
-    }
-    // 安全整数范围内可保留 number；超长雪花 ID 必须保持字符串
-    if (text.length <= 15) {
-      const num = Number(text);
-      if (Number.isSafeInteger(num) && num > 0) {
-        return num;
-      }
-    }
-    return text;
-  }
-  return undefined;
-}
-
-/**
- * 解析路由中的案例 ID（不做 Number 强转，防止雪花字符串精度丢失）
- * @param raw 路由 params.id
- * @returns 可用主键；非法时 undefined
- */
-export function parseCaseRouteId(raw: unknown): CaseId | undefined {
-  const value = Array.isArray(raw) ? raw[0] : raw;
-  return normalizeCaseId(value);
-}
-
-/**
- * 判断内容是否为 HTML（用于选择 v-html 或纯文本渲染）
- * @param content 正文
- * @returns 疑似 HTML 返回 true
- */
-export function isCaseHtmlContent(content?: string): boolean {
-  if (isEmpty(content?.trim())) {
-    return false;
-  }
-  return /<\/?[a-z][\s\S]*>/i.test(content!.trim());
-}
-
-/**
- * 规范化标签列表
- * @param tags 标签数组
- * @returns 去空后的标签
- */
-export function normalizeCaseTags(tags?: null | string[]): string[] {
-  if (!tags?.length) {
-    return [];
-  }
-  return tags.map((t) => String(t).trim()).filter((t) => !isEmpty(t));
-}
-
-/**
- * 按案例类型分组（通算 / 智算 / 其他）
- * @param list 关联案例列表
- * @returns 分组结果
- */
-export function groupCasesByType(list?: CaseInfo[] | null): {
-  general: CaseInfo[];
-  other: CaseInfo[];
-  smart: CaseInfo[];
-} {
-  const general: CaseInfo[] = [];
-  const smart: CaseInfo[] = [];
-  const other: CaseInfo[] = [];
-
-  for (const item of normalizeCaseList(list)) {
-    const type = Number(item.caseType);
-    if (type === CASE_TYPE_GENERAL) {
-      general.push(item);
-    } else if (type === CASE_TYPE_SMART) {
-      smart.push(item);
-    } else {
-      other.push(item);
-    }
-  }
-
-  return { general, smart, other };
 }

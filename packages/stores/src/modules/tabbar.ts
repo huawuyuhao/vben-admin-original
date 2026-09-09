@@ -113,17 +113,32 @@ export const useTabbarStore = defineStore('core-tabbar', {
     },
     /**
      * @zh_CN 跳转到标签页
-     * @param tab
-     * @param router
+     * 优先使用 fullPath（已含动态段与 query），避免同时传 path + params 触发
+     * Vue Router「params will be ignored because a path was passed」警告
+     * @param tab 标签页
+     * @param router 路由实例
      */
     async _goToTab(tab: TabDefinition, router: Router) {
-      const { params, path, query } = tab;
-      const toParams = {
-        params: params || {},
-        path,
+      const { fullPath, name, params, path, query } = tab;
+
+      if (fullPath) {
+        await router.replace(fullPath);
+        return;
+      }
+
+      if (name) {
+        await router.replace({
+          name,
+          params: params || {},
+          query: query || {},
+        });
+        return;
+      }
+
+      await router.replace({
+        path: path || '/',
         query: query || {},
-      };
-      await router.replace(toParams);
+      });
     },
     /**
      * @zh_CN 添加标签页

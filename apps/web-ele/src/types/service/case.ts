@@ -3,14 +3,20 @@
  */
 export type CaseType = 1 | 2;
 
+/** 案例审核状态：0 待审核/草稿 / 1 审核通过 / 2 审核不通过 */
+export type CaseAuditStatus = 0 | 1 | 2;
+
+/** 案例主键（兼容数字与雪花字符串） */
+export type CaseId = number | string;
+
 /**
  * 案例列表视图对象
  * GET /case/list
  * 含 tags，不含 content 大文本，减少传输量
  */
 export interface CaseListItem {
-  /** 案例 ID */
-  caseId: number;
+  /** 案例 ID（兼容数字与雪花字符串，避免 Number 精度丢失） */
+  caseId: CaseId;
   /** 标题 */
   title: string;
   /** 摘要 */
@@ -21,6 +27,11 @@ export interface CaseListItem {
   caseType?: CaseType | number;
   /** 浏览次数 */
   viewCount?: number;
+  /**
+   * 审核状态（列表返参）
+   * 0-待审核/草稿 1-审核通过 2-审核不通过
+   */
+  status?: CaseAuditStatus | number;
   /** 创建时间 */
   createTime?: string;
   /** 标签名列表 */
@@ -34,8 +45,6 @@ export interface CaseListItem {
 export interface CaseInfo extends CaseListItem {
   /** 内容（可能为 HTML；详情接口返回，列表不含） */
   content?: string;
-  /** 状态（0-草稿 1-已发布） */
-  status?: number;
   /** 创建部门 */
   createDept?: number;
   /** 创建者 */
@@ -59,6 +68,11 @@ export interface CaseListParams {
   pageSize: number;
   /** 标签名称（可选，按标签过滤） */
   tagName?: string;
+  /**
+   * 是否草稿（可选）
+   * true-只返回草稿；false-只返回非草稿；不传-返回全部
+   */
+  isDraft?: boolean;
 }
 
 /**
@@ -67,7 +81,7 @@ export interface CaseListParams {
  */
 export interface CaseRelatedParams {
   /** 当前案例 ID */
-  caseId: number;
+  caseId: CaseId;
   /** 标签名称（可选，不传则用 caseId 查案例标签） */
   tagName?: string;
 }
@@ -146,5 +160,19 @@ export interface CaseMutationResponse {
   code?: number;
   msg?: string;
   /** 新增时可能含 key（caseId）；修改/删除多为字符串 */
-  data?: string | { key?: number };
+  data?: string | { key?: CaseId };
+}
+
+/**
+ * 审核案例请求体
+ * PUT /admin/case/{id}/audit
+ */
+export interface CaseAuditParams {
+  /**
+   * 审核状态（0-待审核 1-审核通过 2-审核不通过）
+   * 默认 1；后续若业务变更只需调整调用方默认值
+   */
+  auditStatus?: CaseAuditStatus;
+  /** 审核意见 */
+  auditRemark?: string;
 }

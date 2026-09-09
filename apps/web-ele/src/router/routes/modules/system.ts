@@ -327,20 +327,25 @@ const routes: RouteRecordRaw[] = [
                 },
               },
               {
+                name: 'ContentCase',
+                path: '/monitoring/content/case',
+                component: () =>
+                  import('#/views/monitoring/content/case/index.vue'),
+                meta: {
+                  icon: 'ep:collection',
+                  order: 3,
+                  title: '案例内容管理',
+                },
+              },
+              {
                 name: 'ContentModelCard',
                 path: '/monitoring/content/model-card',
                 component: () => import('#/views/basic/content/model-card.vue'),
                 meta: {
                   icon: 'ep:grid',
-                  order: 3,
+                  order: 4,
                   title: '应用模型卡片管理',
                 },
-              },
-              {
-                name: 'ContentCase',
-                path: '/monitoring/content/case',
-                component: () => import('#/views/basic/content/case.vue'),
-                meta: { icon: 'ep:collection', order: 4, title: '案例内容管理' },
               },
               {
                 name: 'ContentFaq',

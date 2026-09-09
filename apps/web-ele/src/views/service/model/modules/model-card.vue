@@ -105,7 +105,21 @@ function handleEvaluate() {
     :body-style="{ padding: '0' }"
     @click="handleDetail"
   >
-    <div class="model-card__head">
+    <div
+      class="model-card__cover"
+      :class="{ 'model-card__cover--empty': !hasModelIcon(item.iconUrl) }"
+    >
+      <el-image
+        v-if="hasModelIcon(item.iconUrl)"
+        class="model-card__img"
+        :src="item.iconUrl"
+        fit="cover"
+        lazy
+      />
+      <span v-else class="model-card__letter" aria-hidden="true">
+        {{ item.modelName.slice(0, 1) }}
+      </span>
+
       <el-checkbox
         v-if="!exportSelecting"
         class="model-card__check model-card__check--compare"
@@ -126,22 +140,6 @@ function handleEvaluate() {
       >
         {{ $t('page.service.model.export.select') }}
       </el-checkbox>
-
-      <div
-        class="model-card__icon"
-        :class="{ 'model-card__icon--empty': !hasModelIcon(item.iconUrl) }"
-      >
-        <el-image
-          v-if="hasModelIcon(item.iconUrl)"
-          class="model-card__img"
-          :src="item.iconUrl"
-          fit="cover"
-          lazy
-        />
-        <span v-else class="model-card__letter" aria-hidden="true">
-          {{ item.modelName.slice(0, 1) }}
-        </span>
-      </div>
     </div>
 
     <div class="model-card__body">
@@ -217,19 +215,22 @@ function handleEvaluate() {
     border-top: 1px solid var(--el-card-border-color);
   }
 
-  &__head {
+  &__cover {
     position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 188px;
-    padding: 24px 20px 16px;
+    height: 152px;
+    overflow: hidden;
     background: linear-gradient(
       145deg,
-      hsl(var(--primary) / 12%),
-      hsl(190deg 90% 66% / 18%) 55%,
-      hsl(var(--primary) / 8%)
+      hsl(var(--primary)),
+      hsl(250deg 100% 76%) 55%,
+      hsl(190deg 90% 66%)
     );
+
+    &--empty {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
   }
 
   &__check {
@@ -269,26 +270,6 @@ function handleEvaluate() {
     outline: 1px solid hsl(var(--primary) / 22%);
   }
 
-  &__icon {
-    width: 120px;
-    height: 120px;
-    overflow: hidden;
-    background: hsl(var(--background));
-    border-radius: 22px;
-    box-shadow: 0 10px 28px hsl(var(--foreground) / 10%);
-
-    &--empty {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(
-        145deg,
-        hsl(var(--primary)),
-        hsl(190deg 90% 66%)
-      );
-    }
-  }
-
   &__img {
     display: block;
     width: 100%;
@@ -300,13 +281,13 @@ function handleEvaluate() {
   }
 
   &:hover &__img :deep(img) {
-    transform: scale(1.05);
+    transform: scale(1.04);
   }
 
   &__letter {
-    font-size: 42px;
+    font-size: 40px;
     font-weight: 750;
-    color: rgb(255 255 255 / 94%);
+    color: rgb(255 255 255 / 92%);
   }
 
   &__body {

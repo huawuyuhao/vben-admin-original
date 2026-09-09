@@ -19,11 +19,15 @@ import { initComponentAdapter } from './adapter/component';
 import { initSetupVbenForm } from './adapter/form';
 import App from './app.vue';
 import { router } from './router';
+import { suppressChromeDevtoolsStartTimeNoise } from './utils/suppress-chrome-devtools-noise';
 
 /** Element Plus 全量样式（业务页多，按需引入成本更高） */
 import 'element-plus/dist/index.css';
 
 async function bootstrap(namespace: string) {
+  // 尽早挂载：屏蔽 Chrome DevTools 注入脚本的 startTime 噪声红错
+  suppressChromeDevtoolsStartTimeNoise();
+
   // 初始化组件适配器
   await initComponentAdapter();
 

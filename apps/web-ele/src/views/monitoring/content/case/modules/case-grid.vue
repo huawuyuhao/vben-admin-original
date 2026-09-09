@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import type { CaseListItem } from '#/types/service/case';
+import type { CaseListItem } from '#/types/monitoring/content/case';
 
 import { $t } from '@vben/locales';
 
 import CaseCard from './case-card.vue';
 
-defineOptions({ name: 'ServiceCaseGrid' });
+defineOptions({ name: 'AdminCaseGrid' });
 
 withDefaults(
   defineProps<{
@@ -25,6 +25,12 @@ withDefaults(
 const emit = defineEmits<{
   /** 查看详情 */
   detail: [item: CaseListItem];
+  /** 编辑 */
+  edit: [item: CaseListItem];
+  /** 删除 */
+  remove: [item: CaseListItem];
+  /** 提交审核 */
+  submitAudit: [item: CaseListItem];
 }>();
 </script>
 
@@ -63,7 +69,9 @@ const emit = defineEmits<{
       shadow="never"
     >
       <el-empty
-        :description="emptyDescription || $t('page.service.case.empty')"
+        :description="
+          emptyDescription || $t('page.monitoring.content.case.empty')
+        "
       />
     </el-card>
 
@@ -74,6 +82,9 @@ const emit = defineEmits<{
         class="case-grid__item"
         :item="item"
         @detail="emit('detail', $event)"
+        @edit="emit('edit', $event)"
+        @remove="emit('remove', $event)"
+        @submit-audit="emit('submitAudit', $event)"
       />
     </div>
   </div>

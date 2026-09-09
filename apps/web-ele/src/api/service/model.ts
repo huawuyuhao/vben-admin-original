@@ -78,12 +78,19 @@ function parseModelListBody<T = ModelInfo>(
  */
 export async function getModelListApi(params: ModelListParams) {
   const body = await rootRequestClient.get<ModelListResponseBody>(
-    '/mock/model/list',
+    '/pwq-mock/model/list',
     {
       params,
       responseReturn: 'body',
     },
   );
+  // const body = await rootRequestClient.get<ModelListResponseBody>(
+  //   '/mock/model/list',
+  //   {
+  //     params,
+  //     responseReturn: 'body',
+  //   },
+  // );
   // const body = await rootRequestClient.get<ModelListResponseBody>(
   //   '/model/list',
   //   { params, responseReturn: 'body' },
@@ -106,7 +113,8 @@ export async function getModelListApi(params: ModelListParams) {
  * @returns 模型详细信息（含 paramsJson）
  */
 export async function getModelDetailApi(id: number) {
-  return rootRequestClient.get<ModelInfo>(`/mock/model/${id}`);
+  return rootRequestClient.get<ModelInfo>(`/pwq-mock/model/${id}`);
+  // return rootRequestClient.get<ModelInfo>(`/mock/model/${id}`);
   // return rootRequestClient.get<ModelInfo>(`/model/${id}`);
 }
 
@@ -125,10 +133,15 @@ export async function compareModelsApi(modelIds: number[]) {
     .slice(0, 5);
 
   const body = await rootRequestClient.post<ModelCompareResponseBody>(
-    '/mock/model/compare',
+    '/pwq-mock/model/compare',
     { modelIds: ids },
     { responseReturn: 'body' },
   );
+  // const body = await rootRequestClient.post<ModelCompareResponseBody>(
+  //   '/mock/model/compare',
+  //   { modelIds: ids },
+  //   { responseReturn: 'body' },
+  // );
   // const body = await rootRequestClient.post<ModelCompareResponseBody>(
   //   '/model/compare',
   //   { modelIds: ids },
@@ -155,7 +168,8 @@ export async function compareModelsApi(modelIds: number[]) {
 export async function submitModelEvaluationApi(
   params: ModelEvaluationSubmitParams,
 ) {
-  return rootRequestClient.post<string>('/mock/model/evaluation', params);
+  return rootRequestClient.post<string>('/pwq-mock/model/evaluation', params);
+  // return rootRequestClient.post<string>('/mock/model/evaluation', params);
   // return rootRequestClient.post<string>('/model/evaluation', params);
 }
 
@@ -171,10 +185,16 @@ export async function getModelEvaluationListApi(
 ) {
   const body = await rootRequestClient.get<
     ModelListResponseBody<ModelEvaluation>
-  >('/mock/model/evaluation/list', {
+  >('/pwq-mock/model/evaluation/list', {
     params,
     responseReturn: 'body',
   });
+  // const body = await rootRequestClient.get<
+  //   ModelListResponseBody<ModelEvaluation>
+  // >('/mock/model/evaluation/list', {
+  //   params,
+  //   responseReturn: 'body',
+  // });
   // const body = await rootRequestClient.get<
   //   ModelListResponseBody<ModelEvaluation>
   // >('/model/evaluation/list', {

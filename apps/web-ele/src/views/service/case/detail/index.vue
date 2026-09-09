@@ -51,7 +51,7 @@ function handleTagSelect(tag: string) {
  * 拉取案例详情
  */
 async function fetchDetail() {
-  if (Number.isNaN(caseId.value)) {
+  if (!caseId.value) {
     caseItem.value = null;
     loadError.value = true;
     loading.value = false;

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { CaseInfo } from '#/types/service/case';
+import type { CaseId, CaseInfo } from '#/types/service/case';
 
 import { computed, onMounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
@@ -15,7 +15,7 @@ defineOptions({ name: 'ServiceCaseRelatedList' });
 
 const props = defineProps<{
   /** 当前案例 ID */
-  caseId: number;
+  caseId: CaseId;
   /** 可选：指定标签筛选关联 */
   tagName?: string;
 }>();
@@ -46,7 +46,7 @@ async function fetchRelated() {
       tagName: props.tagName?.trim() || undefined,
     });
     related.value = normalizeCaseList(list).filter(
-      (item) => item.caseId !== props.caseId,
+      (item) => String(item.caseId) !== String(props.caseId),
     );
   } catch {
     related.value = [];

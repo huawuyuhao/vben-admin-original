@@ -32,8 +32,10 @@ export const SEARCH_TYPE_TAG_TYPE: Record<
 export function resolveSearchDetailPath(
   item: Pick<PortalSearchResultItem, 'id' | 'type'>,
 ): string {
-  const id = Number(item.id);
-  if (!Number.isFinite(id) || id <= 0) {
+  // 不做 Number 强转，避免雪花 ID 精度丢失
+  const raw = item.id;
+  const id = String(Array.isArray(raw) ? raw[0] : raw ?? '').trim();
+  if (!id || id === '0' || !/^\d+$/.test(id)) {
     return '';
   }
 
