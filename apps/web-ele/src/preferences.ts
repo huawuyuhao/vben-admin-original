@@ -16,7 +16,7 @@ export const overridesPreferences = defineOverridesPreferences({
     // 全站默认：混合垂直（顶栏一级菜单 + 侧栏二级菜单）
     layout: 'mixed-nav',
     name: import.meta.env.VITE_APP_TITLE,
-    // 业务内容区统一边距（四边一致，全站业务页共用）
+    // 业务内容区四边统一外边距 10px（与 page-shell --mine-page-gap / #__vben_main_content 一致）
     contentPadding: 10,
     contentPaddingBottom: 10,
     contentPaddingLeft: 10,

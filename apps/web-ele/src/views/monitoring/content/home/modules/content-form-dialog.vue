@@ -4,6 +4,7 @@ import type {
   FormRules,
   UploadInstance,
   UploadProps,
+  UploadRawFile,
 } from 'element-plus';
 
 import type {
@@ -245,7 +246,8 @@ const handleUploadExceed: UploadProps['onExceed'] = (files) => {
     return;
   }
   clearUploadFiles();
-  const raw = files[0];
+  // onExceed 给出的是 File；beforeUpload 需要 UploadRawFile（含 uid）
+  const raw = files[0] as UploadRawFile | undefined;
   if (raw && beforeUpload(raw)) {
     void handleImageUpload({ file: raw });
   }

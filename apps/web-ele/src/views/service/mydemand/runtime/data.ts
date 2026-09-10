@@ -1,3 +1,4 @@
+import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type {
   RunningTaskCarbonPoint,
   RunningTaskDetail,
@@ -9,13 +10,67 @@ import type {
   RunningTaskResourcePoint,
 } from '#/types/service/mydemand/runtime';
 
+import { $t } from '@vben/locales';
 import { formatDate, isEmpty } from '@vben/utils';
 
 /** 在运应用列表默认每页条数 */
 export const RUNTIME_PAGE_SIZE = 10;
 
-/** 可选每页条数（供 el-pagination） */
+/** 可选每页条数（供分页器） */
 export const RUNTIME_PAGE_SIZE_OPTIONS = [10, 20, 50];
+
+/**
+ * 应用运行列表列配置
+ */
+export function useRuntimeColumns(): VxeTableGridOptions<RunningTaskItem>['columns'] {
+  return [
+    {
+      field: 'taskName',
+      minWidth: 180,
+      showOverflow: true,
+      title: $t('page.service.mydemand.runtime.fields.taskName'),
+      formatter: ({ cellValue }) =>
+        String(cellValue ?? '').trim() ||
+        $t('page.service.mydemand.runtime.valueEmpty'),
+    },
+    {
+      field: 'taskId',
+      minWidth: 120,
+      showOverflow: true,
+      title: $t('page.service.mydemand.runtime.fields.taskId'),
+      formatter: ({ cellValue }) =>
+        String(cellValue ?? '').trim() ||
+        $t('page.service.mydemand.runtime.valueEmpty'),
+    },
+    {
+      field: 'runStatus',
+      minWidth: 120,
+      title: $t('page.service.mydemand.runtime.fields.runStatus'),
+      slots: { default: 'runStatus' },
+    },
+    {
+      field: 'runTime',
+      minWidth: 120,
+      title: $t('page.service.mydemand.runtime.fields.runTime'),
+      formatter: ({ cellValue }) =>
+        formatRuntimeDuration(cellValue) ||
+        $t('page.service.mydemand.runtime.valueEmpty'),
+    },
+    {
+      field: 'completePercent',
+      minWidth: 160,
+      title: $t('page.service.mydemand.runtime.fields.completePercent'),
+      slots: { default: 'completePercent' },
+    },
+    {
+      align: 'center',
+      field: 'action',
+      minWidth: 160,
+      title: $t('page.service.mydemand.runtime.fields.actions'),
+      slots: { default: 'action' },
+    },
+  ];
+}
 
 /** 运行状态：任务提交 */
 export const RUNTIME_STATUS_SUBMITTED = 0;

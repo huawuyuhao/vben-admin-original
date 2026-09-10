@@ -103,10 +103,16 @@ function parseRunningTaskArrayBody<T>(
 export async function getRunningTaskListApi(params: RunningTaskListParams) {
   const body = await rootRequestClient.get<
     RunningTaskListResponseBody<RunningTaskItem>
-  >('/mock/task/running/list', {
+  >('/pwq-mock/task/running/list', {
     params,
     responseReturn: 'body',
   });
+  // const body = await rootRequestClient.get<
+  //   RunningTaskListResponseBody<RunningTaskItem>
+  // >('/mock/task/running/list', {
+  //   params,
+  //   responseReturn: 'body',
+  // });
   // const body = await rootRequestClient.get<
   //   RunningTaskListResponseBody<RunningTaskItem>
   // >('/task/running/list', {
@@ -134,7 +140,11 @@ export async function getRunningTaskDetailApi(id: number | string) {
   const pathId = encodeURIComponent(String(id));
   const body = await rootRequestClient.get<
     RunningTaskMutationResponse<RunningTaskDetail>
-  >(`/mock/task/running/${pathId}`, { responseReturn: 'body' });
+  >(`/pwq-mock/task/running/${pathId}`, { responseReturn: 'body' });
+  // const pathId = encodeURIComponent(String(id));
+  // const body = await rootRequestClient.get<
+  //   RunningTaskMutationResponse<RunningTaskDetail>
+  // >(`/mock/task/running/${pathId}`, { responseReturn: 'body' });
   // const body = await rootRequestClient.get<
   //   RunningTaskMutationResponse<RunningTaskDetail>
   // >(`/task/running/${pathId}`, { responseReturn: 'body' });
@@ -158,10 +168,16 @@ export async function getRunningTaskPowerDataApi(
   const pathId = encodeURIComponent(String(id));
   const body = await rootRequestClient.get<
     RunningTaskMutationResponse<RunningTaskPowerPoint[]>
-  >(`/mock/task/running/${pathId}/power-data`, {
+  >(`/pwq-mock/task/running/${pathId}/power-data`, {
     params: params ?? {},
     responseReturn: 'body',
   });
+  // const body = await rootRequestClient.get<
+  //   RunningTaskMutationResponse<RunningTaskPowerPoint[]>
+  // >(`/mock/task/running/${pathId}/power-data`, {
+  //   params: params ?? {},
+  //   responseReturn: 'body',
+  // });
   // const body = await rootRequestClient.get<
   //   RunningTaskMutationResponse<RunningTaskPowerPoint[]>
   // >(`/task/running/${pathId}/power-data`, {
@@ -187,10 +203,16 @@ export async function getRunningTaskCarbonDataApi(
   const pathId = encodeURIComponent(String(id));
   const body = await rootRequestClient.get<
     RunningTaskMutationResponse<RunningTaskCarbonPoint[]>
-  >(`/mock/task/running/${pathId}/carbon-data`, {
+  >(`/pwq-mock/task/running/${pathId}/carbon-data`, {
     params: params ?? {},
     responseReturn: 'body',
   });
+  // const body = await rootRequestClient.get<
+  //   RunningTaskMutationResponse<RunningTaskCarbonPoint[]>
+  // >(`/mock/task/running/${pathId}/carbon-data`, {
+  //   params: params ?? {},
+  //   responseReturn: 'body',
+  // });
   // const body = await rootRequestClient.get<
   //   RunningTaskMutationResponse<RunningTaskCarbonPoint[]>
   // >(`/task/running/${pathId}/carbon-data`, {
@@ -216,10 +238,16 @@ export async function getRunningTaskResourceDataApi(
   const pathId = encodeURIComponent(String(id));
   const body = await rootRequestClient.get<
     RunningTaskMutationResponse<RunningTaskResourcePoint[]>
-  >(`/mock/task/running/${pathId}/resource-data`, {
+  >(`/pwq-mock/task/running/${pathId}/resource-data`, {
     params: params ?? {},
     responseReturn: 'body',
   });
+  // const body = await rootRequestClient.get<
+  //   RunningTaskMutationResponse<RunningTaskResourcePoint[]>
+  // >(`/mock/task/running/${pathId}/resource-data`, {
+  //   params: params ?? {},
+  //   responseReturn: 'body',
+  // });
   // const body = await rootRequestClient.get<
   //   RunningTaskMutationResponse<RunningTaskResourcePoint[]>
   // >(`/task/running/${pathId}/resource-data`, {
@@ -245,10 +273,16 @@ export async function getRunningTaskHistoryTrendApi(
   const pathId = encodeURIComponent(String(id));
   const body = await rootRequestClient.get<
     RunningTaskMutationResponse<RunningTaskHistoryPoint[]>
-  >(`/mock/task/running/${pathId}/history-trend`, {
+  >(`/pwq-mock/task/running/${pathId}/history-trend`, {
     params: params ?? {},
     responseReturn: 'body',
   });
+  // const body = await rootRequestClient.get<
+  //   RunningTaskMutationResponse<RunningTaskHistoryPoint[]>
+  // >(`/mock/task/running/${pathId}/history-trend`, {
+  //   params: params ?? {},
+  //   responseReturn: 'body',
+  // });
   // const body = await rootRequestClient.get<
   //   RunningTaskMutationResponse<RunningTaskHistoryPoint[]>
   // >(`/task/running/${pathId}/history-trend`, {
@@ -270,7 +304,10 @@ export async function closeRunningTaskApi(id: number | string) {
   const pathId = encodeURIComponent(String(id));
   const body = await rootRequestClient.post<
     RunningTaskMutationResponse<string>
-  >(`/mock/task/running/${pathId}/close`, {}, { responseReturn: 'body' });
+  >(`/pwq-mock/task/running/${pathId}/close`, {}, { responseReturn: 'body' });
+  // const body = await rootRequestClient.post<
+  //   RunningTaskMutationResponse<string>
+  // >(`/mock/task/running/${pathId}/close`, {}, { responseReturn: 'body' });
   // const body = await rootRequestClient.post<
   //   RunningTaskMutationResponse<string>
   // >(`/task/running/${pathId}/close`, {}, { responseReturn: 'body' });

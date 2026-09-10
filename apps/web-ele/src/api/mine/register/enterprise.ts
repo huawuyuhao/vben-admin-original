@@ -16,9 +16,13 @@ import { rootRequestClient } from '#/api/request';
  */
 export async function submitEnterpriseCertApi(data: EnterpriseCertParams) {
   return rootRequestClient.post<EnterpriseCertResult>(
-    '/mock/auth/enterprise-cert',
+    '/pwq-mock/auth/enterprise-cert',
     data,
   );
+  // return rootRequestClient.post<EnterpriseCertResult>(
+  //   '/mock/auth/enterprise-cert',
+  //   data,
+  // );
   // return rootRequestClient.post<EnterpriseCertResult>(
   //   '/auth/enterprise-cert',
   //   data,
@@ -36,9 +40,13 @@ export async function getEnterpriseCertProgressApi(
   params?: EnterpriseCertProgressParams,
 ) {
   return rootRequestClient.get<EnterpriseCertProgressResult>(
-    '/mock/auth/enterprise-cert/progress',
+    '/pwq-mock/auth/enterprise-cert/progress',
     { params },
   );
+  // return rootRequestClient.get<EnterpriseCertProgressResult>(
+  //   '/mock/auth/enterprise-cert/progress',
+  //   { params },
+  // );
   // return rootRequestClient.get<EnterpriseCertProgressResult>(
   //   '/auth/enterprise-cert/progress',
   //   { params },

@@ -27,6 +27,8 @@ function getDefaultState(): VxeGridProps {
     gridOptions: {},
     gridEvents: {},
     formOptions: undefined,
+    // 列表页默认不显示查询区与表格之间的分隔条
+    separator: false,
     showSearchForm: true,
   };
 }

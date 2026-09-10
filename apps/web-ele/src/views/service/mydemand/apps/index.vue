@@ -1,36 +1,39 @@
 <script lang="ts" setup>
+import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { MyAppItem } from '#/types/service/mydemand/apps';
 
-import { onMounted, ref, watch } from 'vue';
+import { ref } from 'vue';
 
 import { $t } from '@vben/locales';
 
-import { Plus, Refresh } from '@element-plus/icons-vue';
+import { Plus } from '@element-plus/icons-vue';
 import { ElMessage } from 'element-plus';
 
+import {
+  CARD_LIST_VXE_LAYOUTS,
+  toVxeCardPageResult,
+  useVbenVxeGrid,
+} from '#/adapter/vxe-table';
 import {
   collectMyAppApi,
   deleteMyAppApi,
   getMyAppListApi,
   toggleMyAppApi,
 } from '#/api/service/mydemand/apps';
+import PageListShell from '#/views/_shared/components/page-list-shell.vue';
 
 import {
   APP_PAGE_SIZE,
-  type AppCollectFilter,
-  type AppStatusFilter,
-  type AppTypeFilter,
+  APP_PAGE_SIZE_OPTIONS,
+  type AppGridFormValues,
+  buildAppFilterParams,
   isAppCollected,
   isAppEnabled,
   normalizeAppPage,
-  parseAppCollectFilter,
-  parseAppStatusFilter,
-  parseAppTypeFilter,
   resolveMyAppId,
+  useAppGridFormSchema,
 } from './data';
 import AppGrid from './modules/app-grid.vue';
-import AppPager from './modules/app-pager.vue';
-import FilterBar from './modules/filter-bar.vue';
 import FormDialog from './modules/form-dialog.vue';
 import MaterialDialog from './modules/material-dialog.vue';
 import ScheduleDialog from './modules/schedule-dialog.vue';
@@ -38,37 +41,14 @@ import VersionDialog from './modules/version-dialog.vue';
 
 /**
  * 门户服务 · 我的应用
- * 对接 /my-application 列表、增删改、启停、收藏、版本、定时任务、素材
+ * 查询栏 / 分页用 useVbenVxeGrid；列表区保持 Element Plus 卡片网格
  */
 defineOptions({ name: 'ServiceMyDemandApps' });
 
-/** 筛选草稿：应用名称 */
-const filterAppName = ref('');
-/** 筛选草稿：应用类型 */
-const filterAppType = ref<AppTypeFilter>('');
-/** 筛选草稿：应用状态 */
-const filterAppStatus = ref<AppStatusFilter>('');
-/** 筛选草稿：是否收藏 */
-const filterIsCollect = ref<AppCollectFilter>('');
-
-/** 已生效筛选 */
-const appliedAppName = ref('');
-const appliedAppType = ref<AppTypeFilter>('');
-const appliedAppStatus = ref<AppStatusFilter>('');
-const appliedIsCollect = ref<AppCollectFilter>('');
-
-/** 当前页码 */
-const currentPage = ref(1);
-/** 每页条数 */
-const pageSize = ref(APP_PAGE_SIZE);
-/** 列表加载中 */
-const loading = ref(false);
-/** 当前页应用列表 */
+/** 当前页卡片数据（与 Vxe pager 同步，不走表格 rows） */
 const apps = ref<MyAppItem[]>([]);
-/** 总条数 */
-const total = ref(0);
-/** 跳过由服务端回写 current 触发的重复请求 */
-const syncingFromServer = ref(false);
+/** 列表加载中（骨架 / v-loading） */
+const loading = ref(false);
 /** 正在启停的应用 ID */
 const togglingId = ref<null | number>(null);
 /** 正在收藏操作的应用 ID */
@@ -83,80 +63,65 @@ const versionDialogRef = ref<InstanceType<typeof VersionDialog>>();
 /** 素材管理抽屉 */
 const materialDialogRef = ref<InstanceType<typeof MaterialDialog>>();
 
-/**
- * 拉取当前页应用列表
- */
-async function fetchApps() {
-  loading.value = true;
-  try {
-    const data = await getMyAppListApi({
-      page: currentPage.value,
-      pageSize: pageSize.value,
-      appName: appliedAppName.value.trim() || undefined,
-      appType: parseAppTypeFilter(appliedAppType.value),
-      appStatus: parseAppStatusFilter(appliedAppStatus.value),
-      isCollect: parseAppCollectFilter(appliedIsCollect.value),
-    });
-    const page = normalizeAppPage(data);
-    apps.value = page.records;
-    total.value = page.total;
-
-    if (page.current !== currentPage.value) {
-      syncingFromServer.value = true;
-      currentPage.value = page.current;
-      syncingFromServer.value = false;
-    }
-  } catch {
-    apps.value = [];
-    total.value = 0;
-  } finally {
-    loading.value = false;
-  }
-}
-
-/**
- * 回到第一页并查询
- */
-function queryFromFirstPage() {
-  if (currentPage.value !== 1) {
-    currentPage.value = 1;
-    return;
-  }
-  void fetchApps();
-}
-
-/**
- * 提交查询
- */
-function handleSearch() {
-  appliedAppName.value = filterAppName.value;
-  appliedAppType.value = filterAppType.value;
-  appliedAppStatus.value = filterAppStatus.value;
-  appliedIsCollect.value = filterIsCollect.value;
-  queryFromFirstPage();
-}
-
-/**
- * 重置筛选并查询
- */
-function handleReset() {
-  filterAppName.value = '';
-  filterAppType.value = '';
-  filterAppStatus.value = '';
-  filterIsCollect.value = '';
-  appliedAppName.value = '';
-  appliedAppType.value = '';
-  appliedAppStatus.value = '';
-  appliedIsCollect.value = '';
-  queryFromFirstPage();
-}
-
-/**
- * 刷新当前页
- */
-function handleRefresh() {
-  void fetchApps();
-}
+const [Grid, gridApi] = useVbenVxeGrid({
+  class: 'mine-vxe-grid mine-vxe-grid--cards',
+  formOptions: {
+    collapsed: true,
+    collapsedRows: 1,
+    resetButtonOptions: {
+      content: $t('common.reset'),
+    },
+    schema: useAppGridFormSchema(),
+    submitButtonOptions: {
+      content: $t('common.query'),
+    },
+    wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3',
+  },
+  gridOptions: {
+    columns: [],
+    height: 'auto',
+    keepSource: true,
+    layouts: [...CARD_LIST_VXE_LAYOUTS],
+    minHeight: 0,
+    pagerConfig: {
+      pageSize: APP_PAGE_SIZE,
+      pageSizes: APP_PAGE_SIZE_OPTIONS,
+    },
+    proxyConfig: {
+      ajax: {
+        query: async ({ page }, formValues?: AppGridFormValues) => {
+          loading.value = true;
+          try {
+            const filters = buildAppFilterParams(formValues);
+            const data = await getMyAppListApi({
+              page: page.currentPage,
+              pageSize: page.pageSize,
+              ...filters,
+            });
+            const normalized = normalizeAppPage(data);
+            apps.value = normalized.records;
+            return toVxeCardPageResult(normalized);
+          } catch {
+            apps.value = [];
+            return toVxeCardPageResult({ total: 0 });
+          } finally {
+            loading.value = false;
+          }
+        },
+      },
+    },
+    rowConfig: {
+      keyField: 'appId',
+    },
+    toolbarConfig: {
+      custom: false,
+      export: false,
+      refresh: false,
+      search: false,
+      zoom: false,
+    },
+  } as VxeTableGridOptions<MyAppItem>,
+});
 
 /**
  * 打开新增弹窗
@@ -174,7 +139,7 @@ function handleEdit(row: MyAppItem) {
 }
 
 /**
- * 删除应用（二次确认由表格 Popconfirm 触发）
+ * 删除应用（二次确认由 Popconfirm 触发）
  * @param row 列表行
  */
 async function handleDelete(row: MyAppItem) {
@@ -187,7 +152,7 @@ async function handleDelete(row: MyAppItem) {
   try {
     await deleteMyAppApi(id);
     ElMessage.success($t('page.service.mydemand.apps.delete.success'));
-    void fetchApps();
+    gridApi.query();
   } catch {
     // 错误提示由接口层处理
   }
@@ -215,7 +180,7 @@ async function handleToggle(row: MyAppItem) {
   try {
     await toggleMyAppApi(id, action);
     ElMessage.success($t(successKey, [name]));
-    void fetchApps();
+    gridApi.query();
   } catch {
     // 错误提示由接口层处理
   } finally {
@@ -245,7 +210,7 @@ async function handleCollect(row: MyAppItem) {
   try {
     await collectMyAppApi(id, action);
     ElMessage.success($t(successKey, [name]));
-    void fetchApps();
+    gridApi.query();
   } catch {
     // 错误提示由接口层处理
   } finally {
@@ -281,86 +246,36 @@ function handleMaterial(row: MyAppItem) {
  * 表单提交成功后刷新列表
  */
 function handleFormSuccess() {
-  void fetchApps();
+  gridApi.query();
 }
-
-watch(pageSize, () => {
-  if (syncingFromServer.value) {
-    return;
-  }
-  if (currentPage.value !== 1) {
-    currentPage.value = 1;
-    return;
-  }
-  void fetchApps();
-});
-
-watch(currentPage, () => {
-  if (syncingFromServer.value) {
-    return;
-  }
-  void fetchApps();
-});
-
-onMounted(() => {
-  void fetchApps();
-});
 </script>
 
 <template>
-  <div class="mine-page">
-    <div class="mine-shell">
-      <div class="mine-shell__bg" aria-hidden="true">
-        <span class="mine-shell__orb mine-shell__orb--a"></span>
-        <span class="mine-shell__orb mine-shell__orb--b"></span>
-        <span class="mine-shell__mesh"></span>
-      </div>
+  <PageListShell
+    :desc="$t('page.service.mydemand.apps.desc')"
+    :eyebrow="$t('page.service.mydemand.apps.eyebrow')"
+    :title="$t('page.service.mydemand.apps.title')"
+  >
+    <template #actions>
+      <el-button
+        class="mine-shell__action-btn"
+        type="primary"
+        :icon="Plus"
+        @click="handleCreate"
+      >
+        {{ $t('page.service.mydemand.apps.add') }}
+      </el-button>
+    </template>
 
-      <div class="mine-shell__inner">
-        <header class="mine-shell__head">
-          <div>
-            <p class="mine-shell__eyebrow">
-              {{ $t('page.service.mydemand.apps.eyebrow') }}
-            </p>
-            <h2>{{ $t('page.service.mydemand.apps.title') }}</h2>
-            <p class="mine-shell__desc">
-              {{ $t('page.service.mydemand.apps.desc') }}
-            </p>
-          </div>
-          <div class="mine-shell__head-actions">
-            <el-button
-              class="mine-shell__action-btn"
-              :icon="Refresh"
-              :loading="loading"
-              @click="handleRefresh"
-            >
-              {{ $t('page.service.mydemand.apps.refresh') }}
-            </el-button>
-            <el-button
-              class="mine-shell__action-btn"
-              type="primary"
-              :icon="Plus"
-              @click="handleCreate"
-            >
-              {{ $t('page.service.mydemand.apps.add') }}
-            </el-button>
-          </div>
-        </header>
-
-        <FilterBar
-          v-model:app-name="filterAppName"
-          v-model:app-type="filterAppType"
-          v-model:app-status="filterAppStatus"
-          v-model:is-collect="filterIsCollect"
-          @search="handleSearch"
-          @reset="handleReset"
-        />
-
+    <Grid>
+      <template #table-title></template>
+      <template #top>
         <AppGrid
-          :apps="apps"
-          :collecting-id="collectingId"
+          class="apps-list-cards"
           :loading="loading"
+          :apps="apps"
           :toggling-id="togglingId"
+          :collecting-id="collectingId"
           @edit="handleEdit"
           @delete="handleDelete"
           @toggle="handleToggle"
@@ -369,24 +284,19 @@ onMounted(() => {
           @schedule="handleSchedule"
           @material="handleMaterial"
         />
-
-        <AppPager
-          v-if="apps.length > 0 || loading || total > 0"
-          v-model:page="currentPage"
-          v-model:page-size="pageSize"
-          :disabled="loading"
-          :total="total"
-        />
-      </div>
-    </div>
+      </template>
+    </Grid>
 
     <FormDialog ref="formDialogRef" @success="handleFormSuccess" />
     <ScheduleDialog ref="scheduleDialogRef" />
     <VersionDialog ref="versionDialogRef" />
     <MaterialDialog ref="materialDialogRef" />
-  </div>
+  </PageListShell>
 </template>
 
 <style lang="scss" scoped>
-@use '../../../../scss/page-shell.scss';
+.apps-list-cards {
+  width: 100%;
+  text-align: left;
+}
 </style>

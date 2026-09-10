@@ -1,16 +1,20 @@
+import type { VbenFormSchema } from '#/adapter/form';
+import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { DeviceOptionItem } from '#/types/admin/device';
 import type {
+  SupplyDeviceExportParams,
   SupplyDeviceItem,
   SupplyDeviceListResult,
   SupplyDeviceStatus,
 } from '#/types/service/enterprise/supply';
 
+import { $t } from '@vben/locales';
 import { formatDate, isEmpty } from '@vben/utils';
 
 /** 供给设备列表默认每页条数 */
 export const SUPPLY_PAGE_SIZE = 10;
 
-/** 可选每页条数（供 el-pagination） */
+/** 可选每页条数 */
 export const SUPPLY_PAGE_SIZE_OPTIONS = [10, 20, 50];
 
 /** 未受理 */
@@ -25,8 +29,119 @@ export type SupplyStatusFilter =
   | `${typeof SUPPLY_STATUS_PENDING}`
   | `${typeof SUPPLY_STATUS_VIEWED}`;
 
+/** 列表查询表单值 */
+export interface SupplyGridFormValues {
+  /** 受理状态 */
+  status?: SupplyStatusFilter;
+}
+
 /** 预设设备类型关键字：GPU（用于判断是否展示 GPU 字段） */
 export const SUPPLY_DEVICE_TYPE_GPU = 'gpu';
+
+/**
+ * 算力供给查询栏 schema
+ */
+export function useSupplyGridFormSchema(): VbenFormSchema[] {
+  return [
+    {
+      component: 'Select',
+      componentProps: {
+        clearable: true,
+        options: [
+          {
+            label: $t('page.service.enterprise.supply.status.pending'),
+            value: String(SUPPLY_STATUS_PENDING),
+          },
+          {
+            label: $t('page.service.enterprise.supply.status.viewed'),
+            value: String(SUPPLY_STATUS_VIEWED),
+          },
+        ],
+        placeholder: $t('page.service.enterprise.supply.filter.statusAll'),
+      },
+      fieldName: 'status',
+      label: $t('page.service.enterprise.supply.filter.status'),
+    },
+  ];
+}
+
+/**
+ * 算力供给列表列配置
+ */
+export function useSupplyColumns(): VxeTableGridOptions<SupplyDeviceItem>['columns'] {
+  const emptyText = $t('page.service.enterprise.supply.valueEmpty');
+  return [
+    {
+      field: 'deviceId',
+      minWidth: 100,
+      title: $t('page.service.enterprise.supply.fields.deviceId'),
+      formatter: ({ cellValue }) =>
+        cellValue == null ? emptyText : String(cellValue),
+    },
+    {
+      field: 'deviceType',
+      minWidth: 120,
+      showOverflow: true,
+      title: $t('page.service.enterprise.supply.fields.deviceType'),
+    },
+    {
+      field: 'deviceModel',
+      minWidth: 140,
+      showOverflow: true,
+      title: $t('page.service.enterprise.supply.fields.deviceModel'),
+    },
+    {
+      field: 'gpuVendor',
+      minWidth: 120,
+      showOverflow: true,
+      title: $t('page.service.enterprise.supply.fields.gpuVendor'),
+      formatter: ({ cellValue }) =>
+        String(cellValue ?? '').trim() || emptyText,
+    },
+    {
+      field: 'gpuModel',
+      minWidth: 120,
+      showOverflow: true,
+      title: $t('page.service.enterprise.supply.fields.gpuModel'),
+      formatter: ({ cellValue }) =>
+        String(cellValue ?? '').trim() || emptyText,
+    },
+    {
+      align: 'center',
+      field: 'quantity',
+      minWidth: 80,
+      title: $t('page.service.enterprise.supply.fields.quantity'),
+    },
+    {
+      align: 'center',
+      cellRender: {
+        name: 'CellTag',
+        options: [
+          {
+            label: $t('page.service.enterprise.supply.status.pending'),
+            type: 'warning',
+            value: SUPPLY_STATUS_PENDING,
+          },
+          {
+            label: $t('page.service.enterprise.supply.status.viewed'),
+            type: 'success',
+            value: SUPPLY_STATUS_VIEWED,
+          },
+        ],
+      },
+      field: 'status',
+      minWidth: 110,
+      title: $t('page.service.enterprise.supply.fields.status'),
+    },
+    {
+      field: 'submitTime',
+      minWidth: 160,
+      title: $t('page.service.enterprise.supply.fields.submitTime'),
+      formatter: ({ row }) =>
+        formatSupplyDateTime(row.submitTime || row.createTime) || emptyText,
+    },
+  ];
+}
 
 /**
  * 判断设备类型是否需要填写 GPU 字段
@@ -69,6 +184,19 @@ export function parseSupplyStatusFilter(
     return SUPPLY_STATUS_VIEWED;
   }
   return undefined;
+}
+
+/**
+ * 将查询表单值转为列表 / 导出筛选参数（不含分页）
+ * @param formValues 查询表单值
+ * @returns 接口筛选参数
+ */
+export function buildSupplyFilterParams(
+  formValues?: null | SupplyGridFormValues,
+): SupplyDeviceExportParams {
+  return {
+    status: parseSupplyStatusFilter(formValues?.status),
+  };
 }
 
 /**

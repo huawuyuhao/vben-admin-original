@@ -516,13 +516,20 @@ body,
   background: transparent !important;
 }
 
-/* 业务页内容区内边距（全站统一：四边一致） */
+/* 业务页内容区内边距（全站统一：四边一致）
+ * flex-shrink:0 + height:auto：主区随内容增高，滚动到底仍保留底边距
+ */
 .site-admin-shell:not(.is-public-page) #__vben_main_content,
 .site-admin-shell:not(.is-public-page) [data-layout-region='main'] > main,
 .site-admin-shell:not(.is-public-page) main.relative {
   box-sizing: border-box !important;
+  display: flex !important;
+  flex: 1 0 auto !important;
+  flex-direction: column !important;
   width: 100% !important;
   max-width: none !important;
+  height: auto !important;
+  min-height: 100% !important;
   padding: 10px !important;
   margin: 0 !important;
   background: transparent !important;
@@ -533,8 +540,13 @@ body,
 .site-admin-shell:not(.is-public-page) .page-route-container,
 .site-admin-shell:not(.is-public-page) .portal-inner-page {
   box-sizing: border-box;
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: column;
   width: 100%;
   max-width: none;
+  height: auto !important;
+  min-height: 100%;
   padding: 0 !important;
   margin: 0 !important;
 }

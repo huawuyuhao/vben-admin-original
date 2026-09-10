@@ -1,63 +1,133 @@
 <script lang="ts" setup>
+import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { ModelInfo } from '#/types/service/model';
 
-import { onMounted, ref, watch } from 'vue';
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { $t } from '@vben/locales';
 
+import { Download, Switch } from '@element-plus/icons-vue';
 import { ElMessage } from 'element-plus';
 
+import {
+  CARD_LIST_VXE_LAYOUTS,
+  toVxeCardPageResult,
+  useVbenVxeGrid,
+} from '#/adapter/vxe-table';
 import { getModelListApi } from '#/api/service/model';
+import PageListShell from '#/views/_shared/components/page-list-shell.vue';
 
 import {
+  buildModelFilterParams,
   canEvaluateModel,
   exportModelInfoTemplate,
   MODEL_COMPARE_MAX,
   MODEL_PAGE_SIZE,
+  MODEL_PAGE_SIZE_OPTIONS,
+  type ModelGridFormValues,
   normalizeModelPage,
+  useModelGridFormSchema,
 } from './data';
 import CompareDialog from './modules/compare-dialog.vue';
 import EvaluateDialog from './modules/evaluate-dialog.vue';
-import FilterBar from './modules/filter-bar.vue';
 import ModelGrid from './modules/model-grid.vue';
-import ModelPager from './modules/model-pager.vue';
 
 /**
- * 门户服务 · 模型服务列表（对接 GET /model/list 扁平分页返参）
+ * 门户服务 · 模型服务列表
+ * 查询栏 / 分页用 useVbenVxeGrid；列表区保持 Element Plus 卡片网格
  */
 defineOptions({ name: 'ServiceModel' });
 
 const router = useRouter();
 
-/** 搜索关键词 */
-const keyword = ref('');
-/** 当前页码 */
-const currentPage = ref(1);
-/** 每页条数 */
-const pageSize = ref(MODEL_PAGE_SIZE);
-/** 列表加载中 */
-const loading = ref(false);
-/** 当前页模型 */
+/** 当前页卡片数据（与 Vxe pager 同步，不走表格 rows） */
 const models = ref<ModelInfo[]>([]);
-/** 总条数 */
-const total = ref(0);
-/** 跳过由服务端回写 current 触发的重复请求 */
-const syncingFromServer = ref(false);
-/** 已选对比模型 ID */
-const compareIds = ref<number[]>([]);
+/** 列表加载中（骨架 / v-loading） */
+const loading = ref(false);
 /** 对比弹窗 */
 const compareVisible = ref(false);
 /** 评价弹窗 */
 const evaluateVisible = ref(false);
 /** 当前评价目标 */
 const evaluateTarget = ref<ModelInfo | null>(null);
+/** 已选对比模型 ID（跨页保留） */
+const compareIds = ref<number[]>([]);
 /** 是否处于导出勾选模式 */
 const exportSelecting = ref(false);
 /** 已选导出模型 ID（仅当前页） */
 const exportIds = ref<number[]>([]);
 /** 导出中 */
 const exporting = ref(false);
+
+const [Grid, gridApi] = useVbenVxeGrid({
+  class: 'mine-vxe-grid mine-vxe-grid--cards',
+  formOptions: {
+    collapsed: true,
+    collapsedRows: 1,
+    resetButtonOptions: {
+      content: $t('common.reset'),
+    },
+    schema: useModelGridFormSchema(),
+    submitButtonOptions: {
+      content: $t('common.query'),
+    },
+    wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3',
+  },
+  gridOptions: {
+    columns: [],
+    height: 'auto',
+    keepSource: true,
+    layouts: [...CARD_LIST_VXE_LAYOUTS],
+    minHeight: 0,
+    pagerConfig: {
+      pageSize: MODEL_PAGE_SIZE,
+      pageSizes: MODEL_PAGE_SIZE_OPTIONS,
+    },
+    proxyConfig: {
+      ajax: {
+        query: async ({ page }, formValues?: ModelGridFormValues) => {
+          loading.value = true;
+          try {
+            const filters = buildModelFilterParams(formValues);
+            const data = await getModelListApi({
+              page: page.currentPage,
+              pageSize: page.pageSize,
+              ...filters,
+            });
+            const normalized = normalizeModelPage(data);
+            models.value = normalized.records;
+            // 翻页后仅保留仍在当前页的导出勾选
+            if (exportSelecting.value) {
+              const pageIdSet = new Set(
+                normalized.records.map((item) => item.modelId),
+              );
+              exportIds.value = exportIds.value.filter((id) =>
+                pageIdSet.has(id),
+              );
+            }
+            return toVxeCardPageResult(normalized);
+          } catch {
+            models.value = [];
+            return toVxeCardPageResult({ total: 0 });
+          } finally {
+            loading.value = false;
+          }
+        },
+      },
+    },
+    rowConfig: {
+      keyField: 'modelId',
+    },
+    toolbarConfig: {
+      custom: false,
+      export: false,
+      refresh: false,
+      search: false,
+      zoom: false,
+    },
+  } as VxeTableGridOptions<ModelInfo>,
+});
 
 /**
  * 清空导出勾选
@@ -75,70 +145,6 @@ function exitExportMode() {
 }
 
 /**
- * 拉取当前页模型列表
- */
-async function fetchModels() {
-  loading.value = true;
-  try {
-    const data = await getModelListApi({
-      page: currentPage.value,
-      pageSize: pageSize.value,
-      keyword: keyword.value.trim() || undefined,
-    });
-    const page = normalizeModelPage(data);
-    models.value = page.records;
-    total.value = page.total;
-    // 翻页后仅保留仍在当前页的导出勾选
-    if (exportSelecting.value) {
-      const pageIdSet = new Set(page.records.map((item) => item.modelId));
-      exportIds.value = exportIds.value.filter((id) => pageIdSet.has(id));
-    }
-
-    if (page.current !== currentPage.value) {
-      syncingFromServer.value = true;
-      currentPage.value = page.current;
-      syncingFromServer.value = false;
-    }
-  } catch {
-    models.value = [];
-    total.value = 0;
-  } finally {
-    loading.value = false;
-  }
-}
-
-/**
- * 回到第一页并查询
- */
-function queryFromFirstPage() {
-  if (currentPage.value !== 1) {
-    currentPage.value = 1;
-    return;
-  }
-  void fetchModels();
-}
-
-/**
- * 提交搜索
- */
-function handleSearch() {
-  if (exportSelecting.value) {
-    return;
-  }
-  queryFromFirstPage();
-}
-
-/**
- * 刷新当前条件
- */
-function handleRefresh() {
-  if (exportSelecting.value) {
-    return;
-  }
-  void fetchModels();
-}
-
-/**
  * 进入模型详情
  * @param item 模型
  */
@@ -146,7 +152,7 @@ function goDetail(item: ModelInfo) {
   if (!item.modelId || exportSelecting.value) {
     return;
   }
-  router.push(`/service/model/${item.modelId}`);
+  void router.push(`/service/model/${item.modelId}`);
 }
 
 /**
@@ -213,7 +219,7 @@ function handleCompare() {
 }
 
 /**
- * 打开评价弹窗（仅 canEvaluate 为 true 时）
+ * 打开评价弹窗
  * @param item 模型
  */
 function handleEvaluate(item: ModelInfo) {
@@ -264,69 +270,72 @@ function handleExport() {
 function handleExportCancel() {
   exitExportMode();
 }
-
-watch(pageSize, () => {
-  if (syncingFromServer.value) {
-    return;
-  }
-  if (currentPage.value !== 1) {
-    currentPage.value = 1;
-    return;
-  }
-  void fetchModels();
-});
-
-watch(currentPage, () => {
-  if (syncingFromServer.value) {
-    return;
-  }
-  void fetchModels();
-});
-
-onMounted(() => {
-  void fetchModels();
-});
 </script>
 
 <template>
-  <div class="mine-page">
-    <div class="mine-shell">
-      <div class="mine-shell__bg" aria-hidden="true">
-        <span class="mine-shell__orb mine-shell__orb--a"></span>
-        <span class="mine-shell__orb mine-shell__orb--b"></span>
-        <span class="mine-shell__mesh"></span>
-      </div>
+  <PageListShell
+    :desc="$t('page.service.model.desc')"
+    :eyebrow="$t('page.service.model.eyebrow')"
+    :title="$t('page.service.model.title')"
+  >
+    <template #actions>
+      <template v-if="exportSelecting">
+        <el-button
+          class="mine-shell__action-btn"
+          @click="handleExportSelectAll"
+        >
+          {{ $t('page.service.model.export.selectAll') }}
+        </el-button>
+        <el-button
+          class="mine-shell__action-btn"
+          type="primary"
+          :icon="Download"
+          :loading="exporting"
+          :disabled="!exportIds.length"
+          @click="handleExport"
+        >
+          {{
+            $t('page.service.model.export.confirm', [
+              String(exportIds.length),
+            ])
+          }}
+        </el-button>
+        <el-button
+          class="mine-shell__action-btn"
+          @click="handleExportCancel"
+        >
+          {{ $t('page.service.model.export.cancel') }}
+        </el-button>
+      </template>
+      <template v-else>
+        <el-button
+          class="mine-shell__action-btn"
+          :disabled="compareIds.length < 2"
+          :icon="Switch"
+          @click="handleCompare"
+        >
+          {{
+            $t('page.service.model.compare.action', [
+              String(compareIds.length),
+            ])
+          }}
+        </el-button>
+        <el-button
+          class="mine-shell__action-btn"
+          type="primary"
+          :icon="Download"
+          @click="handleExport"
+        >
+          {{ $t('page.service.model.export.action') }}
+        </el-button>
+      </template>
+    </template>
 
-      <div class="mine-shell__inner">
-        <header class="mine-shell__head">
-          <div>
-            <p class="mine-shell__eyebrow">
-              {{ $t('page.service.model.eyebrow') }}
-            </p>
-            <h2>{{ $t('page.service.model.title') }}</h2>
-            <p class="mine-shell__desc">
-              {{ $t('page.service.model.desc') }}
-            </p>
-          </div>
-        </header>
-
-        <FilterBar
-          v-model:keyword="keyword"
-          :refreshing="loading"
-          :exporting="exporting"
-          :export-selecting="exportSelecting"
-          :export-count="exportIds.length"
-          :compare-count="compareIds.length"
-          :compare-disabled="compareIds.length < 2"
-          @refresh="handleRefresh"
-          @search="handleSearch"
-          @compare="handleCompare"
-          @export="handleExport"
-          @export-cancel="handleExportCancel"
-          @export-select-all="handleExportSelectAll"
-        />
-
+    <Grid>
+      <template #table-title></template>
+      <template #top>
         <ModelGrid
+          class="model-list-cards"
           :loading="loading"
           :models="models"
           :compare-ids="compareIds"
@@ -338,16 +347,8 @@ onMounted(() => {
           @compare-change="handleCompareChange"
           @export-change="handleExportChange"
         />
-
-        <ModelPager
-          v-if="models.length > 0 || loading || total > 0"
-          v-model:page="currentPage"
-          v-model:page-size="pageSize"
-          :disabled="loading"
-          :total="total"
-        />
-      </div>
-    </div>
+      </template>
+    </Grid>
 
     <CompareDialog v-model:visible="compareVisible" :model-ids="compareIds" />
 
@@ -356,9 +357,12 @@ onMounted(() => {
       :model-id="evaluateTarget?.modelId"
       :model-name="evaluateTarget?.modelName"
     />
-  </div>
+  </PageListShell>
 </template>
 
 <style lang="scss" scoped>
-@use '../../../scss/page-shell.scss';
+.model-list-cards {
+  width: 100%;
+  text-align: left;
+}
 </style>

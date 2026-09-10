@@ -1,16 +1,20 @@
+import type { VbenFormSchema } from '#/adapter/form';
+import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { MyAppItem, MyAppListResult } from '#/types/service/mydemand/apps';
 import type {
+  ComputeDemandExportParams,
   ComputeDemandItem,
   ComputeDemandListResult,
   ComputeDemandStatus,
 } from '#/types/service/mydemand/compute';
 
+import { $t } from '@vben/locales';
 import { formatDate, isEmpty, isHttpUrl } from '@vben/utils';
 
 /** 算力需求列表默认每页条数 */
 export const COMPUTE_PAGE_SIZE = 10;
 
-/** 可选每页条数（供 el-pagination） */
+/** 可选每页条数 */
 export const COMPUTE_PAGE_SIZE_OPTIONS = [10, 20, 50];
 
 /** 关联应用分页选择默认每页条数（卡片 3×3） */
@@ -80,6 +84,137 @@ export type ComputeStatusFilter =
 /** 时间范围筛选：[开始, 结束]；未选时为 null */
 export type ComputeTimeRange = [string, string] | null;
 
+/** 列表查询表单值 */
+export interface ComputeGridFormValues {
+  /** 需求编号 */
+  demandNo?: string;
+  /** 状态筛选 */
+  status?: ComputeStatusFilter;
+  /** 创建/提交时间范围 */
+  timeRange?: ComputeTimeRange;
+}
+
+/**
+ * 算力需求查询栏 schema
+ */
+export function useComputeGridFormSchema(): VbenFormSchema[] {
+  return [
+    {
+      component: 'Input',
+      componentProps: {
+        clearable: true,
+        placeholder: $t(
+          'page.service.mydemand.compute.filter.demandNoPlaceholder',
+        ),
+      },
+      fieldName: 'demandNo',
+      label: $t('page.service.mydemand.compute.filter.demandNo'),
+    },
+    {
+      component: 'Select',
+      componentProps: {
+        clearable: true,
+        options: COMPUTE_STATUS_OPTIONS.map((item) => ({
+          label: $t(
+            `page.service.mydemand.compute.status.${getComputeStatusI18nKey(item)}`,
+          ),
+          value: String(item),
+        })),
+        placeholder: $t('page.service.mydemand.compute.filter.statusAll'),
+      },
+      fieldName: 'status',
+      label: $t('page.service.mydemand.compute.filter.status'),
+    },
+    {
+      component: 'DatePicker',
+      componentProps: {
+        clearable: true,
+        endPlaceholder: $t('page.service.mydemand.compute.filter.timeEnd'),
+        format: 'YYYY-MM-DD HH:mm:ss',
+        rangeSeparator: '-',
+        startPlaceholder: $t('page.service.mydemand.compute.filter.timeStart'),
+        type: 'datetimerange',
+        valueFormat: 'YYYY-MM-DD HH:mm:ss',
+      },
+      fieldName: 'timeRange',
+      label: $t('page.service.mydemand.compute.filter.timeRange'),
+    },
+  ];
+}
+
+/**
+ * 算力需求列表列配置
+ */
+export function useComputeColumns(): VxeTableGridOptions<ComputeDemandItem>['columns'] {
+  const emptyText = $t('page.service.mydemand.compute.valueEmpty');
+  return [
+    {
+      field: 'demandNo',
+      minWidth: 160,
+      showOverflow: true,
+      title: $t('page.service.mydemand.compute.fields.demandNo'),
+      formatter: ({ cellValue }) =>
+        String(cellValue ?? '').trim() || emptyText,
+    },
+    {
+      field: 'demandName',
+      minWidth: 160,
+      showOverflow: true,
+      title: $t('page.service.mydemand.compute.fields.demandName'),
+      formatter: ({ cellValue }) =>
+        String(cellValue ?? '').trim() || emptyText,
+    },
+    {
+      align: 'center',
+      field: 'demandType',
+      minWidth: 110,
+      title: $t('page.service.mydemand.compute.fields.demandType'),
+      formatter: ({ cellValue }) =>
+        $t(
+          `page.service.mydemand.compute.type.${getComputeTypeI18nKey(cellValue)}`,
+        ),
+    },
+    {
+      field: 'resourceSpec',
+      minWidth: 140,
+      showOverflow: true,
+      title: $t('page.service.mydemand.compute.fields.resourceSpec'),
+      formatter: ({ cellValue }) =>
+        String(cellValue ?? '').trim() || emptyText,
+    },
+    {
+      align: 'center',
+      cellRender: {
+        name: 'CellTag',
+        options: COMPUTE_STATUS_OPTIONS.map((item) => ({
+          label: $t(
+            `page.service.mydemand.compute.status.${getComputeStatusI18nKey(item)}`,
+          ),
+          type: getComputeStatusTagType(item),
+          value: item,
+        })),
+      },
+      field: 'status',
+      minWidth: 120,
+      title: $t('page.service.mydemand.compute.fields.status'),
+    },
+    {
+      field: 'submitTime',
+      minWidth: 160,
+      title: $t('page.service.mydemand.compute.fields.submitTime'),
+      formatter: ({ row }) =>
+        formatComputeDateTime(row.submitTime || row.createTime) || emptyText,
+    },
+    {
+      align: 'center',
+      field: 'action',
+      minWidth: 320,
+      slots: { default: 'action' },
+      title: $t('page.service.mydemand.compute.fields.actions'),
+    },
+  ];
+}
+
 /**
  * 解析状态筛选值为接口参数
  * @param status 筛选值
@@ -103,6 +238,23 @@ export function parseComputeStatusFilter(
     return value;
   }
   return undefined;
+}
+
+/**
+ * 将查询表单值转为列表 / 导出筛选参数（不含分页）
+ * @param formValues 查询表单值
+ * @returns 接口筛选参数
+ */
+export function buildComputeFilterParams(
+  formValues?: ComputeGridFormValues | null,
+): ComputeDemandExportParams {
+  const range = formValues?.timeRange;
+  return {
+    demandNo: String(formValues?.demandNo ?? '').trim() || undefined,
+    status: parseComputeStatusFilter(formValues?.status),
+    startTime: range?.[0] || undefined,
+    endTime: range?.[1] || undefined,
+  };
 }
 
 /**

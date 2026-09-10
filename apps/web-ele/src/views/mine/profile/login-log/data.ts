@@ -1,10 +1,14 @@
+import type { VbenFormSchema } from '#/adapter/form';
+import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type {
+  LoginLogExportParams,
   LoginLogItem,
   LoginLogListParams,
   LoginLogListResult,
   LoginLogStatus,
 } from '#/types/mine/profile/login-log';
 
+import { $t } from '@vben/locales';
 import { formatDate, isEmpty } from '@vben/utils';
 
 export { resolveExportDownloadUrl as resolveLoginLogExportDownloadUrl } from '#/store/common';
@@ -12,7 +16,7 @@ export { resolveExportDownloadUrl as resolveLoginLogExportDownloadUrl } from '#/
 /** 登录日志默认每页条数 */
 export const LOGIN_LOG_PAGE_SIZE = 10;
 
-/** 可选每页条数（供 el-pagination） */
+/** 可选每页条数 */
 export const LOGIN_LOG_PAGE_SIZE_OPTIONS = [10, 20, 50];
 
 /** 登录成功 */
@@ -29,6 +33,174 @@ export type LoginLogStatusFilter =
 
 /** 访问时间范围（起止，含时分秒） */
 export type LoginLogTimeRange = [string, string] | null;
+
+/** 查询表单值 */
+export interface LoginLogGridFormValues {
+  /** 用户账号 */
+  userName?: string;
+  /** 登录 IP */
+  ipaddr?: string;
+  /** 登录地点 */
+  loginLocation?: string;
+  /** 登录状态 */
+  status?: LoginLogStatusFilter;
+  /** 访问时间范围 */
+  loginTimeRange?: LoginLogTimeRange;
+}
+
+/**
+ * 登录日志查询栏 schema
+ */
+export function useLoginLogGridFormSchema(): VbenFormSchema[] {
+  return [
+    {
+      component: 'Input',
+      componentProps: {
+        clearable: true,
+        placeholder: $t('page.mine.loginLog.filter.userNamePlaceholder'),
+      },
+      fieldName: 'userName',
+      label: $t('page.mine.loginLog.filter.userName'),
+    },
+    {
+      component: 'Input',
+      componentProps: {
+        clearable: true,
+        placeholder: $t('page.mine.loginLog.filter.ipaddrPlaceholder'),
+      },
+      fieldName: 'ipaddr',
+      label: $t('page.mine.loginLog.filter.ipaddr'),
+    },
+    {
+      component: 'Select',
+      componentProps: {
+        clearable: true,
+        options: [
+          {
+            label: $t('page.mine.loginLog.status.success'),
+            value: LOGIN_LOG_STATUS_SUCCESS,
+          },
+          {
+            label: $t('page.mine.loginLog.status.fail'),
+            value: LOGIN_LOG_STATUS_FAIL,
+          },
+        ],
+        placeholder: $t('page.mine.loginLog.filter.statusAll'),
+      },
+      fieldName: 'status',
+      label: $t('page.mine.loginLog.filter.status'),
+    },
+    {
+      component: 'Input',
+      componentProps: {
+        clearable: true,
+        placeholder: $t('page.mine.loginLog.filter.loginLocationPlaceholder'),
+      },
+      fieldName: 'loginLocation',
+      label: $t('page.mine.loginLog.filter.loginLocation'),
+    },
+    {
+      component: 'DatePicker',
+      componentProps: {
+        clearable: true,
+        endPlaceholder: $t('page.mine.loginLog.filter.loginTimeEnd'),
+        format: 'YYYY-MM-DD HH:mm:ss',
+        rangeSeparator: '-',
+        startPlaceholder: $t('page.mine.loginLog.filter.loginTimeStart'),
+        type: 'datetimerange',
+        valueFormat: 'YYYY-MM-DD HH:mm:ss',
+      },
+      fieldName: 'loginTimeRange',
+      label: $t('page.mine.loginLog.filter.loginTime'),
+    },
+  ];
+}
+
+/**
+ * 登录日志表格列配置
+ */
+export function useLoginLogColumns(): VxeTableGridOptions<LoginLogItem>['columns'] {
+  const emptyText = $t('page.mine.loginLog.valueEmpty');
+  return [
+    {
+      field: 'infoId',
+      minWidth: 90,
+      showOverflow: true,
+      title: $t('page.mine.loginLog.fields.infoId'),
+      formatter: ({ cellValue }) => displayLoginLogValue(cellValue, emptyText),
+    },
+    {
+      field: 'userName',
+      minWidth: 120,
+      showOverflow: true,
+      title: $t('page.mine.loginLog.fields.userName'),
+      formatter: ({ cellValue }) => displayLoginLogValue(cellValue, emptyText),
+    },
+    {
+      field: 'ipaddr',
+      minWidth: 130,
+      showOverflow: true,
+      title: $t('page.mine.loginLog.fields.ipaddr'),
+      formatter: ({ cellValue }) => displayLoginLogValue(cellValue, emptyText),
+    },
+    {
+      field: 'loginLocation',
+      minWidth: 130,
+      showOverflow: true,
+      title: $t('page.mine.loginLog.fields.loginLocation'),
+      formatter: ({ cellValue }) => displayLoginLogValue(cellValue, emptyText),
+    },
+    {
+      field: 'browser',
+      minWidth: 110,
+      showOverflow: true,
+      title: $t('page.mine.loginLog.fields.browser'),
+      formatter: ({ cellValue }) => displayLoginLogValue(cellValue, emptyText),
+    },
+    {
+      field: 'os',
+      minWidth: 110,
+      showOverflow: true,
+      title: $t('page.mine.loginLog.fields.os'),
+      formatter: ({ cellValue }) => displayLoginLogValue(cellValue, emptyText),
+    },
+    {
+      align: 'center',
+      cellRender: {
+        name: 'CellTag',
+        options: [
+          {
+            label: $t('page.mine.loginLog.status.success'),
+            type: 'success',
+            value: LOGIN_LOG_STATUS_SUCCESS,
+          },
+          {
+            label: $t('page.mine.loginLog.status.fail'),
+            type: 'danger',
+            value: LOGIN_LOG_STATUS_FAIL,
+          },
+        ],
+      },
+      field: 'status',
+      minWidth: 100,
+      title: $t('page.mine.loginLog.fields.status'),
+    },
+    {
+      field: 'msg',
+      minWidth: 140,
+      showOverflow: true,
+      title: $t('page.mine.loginLog.fields.msg'),
+      formatter: ({ cellValue }) => displayLoginLogValue(cellValue, emptyText),
+    },
+    {
+      field: 'loginTime',
+      minWidth: 170,
+      title: $t('page.mine.loginLog.fields.loginTime'),
+      formatter: ({ cellValue }) =>
+        formatLoginLogDateTime(cellValue) || emptyText,
+    },
+  ];
+}
 
 /**
  * 解析登录状态筛选值为接口参数
@@ -58,6 +230,23 @@ export function buildLoginLogTimeParams(
   return {
     'params[beginTime]': range[0],
     'params[endTime]': range[1],
+  };
+}
+
+/**
+ * 将查询表单值转为列表 / 导出筛选参数（不含分页）
+ * @param formValues 查询表单值
+ * @returns 接口筛选参数
+ */
+export function buildLoginLogFilterParams(
+  formValues?: LoginLogGridFormValues | null,
+): LoginLogExportParams {
+  return {
+    userName: String(formValues?.userName ?? '').trim() || undefined,
+    ipaddr: String(formValues?.ipaddr ?? '').trim() || undefined,
+    loginLocation: String(formValues?.loginLocation ?? '').trim() || undefined,
+    status: parseLoginLogStatusFilter(formValues?.status),
+    ...buildLoginLogTimeParams(formValues?.loginTimeRange ?? null),
   };
 }
 

@@ -87,12 +87,19 @@ function parseProductListBody<T>(
  */
 export async function getSupplyProductListApi(params: SupplyProductListParams) {
   const body = await rootRequestClient.get<SupplyProductListResponseBody>(
-    '/mock/supply/product/list',
+    '/pwq-mock/supply/product/list',
     {
       params,
       responseReturn: 'body',
     },
   );
+  // const body = await rootRequestClient.get<SupplyProductListResponseBody>(
+  //   '/mock/supply/product/list',
+  //   {
+  //     params,
+  //     responseReturn: 'body',
+  //   },
+  // );
   // const body = await rootRequestClient.get<SupplyProductListResponseBody>(
   //   '/supply/product/list',
   //   { params, responseReturn: 'body' },
@@ -117,12 +124,19 @@ export async function getSupplyProductListApi(params: SupplyProductListParams) {
  */
 export async function createSupplyProductApi(data: SupplyProductWriteParams) {
   const body = await rootRequestClient.post<SupplyProductMutationResponse>(
-    '/mock/supply/product',
+    '/pwq-mock/supply/product',
     data,
     {
       responseReturn: 'body',
     },
   );
+  // const body = await rootRequestClient.post<SupplyProductMutationResponse>(
+  //   '/mock/supply/product',
+  //   data,
+  //   {
+  //     responseReturn: 'body',
+  //   },
+  // );
   // const body = await rootRequestClient.post<SupplyProductMutationResponse>(
   //   '/supply/product',
   //   data,
@@ -150,12 +164,19 @@ export async function updateSupplyProductApi(
   data: SupplyProductWriteParams,
 ) {
   const body = await rootRequestClient.put<SupplyProductMutationResponse>(
-    `/mock/supply/product/${id}`,
+    `/pwq-mock/supply/product/${id}`,
     data,
     {
       responseReturn: 'body',
     },
   );
+  // const body = await rootRequestClient.put<SupplyProductMutationResponse>(
+  //   `/mock/supply/product/${id}`,
+  //   data,
+  //   {
+  //     responseReturn: 'body',
+  //   },
+  // );
   // const body = await rootRequestClient.put<SupplyProductMutationResponse>(
   //   `/supply/product/${id}`,
   //   data,
@@ -173,11 +194,17 @@ export async function updateSupplyProductApi(
  */
 export async function deleteSupplyProductApi(id: number) {
   const body = await rootRequestClient.delete<SupplyProductMutationResponse>(
-    `/mock/supply/product/${id}`,
+    `/pwq-mock/supply/product/${id}`,
     {
       responseReturn: 'body',
     },
   );
+  // const body = await rootRequestClient.delete<SupplyProductMutationResponse>(
+  //   `/mock/supply/product/${id}`,
+  //   {
+  //     responseReturn: 'body',
+  //   },
+  // );
   // const body = await rootRequestClient.delete<SupplyProductMutationResponse>(
   //   `/supply/product/${id}`,
   //   { responseReturn: 'body' },
@@ -199,13 +226,21 @@ export async function shelfSupplyProductApi(
   action: SupplyProductShelfAction,
 ) {
   const body = await rootRequestClient.put<SupplyProductMutationResponse>(
-    `/mock/supply/product/${id}/shelf`,
+    `/pwq-mock/supply/product/${id}/shelf`,
     {},
     {
       params: { action },
       responseReturn: 'body',
     },
   );
+  // const body = await rootRequestClient.put<SupplyProductMutationResponse>(
+  //   `/mock/supply/product/${id}/shelf`,
+  //   {},
+  //   {
+  //     params: { action },
+  //     responseReturn: 'body',
+  //   },
+  // );
   // const body = await rootRequestClient.put<SupplyProductMutationResponse>(
   //   `/supply/product/${id}/shelf`,
   //   {},
@@ -224,11 +259,17 @@ export async function shelfSupplyProductApi(
  */
 export async function getSupplyProductResourceStatusApi(id: number) {
   const body = await rootRequestClient.get<SupplyProductMutationResponse>(
-    `/mock/supply/product/${id}/resource-status`,
+    `/pwq-mock/supply/product/${id}/resource-status`,
     {
       responseReturn: 'body',
     },
   );
+  // const body = await rootRequestClient.get<SupplyProductMutationResponse>(
+  //   `/mock/supply/product/${id}/resource-status`,
+  //   {
+  //     responseReturn: 'body',
+  //   },
+  // );
   // const body = await rootRequestClient.get<SupplyProductMutationResponse>(
   //   `/supply/product/${id}/resource-status`,
   //   { responseReturn: 'body' },

@@ -1,14 +1,19 @@
 <script lang="ts" setup>
-import type { ComputeDemandItem } from '#/types/service/mydemand/compute';
+import type { VxeTableGridOptions } from '#/adapter/vxe-table';
+import type {
+  ComputeDemandExportParams,
+  ComputeDemandItem,
+} from '#/types/service/mydemand/compute';
 
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import { $t } from '@vben/locales';
 
-import { Download, Plus, Refresh } from '@element-plus/icons-vue';
+import { Download, Plus } from '@element-plus/icons-vue';
 import { ElMessage } from 'element-plus';
 
+import { toVxePageResult, useVbenVxeGrid } from '#/adapter/vxe-table';
 import {
   copyComputeDemandApi,
   deleteComputeDemandApi,
@@ -16,146 +21,94 @@ import {
   getComputeDemandListApi,
 } from '#/api/service/mydemand/compute';
 import { downloadExportFile } from '#/store/common';
+import PageListShell from '#/views/_shared/components/page-list-shell.vue';
 
 import {
+  buildComputeFilterParams,
+  canDeleteComputeDemand,
+  canEditComputeDemand,
+  canResubmitComputeDemand,
   COMPUTE_PAGE_SIZE,
-  type ComputeStatusFilter,
-  type ComputeTimeRange,
+  COMPUTE_PAGE_SIZE_OPTIONS,
+  type ComputeGridFormValues,
+  isComputeDemandDone,
   normalizeComputePage,
-  parseComputeStatusFilter,
   resolveComputeDemandId,
+  useComputeColumns,
+  useComputeGridFormSchema,
 } from './data';
-import DemandPager from './modules/demand-pager.vue';
-import DemandTable from './modules/demand-table.vue';
 import DetailDialog from './modules/detail-dialog.vue';
-import FilterBar from './modules/filter-bar.vue';
 
 /**
  * 门户服务 · 我的算力需求
- * 对接 /demand 列表、增删改、复制、导出、结果预览与下载
+ * 列表统一使用 useVbenVxeGrid（查询栏 / 分页 / 工具栏），壳层沿用 page-shell
  */
 defineOptions({ name: 'ServiceMyDemandCompute' });
 
 const route = useRoute();
 const router = useRouter();
 
-/** 筛选草稿：需求编号 */
-const filterDemandNo = ref('');
-/** 筛选草稿：状态 */
-const filterStatus = ref<ComputeStatusFilter>('');
-/** 筛选草稿：时间范围 */
-const filterTimeRange = ref<ComputeTimeRange>(null);
-
-/** 已生效筛选 */
-const appliedDemandNo = ref('');
-const appliedStatus = ref<ComputeStatusFilter>('');
-const appliedTimeRange = ref<ComputeTimeRange>(null);
-
-/** 当前页码 */
-const currentPage = ref(1);
-/** 每页条数 */
-const pageSize = ref(COMPUTE_PAGE_SIZE);
-/** 列表加载中 */
-const loading = ref(false);
 /** 导出中 */
 const exporting = ref(false);
 /** 悬停导出按钮时显示提示 */
 const exportHintVisible = ref(false);
-/** 当前页需求列表 */
-const demands = ref<ComputeDemandItem[]>([]);
-/** 总条数 */
-const total = ref(0);
-/** 跳过由服务端回写 current 触发的重复请求 */
-const syncingFromServer = ref(false);
 /** 正在复制的需求 ID */
 const copyingId = ref<null | number>(null);
+/** 最近一次查询生效的筛选条件（供导出使用） */
+const appliedFilterParams = ref<ComputeDemandExportParams>({});
 
 /** 详情弹窗 */
 const detailDialogRef = ref<InstanceType<typeof DetailDialog>>();
 
-/**
- * 组装当前已生效的筛选参数（不含分页）
- */
-function buildFilterParams() {
-  const range = appliedTimeRange.value;
-  return {
-    demandNo: appliedDemandNo.value.trim() || undefined,
-    status: parseComputeStatusFilter(appliedStatus.value),
-    startTime: range?.[0] || undefined,
-    endTime: range?.[1] || undefined,
-  };
-}
-
-/**
- * 拉取当前页需求台账
- */
-async function fetchDemands() {
-  loading.value = true;
-  try {
-    const data = await getComputeDemandListApi({
-      page: currentPage.value,
-      pageSize: pageSize.value,
-      ...buildFilterParams(),
-    });
-    const page = normalizeComputePage(data);
-    demands.value = page.records;
-    total.value = page.total;
-
-    if (page.current !== currentPage.value) {
-      syncingFromServer.value = true;
-      currentPage.value = page.current;
-      syncingFromServer.value = false;
-    }
-  } catch {
-    demands.value = [];
-    total.value = 0;
-  } finally {
-    loading.value = false;
-  }
-}
-
-/**
- * 回到第一页并查询
- */
-function queryFromFirstPage() {
-  if (currentPage.value !== 1) {
-    currentPage.value = 1;
-    return;
-  }
-  void fetchDemands();
-}
-
-/**
- * 提交查询
- */
-function handleSearch() {
-  appliedDemandNo.value = filterDemandNo.value;
-  appliedStatus.value = filterStatus.value;
-  appliedTimeRange.value = filterTimeRange.value
-    ? [...filterTimeRange.value]
-    : null;
-  queryFromFirstPage();
-}
-
-/**
- * 重置筛选并查询
- */
-function handleReset() {
-  filterDemandNo.value = '';
-  filterStatus.value = '';
-  filterTimeRange.value = null;
-  appliedDemandNo.value = '';
-  appliedStatus.value = '';
-  appliedTimeRange.value = null;
-  queryFromFirstPage();
-}
-
-/**
- * 刷新当前页
- */
-function handleRefresh() {
-  void fetchDemands();
-}
+const [Grid, gridApi] = useVbenVxeGrid({
+  class: 'mine-vxe-grid',
+  formOptions: {
+    collapsed: false,
+    resetButtonOptions: {
+      content: $t('common.reset'),
+    },
+    schema: useComputeGridFormSchema(),
+    showCollapseButton: false,
+    submitButtonOptions: {
+      content: $t('common.query'),
+    },
+    wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3',
+  },
+  gridOptions: {
+    columns: useComputeColumns(),
+    height: 'auto',
+    keepSource: true,
+    pagerConfig: {
+      pageSize: COMPUTE_PAGE_SIZE,
+      pageSizes: COMPUTE_PAGE_SIZE_OPTIONS,
+    },
+    proxyConfig: {
+      ajax: {
+        query: async ({ page }, formValues?: ComputeGridFormValues) => {
+          const filters = buildComputeFilterParams(formValues);
+          appliedFilterParams.value = filters;
+          const data = await getComputeDemandListApi({
+            page: page.currentPage,
+            pageSize: page.pageSize,
+            ...filters,
+          });
+          return toVxePageResult(normalizeComputePage(data));
+        },
+      },
+    },
+    rowConfig: {
+      keyField: 'demandId',
+    },
+    stripe: true,
+    toolbarConfig: {
+      custom: false,
+      export: false,
+      refresh: false,
+      search: false,
+      zoom: false,
+    },
+  } as VxeTableGridOptions<ComputeDemandItem>,
+});
 
 /**
  * 跳转新建需求页
@@ -218,7 +171,7 @@ async function handleDelete(row: ComputeDemandItem) {
   try {
     await deleteComputeDemandApi(id);
     ElMessage.success($t('page.service.mydemand.compute.delete.success'));
-    void fetchDemands();
+    gridApi.query();
   } catch {
     // 错误提示由接口层处理
   }
@@ -244,7 +197,7 @@ async function handleCopy(row: ComputeDemandItem) {
         ? $t('page.service.mydemand.compute.copy.successWithNo', [no])
         : $t('page.service.mydemand.compute.copy.success'),
     );
-    void fetchDemands();
+    gridApi.query();
   } catch {
     // 错误提示由接口层处理
   } finally {
@@ -272,7 +225,15 @@ function hideExportHint() {
 async function handleExport() {
   exporting.value = true;
   try {
-    const result = await exportComputeDemandApi(buildFilterParams());
+    const formValues = (await gridApi.formApi?.getValues()) as
+      | ComputeGridFormValues
+      | undefined;
+    const filters =
+      Object.keys(appliedFilterParams.value).length > 0
+        ? appliedFilterParams.value
+        : buildComputeFilterParams(formValues);
+
+    const result = await exportComputeDemandApi(filters);
     const ok = await downloadExportFile({
       fileUrl: result?.fileUrl,
       fileName: result?.fileName,
@@ -288,24 +249,6 @@ async function handleExport() {
     exporting.value = false;
   }
 }
-
-watch(pageSize, () => {
-  if (syncingFromServer.value) {
-    return;
-  }
-  if (currentPage.value !== 1) {
-    currentPage.value = 1;
-    return;
-  }
-  void fetchDemands();
-});
-
-watch(currentPage, () => {
-  if (syncingFromServer.value) {
-    return;
-  }
-  void fetchDemands();
-});
 
 /**
  * 兼容旧入口 query：跳转到新建/编辑页后清掉列表上的 query
@@ -334,104 +277,121 @@ async function handleEntryQuery() {
 }
 
 onMounted(() => {
-  void fetchDemands();
   void handleEntryQuery();
 });
 </script>
 
 <template>
-  <div class="mine-page">
-    <div class="mine-shell">
-      <div class="mine-shell__bg" aria-hidden="true">
-        <span class="mine-shell__orb mine-shell__orb--a"></span>
-        <span class="mine-shell__orb mine-shell__orb--b"></span>
-        <span class="mine-shell__mesh"></span>
-      </div>
+  <PageListShell
+    :desc="$t('page.service.mydemand.compute.desc')"
+    :eyebrow="$t('page.service.mydemand.compute.eyebrow')"
+    :title="$t('page.service.mydemand.compute.title')"
+  >
+    <template #actions>
+      <Transition name="compute-export-tip">
+        <span v-if="exportHintVisible" class="compute-page__export-tip">
+          {{ $t('page.service.mydemand.compute.export.hint') }}
+        </span>
+      </Transition>
+      <el-button
+        class="mine-shell__action-btn"
+        :icon="Download"
+        :loading="exporting"
+        @click="handleExport"
+        @mouseenter="showExportHint"
+        @mouseleave="hideExportHint"
+        @focus="showExportHint"
+        @blur="hideExportHint"
+      >
+        {{ $t('page.service.mydemand.compute.export.action') }}
+      </el-button>
+      <el-button
+        class="mine-shell__action-btn"
+        type="primary"
+        :icon="Plus"
+        @click="handleCreate"
+      >
+        {{ $t('page.service.mydemand.compute.add') }}
+      </el-button>
+    </template>
 
-      <div class="mine-shell__inner">
-        <header class="mine-shell__head">
-          <div>
-            <p class="mine-shell__eyebrow">
-              {{ $t('page.service.mydemand.compute.eyebrow') }}
-            </p>
-            <h2>{{ $t('page.service.mydemand.compute.title') }}</h2>
-            <p class="mine-shell__desc">
-              {{ $t('page.service.mydemand.compute.desc') }}
-            </p>
-          </div>
-          <div class="mine-shell__head-actions">
-            <Transition name="compute-export-tip">
-              <span v-if="exportHintVisible" class="compute-page__export-tip">
-                {{ $t('page.service.mydemand.compute.export.hint') }}
-              </span>
-            </Transition>
-            <el-button
-              class="mine-shell__action-btn"
-              :icon="Download"
-              :loading="exporting"
-              @click="handleExport"
-              @mouseenter="showExportHint"
-              @mouseleave="hideExportHint"
-              @focus="showExportHint"
-              @blur="hideExportHint"
-            >
-              {{ $t('page.service.mydemand.compute.export.action') }}
+    <Grid>
+      <template #table-title></template>
+
+      <template #action="{ row }">
+        <el-button link type="primary" @click="handleDetail(row)">
+          {{ $t('page.service.mydemand.compute.actions.detail') }}
+        </el-button>
+
+        <el-button
+          v-if="canEditComputeDemand(row.status)"
+          link
+          type="primary"
+          @click="handleEdit(row)"
+        >
+          {{ $t('page.service.mydemand.compute.actions.edit') }}
+        </el-button>
+
+        <el-button
+          v-if="canResubmitComputeDemand(row.status)"
+          link
+          type="warning"
+          @click="handleResubmit(row)"
+        >
+          {{ $t('page.service.mydemand.compute.actions.resubmit') }}
+        </el-button>
+
+        <el-button
+          link
+          type="primary"
+          :loading="copyingId === row.demandId"
+          @click="handleCopy(row)"
+        >
+          {{ $t('page.service.mydemand.compute.actions.copy') }}
+        </el-button>
+
+        <el-button
+          v-if="isComputeDemandDone(row.status)"
+          link
+          type="success"
+          @click="handleDetail(row)"
+        >
+          {{ $t('page.service.mydemand.compute.actions.result') }}
+        </el-button>
+
+        <el-popconfirm
+          v-if="canDeleteComputeDemand(row.status)"
+          width="260"
+          :cancel-button-text="
+            $t('page.service.mydemand.compute.delete.cancelBtn')
+          "
+          :confirm-button-text="
+            $t('page.service.mydemand.compute.delete.confirmBtn')
+          "
+          :title="
+            $t('page.service.mydemand.compute.delete.confirm', [
+              row.demandName?.trim() ||
+                row.demandNo?.trim() ||
+                String(row.demandId ?? '') ||
+                $t('page.service.mydemand.compute.valueEmpty'),
+            ])
+          "
+          @confirm="handleDelete(row)"
+        >
+          <template #reference>
+            <el-button link type="danger">
+              {{ $t('page.service.mydemand.compute.actions.delete') }}
             </el-button>
-            <el-button
-              class="mine-shell__action-btn"
-              :icon="Refresh"
-              :loading="loading"
-              @click="handleRefresh"
-            >
-              {{ $t('page.service.mydemand.compute.refresh') }}
-            </el-button>
-            <el-button
-              class="mine-shell__action-btn"
-              type="primary"
-              :icon="Plus"
-              @click="handleCreate"
-            >
-              {{ $t('page.service.mydemand.compute.add') }}
-            </el-button>
-          </div>
-        </header>
-
-        <FilterBar
-          v-model:demand-no="filterDemandNo"
-          v-model:status="filterStatus"
-          v-model:time-range="filterTimeRange"
-          @search="handleSearch"
-          @reset="handleReset"
-        />
-
-        <DemandTable
-          :copying-id="copyingId"
-          :demands="demands"
-          :loading="loading"
-          @copy="handleCopy"
-          @delete="handleDelete"
-          @detail="handleDetail"
-          @edit="handleEdit"
-          @resubmit="handleResubmit"
-        />
-
-        <DemandPager
-          v-if="demands.length > 0 || loading || total > 0"
-          v-model:page="currentPage"
-          v-model:page-size="pageSize"
-          :disabled="loading"
-          :total="total"
-        />
-      </div>
-    </div>
+          </template>
+        </el-popconfirm>
+      </template>
+    </Grid>
 
     <DetailDialog ref="detailDialogRef" />
-  </div>
+  </PageListShell>
 </template>
 
 <style lang="scss" scoped>
-@use '../../../../scss/page-shell.scss';
-
 .compute-page {
   &__export-tip {
     font-size: 13px;

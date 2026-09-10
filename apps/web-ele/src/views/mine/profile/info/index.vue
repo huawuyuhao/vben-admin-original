@@ -642,10 +642,6 @@ onMounted(initPage);
 }
 
 @media (max-width: 960px) {
-  .mine-page {
-    padding: 12px;
-  }
-
   .mine-shell {
     min-height: auto;
     padding: 18px 16px;
@@ -678,10 +674,6 @@ onMounted(initPage);
 }
 
 @media (max-width: 640px) {
-  .mine-page {
-    padding: 10px;
-  }
-
   .mine-shell {
     padding: 14px 12px;
     border-radius: 16px;

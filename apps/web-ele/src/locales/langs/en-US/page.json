@@ -589,7 +589,17 @@
         "title": "My Products",
         "desc": "Manage favorited compute products. Unfavorite or place an order.",
         "empty": "No favorited products yet",
-        "refresh": "Refresh"
+        "refresh": "Refresh",
+        "valueEmpty": "—",
+        "fields": {
+          "cover": "Cover",
+          "productName": "Product name",
+          "tags": "Tags",
+          "price": "Price",
+          "greenPowerRatio": "Green power ratio",
+          "description": "Description",
+          "actions": "Actions"
+        }
       }
     },
     "messages": {
@@ -1068,7 +1078,7 @@
       "product": {
         "eyebrow": "Content · Compute products",
         "title": "Compute product management",
-        "desc": "Browse and manage portal compute products. Filter by name and shelf status; cards show product overview.",
+        "desc": "Browse and manage portal compute products. Filter by name and shelf status; table shows product overview.",
         "add": "Add product",
         "edit": "Edit",
         "delete": "Delete",
@@ -1077,6 +1087,7 @@
         "searchPlaceholder": "Search by product name…",
         "shelfStatusLabel": "Shelf status",
         "empty": "No matching products",
+        "valueEmpty": "—",
         "viewDetail": "Details",
         "submitAudit": "Submit review",
         "submitAuditSuccess": "“{0}” has been submitted for review",
@@ -1112,6 +1123,9 @@
         },
         "fields": {
           "productId": "Product ID",
+          "cover": "Cover",
+          "productName": "Product name",
+          "tags": "Tags",
           "description": "Description",
           "price": "Price",
           "greenPowerRatio": "Green power ratio",
@@ -1120,7 +1134,8 @@
           "auditStatus": "Review status",
           "enterpriseId": "Supplier enterprise ID",
           "publishTime": "Published at",
-          "tenantId": "Tenant ID"
+          "tenantId": "Tenant ID",
+          "actions": "Actions"
         },
         "form": {
           "createTitle": "Add compute product",
@@ -1196,7 +1211,7 @@
       "case": {
         "eyebrow": "Content · Cases",
         "title": "Case content management",
-        "desc": "Manage portal case articles. Filter by tag and type; cards show case overview with create, edit and delete.",
+        "desc": "Manage portal case articles. Filter by tag and type; table shows case overview with create, edit and delete.",
         "add": "Add case",
         "refresh": "Refresh",
         "empty": "No matching cases",
@@ -1250,12 +1265,16 @@
         },
         "fields": {
           "caseId": "Case ID",
+          "cover": "Cover",
+          "title": "Title",
           "caseType": "Case type",
+          "tags": "Tags",
           "viewCount": "Views",
           "summary": "Summary",
           "createTime": "Created at",
           "draftStatus": "Draft",
-          "auditStatus": "Review status"
+          "auditStatus": "Review status",
+          "actions": "Actions"
         },
         "form": {
           "createTitle": "Add case",
@@ -1303,9 +1322,13 @@
       "searchPlaceholder": "Search by name, description, or tags…",
       "search": "Search",
       "refresh": "Refresh",
+      "valueEmpty": "—",
       "sortLabel": "Sort by",
       "sortFieldLabel": "Sort field",
       "sortOrderLabel": "Sort order",
+      "filter": {
+        "keyword": "Keyword"
+      },
       "sortField": {
         "price": "Price",
         "greenPowerRatio": "Green power ratio"
@@ -1319,6 +1342,16 @@
       "pricePending": "Contact for price",
       "greenPower": "Green power {0}",
       "recommendLevel": "Rec {0}",
+      "fields": {
+        "cover": "Cover",
+        "productName": "Product name",
+        "tags": "Tags",
+        "price": "Price",
+        "greenPowerRatio": "Green power ratio",
+        "recommendLevel": "Recommend level",
+        "description": "Description",
+        "actions": "Actions"
+      },
       "collect": {
         "do": "Favorite",
         "cancel": "Unfavorite",
@@ -1490,18 +1523,25 @@
     "model": {
       "eyebrow": "Portal · Models",
       "title": "Model Services",
-      "desc": "Browse enabled models as cards. Search, compare, review, and export info templates.",
+      "desc": "Browse enabled models. Search, compare, review, and export info templates.",
       "searchPlaceholder": "Search by model name…",
       "search": "Search",
       "refresh": "Refresh",
+      "valueEmpty": "—",
       "empty": "No matching models",
       "viewDetail": "View details",
       "scorePending": "No rating",
       "callPending": "—",
+      "filter": {
+        "keyword": "Keyword"
+      },
       "fields": {
+        "cover": "Icon",
+        "modelName": "Model name",
         "score": "Score",
         "callCount": "Calls",
-        "description": "Description"
+        "description": "Description",
+        "actions": "Actions"
       },
       "compare": {
         "select": "Compare",
@@ -1574,6 +1614,7 @@
       "empty": "No matching cases",
       "viewDetail": "View details",
       "viewPending": "—",
+      "valueEmpty": "—",
       "filter": {
         "tagName": "Tag",
         "caseType": "Case type",
@@ -1585,9 +1626,14 @@
         "smart": "Intelligent computing"
       },
       "fields": {
+        "cover": "Cover",
+        "title": "Title",
+        "caseType": "Case type",
+        "tags": "Tags",
         "viewCount": "Views",
         "summary": "Summary",
-        "createTime": "Created at"
+        "createTime": "Created at",
+        "actions": "Actions"
       },
       "detail": {
         "eyebrow": "Portal · Case Detail",

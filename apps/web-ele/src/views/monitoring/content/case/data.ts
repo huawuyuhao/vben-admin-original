@@ -1,3 +1,5 @@
+import type { VbenFormSchema } from '#/adapter/form';
+import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type {
   CaseAuditStatus,
   CaseListItem,
@@ -5,12 +7,13 @@ import type {
   CaseType,
 } from '#/types/monitoring/content/case';
 
+import { $t } from '@vben/locales';
 import { formatDate, isEmpty } from '@vben/utils';
 
 /** 案例列表默认每页条数（2 列 × 3 行） */
 export const CASE_PAGE_SIZE = 6;
 
-/** 可选每页条数（供 el-pagination） */
+/** 可选每页条数（供分页器） */
 export const CASE_PAGE_SIZE_OPTIONS = [6, 12, 18];
 
 /** 已发布状态 */
@@ -47,6 +50,192 @@ export const CASE_AUDIT_SUBMIT_STATUS = CASE_AUDIT_PASSED;
  * 是否草稿筛选值（空串表示全部；走接口 isDraft）
  */
 export type CaseDraftFilter = '' | 'false' | 'true';
+
+/**
+ * 案例类型前端筛选值（空串表示全部）
+ */
+export type CaseTypeFilter =
+  | ''
+  | `${typeof CASE_TYPE_GENERAL}`
+  | `${typeof CASE_TYPE_SMART}`;
+
+/** 列表查询表单值 */
+export interface AdminCaseGridFormValues {
+  /** 标签名称 */
+  tagName?: string;
+  /** 案例类型（前端筛当前页） */
+  caseType?: CaseTypeFilter;
+  /** 是否草稿（走接口） */
+  isDraft?: CaseDraftFilter;
+}
+
+/**
+ * 管理端案例查询栏 schema
+ */
+export function useAdminCaseGridFormSchema(): VbenFormSchema[] {
+  return [
+    {
+      component: 'Input',
+      componentProps: {
+        clearable: true,
+        placeholder: $t('page.monitoring.content.case.searchPlaceholder'),
+      },
+      fieldName: 'tagName',
+      label: $t('page.monitoring.content.case.filter.tagName'),
+    },
+    {
+      component: 'Select',
+      componentProps: {
+        clearable: true,
+        options: [
+          {
+            label: $t('page.monitoring.content.case.type.general'),
+            value: String(CASE_TYPE_GENERAL),
+          },
+          {
+            label: $t('page.monitoring.content.case.type.smart'),
+            value: String(CASE_TYPE_SMART),
+          },
+        ],
+        placeholder: $t('page.monitoring.content.case.filter.typeAll'),
+      },
+      fieldName: 'caseType',
+      label: $t('page.monitoring.content.case.filter.caseType'),
+    },
+    {
+      component: 'Select',
+      componentProps: {
+        clearable: true,
+        options: [
+          {
+            label: $t('page.monitoring.content.case.filter.draftYes'),
+            value: 'true',
+          },
+          {
+            label: $t('page.monitoring.content.case.filter.draftNo'),
+            value: 'false',
+          },
+        ],
+        placeholder: $t('page.monitoring.content.case.filter.draftAll'),
+      },
+      fieldName: 'isDraft',
+      label: $t('page.monitoring.content.case.filter.isDraft'),
+    },
+  ];
+}
+
+/**
+ * 管理端案例列表列配置
+ */
+export function useAdminCaseColumns(): VxeTableGridOptions<CaseListItem>['columns'] {
+  const emptyText = $t('page.monitoring.content.case.valueEmpty');
+  return [
+    {
+      align: 'center',
+      cellRender: { name: 'CellImage' },
+      field: 'coverImage',
+      minWidth: 80,
+      title: $t('page.monitoring.content.case.fields.cover'),
+    },
+    {
+      field: 'title',
+      minWidth: 180,
+      showOverflow: true,
+      title: $t('page.monitoring.content.case.fields.title'),
+      formatter: ({ cellValue }) => displayAdminCaseValue(cellValue, emptyText),
+    },
+    {
+      align: 'center',
+      field: 'caseType',
+      minWidth: 100,
+      slots: { default: 'caseType' },
+      title: $t('page.monitoring.content.case.fields.caseType'),
+    },
+    {
+      field: 'tags',
+      minWidth: 150,
+      slots: { default: 'tags' },
+      title: $t('page.monitoring.content.case.fields.tags'),
+    },
+    {
+      field: 'summary',
+      minWidth: 180,
+      showOverflow: true,
+      title: $t('page.monitoring.content.case.fields.summary'),
+      formatter: ({ cellValue }) => displayAdminCaseValue(cellValue, emptyText),
+    },
+    {
+      field: 'viewCount',
+      minWidth: 90,
+      title: $t('page.monitoring.content.case.fields.viewCount'),
+      formatter: ({ cellValue }) =>
+        formatCaseViewCount(cellValue) ||
+        $t('page.monitoring.content.case.viewPending'),
+    },
+    {
+      align: 'center',
+      field: 'status',
+      minWidth: 110,
+      slots: { default: 'auditStatus' },
+      title: $t('page.monitoring.content.case.fields.auditStatus'),
+    },
+    {
+      field: 'createTime',
+      minWidth: 150,
+      title: $t('page.monitoring.content.case.fields.createTime'),
+      formatter: ({ cellValue }) => formatCaseDateTime(cellValue) || emptyText,
+    },
+    {
+      align: 'center',
+      field: 'action',
+      fixed: 'right',
+      minWidth: 240,
+      slots: { default: 'action' },
+      title: $t('page.monitoring.content.case.fields.actions'),
+    },
+  ];
+}
+
+/**
+ * 将查询表单值转为列表筛选参数
+ * @param formValues 查询表单值
+ * @returns tagName / isDraft（走接口）+ caseType（前端筛当前页）
+ */
+export function buildAdminCaseFilterParams(
+  formValues?: AdminCaseGridFormValues | null,
+): {
+  caseType?: CaseTypeFilter;
+  isDraft?: boolean;
+  tagName?: string;
+} {
+  const caseType = formValues?.caseType;
+  return {
+    tagName: String(formValues?.tagName ?? '').trim() || undefined,
+    isDraft: resolveCaseListIsDraft(formValues?.isDraft),
+    caseType:
+      caseType === String(CASE_TYPE_GENERAL) ||
+      caseType === String(CASE_TYPE_SMART)
+        ? caseType
+        : '',
+  };
+}
+
+/**
+ * 展示字段值；空值用占位符
+ * @param value 原始值
+ * @param emptyText 占位文案
+ * @returns 展示字符串
+ */
+export function displayAdminCaseValue(
+  value?: null | number | string,
+  emptyText = '—',
+): string {
+  if (value == null) {
+    return emptyText;
+  }
+  const text = String(value).trim();
+  return text || emptyText;
+}
 
 /**
  * 将筛选值转为列表接口 isDraft 入参
@@ -115,14 +304,6 @@ export function resolveCaseAuditTagType(
   }
   return 'info';
 }
-
-/**
- * 案例类型前端筛选值（空串表示全部）
- */
-export type CaseTypeFilter =
-  | ''
-  | `${typeof CASE_TYPE_GENERAL}`
-  | `${typeof CASE_TYPE_SMART}`;
 
 /**
  * 校验是否为允许的封面图文件类型

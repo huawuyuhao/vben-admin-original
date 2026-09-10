@@ -1,16 +1,22 @@
+import type { VbenFormSchema } from '#/adapter/form';
+import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type {
   FeedbackItem,
   FeedbackListResult,
   FeedbackStatus,
 } from '#/types/mine/profile/feedback';
 
+import { $t } from '@vben/locales';
 import { formatDate, isEmpty, isHttpUrl } from '@vben/utils';
 
 /** 意见反馈默认每页条数 */
 export const FEEDBACK_PAGE_SIZE = 10;
 
-/** 可选每页条数（供 el-pagination） */
+/** 可选每页条数（供分页器） */
 export const FEEDBACK_PAGE_SIZE_OPTIONS = [10, 20, 50];
+
+/** 列表缩略图最多展示张数，超出显示 +N */
+export const FEEDBACK_LIST_THUMB_VISIBLE = 3;
 
 /** 待处理 */
 export const FEEDBACK_STATUS_PENDING = 0 as FeedbackStatus;
@@ -39,6 +45,121 @@ export const FEEDBACK_IMAGE_MAX_MB = 5;
 
 /** 反馈内容最大字数 */
 export const FEEDBACK_CONTENT_MAX_LENGTH = 500;
+
+/**
+ * 意见反馈查询表单 schema
+ */
+export function useFeedbackGridFormSchema(): VbenFormSchema[] {
+  return [
+    {
+      component: 'Select',
+      componentProps: {
+        clearable: true,
+        options: [
+          {
+            label: $t('page.mine.feedback.status.pending'),
+            value: String(FEEDBACK_STATUS_PENDING),
+          },
+          {
+            label: $t('page.mine.feedback.status.processing'),
+            value: String(FEEDBACK_STATUS_PROCESSING),
+          },
+          {
+            label: $t('page.mine.feedback.status.done'),
+            value: String(FEEDBACK_STATUS_DONE),
+          },
+        ],
+        placeholder: $t('page.mine.feedback.filter.statusAll'),
+        style: { width: '160px' },
+      },
+      fieldName: 'status',
+      label: $t('page.mine.feedback.filter.status'),
+    },
+  ];
+}
+
+/**
+ * 意见反馈列表列配置
+ */
+export function useFeedbackColumns(): VxeTableGridOptions<FeedbackItem>['columns'] {
+  return [
+    {
+      field: 'feedbackId',
+      minWidth: 90,
+      showOverflow: 'ellipsis' as const,
+      title: $t('page.mine.feedback.fields.feedbackId'),
+      formatter: ({ cellValue }) =>
+        displayFeedbackValue(
+          cellValue,
+          $t('page.mine.feedback.valueEmpty'),
+        ),
+    },
+    {
+      field: 'content',
+      // 作为弹性列吸收剩余宽度，消除右侧空白
+      minWidth: 220,
+      showOverflow: 'ellipsis' as const,
+      title: $t('page.mine.feedback.fields.content'),
+      formatter: ({ cellValue }) =>
+        displayFeedbackValue(
+          cellValue,
+          $t('page.mine.feedback.valueEmpty'),
+        ),
+    },
+    {
+      align: 'center',
+      field: 'images',
+      minWidth: 280,
+      // 多图缩略图需完整展示，禁止省略裁切
+      showOverflow: false,
+      title: $t('page.mine.feedback.fields.images'),
+      slots: { default: 'images' },
+    },
+    {
+      align: 'center',
+      field: 'status',
+      minWidth: 100,
+      showOverflow: false,
+      title: $t('page.mine.feedback.fields.status'),
+      slots: { default: 'status' },
+    },
+    {
+      field: 'replyContent',
+      minWidth: 160,
+      showOverflow: 'ellipsis' as const,
+      title: $t('page.mine.feedback.fields.replyContent'),
+      formatter: ({ cellValue }) =>
+        displayFeedbackValue(
+          cellValue,
+          $t('page.mine.feedback.valueEmpty'),
+        ),
+    },
+    {
+      field: 'replyTime',
+      minWidth: 170,
+      title: $t('page.mine.feedback.fields.replyTime'),
+      formatter: ({ cellValue }) =>
+        formatFeedbackDateTime(cellValue) ||
+        $t('page.mine.feedback.valueEmpty'),
+    },
+    {
+      field: 'createTime',
+      minWidth: 170,
+      title: $t('page.mine.feedback.fields.createTime'),
+      formatter: ({ cellValue }) =>
+        formatFeedbackDateTime(cellValue) ||
+        $t('page.mine.feedback.valueEmpty'),
+    },
+    {
+      align: 'center',
+      field: 'action',
+      minWidth: 100,
+      showOverflow: false,
+      title: $t('page.mine.feedback.fields.actions'),
+      slots: { default: 'action' },
+    },
+  ];
+}
 
 /**
  * 解析处理状态筛选值为接口参数

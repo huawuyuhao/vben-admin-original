@@ -371,10 +371,15 @@ const layoutScrollStyle = computed((): CSSProperties => {
 });
 
 const contentStyle = computed((): CSSProperties => {
-  const { footerEnable, footerFixed, footerHeight } = props;
-  return {
-    paddingBottom: `${footerEnable && footerFixed ? footerHeight : 0}px`,
-  };
+  const { contentPaddingBottom, footerEnable, footerFixed, footerHeight } =
+    props;
+  // 仅在页脚固定时叠加底部偏移；切勿写 paddingBottom:0，否则会覆盖 LayoutContent 的 contentPaddingBottom
+  if (footerEnable && footerFixed) {
+    return {
+      paddingBottom: `${footerHeight + contentPaddingBottom}px`,
+    };
+  }
+  return {};
 });
 
 const headerZIndex = computed(() => {

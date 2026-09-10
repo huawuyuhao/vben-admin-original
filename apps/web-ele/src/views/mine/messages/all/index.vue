@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { MessageItem } from '#/types/mine/messages/all';
 
 import { nextTick, onMounted, ref, watch } from 'vue';
@@ -6,35 +7,42 @@ import { useRoute, useRouter } from 'vue-router';
 
 import { $t } from '@vben/locales';
 
-import { Refresh } from '@element-plus/icons-vue';
+import { Check, Delete } from '@element-plus/icons-vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 
+import { toVxePageResult, useVbenVxeGrid } from '#/adapter/vxe-table';
 import {
   deleteMessageApi,
   getMessageListApi,
   getMessageStatisticsApi,
   markMessageReadApi,
 } from '#/api/mine/messages/all';
+import PageListShell from '#/views/_shared/components/page-list-shell.vue';
 
 import {
   buildMessageCategoryTabs,
+  displayMessageValue,
+  getMessageTypeI18nKey,
+  getMessageTypeTagType,
+  isMessageUnread,
   MESSAGE_PAGE_SIZE,
+  MESSAGE_PAGE_SIZE_OPTIONS,
   type MessageCategoryTab,
   type MessageReadFilter,
   type MessageTypeFilter,
   normalizeMessagePage,
   parseMessageReadFilter,
   parseMessageTypeFilter,
+  resolveMessageId,
+  useMessageColumns,
+  useMessageGridFormSchema,
 } from './data';
 import CategoryTabs from './modules/category-tabs.vue';
 import DetailDialog from './modules/detail-dialog.vue';
-import FilterBar from './modules/filter-bar.vue';
-import MessagePager from './modules/message-pager.vue';
-import MessageTable from './modules/message-table.vue';
 
 /**
  * 我的 · 消息通知 · 全部消息
- * 对接 /message/list、/message/{id}、/message/read、/message/delete、/message/statistics
+ * 分类 Tabs 保留；表格 / 分页 / 阅读状态筛选迁至 useVbenVxeGrid
  */
 defineOptions({ name: 'MineMessagesAll' });
 
@@ -43,32 +51,89 @@ const router = useRouter();
 
 /** 当前分类 Tab（空串=全部） */
 const activeType = ref<MessageTypeFilter>('');
-/** 已读筛选 */
-const readStatus = ref<MessageReadFilter>('');
-
-/** 当前页码 */
-const currentPage = ref(1);
-/** 每页条数 */
-const pageSize = ref(MESSAGE_PAGE_SIZE);
-/** 列表加载中 */
-const loading = ref(false);
 /** 批量操作中 */
 const acting = ref(false);
-/** 当前页消息 */
-const records = ref<MessageItem[]>([]);
-/** 总条数 */
-const total = ref(0);
 /** 分类统计 Tab */
 const categoryTabs = ref<MessageCategoryTab[]>(buildMessageCategoryTabs([]));
 /** 已选消息 ID */
 const selectedIds = ref<number[]>([]);
-/** 跳过由服务端回写 current 触发的重复请求 */
-const syncingFromServer = ref(false);
-
-/** 表格 */
-const tableRef = ref<InstanceType<typeof MessageTable>>();
 /** 详情弹窗 */
 const detailDialogRef = ref<InstanceType<typeof DetailDialog>>();
+
+const [Grid, gridApi] = useVbenVxeGrid({
+  class: 'mine-vxe-grid',
+  formOptions: {
+    schema: useMessageGridFormSchema(),
+    submitOnChange: true,
+  },
+  gridEvents: {
+    checkboxAll: () => {
+      syncSelectedIds();
+    },
+    checkboxChange: () => {
+      syncSelectedIds();
+    },
+  },
+  gridOptions: {
+    checkboxConfig: {
+      highlight: true,
+      reserve: false,
+    },
+    columns: useMessageColumns(),
+    height: 'auto',
+    keepSource: true,
+    pagerConfig: {
+      pageSize: MESSAGE_PAGE_SIZE,
+      pageSizes: MESSAGE_PAGE_SIZE_OPTIONS,
+    },
+    proxyConfig: {
+      ajax: {
+        query: async ({ page }, formValues) => {
+          selectedIds.value = [];
+          const data = await getMessageListApi({
+            page: page.currentPage,
+            pageSize: page.pageSize,
+            messageType: parseMessageTypeFilter(activeType.value),
+            isRead: parseMessageReadFilter(
+              (formValues?.isRead as MessageReadFilter | undefined) ?? '',
+            ),
+          });
+          return toVxePageResult(normalizeMessagePage(data));
+        },
+      },
+    },
+    rowConfig: {
+      keyField: 'messageId',
+    },
+    stripe: true,
+    toolbarConfig: {
+      custom: false,
+      export: false,
+      refresh: false,
+      search: false,
+      zoom: false,
+    },
+  } as VxeTableGridOptions<MessageItem>,
+});
+
+/**
+ * 从表格勾选同步已选消息 ID
+ */
+function syncSelectedIds() {
+  const rows =
+    (gridApi.grid?.getCheckboxRecords?.() as MessageItem[] | undefined) ?? [];
+  selectedIds.value = rows
+    .map((row) => resolveMessageId(row))
+    .filter((id): id is number => id != null);
+}
+
+/**
+ * 清空表格勾选与本地已选
+ */
+function clearSelection() {
+  gridApi.grid?.clearCheckboxRow?.();
+  selectedIds.value = [];
+}
 
 /**
  * 拉取分类统计
@@ -83,81 +148,10 @@ async function fetchStatistics() {
 }
 
 /**
- * 拉取当前页消息列表
- */
-async function fetchMessages() {
-  loading.value = true;
-  try {
-    const data = await getMessageListApi({
-      page: currentPage.value,
-      pageSize: pageSize.value,
-      messageType: parseMessageTypeFilter(activeType.value),
-      isRead: parseMessageReadFilter(readStatus.value),
-    });
-    const page = normalizeMessagePage(data);
-    records.value = page.records;
-    total.value = page.total;
-
-    if (page.current !== currentPage.value) {
-      syncingFromServer.value = true;
-      currentPage.value = page.current;
-      syncingFromServer.value = false;
-    }
-  } catch {
-    records.value = [];
-    total.value = 0;
-  } finally {
-    loading.value = false;
-  }
-}
-
-/**
  * 同时刷新列表与统计
  */
 async function refreshAll() {
-  await Promise.all([fetchMessages(), fetchStatistics()]);
-}
-
-/**
- * 回到第一页并查询
- */
-function queryFromFirstPage() {
-  selectedIds.value = [];
-  tableRef.value?.clearSelection();
-  if (currentPage.value !== 1) {
-    currentPage.value = 1;
-    return;
-  }
-  void fetchMessages();
-}
-
-/**
- * 刷新当前页与统计
- */
-function handleRefresh() {
-  void refreshAll();
-}
-
-/**
- * 分类 Tab 切换
- */
-function handleTypeChange() {
-  queryFromFirstPage();
-}
-
-/**
- * 已读筛选变化
- */
-function handleReadSearch() {
-  queryFromFirstPage();
-}
-
-/**
- * 勾选变化
- * @param ids 已选消息 ID
- */
-function handleSelectionChange(ids: number[]) {
-  selectedIds.value = ids;
+  await Promise.all([gridApi.query(), fetchStatistics()]);
 }
 
 /**
@@ -194,8 +188,7 @@ async function handleMarkRead() {
   try {
     await markMessageReadApi([...selectedIds.value]);
     ElMessage.success($t('page.mine.messages.all.tips.markReadSuccess'));
-    selectedIds.value = [];
-    tableRef.value?.clearSelection();
+    clearSelection();
     void refreshAll();
   } catch {
     // 错误提示由接口层处理
@@ -231,46 +224,17 @@ async function handleDelete() {
 
   acting.value = true;
   try {
-    const ids = [...selectedIds.value];
-    await deleteMessageApi(ids);
+    await deleteMessageApi([...selectedIds.value]);
     ElMessage.success($t('ui.actionMessage.operationSuccess'));
-    selectedIds.value = [];
-    tableRef.value?.clearSelection();
-
-    const remain = Math.max(0, total.value - ids.length);
-    const maxPage = Math.max(1, Math.ceil(remain / pageSize.value));
-    if (currentPage.value > maxPage) {
-      currentPage.value = maxPage;
-    }
-    void refreshAll();
+    clearSelection();
+    await fetchStatistics();
+    gridApi.reload();
   } catch {
     // 错误提示由接口层处理
   } finally {
     acting.value = false;
   }
 }
-
-watch(activeType, () => {
-  handleTypeChange();
-});
-
-watch(pageSize, () => {
-  if (syncingFromServer.value) {
-    return;
-  }
-  if (currentPage.value !== 1) {
-    currentPage.value = 1;
-    return;
-  }
-  void fetchMessages();
-});
-
-watch(currentPage, () => {
-  if (syncingFromServer.value) {
-    return;
-  }
-  void fetchMessages();
-});
 
 /**
  * 处理顶栏通知跳转携带的 messageId，打开详情后清掉 query
@@ -285,78 +249,156 @@ async function handleEntryQuery() {
   await router.replace({ path: route.path });
 }
 
+watch(activeType, () => {
+  clearSelection();
+  gridApi.reload();
+});
+
 onMounted(() => {
-  void refreshAll().then(() => {
+  void fetchStatistics().then(() => {
     void handleEntryQuery();
   });
 });
 </script>
 
 <template>
-  <div class="mine-page">
-    <div class="mine-shell">
-      <div class="mine-shell__bg" aria-hidden="true">
-        <span class="mine-shell__orb mine-shell__orb--a"></span>
-        <span class="mine-shell__orb mine-shell__orb--b"></span>
-        <span class="mine-shell__mesh"></span>
-      </div>
+  <PageListShell
+    :desc="$t('page.mine.messages.all.desc')"
+    :eyebrow="$t('page.mine.messages.all.eyebrow')"
+    :title="$t('page.mine.messages.all.title')"
+  >
+    <CategoryTabs v-model:active-type="activeType" :tabs="categoryTabs" />
 
-      <div class="mine-shell__inner">
-        <header class="mine-shell__head">
-          <div>
-            <p class="mine-shell__eyebrow">
-              {{ $t('page.mine.messages.all.eyebrow') }}
-            </p>
-            <h2>{{ $t('page.mine.messages.all.title') }}</h2>
-            <p class="mine-shell__desc">
-              {{ $t('page.mine.messages.all.desc') }}
-            </p>
-          </div>
-          <div class="mine-shell__head-actions">
-            <el-button
-              class="mine-shell__action-btn"
-              :icon="Refresh"
-              :loading="loading"
-              @click="handleRefresh"
-            >
-              {{ $t('page.mine.messages.all.refresh') }}
-            </el-button>
-          </div>
-        </header>
+    <Grid>
+      <template #table-title></template>
 
-        <CategoryTabs v-model:active-type="activeType" :tabs="categoryTabs" />
+      <template #toolbar-actions>
+        <div class="msg-grid__batch">
+          <span v-if="selectedIds.length > 0" class="msg-grid__selected">
+            {{
+              $t('page.mine.messages.all.selectedCount', [
+                String(selectedIds.length),
+              ])
+            }}
+          </span>
+          <el-button
+            :disabled="selectedIds.length === 0 || acting"
+            :icon="Check"
+            :loading="acting"
+            @click="handleMarkRead"
+          >
+            {{ $t('page.mine.messages.all.actions.markRead') }}
+          </el-button>
+          <el-button
+            :disabled="selectedIds.length === 0 || acting"
+            :icon="Delete"
+            :loading="acting"
+            plain
+            type="danger"
+            @click="handleDelete"
+          >
+            {{ $t('page.mine.messages.all.actions.delete') }}
+          </el-button>
+        </div>
+      </template>
 
-        <FilterBar
-          v-model:read-status="readStatus"
-          :acting="acting"
-          :selected-count="selectedIds.length"
-          @mark-read="handleMarkRead"
-          @remove="handleDelete"
-          @search="handleReadSearch"
-        />
+      <template #title="{ row }">
+        <div class="msg-grid__title-cell">
+          <i
+            v-if="isMessageUnread(row.isRead)"
+            class="msg-grid__unread-dot"
+            aria-hidden="true"
+          ></i>
+          <span
+            class="msg-grid__title"
+            :class="{ 'msg-grid__title--unread': isMessageUnread(row.isRead) }"
+          >
+            {{
+              displayMessageValue(
+                row.title,
+                $t('page.mine.messages.all.valueEmpty'),
+              )
+            }}
+          </span>
+        </div>
+      </template>
 
-        <MessageTable
-          ref="tableRef"
-          :loading="loading"
-          :records="records"
-          @detail="handleDetail"
-          @selection-change="handleSelectionChange"
-        />
+      <template #messageType="{ row }">
+        <el-tag
+          effect="light"
+          round
+          size="small"
+          :type="getMessageTypeTagType(row.messageType)"
+        >
+          {{ $t(getMessageTypeI18nKey(row.messageType)) }}
+        </el-tag>
+      </template>
 
-        <MessagePager
-          v-if="records.length > 0 || loading || total > 0"
-          v-model:page="currentPage"
-          v-model:page-size="pageSize"
-          :disabled="loading"
-          :total="total"
-        />
-      </div>
-    </div>
+      <template #isRead="{ row }">
+        <el-tag
+          effect="plain"
+          round
+          size="small"
+          :type="isMessageUnread(row.isRead) ? 'danger' : 'info'"
+        >
+          {{
+            isMessageUnread(row.isRead)
+              ? $t('page.mine.messages.all.readStatus.unread')
+              : $t('page.mine.messages.all.readStatus.read')
+          }}
+        </el-tag>
+      </template>
 
-    <DetailDialog ref="detailDialogRef" @read="handleDetailRead" />
-  </div>
+      <template #action="{ row }">
+        <el-button link type="primary" @click="handleDetail(row)">
+          {{ $t('page.mine.messages.all.actions.detail') }}
+        </el-button>
+      </template>
+    </Grid>
+  </PageListShell>
+
+  <DetailDialog ref="detailDialogRef" @read="handleDetailRead" />
 </template>
 
 <style lang="scss" scoped>
-@use '../../../../scss/page-shell.scss';
+.msg-grid {
+  &__batch {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
+
+  &__selected {
+    margin-right: 4px;
+    font-size: 13px;
+    color: hsl(var(--muted-foreground));
+  }
+
+  &__title-cell {
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+    max-width: 100%;
+  }
+
+  &__unread-dot {
+    flex-shrink: 0;
+    width: 7px;
+    height: 7px;
+    background: var(--el-color-danger);
+    border-radius: 50%;
+  }
+
+  &__title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    &--unread {
+      font-weight: 650;
+      color: hsl(var(--foreground));
+    }
+  }
+}
 </style>

@@ -1,15 +1,76 @@
+import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type {
   FavoriteItem,
   FavoritesListResult,
 } from '#/types/mine/favorites/products';
 
+import { $t } from '@vben/locales';
 import { isEmpty } from '@vben/utils';
 
-/** 我的产品（收藏）默认每页条数（3 列 × 2 行） */
+/** 收藏产品列表默认每页条数（卡片网格） */
 export const FAVORITES_PAGE_SIZE = 6;
 
-/** 可选每页条数（供 el-pagination） */
+/** 可选每页条数（供分页器） */
 export const FAVORITES_PAGE_SIZE_OPTIONS = [6, 12, 18];
+
+/**
+ * 收藏产品列表列配置
+ */
+export function useFavoritesColumns(): VxeTableGridOptions<FavoriteItem>['columns'] {
+  const emptyText = $t('page.mine.favorites.products.valueEmpty');
+  return [
+    {
+      align: 'center',
+      cellRender: { name: 'CellImage' },
+      field: 'imageUrl',
+      minWidth: 80,
+      title: $t('page.mine.favorites.products.fields.cover'),
+    },
+    {
+      field: 'productName',
+      minWidth: 160,
+      showOverflow: true,
+      title: $t('page.mine.favorites.products.fields.productName'),
+      formatter: ({ cellValue }) => displayFavoriteValue(cellValue, emptyText),
+    },
+    {
+      field: 'tags',
+      minWidth: 160,
+      slots: { default: 'tags' },
+      title: $t('page.mine.favorites.products.fields.tags'),
+    },
+    {
+      field: 'price',
+      minWidth: 110,
+      title: $t('page.mine.favorites.products.fields.price'),
+      formatter: ({ cellValue }) =>
+        formatFavoritePrice(cellValue) ||
+        $t('page.service.product.pricePending'),
+    },
+    {
+      field: 'greenPowerRatio',
+      minWidth: 110,
+      title: $t('page.mine.favorites.products.fields.greenPowerRatio'),
+      formatter: ({ cellValue }) =>
+        formatFavoriteGreenPowerRatio(cellValue) || emptyText,
+    },
+    {
+      field: 'description',
+      minWidth: 200,
+      showOverflow: true,
+      title: $t('page.mine.favorites.products.fields.description'),
+      formatter: ({ cellValue }) => displayFavoriteValue(cellValue, emptyText),
+    },
+    {
+      align: 'center',
+      field: 'action',
+      fixed: 'right',
+      minWidth: 220,
+      slots: { default: 'action' },
+      title: $t('page.mine.favorites.products.fields.actions'),
+    },
+  ];
+}
 
 /**
  * 过滤含名称的收藏条目
@@ -37,7 +98,10 @@ export function normalizeFavoritesPage(data?: FavoritesListResult | null): {
   total: number;
 } {
   return {
-    records: normalizeFavoriteList(data?.records),
+    records: normalizeFavoriteList(data?.records).map((item) => ({
+      ...item,
+      isCollected: item.isCollected ?? true,
+    })),
     total: Math.max(0, Number(data?.total) || 0),
     current: Math.max(1, Number(data?.current) || 1),
     size: Math.max(1, Number(data?.size) || FAVORITES_PAGE_SIZE),
@@ -94,4 +158,21 @@ export function formatFavoriteGreenPowerRatio(ratio?: number): string {
  */
 export function hasFavoriteImage(imageUrl?: string): boolean {
   return !isEmpty(imageUrl?.trim());
+}
+
+/**
+ * 展示字段值；空值用占位符
+ * @param value 原始值
+ * @param emptyText 占位文案
+ * @returns 展示字符串
+ */
+export function displayFavoriteValue(
+  value?: null | number | string,
+  emptyText = '—',
+): string {
+  if (value == null) {
+    return emptyText;
+  }
+  const text = String(value).trim();
+  return text || emptyText;
 }

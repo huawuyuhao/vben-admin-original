@@ -1,3 +1,5 @@
+import type { VbenFormSchema } from '#/adapter/form';
+import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type {
   PortalContentId,
   PortalContentItem,
@@ -6,6 +8,7 @@ import type {
   PortalContentWriteParams,
 } from '#/types/monitoring/content/home/common';
 
+import { $t } from '@vben/locales';
 import { formatDate, isEmpty, isHttpUrl } from '@vben/utils';
 
 /** 门户内容列表默认每页条数 */
@@ -14,8 +17,13 @@ export const PORTAL_CONTENT_PAGE_SIZE = 10;
 /** 可选每页条数 */
 export const PORTAL_CONTENT_PAGE_SIZE_OPTIONS = [10, 20, 50];
 
-/** 前端拉取全量列表时的 pageSize（接口不支持筛选，由前端分页） */
-export const PORTAL_CONTENT_FETCH_ALL_SIZE = 9999;
+/** 首页管理子页 i18n 键名 */
+export type PortalContentPageKey =
+  | 'about'
+  | 'banner'
+  | 'billing'
+  | 'bizService'
+  | 'news';
 
 /** 门户内容图片上传 accept */
 export const PORTAL_CONTENT_IMAGE_ACCEPT = '.jpg,.jpeg,.png';
@@ -45,6 +53,16 @@ export type PortalContentAuditStatusFilter = '0' | '1' | '2' | '';
  * 列表前端筛选条件
  */
 export interface PortalContentListFilters {
+  /** 关键词（匹配标题） */
+  keyword?: string;
+  /** 启用状态 */
+  enableStatus?: PortalContentEnableStatusFilter;
+  /** 审核状态 */
+  auditStatus?: PortalContentAuditStatusFilter;
+}
+
+/** 查询表单值 */
+export interface PortalContentGridFormValues {
   /** 关键词（匹配标题） */
   keyword?: string;
   /** 启用状态 */
@@ -245,7 +263,7 @@ export function normalizePortalContentPage(
  * @param status 状态码
  * @returns 键后缀
  */
-export function getPortalContentStatusLabelKey(status?: number): string {
+export function getPortalContentStatusLabelKey(status?: null | number): string {
   if (status === PORTAL_CONTENT_STATUS_ENABLED) {
     return 'enabled';
   }
@@ -284,7 +302,7 @@ export function getPortalContentAuditLabelKey(
  * @returns el-tag type
  */
 export function getPortalContentStatusTagType(
-  status?: number,
+  status?: null | number,
 ): 'info' | 'success' | 'warning' {
   if (status === PORTAL_CONTENT_STATUS_ENABLED) {
     return 'success';
@@ -325,26 +343,6 @@ export function formatPortalContentDateTime(value?: string): string {
     return '-';
   }
   return formatDate(value!.trim(), 'YYYY-MM-DD HH:mm');
-}
-
-/**
- * 计算分页展示区间
- * @param total 总条数
- * @param current 当前页
- * @param size 每页条数
- * @returns 起止序号
- */
-export function calcPortalContentPageRange(
-  total: number,
-  current: number,
-  size: number,
-): { end: number; start: number } {
-  if (total <= 0) {
-    return { start: 0, end: 0 };
-  }
-  const start = (current - 1) * size + 1;
-  const end = Math.min(current * size, total);
-  return { start, end };
 }
 
 /**
@@ -463,6 +461,20 @@ export function supportsPortalContentSort(contentType: PortalContentType): boole
 }
 
 /**
+ * 是否展示启用 / 审核状态筛选与列（banner / news / service）
+ * @param contentType 内容类型
+ */
+export function showsPortalContentStatusFilters(
+  contentType: PortalContentType,
+): boolean {
+  return (
+    contentType === PORTAL_CONTENT_TYPE.BANNER ||
+    contentType === PORTAL_CONTENT_TYPE.NEWS ||
+    contentType === PORTAL_CONTENT_TYPE.SERVICE
+  );
+}
+
+/**
  * 是否支持表单图片上传
  * @param contentType 内容类型
  */
@@ -565,22 +577,273 @@ export function filterPortalContentRecords(
 }
 
 /**
- * 对列表做前端分页切片
- * @param records 待分页列表
- * @param current 当前页（从 1 开始）
- * @param size 每页条数
- * @returns 当前页数据
+ * 将查询表单值转为前端筛选条件
+ * @param formValues 查询表单值
+ * @returns 筛选条件
  */
-export function paginatePortalContentRecords(
-  records: PortalContentItem[],
-  current: number,
-  size: number,
-): PortalContentItem[] {
-  if (!records.length) {
-    return [];
+export function buildPortalContentListFiltersFromForm(
+  formValues?: null | PortalContentGridFormValues,
+): PortalContentListFilters {
+  const enableStatus = String(formValues?.enableStatus ?? '').trim();
+  const auditStatus = String(formValues?.auditStatus ?? '').trim();
+
+  return {
+    keyword: String(formValues?.keyword ?? '').trim(),
+    enableStatus:
+      enableStatus === '0' || enableStatus === '1' ? enableStatus : '',
+    auditStatus:
+      auditStatus === '0' || auditStatus === '1' || auditStatus === '2'
+        ? auditStatus
+        : '',
+  };
+}
+
+/**
+ * 门户内容查询栏 schema（按 contentType 决定是否展示状态筛选项）
+ * @param contentType 内容类型
+ * @param pageKey 页面 i18n 键名
+ */
+export function usePortalContentGridFormSchema(
+  contentType: PortalContentType,
+  pageKey: PortalContentPageKey,
+): VbenFormSchema[] {
+  const schema: VbenFormSchema[] = [
+    {
+      component: 'Input',
+      componentProps: {
+        clearable: true,
+        placeholder: $t(
+          `page.monitoring.content.home.${pageKey}.keywordPlaceholder`,
+        ),
+      },
+      fieldName: 'keyword',
+      label: $t('page.monitoring.content.home.common.filter.keyword'),
+    },
+  ];
+
+  if (!showsPortalContentStatusFilters(contentType)) {
+    return schema;
   }
-  const safeSize = Math.max(1, size);
-  const safeCurrent = Math.max(1, current);
-  const start = (safeCurrent - 1) * safeSize;
-  return records.slice(start, start + safeSize);
+
+  schema.push(
+    {
+      component: 'Select',
+      componentProps: {
+        clearable: true,
+        options: [
+          {
+            label: $t('page.monitoring.content.home.common.status.enabled'),
+            value: '1',
+          },
+          {
+            label: $t('page.monitoring.content.home.common.status.disabled'),
+            value: '0',
+          },
+        ],
+        placeholder: $t(
+          'page.monitoring.content.home.common.filter.statusAll',
+        ),
+      },
+      fieldName: 'enableStatus',
+      label: $t('page.monitoring.content.home.common.filter.enableStatus'),
+    },
+    {
+      component: 'Select',
+      componentProps: {
+        clearable: true,
+        options: [
+          {
+            label: $t('page.monitoring.content.home.common.audit.pending'),
+            value: '0',
+          },
+          {
+            label: $t('page.monitoring.content.home.common.audit.passed'),
+            value: '1',
+          },
+          {
+            label: $t('page.monitoring.content.home.common.audit.rejected'),
+            value: '2',
+          },
+        ],
+        placeholder: $t(
+          'page.monitoring.content.home.common.filter.auditAll',
+        ),
+      },
+      fieldName: 'auditStatus',
+      label: $t('page.monitoring.content.home.common.filter.auditStatus'),
+    },
+  );
+
+  return schema;
+}
+
+/**
+ * 门户内容列表列配置（按 contentType 动态组装）
+ * @param contentType 内容类型
+ */
+export function usePortalContentColumns(
+  contentType: PortalContentType,
+): VxeTableGridOptions<PortalContentItem>['columns'] {
+  const emptyText = '—';
+  const columns: NonNullable<
+    VxeTableGridOptions<PortalContentItem>['columns']
+  > = [
+    {
+      align: 'center',
+      title: $t('page.monitoring.content.home.common.fields.sortIndex'),
+      type: 'seq',
+      width: 56,
+    },
+  ];
+
+  if (showsPortalContentImageColumn(contentType)) {
+    columns.push({
+      align: 'center',
+      field: 'imageUrl',
+      showOverflow: false,
+      slots: { default: 'image' },
+      title: $t('page.monitoring.content.home.common.fields.image'),
+      width: 140,
+    });
+  }
+
+  columns.push({
+    field: 'title',
+    formatter: ({ cellValue }) =>
+      String(cellValue ?? '').trim() || emptyText,
+    minWidth: 140,
+    showOverflow: true,
+    title: $t('page.monitoring.content.home.common.fields.title'),
+  });
+
+  if (contentType === 'news') {
+    columns.push({
+      field: 'summary',
+      formatter: ({ cellValue }) =>
+        String(cellValue ?? '').trim() || emptyText,
+      minWidth: 180,
+      showOverflow: true,
+      title: $t('page.monitoring.content.home.common.fields.summary'),
+    });
+  }
+
+  if (contentType === 'billing' || contentType === 'about') {
+    columns.push({
+      field: 'content',
+      formatter: ({ cellValue }) =>
+        String(cellValue ?? '').trim() || emptyText,
+      minWidth: 220,
+      showOverflow: true,
+      title: $t('page.monitoring.content.home.common.fields.content'),
+    });
+  }
+
+  if (contentType === 'banner') {
+    columns.push(
+      {
+        field: 'linkUrl',
+        formatter: ({ cellValue }) =>
+          String(cellValue ?? '').trim() || emptyText,
+        showOverflow: true,
+        title: $t('page.monitoring.content.home.common.fields.linkUrl'),
+        width: 168,
+      },
+      {
+        field: 'startTime',
+        formatter: ({ cellValue }) =>
+          formatPortalContentDateTime(cellValue) || emptyText,
+        title: $t('page.monitoring.content.home.common.fields.startTime'),
+        width: 168,
+      },
+      {
+        field: 'endTime',
+        formatter: ({ cellValue }) =>
+          formatPortalContentDateTime(cellValue) || emptyText,
+        title: $t('page.monitoring.content.home.common.fields.endTime'),
+        width: 168,
+      },
+    );
+  }
+
+  if (contentType === 'news') {
+    columns.push({
+      field: 'viewCount',
+      formatter: ({ cellValue }) =>
+        cellValue === null || cellValue === undefined
+          ? emptyText
+          : String(cellValue),
+      minWidth: 90,
+      title: $t('page.monitoring.content.home.common.fields.viewCount'),
+    });
+  }
+
+  if (showsPortalContentStatusFilters(contentType)) {
+    columns.push(
+      {
+        align: 'center',
+        field: 'status',
+        minWidth: 90,
+        slots: { default: 'status' },
+        title: $t('page.monitoring.content.home.common.fields.status'),
+      },
+      {
+        align: 'center',
+        field: 'auditStatus',
+        minWidth: 100,
+        slots: { default: 'auditStatus' },
+        title: $t('page.monitoring.content.home.common.fields.auditStatus'),
+      },
+    );
+  }
+
+  if (contentType === 'news') {
+    columns.push({
+      field: 'publishTime',
+      formatter: ({ cellValue }) =>
+        formatPortalContentDateTime(cellValue) || emptyText,
+      minWidth: 160,
+      title: $t('page.monitoring.content.home.common.fields.publishTime'),
+    });
+  }
+
+  if (contentType === 'banner') {
+    columns.push({
+      field: 'createTime',
+      formatter: ({ cellValue }) =>
+        formatPortalContentDateTime(cellValue) || emptyText,
+      showOverflow: true,
+      title: $t('page.monitoring.content.home.common.fields.createTime'),
+      width: 168,
+    });
+  }
+
+  columns.push({
+    field: 'updateTime',
+    formatter: ({ cellValue }) =>
+      formatPortalContentDateTime(cellValue) || emptyText,
+    showOverflow: true,
+    title: $t('page.monitoring.content.home.common.fields.updateTime'),
+    width: 168,
+  });
+
+  if (supportsPortalContentSort(contentType)) {
+    columns.push({
+      align: 'center',
+      field: 'sortOrder',
+      slots: { default: 'sortEdit' },
+      title: $t('page.monitoring.content.home.common.fields.sortEdit'),
+      width: 148,
+    });
+  }
+
+  columns.push({
+    align: 'center',
+    field: 'action',
+    minWidth: 360,
+    showOverflow: false,
+    slots: { default: 'action' },
+    title: $t('page.monitoring.content.home.common.fields.actions'),
+  });
+
+  return columns;
 }

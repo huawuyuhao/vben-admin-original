@@ -1,15 +1,129 @@
-import type { ModelInfo, ModelListResult } from '#/types/service/model';
+import type { VbenFormSchema } from '#/adapter/form';
+import type { VxeTableGridOptions } from '#/adapter/vxe-table';
+import type {
+  ModelInfo,
+  ModelListParams,
+  ModelListResult,
+} from '#/types/service/model';
 
+import { $t } from '@vben/locales';
 import { downloadFileFromBlobPart, formatDate, isEmpty } from '@vben/utils';
 
-/** 模型列表默认每页条数（3 列 × 2 行） */
+/** 模型列表默认每页条数（卡片网格） */
 export const MODEL_PAGE_SIZE = 6;
 
-/** 可选每页条数（供 el-pagination） */
+/** 可选每页条数（供分页器） */
 export const MODEL_PAGE_SIZE_OPTIONS = [6, 12, 18];
 
 /** 模型对比最多可选数量 */
 export const MODEL_COMPARE_MAX = 5;
+
+/** 列表查询表单值 */
+export interface ModelGridFormValues {
+  /** 关键词 */
+  keyword?: string;
+}
+
+/**
+ * 模型列表查询栏 schema
+ */
+export function useModelGridFormSchema(): VbenFormSchema[] {
+  return [
+    {
+      component: 'Input',
+      componentProps: {
+        clearable: true,
+        placeholder: $t('page.service.model.searchPlaceholder'),
+      },
+      fieldName: 'keyword',
+      label: $t('page.service.model.filter.keyword'),
+    },
+  ];
+}
+
+/**
+ * 模型列表列配置
+ */
+export function useModelColumns(): VxeTableGridOptions<ModelInfo>['columns'] {
+  const emptyText = $t('page.service.model.valueEmpty');
+  return [
+    { type: 'checkbox', width: 48 },
+    {
+      align: 'center',
+      cellRender: { name: 'CellImage' },
+      field: 'iconUrl',
+      minWidth: 80,
+      title: $t('page.service.model.fields.cover'),
+    },
+    {
+      field: 'modelName',
+      minWidth: 160,
+      showOverflow: true,
+      title: $t('page.service.model.fields.modelName'),
+      formatter: ({ cellValue }) => displayModelValue(cellValue, emptyText),
+    },
+    {
+      field: 'score',
+      minWidth: 90,
+      title: $t('page.service.model.fields.score'),
+      formatter: ({ cellValue }) =>
+        formatModelScore(cellValue) || $t('page.service.model.scorePending'),
+    },
+    {
+      field: 'callCount',
+      minWidth: 100,
+      title: $t('page.service.model.fields.callCount'),
+      formatter: ({ cellValue }) =>
+        formatModelCallCount(cellValue) ||
+        $t('page.service.model.callPending'),
+    },
+    {
+      field: 'description',
+      minWidth: 220,
+      showOverflow: true,
+      title: $t('page.service.model.fields.description'),
+      formatter: ({ cellValue }) => displayModelValue(cellValue, emptyText),
+    },
+    {
+      align: 'center',
+      field: 'action',
+      fixed: 'right',
+      minWidth: 160,
+      slots: { default: 'action' },
+      title: $t('page.service.model.fields.actions'),
+    },
+  ];
+}
+
+/**
+ * 将查询表单值转为列表筛选参数（不含分页）
+ * @param formValues 查询表单值
+ * @returns 接口筛选参数
+ */
+export function buildModelFilterParams(
+  formValues?: null | ModelGridFormValues,
+): Pick<ModelListParams, 'keyword'> {
+  return {
+    keyword: String(formValues?.keyword ?? '').trim() || undefined,
+  };
+}
+
+/**
+ * 展示字段值；空值用占位符
+ * @param value 原始值
+ * @param emptyText 占位文案
+ * @returns 展示字符串
+ */
+export function displayModelValue(
+  value?: null | number | string,
+  emptyText = '—',
+): string {
+  if (value == null) {
+    return emptyText;
+  }
+  const text = String(value).trim();
+  return text || emptyText;
+}
 
 /** 评价列表默认每页条数 */
 export const MODEL_EVAL_PAGE_SIZE = 6;

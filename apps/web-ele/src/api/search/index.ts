@@ -14,9 +14,13 @@ import { rootRequestClient } from '#/api/request';
  */
 export async function getPortalSearchApi(params: PortalSearchParams) {
   const data = await rootRequestClient.get<PortalSearchResultItem[]>(
-    '/mock/portal/search',
+    '/pwq-mock/portal/search',
     { params },
   );
+  // const data = await rootRequestClient.get<PortalSearchResultItem[]>(
+  //   '/mock/portal/search',
+  //   { params },
+  // );
   // const data = await rootRequestClient.get<PortalSearchResultItem[]>(
   //   '/portal/search',
   //   { params },

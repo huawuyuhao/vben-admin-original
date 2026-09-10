@@ -16,9 +16,13 @@ import { rootRequestClient } from '#/api/request';
  */
 export async function submitPersonalCertApi(data: PersonalCertParams) {
   return rootRequestClient.post<PersonalCertResult>(
-    '/mock/auth/personal-cert',
+    '/pwq-mock/auth/personal-cert',
     data,
   );
+  // return rootRequestClient.post<PersonalCertResult>(
+  //   '/mock/auth/personal-cert',
+  //   data,
+  // );
   // return rootRequestClient.post<PersonalCertResult>(
   //   '/auth/personal-cert',
   //   data,
@@ -36,9 +40,13 @@ export async function getPersonalCertProgressApi(
   params?: PersonalCertProgressParams,
 ) {
   return rootRequestClient.get<PersonalCertProgressResult>(
-    '/mock/auth/personal-cert/progress',
+    '/pwq-mock/auth/personal-cert/progress',
     { params },
   );
+  // return rootRequestClient.get<PersonalCertProgressResult>(
+  //   '/mock/auth/personal-cert/progress',
+  //   { params },
+  // );
   // return rootRequestClient.get<PersonalCertProgressResult>(
   //   '/auth/personal-cert/progress',
   //   { params },

@@ -1,22 +1,49 @@
-/* 业务页壳层与背景共用样式（全应用可复用） */
+/* 业务页壳层与背景共用样式（全应用可复用）
+ *
+ * 外边距：主内容区四边统一 10px。
+ * 主内容区须随内容增高（勿锁死视口高度），否则长页滚动到底时
+ * padding-bottom 落在「视口底」而非「内容底」，下边距会消失。
+ */
+
+:root {
+  --mine-page-gap: 10px;
+}
+
+/**
+ * 四边统一外边距；允许随内容长高，短页仍至少铺满滚动区。
+ * 覆盖 layout-content 的 flex:1 + minHeight:0（否则底边距滚不到）。
+ */
+#__vben_main_content {
+  box-sizing: border-box !important;
+  display: flex;
+  flex: 1 0 auto !important;
+  flex-direction: column;
+  width: 100%;
+  height: auto !important;
+  min-height: 100% !important;
+  padding: var(--mine-page-gap) !important;
+}
 
 .mine-page {
   box-sizing: border-box;
   display: flex;
-  justify-content: center;
+  flex: 1 0 auto;
+  flex-direction: column;
   width: 100%;
-  min-height: calc(100vh - 120px);
-
-  /* 外边距交给布局统一控制，页面内不再叠加 */
+  min-height: 100%;
   padding: 0;
+  margin: 0;
 }
 
 .mine-shell {
   position: relative;
   box-sizing: border-box;
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: column;
   width: 100%;
   max-width: none;
-  min-height: calc(100vh - 140px);
+  min-height: 100%;
   padding: 20px;
   margin: 0;
   overflow: hidden;
@@ -136,6 +163,191 @@
     font-weight: 600 !important;
     border-radius: 10px !important;
     box-shadow: none !important;
+  }
+
+  /* 列表区：承载 Vben VxeGrid（查询栏 / 表格 / 分页） */
+  &__list-body {
+    width: 100%;
+    min-width: 0;
+  }
+
+  /**
+   * 列表壳：随内容增高，只走外层滚动；
+   * 短列表不强制 min-height 撑满，避免多余滚动条。
+   */
+  &--list {
+    min-height: auto;
+    overflow: visible;
+  }
+}
+
+/**
+ * 业务列表页内的 VxeGrid 视觉收敛（允许覆盖 Vben 默认 bg-card）
+ * 用法：<Grid class="mine-vxe-grid" />
+ *
+ * 约束：
+ * 1) layout-body 勿被 flex-grow 压扁 → 表体 height:auto
+ * 2) 非省略列完整展示图片/标签
+ * 3) 列宽不足时 min-width:100% 铺满；超出时保留横向滚动
+ * 4) 禁止对 header/body wrapper 设 overflow:visible，否则会出现
+ *    「底部横条只带动表头、行不动」的表头/表体滚动失同步
+ */
+.mine-vxe-grid {
+  width: 100% !important;
+  height: auto !important;
+  background: transparent !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+
+  .vxe-grid {
+    width: 100% !important;
+    height: auto !important;
+    padding: 0 !important;
+    background: transparent;
+  }
+
+  .vxe-grid--layout-header-wrapper,
+  .vxe-grid--form-wrapper,
+  .vxe-toolbar,
+  .vxe-grid--pager-wrapper,
+  .vxe-grid--layout-footer-wrapper {
+    flex: 0 0 auto !important;
+    width: 100% !important;
+    background: transparent;
+  }
+
+  /* 表体按内容高度，禁止被 flex 压缩 */
+  .vxe-grid--layout-body-wrapper,
+  .vxe-grid--layout-body-content-wrapper {
+    flex: 0 0 auto !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+  }
+
+  .vxe-grid--table-container,
+  .vxe-grid--table-wrapper {
+    flex: 0 0 auto !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+  }
+
+  .vxe-table--render-default {
+    width: 100% !important;
+    border-radius: 12px;
+  }
+
+  .vxe-table--render-wrapper,
+  .vxe-table--main-wrapper {
+    width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+  }
+
+  /**
+   * 仅放开高度；横向滚动仍由 vxe 的 header/body wrapper 处理并互相同步。
+   * 切勿 overflow: visible !important。
+   */
+  .vxe-table--body-wrapper,
+  .vxe-table--header-wrapper,
+  .vxe-table--footer-wrapper,
+  .vxe-table--body-inner-wrapper,
+  .vxe-table--viewport-wrapper {
+    height: auto !important;
+    max-height: none !important;
+  }
+
+  /* 列宽合计不足时铺满；超出容器时允许被横向滚动撑开 */
+  .vxe-table--header table,
+  .vxe-table--body table,
+  .vxe-table--footer table {
+    min-width: 100% !important;
+  }
+
+  .vxe-body--row,
+  .vxe-header--row {
+    height: auto !important;
+  }
+
+  .vxe-body--column,
+  .vxe-header--column {
+    height: auto !important;
+    line-height: 1.5 !important;
+    vertical-align: middle;
+  }
+
+  .vxe-cell {
+    max-height: none !important;
+    height: auto !important;
+    min-height: var(--vxe-ui-table-row-height-small, 40px);
+    line-height: 1.5 !important;
+  }
+
+  /*
+   * 非省略列（图片 / 标签 / 操作等）：完整展示。
+   * vxe 在 col--*-height 下仍会对 .vxe-cell 设 overflow:hidden，需一并放开。
+   */
+  .vxe-body--column:not(.col--ellipsis) {
+    overflow: visible !important;
+
+    &.col--cs-height,
+    &.col--rs-height,
+    &.col--auto-height {
+      overflow: visible !important;
+    }
+
+    > .vxe-cell {
+      overflow: visible !important;
+      height: auto !important;
+      max-height: none !important;
+      white-space: normal !important;
+      word-break: break-word;
+
+      > .vxe-cell--wrapper {
+        overflow: visible !important;
+        white-space: normal !important;
+        text-overflow: unset !important;
+        word-break: break-word;
+      }
+    }
+  }
+
+  .vxe-pager {
+    width: 100%;
+    padding: 12px 0 0;
+  }
+
+  .table-operations {
+    flex-wrap: wrap;
+  }
+
+  /**
+   * 卡片列表模式：#top 放卡片；仅隐藏 Table 容器，勿藏 layout-body / footer。
+   */
+  &--cards {
+    .vxe-grid--table-container,
+    .vxe-grid--table-wrapper {
+      display: none !important;
+      flex-grow: 0 !important;
+      height: 0 !important;
+      min-height: 0 !important;
+      max-height: 0 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      overflow: hidden !important;
+      border: none !important;
+    }
+
+    .vxe-grid--top-wrapper {
+      position: relative;
+      width: 100%;
+      min-height: 120px;
+      margin: 8px 0 4px;
+      overflow: visible;
+    }
   }
 }
 

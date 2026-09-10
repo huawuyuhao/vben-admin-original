@@ -1,3 +1,5 @@
+import type { VbenFormSchema } from '#/adapter/form';
+import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type {
   CaseId,
   CaseInfo,
@@ -6,22 +8,179 @@ import type {
   CaseType,
 } from '#/types/service/case';
 
+import { $t } from '@vben/locales';
 import { formatDate, isEmpty } from '@vben/utils';
 
 /** 案例列表默认每页条数（2 列 × 3 行） */
 export const CASE_PAGE_SIZE = 6;
 
-/** 可选每页条数（供 el-pagination） */
+/** 可选每页条数（供分页器） */
 export const CASE_PAGE_SIZE_OPTIONS = [6, 12, 18];
-
-/** 已发布状态 */
-export const CASE_STATUS_PUBLISHED = 1;
 
 /** 通算 */
 export const CASE_TYPE_GENERAL = 1 as CaseType;
 
 /** 智算 */
 export const CASE_TYPE_SMART = 2 as CaseType;
+
+/**
+ * 案例类型前端筛选值（空串表示全部）
+ */
+export type CaseTypeFilter =
+  | ''
+  | `${typeof CASE_TYPE_GENERAL}`
+  | `${typeof CASE_TYPE_SMART}`;
+
+/** 列表查询表单值 */
+export interface CaseGridFormValues {
+  /** 标签名称 */
+  tagName?: string;
+  /** 案例类型（前端筛当前页） */
+  caseType?: CaseTypeFilter;
+}
+
+/**
+ * 案例列表查询栏 schema
+ */
+export function useCaseGridFormSchema(): VbenFormSchema[] {
+  return [
+    {
+      component: 'Input',
+      componentProps: {
+        clearable: true,
+        placeholder: $t('page.service.case.searchPlaceholder'),
+      },
+      fieldName: 'tagName',
+      label: $t('page.service.case.filter.tagName'),
+    },
+    {
+      component: 'Select',
+      componentProps: {
+        clearable: true,
+        options: [
+          {
+            label: $t('page.service.case.type.general'),
+            value: String(CASE_TYPE_GENERAL),
+          },
+          {
+            label: $t('page.service.case.type.smart'),
+            value: String(CASE_TYPE_SMART),
+          },
+        ],
+        placeholder: $t('page.service.case.filter.typeAll'),
+      },
+      fieldName: 'caseType',
+      label: $t('page.service.case.filter.caseType'),
+    },
+  ];
+}
+
+/**
+ * 案例列表列配置
+ */
+export function useCaseColumns(): VxeTableGridOptions<CaseListItem>['columns'] {
+  const emptyText = $t('page.service.case.valueEmpty');
+  return [
+    {
+      align: 'center',
+      cellRender: { name: 'CellImage' },
+      field: 'coverImage',
+      minWidth: 80,
+      title: $t('page.service.case.fields.cover'),
+    },
+    {
+      field: 'title',
+      minWidth: 180,
+      showOverflow: true,
+      title: $t('page.service.case.fields.title'),
+      formatter: ({ cellValue }) => displayCaseValue(cellValue, emptyText),
+    },
+    {
+      align: 'center',
+      field: 'caseType',
+      minWidth: 100,
+      slots: { default: 'caseType' },
+      title: $t('page.service.case.fields.caseType'),
+    },
+    {
+      field: 'tags',
+      minWidth: 160,
+      slots: { default: 'tags' },
+      title: $t('page.service.case.fields.tags'),
+    },
+    {
+      field: 'summary',
+      minWidth: 200,
+      showOverflow: true,
+      title: $t('page.service.case.fields.summary'),
+      formatter: ({ cellValue }) => displayCaseValue(cellValue, emptyText),
+    },
+    {
+      field: 'viewCount',
+      minWidth: 100,
+      title: $t('page.service.case.fields.viewCount'),
+      formatter: ({ cellValue }) =>
+        formatCaseViewCount(cellValue) ||
+        $t('page.service.case.viewPending'),
+    },
+    {
+      field: 'createTime',
+      minWidth: 150,
+      title: $t('page.service.case.fields.createTime'),
+      formatter: ({ cellValue }) => formatCaseDateTime(cellValue) || emptyText,
+    },
+    {
+      align: 'center',
+      field: 'action',
+      fixed: 'right',
+      minWidth: 100,
+      slots: { default: 'action' },
+      title: $t('page.service.case.fields.actions'),
+    },
+  ];
+}
+
+/**
+ * 将查询表单值转为列表筛选参数（不含分页）
+ * @param formValues 查询表单值
+ * @returns tagName（走接口）+ caseType（前端筛当前页）
+ */
+export function buildCaseFilterParams(
+  formValues?: CaseGridFormValues | null,
+): {
+  caseType?: CaseTypeFilter;
+  tagName?: string;
+} {
+  const caseType = formValues?.caseType;
+  return {
+    tagName: String(formValues?.tagName ?? '').trim() || undefined,
+    caseType:
+      caseType === String(CASE_TYPE_GENERAL) ||
+      caseType === String(CASE_TYPE_SMART)
+        ? caseType
+        : '',
+  };
+}
+
+/**
+ * 展示字段值；空值用占位符
+ * @param value 原始值
+ * @param emptyText 占位文案
+ * @returns 展示字符串
+ */
+export function displayCaseValue(
+  value?: null | number | string,
+  emptyText = '—',
+): string {
+  if (value == null) {
+    return emptyText;
+  }
+  const text = String(value).trim();
+  return text || emptyText;
+}
+
+/** 已发布状态 */
+export const CASE_STATUS_PUBLISHED = 1;
 
 /** 草稿状态 */
 export const CASE_STATUS_DRAFT = 0;
@@ -48,11 +207,6 @@ export function joinCaseTags(tags?: null | string[]): string | undefined {
   const list = normalizeCaseTags(tags);
   return list.length > 0 ? list.join(',') : undefined;
 }
-
-/**
- * 案例类型前端筛选值（空串表示全部）
- */
-export type CaseTypeFilter = '' | `${typeof CASE_TYPE_GENERAL}` | `${typeof CASE_TYPE_SMART}`;
 
 /**
  * 判断是否有生效的案例类型前端筛选

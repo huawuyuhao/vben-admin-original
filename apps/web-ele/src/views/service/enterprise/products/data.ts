@@ -1,16 +1,20 @@
+import type { VbenFormSchema } from '#/adapter/form';
+import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type {
   SupplyProductItem,
+  SupplyProductListParams,
   SupplyProductListResult,
   SupplyProductResourceStatus,
   SupplyProductShelfStatus,
 } from '#/types/service/enterprise/products';
 
+import { $t } from '@vben/locales';
 import { formatDate, isEmpty } from '@vben/utils';
 
 /** 算力产品列表默认每页条数 */
 export const PRODUCT_PAGE_SIZE = 10;
 
-/** 可选每页条数（供 el-pagination） */
+/** 可选每页条数 */
 export const PRODUCT_PAGE_SIZE_OPTIONS = [10, 20, 50];
 
 /** 下架 */
@@ -34,6 +38,145 @@ export type ProductShelfFilter =
   | `${typeof PRODUCT_SHELF_OFF}`
   | `${typeof PRODUCT_SHELF_ON}`;
 
+/** 列表查询表单值 */
+export interface ProductGridFormValues {
+  /** 产品名称 */
+  productName?: string;
+  /** 上下架状态 */
+  shelfStatus?: ProductShelfFilter;
+}
+
+/**
+ * 算力产品查询栏 schema
+ */
+export function useProductGridFormSchema(): VbenFormSchema[] {
+  return [
+    {
+      component: 'Input',
+      componentProps: {
+        clearable: true,
+        placeholder: $t(
+          'page.service.enterprise.products.filter.productNamePlaceholder',
+        ),
+      },
+      fieldName: 'productName',
+      label: $t('page.service.enterprise.products.filter.productName'),
+    },
+    {
+      component: 'Select',
+      componentProps: {
+        clearable: true,
+        options: [
+          {
+            label: $t('page.service.enterprise.products.shelf.on'),
+            value: String(PRODUCT_SHELF_ON),
+          },
+          {
+            label: $t('page.service.enterprise.products.shelf.off'),
+            value: String(PRODUCT_SHELF_OFF),
+          },
+        ],
+        placeholder: $t(
+          'page.service.enterprise.products.filter.shelfStatusAll',
+        ),
+      },
+      fieldName: 'shelfStatus',
+      label: $t('page.service.enterprise.products.filter.shelfStatus'),
+    },
+  ];
+}
+
+/**
+ * 算力产品列表列配置
+ */
+export function useProductColumns(): VxeTableGridOptions<SupplyProductItem>['columns'] {
+  const emptyText = $t('page.service.enterprise.products.valueEmpty');
+  return [
+    {
+      field: 'productName',
+      minWidth: 140,
+      showOverflow: true,
+      title: $t('page.service.enterprise.products.fields.productName'),
+      formatter: ({ cellValue }) => displayProductValue(cellValue, emptyText),
+    },
+    {
+      field: 'description',
+      minWidth: 360,
+      showOverflow: true,
+      title: $t('page.service.enterprise.products.fields.description'),
+      formatter: ({ cellValue }) => displayProductValue(cellValue, emptyText),
+    },
+    {
+      align: 'center',
+      cellRender: {
+        name: 'CellTag',
+        options: [
+          {
+            label: $t('page.service.enterprise.products.shelf.on'),
+            type: 'success',
+            value: PRODUCT_SHELF_ON,
+          },
+          {
+            label: $t('page.service.enterprise.products.shelf.off'),
+            type: 'info',
+            value: PRODUCT_SHELF_OFF,
+          },
+        ],
+      },
+      field: 'shelfStatus',
+      minWidth: 100,
+      title: $t('page.service.enterprise.products.fields.shelfStatus'),
+    },
+    {
+      align: 'center',
+      cellRender: {
+        name: 'CellTag',
+        options: [
+          {
+            label: $t('page.service.enterprise.products.resource.offline'),
+            type: 'info',
+            value: PRODUCT_RESOURCE_OFFLINE,
+          },
+          {
+            label: $t('page.service.enterprise.products.resource.online'),
+            type: 'success',
+            value: PRODUCT_RESOURCE_ONLINE,
+          },
+          {
+            label: $t('page.service.enterprise.products.resource.abnormal'),
+            type: 'danger',
+            value: PRODUCT_RESOURCE_ABNORMAL,
+          },
+        ],
+      },
+      field: 'resourceStatus',
+      minWidth: 100,
+      title: $t('page.service.enterprise.products.fields.resourceStatus'),
+    },
+    {
+      field: 'createTime',
+      minWidth: 168,
+      title: $t('page.service.enterprise.products.fields.createTime'),
+      formatter: ({ cellValue }) =>
+        formatProductDateTime(cellValue) || emptyText,
+    },
+    {
+      field: 'updateTime',
+      minWidth: 168,
+      title: $t('page.service.enterprise.products.fields.updateTime'),
+      formatter: ({ cellValue }) =>
+        formatProductDateTime(cellValue) || emptyText,
+    },
+    {
+      align: 'center',
+      field: 'action',
+      minWidth: 260,
+      slots: { default: 'action' },
+      title: $t('page.service.enterprise.products.fields.actions'),
+    },
+  ];
+}
+
 /**
  * 解析上下架筛选值为接口参数
  * @param status 筛选值
@@ -49,6 +192,20 @@ export function parseProductShelfFilter(
     return PRODUCT_SHELF_ON;
   }
   return undefined;
+}
+
+/**
+ * 将查询表单值转为列表筛选参数（不含分页）
+ * @param formValues 查询表单值
+ * @returns 接口筛选参数
+ */
+export function buildProductFilterParams(
+  formValues?: null | ProductGridFormValues,
+): Pick<SupplyProductListParams, 'productName' | 'shelfStatus'> {
+  return {
+    productName: String(formValues?.productName ?? '').trim() || undefined,
+    shelfStatus: parseProductShelfFilter(formValues?.shelfStatus),
+  };
 }
 
 /**

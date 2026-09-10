@@ -1,62 +1,43 @@
 <script lang="ts" setup>
+import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { SupplyProductItem } from '#/types/service/enterprise/products';
 
-import { onMounted, ref, watch } from 'vue';
+import { ref } from 'vue';
 
 import { $t } from '@vben/locales';
 
-import { Plus, Refresh } from '@element-plus/icons-vue';
+import { Plus } from '@element-plus/icons-vue';
 import { ElMessage } from 'element-plus';
 
+import { toVxePageResult, useVbenVxeGrid } from '#/adapter/vxe-table';
 import {
   deleteSupplyProductApi,
   getSupplyProductListApi,
   getSupplyProductResourceStatusApi,
   shelfSupplyProductApi,
 } from '#/api/service/enterprise/products';
+import PageListShell from '#/views/_shared/components/page-list-shell.vue';
 
 import {
+  buildProductFilterParams,
   getProductResourceI18nKey,
   isProductOnShelf,
   normalizeProductPage,
-  parseProductShelfFilter,
   PRODUCT_PAGE_SIZE,
-  type ProductShelfFilter,
+  PRODUCT_PAGE_SIZE_OPTIONS,
+  type ProductGridFormValues,
   resolveSupplyProductId,
+  useProductColumns,
+  useProductGridFormSchema,
 } from './data';
-import FilterBar from './modules/filter-bar.vue';
 import FormDialog from './modules/form-dialog.vue';
-import ProductPager from './modules/product-pager.vue';
-import ProductTable from './modules/product-table.vue';
 
 /**
  * 门户服务 · 我的算力产品
- * 对接 GET/POST /supply/product、PUT/DELETE /supply/product/{id}、
- * PUT /shelf、GET /resource-status
+ * 列表统一使用 useVbenVxeGrid（查询栏 / 分页 / 工具栏），壳层沿用 page-shell
  */
 defineOptions({ name: 'ServiceEnterpriseProducts' });
 
-/** 筛选草稿：产品名称 */
-const filterProductName = ref('');
-/** 筛选草稿：上下架状态 */
-const filterShelfStatus = ref<ProductShelfFilter>('');
-
-/** 已生效筛选 */
-const appliedProductName = ref('');
-const appliedShelfStatus = ref<ProductShelfFilter>('');
-
-/** 当前页码 */
-const currentPage = ref(1);
-/** 每页条数 */
-const pageSize = ref(PRODUCT_PAGE_SIZE);
-/** 列表加载中 */
-const loading = ref(false);
-/** 当前页产品列表 */
-const products = ref<SupplyProductItem[]>([]);
-/** 总条数 */
-const total = ref(0);
-/** 跳过由服务端回写 current 触发的重复请求 */
-const syncingFromServer = ref(false);
 /** 正在上下架的产品 ID */
 const shelvingId = ref<null | number>(null);
 /** 正在监测资源状态的产品 ID */
@@ -65,72 +46,54 @@ const monitoringId = ref<null | number>(null);
 /** 新增 / 编辑表单弹窗 */
 const formDialogRef = ref<InstanceType<typeof FormDialog>>();
 
-/**
- * 拉取当前页产品列表
- */
-async function fetchProducts() {
-  loading.value = true;
-  try {
-    const data = await getSupplyProductListApi({
-      page: currentPage.value,
-      pageSize: pageSize.value,
-      productName: appliedProductName.value.trim() || undefined,
-      shelfStatus: parseProductShelfFilter(appliedShelfStatus.value),
-    });
-    const page = normalizeProductPage(data);
-    products.value = page.records;
-    total.value = page.total;
-
-    if (page.current !== currentPage.value) {
-      syncingFromServer.value = true;
-      currentPage.value = page.current;
-      syncingFromServer.value = false;
-    }
-  } catch {
-    products.value = [];
-    total.value = 0;
-  } finally {
-    loading.value = false;
-  }
-}
-
-/**
- * 回到第一页并查询
- */
-function queryFromFirstPage() {
-  if (currentPage.value !== 1) {
-    currentPage.value = 1;
-    return;
-  }
-  void fetchProducts();
-}
-
-/**
- * 提交查询
- */
-function handleSearch() {
-  appliedProductName.value = filterProductName.value;
-  appliedShelfStatus.value = filterShelfStatus.value;
-  queryFromFirstPage();
-}
-
-/**
- * 重置筛选并查询
- */
-function handleReset() {
-  filterProductName.value = '';
-  filterShelfStatus.value = '';
-  appliedProductName.value = '';
-  appliedShelfStatus.value = '';
-  queryFromFirstPage();
-}
-
-/**
- * 刷新当前页
- */
-function handleRefresh() {
-  void fetchProducts();
-}
+const [Grid, gridApi] = useVbenVxeGrid({
+  class: 'mine-vxe-grid',
+  formOptions: {
+    collapsed: false,
+    resetButtonOptions: {
+      content: $t('common.reset'),
+    },
+    schema: useProductGridFormSchema(),
+    showCollapseButton: false,
+    submitButtonOptions: {
+      content: $t('common.query'),
+    },
+    wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3',
+  },
+  gridOptions: {
+    columns: useProductColumns(),
+    height: 'auto',
+    keepSource: true,
+    pagerConfig: {
+      pageSize: PRODUCT_PAGE_SIZE,
+      pageSizes: PRODUCT_PAGE_SIZE_OPTIONS,
+    },
+    proxyConfig: {
+      ajax: {
+        query: async ({ page }, formValues?: ProductGridFormValues) => {
+          const filters = buildProductFilterParams(formValues);
+          const data = await getSupplyProductListApi({
+            page: page.currentPage,
+            pageSize: page.pageSize,
+            ...filters,
+          });
+          return toVxePageResult(normalizeProductPage(data));
+        },
+      },
+    },
+    rowConfig: {
+      keyField: 'supplyProductId',
+    },
+    stripe: true,
+    toolbarConfig: {
+      custom: false,
+      export: false,
+      refresh: false,
+      search: false,
+      zoom: false,
+    },
+  } as VxeTableGridOptions<SupplyProductItem>,
+});
 
 /**
  * 打开新增弹窗
@@ -148,7 +111,7 @@ function handleEdit(row: SupplyProductItem) {
 }
 
 /**
- * 删除产品（二次确认由表格 Popconfirm 触发）
+ * 删除产品（二次确认由 Popconfirm 触发）
  * @param row 列表行
  */
 async function handleDelete(row: SupplyProductItem) {
@@ -161,14 +124,14 @@ async function handleDelete(row: SupplyProductItem) {
   try {
     await deleteSupplyProductApi(id);
     ElMessage.success($t('page.service.enterprise.products.delete.success'));
-    void fetchProducts();
+    gridApi.query();
   } catch {
     // 错误提示由接口层处理
   }
 }
 
 /**
- * 上架 / 下架（二次确认由表格 Popconfirm 触发）
+ * 上架 / 下架（二次确认由 Popconfirm 触发）
  * @param row 列表行
  */
 async function handleShelf(row: SupplyProductItem) {
@@ -189,7 +152,7 @@ async function handleShelf(row: SupplyProductItem) {
   try {
     await shelfSupplyProductApi(id, action);
     ElMessage.success($t(successKey, [name]));
-    void fetchProducts();
+    gridApi.query();
   } catch {
     // 错误提示由接口层处理
   } finally {
@@ -212,9 +175,8 @@ async function handleMonitor(row: SupplyProductItem) {
   try {
     const result = await getSupplyProductResourceStatusApi(id);
     const status = result?.resourceStatus;
-    const target = products.value.find((item) => item.supplyProductId === id);
-    if (target && status != null) {
-      target.resourceStatus = status;
+    if (status != null) {
+      row.resourceStatus = status;
     }
     ElMessage.success(
       $t('page.service.enterprise.products.monitor.success', [
@@ -234,104 +196,105 @@ async function handleMonitor(row: SupplyProductItem) {
  * 表单提交成功后刷新列表
  */
 function handleFormSuccess() {
-  void fetchProducts();
+  gridApi.query();
 }
-
-watch(pageSize, () => {
-  if (syncingFromServer.value) {
-    return;
-  }
-  if (currentPage.value !== 1) {
-    currentPage.value = 1;
-    return;
-  }
-  void fetchProducts();
-});
-
-watch(currentPage, () => {
-  if (syncingFromServer.value) {
-    return;
-  }
-  void fetchProducts();
-});
-
-onMounted(() => {
-  void fetchProducts();
-});
 </script>
 
 <template>
-  <div class="mine-page">
-    <div class="mine-shell">
-      <div class="mine-shell__bg" aria-hidden="true">
-        <span class="mine-shell__orb mine-shell__orb--a"></span>
-        <span class="mine-shell__orb mine-shell__orb--b"></span>
-        <span class="mine-shell__mesh"></span>
-      </div>
+  <PageListShell
+    :desc="$t('page.service.enterprise.products.desc')"
+    :eyebrow="$t('page.service.enterprise.products.eyebrow')"
+    :title="$t('page.service.enterprise.products.title')"
+  >
+    <template #actions>
+      <el-button
+        class="mine-shell__action-btn"
+        type="primary"
+        :icon="Plus"
+        @click="handleCreate"
+      >
+        {{ $t('page.service.enterprise.products.add') }}
+      </el-button>
+    </template>
 
-      <div class="mine-shell__inner">
-        <header class="mine-shell__head">
-          <div>
-            <p class="mine-shell__eyebrow">
-              {{ $t('page.service.enterprise.products.eyebrow') }}
-            </p>
-            <h2>{{ $t('page.service.enterprise.products.title') }}</h2>
-            <p class="mine-shell__desc">
-              {{ $t('page.service.enterprise.products.desc') }}
-            </p>
-          </div>
-          <div class="mine-shell__head-actions">
+    <Grid>
+      <template #table-title></template>
+
+      <template #action="{ row }">
+        <el-button link type="primary" @click="handleEdit(row)">
+          {{ $t('page.service.enterprise.products.actions.edit') }}
+        </el-button>
+        <el-popconfirm
+          width="240"
+          :cancel-button-text="
+            $t('page.service.enterprise.products.shelfAction.cancelBtn')
+          "
+          :confirm-button-text="
+            $t('page.service.enterprise.products.shelfAction.confirmBtn')
+          "
+          :title="
+            $t(
+              isProductOnShelf(row.shelfStatus)
+                ? 'page.service.enterprise.products.shelfAction.unshelfConfirm'
+                : 'page.service.enterprise.products.shelfAction.shelfConfirm',
+              [
+                row.productName?.trim() ||
+                  String(row.supplyProductId ?? '') ||
+                  $t('page.service.enterprise.products.valueEmpty'),
+              ],
+            )
+          "
+          @confirm="handleShelf(row)"
+        >
+          <template #reference>
             <el-button
-              class="mine-shell__action-btn"
-              :icon="Refresh"
-              :loading="loading"
-              @click="handleRefresh"
-            >
-              {{ $t('page.service.enterprise.products.refresh') }}
-            </el-button>
-            <el-button
-              class="mine-shell__action-btn"
+              link
               type="primary"
-              :icon="Plus"
-              @click="handleCreate"
+              :loading="shelvingId === row.supplyProductId"
             >
-              {{ $t('page.service.enterprise.products.add') }}
+              {{
+                isProductOnShelf(row.shelfStatus)
+                  ? $t('page.service.enterprise.products.actions.unshelf')
+                  : $t('page.service.enterprise.products.actions.shelf')
+              }}
             </el-button>
-          </div>
-        </header>
-
-        <FilterBar
-          v-model:product-name="filterProductName"
-          v-model:shelf-status="filterShelfStatus"
-          @search="handleSearch"
-          @reset="handleReset"
-        />
-
-        <ProductTable
-          :loading="loading"
-          :monitoring-id="monitoringId"
-          :products="products"
-          :shelving-id="shelvingId"
-          @edit="handleEdit"
-          @delete="handleDelete"
-          @shelf="handleShelf"
-          @monitor="handleMonitor"
-        />
-
-        <ProductPager
-          v-if="products.length > 0 || loading || total > 0"
-          v-model:page="currentPage"
-          v-model:page-size="pageSize"
-          :disabled="loading"
-          :total="total"
-        />
-      </div>
-    </div>
+          </template>
+        </el-popconfirm>
+        <el-button
+          link
+          type="primary"
+          :loading="monitoringId === row.supplyProductId"
+          @click="handleMonitor(row)"
+        >
+          {{ $t('page.service.enterprise.products.actions.monitor') }}
+        </el-button>
+        <el-popconfirm
+          width="240"
+          confirm-button-type="danger"
+          :cancel-button-text="
+            $t('page.service.enterprise.products.delete.cancelBtn')
+          "
+          :confirm-button-text="
+            $t('page.service.enterprise.products.delete.confirmBtn')
+          "
+          :title="
+            $t('page.service.enterprise.products.delete.confirm', [
+              row.productName?.trim() ||
+                String(row.supplyProductId ?? '') ||
+                $t('page.service.enterprise.products.valueEmpty'),
+            ])
+          "
+          @confirm="handleDelete(row)"
+        >
+          <template #reference>
+            <el-button link type="danger">
+              {{ $t('page.service.enterprise.products.actions.delete') }}
+            </el-button>
+          </template>
+        </el-popconfirm>
+      </template>
+    </Grid>
 
     <FormDialog ref="formDialogRef" @success="handleFormSuccess" />
-  </div>
+  </PageListShell>
 </template>
-
-<style lang="scss" scoped>
-@use '../../../../scss/page-shell.scss';
-</style>

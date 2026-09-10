@@ -1,3 +1,5 @@
+import type { VbenFormSchema } from '#/adapter/form';
+import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type {
   MessageItem,
   MessageListResult,
@@ -6,12 +8,13 @@ import type {
   MessageType,
 } from '#/types/mine/messages/all';
 
+import { $t } from '@vben/locales';
 import { formatDate, isEmpty } from '@vben/utils';
 
 /** 消息列表默认每页条数 */
 export const MESSAGE_PAGE_SIZE = 10;
 
-/** 可选每页条数（供 el-pagination） */
+/** 可选每页条数（供分页器） */
 export const MESSAGE_PAGE_SIZE_OPTIONS = [10, 20, 50];
 
 /** 需求消息 */
@@ -59,6 +62,95 @@ export interface MessageCategoryTab {
   count: number;
   /** 未读数 */
   unreadCount: number;
+}
+
+/**
+ * 消息列表查询表单 schema（阅读状态）
+ */
+export function useMessageGridFormSchema(): VbenFormSchema[] {
+  return [
+    {
+      component: 'Select',
+      componentProps: {
+        clearable: true,
+        options: [
+          {
+            label: $t('page.mine.messages.all.filter.unread'),
+            value: String(MESSAGE_READ_UNREAD),
+          },
+          {
+            label: $t('page.mine.messages.all.filter.read'),
+            value: String(MESSAGE_READ_READ),
+          },
+        ],
+        placeholder: $t('page.mine.messages.all.filter.readAll'),
+        style: { width: '160px' },
+      },
+      fieldName: 'isRead',
+      label: $t('page.mine.messages.all.filter.readStatus'),
+    },
+  ];
+}
+
+/**
+ * 消息列表列配置
+ */
+export function useMessageColumns(): VxeTableGridOptions<MessageItem>['columns'] {
+  return [
+    {
+      align: 'center',
+      type: 'checkbox',
+      width: 48,
+    },
+    {
+      field: 'title',
+      minWidth: 200,
+      showOverflow: true,
+      title: $t('page.mine.messages.all.fields.title'),
+      slots: { default: 'title' },
+    },
+    {
+      field: 'messageType',
+      minWidth: 120,
+      title: $t('page.mine.messages.all.fields.messageType'),
+      slots: { default: 'messageType' },
+    },
+    {
+      field: 'content',
+      minWidth: 240,
+      showOverflow: true,
+      title: $t('page.mine.messages.all.fields.content'),
+      formatter: ({ cellValue }) =>
+        displayMessageValue(
+          cellValue,
+          $t('page.mine.messages.all.valueEmpty'),
+        ),
+    },
+    {
+      field: 'isRead',
+      minWidth: 90,
+      title: $t('page.mine.messages.all.fields.isRead'),
+      slots: { default: 'isRead' },
+    },
+    {
+      field: 'createTime',
+      minWidth: 160,
+      showOverflow: true,
+      title: $t('page.mine.messages.all.fields.createTime'),
+      formatter: ({ cellValue }) =>
+        displayMessageValue(
+          formatMessageDateTime(cellValue),
+          $t('page.mine.messages.all.valueEmpty'),
+        ),
+    },
+    {
+      align: 'center',
+      field: 'action',
+      title: $t('page.mine.messages.all.fields.actions'),
+      width: 100,
+      slots: { default: 'action' },
+    },
+  ];
 }
 
 /**

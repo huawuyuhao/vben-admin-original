@@ -1,19 +1,25 @@
+import type { VbenFormSchema } from '#/adapter/form';
+import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type {
   AppTypeOptionItem,
   MyAppCollectFlag,
   MyAppItem,
+  MyAppListParams,
   MyAppListResult,
   MyAppMaterialItem,
   MyAppStatus,
 } from '#/types/service/mydemand/apps';
 
+import { $t } from '@vben/locales';
 import { formatDate, isEmpty } from '@vben/utils';
 
-/** 我的应用列表默认每页条数（卡片 3×3） */
-export const APP_PAGE_SIZE = 9;
+import { getAppTypeOptionsApi } from '#/api/service/mydemand/apps';
 
-/** 可选每页条数（供 el-pagination） */
-export const APP_PAGE_SIZE_OPTIONS = [9, 18, 36];
+/** 我的应用列表默认每页条数（卡片网格） */
+export const APP_PAGE_SIZE = 6;
+
+/** 可选每页条数（供分页器） */
+export const APP_PAGE_SIZE_OPTIONS = [6, 12, 18];
 
 /** 素材列表默认每页条数 */
 export const MATERIAL_PAGE_SIZE = 10;
@@ -47,6 +53,228 @@ export type AppCollectFilter =
 
 /** 应用类型筛选：空串表示全部 */
 export type AppTypeFilter = '' | `${number}`;
+
+/** 列表查询表单值 */
+export interface AppGridFormValues {
+  /** 应用名称 */
+  appName?: string;
+  /** 应用类型 */
+  appType?: AppTypeFilter;
+  /** 应用状态 */
+  appStatus?: AppStatusFilter;
+  /** 是否收藏 */
+  isCollect?: AppCollectFilter;
+}
+
+/**
+ * 拉取应用类型下拉选项（供查询栏 ApiSelect）
+ * @param params 远程搜索参数（keyword）
+ * @returns label / value 选项
+ */
+export async function fetchAppTypeSelectOptions(params?: {
+  keyword?: string;
+}): Promise<Array<{ label: string; value: string }>> {
+  const list = await getAppTypeOptionsApi({
+    keyword: String(params?.keyword ?? '').trim() || undefined,
+  });
+  return (Array.isArray(list) ? list : [])
+    .map((item) => {
+      const value = resolveAppTypeOptionValue(item);
+      if (value == null) {
+        return null;
+      }
+      return {
+        label:
+          item.typeName?.trim() ||
+          item.typeCode?.trim() ||
+          String(item.typeId ?? value),
+        value: String(value),
+      };
+    })
+    .filter(
+      (item): item is { label: string; value: string } => item != null,
+    );
+}
+
+/**
+ * 我的应用查询栏 schema
+ */
+export function useAppGridFormSchema(): VbenFormSchema[] {
+  return [
+    {
+      component: 'Input',
+      componentProps: {
+        clearable: true,
+        placeholder: $t(
+          'page.service.mydemand.apps.filter.appNamePlaceholder',
+        ),
+      },
+      fieldName: 'appName',
+      label: $t('page.service.mydemand.apps.filter.appName'),
+    },
+    {
+      component: 'ApiSelect',
+      componentProps: {
+        api: fetchAppTypeSelectOptions,
+        clearable: true,
+        filterable: true,
+        placeholder: $t('page.service.mydemand.apps.filter.appTypeAll'),
+      },
+      fieldName: 'appType',
+      label: $t('page.service.mydemand.apps.filter.appType'),
+    },
+    {
+      component: 'Select',
+      componentProps: {
+        clearable: true,
+        options: [
+          {
+            label: $t('page.service.mydemand.apps.status.on'),
+            value: String(APP_STATUS_ON),
+          },
+          {
+            label: $t('page.service.mydemand.apps.status.off'),
+            value: String(APP_STATUS_OFF),
+          },
+        ],
+        placeholder: $t('page.service.mydemand.apps.filter.appStatusAll'),
+      },
+      fieldName: 'appStatus',
+      label: $t('page.service.mydemand.apps.filter.appStatus'),
+    },
+    {
+      component: 'Select',
+      componentProps: {
+        clearable: true,
+        options: [
+          {
+            label: $t('page.service.mydemand.apps.collect.yes'),
+            value: String(APP_COLLECT_YES),
+          },
+          {
+            label: $t('page.service.mydemand.apps.collect.no'),
+            value: String(APP_COLLECT_NO),
+          },
+        ],
+        placeholder: $t('page.service.mydemand.apps.filter.isCollectAll'),
+      },
+      fieldName: 'isCollect',
+      label: $t('page.service.mydemand.apps.filter.isCollect'),
+    },
+  ];
+}
+
+/**
+ * 我的应用列表列配置
+ */
+export function useAppColumns(): VxeTableGridOptions<MyAppItem>['columns'] {
+  const emptyText = $t('page.service.mydemand.apps.valueEmpty');
+  return [
+    {
+      field: 'appName',
+      minWidth: 140,
+      showOverflow: true,
+      title: $t('page.service.mydemand.apps.fields.appName'),
+      formatter: ({ cellValue }) => displayAppValue(cellValue, emptyText),
+    },
+    {
+      field: 'appVersion',
+      minWidth: 100,
+      showOverflow: true,
+      title: $t('page.service.mydemand.apps.fields.appVersion'),
+      formatter: ({ cellValue }) => displayAppValue(cellValue, emptyText),
+    },
+    {
+      field: 'appTypeName',
+      minWidth: 110,
+      showOverflow: true,
+      title: $t('page.service.mydemand.apps.fields.appType'),
+      formatter: ({ cellValue, row }) =>
+        displayAppValue(cellValue || row.appType, emptyText),
+    },
+    {
+      align: 'center',
+      cellRender: {
+        name: 'CellTag',
+        options: [
+          {
+            label: $t('page.service.mydemand.apps.status.on'),
+            type: 'success',
+            value: APP_STATUS_ON,
+          },
+          {
+            label: $t('page.service.mydemand.apps.status.off'),
+            type: 'info',
+            value: APP_STATUS_OFF,
+          },
+        ],
+      },
+      field: 'appStatus',
+      minWidth: 90,
+      title: $t('page.service.mydemand.apps.fields.appStatus'),
+    },
+    {
+      align: 'center',
+      cellRender: {
+        name: 'CellTag',
+        options: [
+          {
+            label: $t('page.service.mydemand.apps.collect.yes'),
+            type: 'warning',
+            value: APP_COLLECT_YES,
+          },
+          {
+            label: $t('page.service.mydemand.apps.collect.no'),
+            type: 'info',
+            value: APP_COLLECT_NO,
+          },
+        ],
+      },
+      field: 'isCollect',
+      minWidth: 90,
+      title: $t('page.service.mydemand.apps.fields.isCollect'),
+    },
+    {
+      field: 'createTime',
+      minWidth: 150,
+      title: $t('page.service.mydemand.apps.fields.createTime'),
+      formatter: ({ cellValue }) => formatAppDateTime(cellValue) || emptyText,
+    },
+    {
+      field: 'updateTime',
+      minWidth: 150,
+      title: $t('page.service.mydemand.apps.fields.updateTime'),
+      formatter: ({ cellValue }) => formatAppDateTime(cellValue) || emptyText,
+    },
+    {
+      align: 'center',
+      field: 'action',
+      fixed: 'right',
+      minWidth: 320,
+      slots: { default: 'action' },
+      title: $t('page.service.mydemand.apps.fields.actions'),
+    },
+  ];
+}
+
+/**
+ * 将查询表单值转为列表筛选参数（不含分页）
+ * @param formValues 查询表单值
+ * @returns 接口筛选参数
+ */
+export function buildAppFilterParams(
+  formValues?: AppGridFormValues | null,
+): Pick<
+  MyAppListParams,
+  'appName' | 'appStatus' | 'appType' | 'isCollect'
+> {
+  return {
+    appName: String(formValues?.appName ?? '').trim() || undefined,
+    appType: parseAppTypeFilter(formValues?.appType),
+    appStatus: parseAppStatusFilter(formValues?.appStatus),
+    isCollect: parseAppCollectFilter(formValues?.isCollect),
+  };
+}
 
 /**
  * 素材附件允许的扩展名（文档 + 图片 + PDF）

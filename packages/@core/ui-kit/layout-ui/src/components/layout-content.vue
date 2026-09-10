@@ -42,16 +42,18 @@ const style = computed((): CSSProperties => {
     contentCompact === 'compact'
       ? { margin: '0 auto', width: `${props.contentCompactWidth}px` }
       : {};
+
+  // 随内容增高：勿用 minHeight:0 锁死视口，否则长页滚到底时底边距消失
   return {
     ...compactStyle,
-    flex: 1,
-    minHeight: 0,
+    flex: '1 0 auto',
+    minHeight: '100%',
     minWidth: 0,
-    padding: `${padding}px`,
-    paddingBottom: `${paddingBottom}px`,
-    paddingLeft: `${paddingLeft}px`,
-    paddingRight: `${paddingRight}px`,
-    paddingTop: `${paddingTop}px`,
+    height: 'auto',
+    paddingTop: `${paddingTop ?? padding}px`,
+    paddingRight: `${paddingRight ?? padding}px`,
+    paddingBottom: `${paddingBottom ?? padding}px`,
+    paddingLeft: `${paddingLeft ?? padding}px`,
   };
 });
 </script>

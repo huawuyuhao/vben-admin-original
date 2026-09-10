@@ -100,15 +100,20 @@ watch(
 );
 
 const { isMobile } = usePreferences();
+/**
+ * 是否展示查询区与表格之间的分隔条。
+ * 默认关闭（separator 未配置或为 false）；仅显式 separator: true / { show: true } 时显示。
+ */
 const isSeparator = computed(() => {
   if (
     !formOptions.value ||
     showSearchForm.value === false ||
-    separator.value === false
+    separator.value === false ||
+    separator.value === undefined
   ) {
     return false;
   }
-  if (separator.value === true || separator.value === undefined) {
+  if (separator.value === true) {
     return true;
   }
   return separator.value.show !== false;
@@ -121,6 +126,27 @@ const separatorBg = computed(() => {
     : separator.value.backgroundColor;
 });
 const slots: SetupContext['slots'] = useSlots();
+
+/**
+ * 根据查询项数量决定是否显示「收起/展开」。
+ * 默认 wrapperClass 为 `lg:grid-cols-3`，最后一列给重置/搜索/展开按钮，
+ * 因此一行最多展示 2 个查询项（与登录日志等列表查询页一致）；
+ * formOptions.showCollapseButton 显式配置优先。
+ * @param options 合并后的表单配置
+ * @param explicit 用户是否显式传入 showCollapseButton
+ */
+function resolveShowCollapseButton(
+  options: VbenFormProps,
+  explicit: boolean | undefined,
+): boolean {
+  if (explicit !== undefined) {
+    return explicit;
+  }
+  const schemaLen = options.schema?.length ?? 0;
+  const collapsedRows = options.collapsedRows ?? 1;
+  // 3 列网格 − 1 列操作按钮 = 每行 2 个查询项
+  return schemaLen > 2 * collapsedRows;
+}
 
 const [Form, formApi] = useTableForm({
   compact: true,
@@ -144,9 +170,10 @@ const [Form, formApi] = useTableForm({
       class: 'w-full',
     },
   },
-  showCollapseButton: true,
+  // 默认关闭；由下方 watch 按 schema 数量自动开启
+  showCollapseButton: false,
   submitButtonOptions: {
-    content: computed(() => $t('common.search')),
+    content: computed(() => $t('common.query')),
   },
   wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3',
 });
@@ -367,9 +394,19 @@ watch(
         formOptions.value,
         prev,
       );
+      const showCollapseButton = resolveShowCollapseButton(
+        finalFormOptions,
+        formOptions.value?.showCollapseButton,
+      );
+      // 有折叠按钮时默认收起，显式 collapsed 优先（对齐登录日志）
+      const collapsed =
+        formOptions.value?.collapsed ??
+        (showCollapseButton ? true : (finalFormOptions.collapsed ?? false));
       return {
         ...finalFormOptions,
-        collapseTriggerResize: !!finalFormOptions.showCollapseButton,
+        collapsed,
+        showCollapseButton,
+        collapseTriggerResize: !!showCollapseButton,
       };
     });
   },

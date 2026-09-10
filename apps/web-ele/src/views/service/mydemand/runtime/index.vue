@@ -1,83 +1,77 @@
 <script lang="ts" setup>
+import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { RunningTaskItem } from '#/types/service/mydemand/runtime';
 
-import { onMounted, ref, watch } from 'vue';
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { $t } from '@vben/locales';
 
-import { Refresh } from '@element-plus/icons-vue';
 import { ElMessage } from 'element-plus';
 
+import { toVxePageResult, useVbenVxeGrid } from '#/adapter/vxe-table';
 import {
   closeRunningTaskApi,
   getRunningTaskListApi,
 } from '#/api/service/mydemand/runtime';
+import PageListShell from '#/views/_shared/components/page-list-shell.vue';
 
 import {
+  canCloseRunningTask,
+  displayRuntimeStatusName,
+  formatRuntimePercent,
+  getRuntimeStatusTagType,
   normalizeRuntimePage,
   resolveRunningTaskId,
   RUNTIME_PAGE_SIZE,
+  useRuntimeColumns,
 } from './data';
-import TaskPager from './modules/task-pager.vue';
-import TaskTable from './modules/task-table.vue';
 
 /**
  * 门户服务 · 应用运行管理
- * 对接在运列表与关闭任务；详情跳转独立页串联监控接口
+ * 列表统一使用 useVbenVxeGrid（分页 / 工具栏），壳层沿用 page-shell
  */
 defineOptions({ name: 'ServiceMyDemandRuntime' });
 
 const router = useRouter();
 
-/** 当前页码 */
-const currentPage = ref(1);
-/** 每页条数 */
-const pageSize = ref(RUNTIME_PAGE_SIZE);
-/** 列表加载中 */
-const loading = ref(false);
-/** 当前页任务列表 */
-const tasks = ref<RunningTaskItem[]>([]);
-/** 总条数 */
-const total = ref(0);
-/** 跳过由服务端回写 current 触发的重复请求 */
-const syncingFromServer = ref(false);
 /** 正在关闭的任务 ID */
 const closingId = ref<null | string>(null);
 
-/**
- * 拉取当前页在运应用列表
- */
-async function fetchTasks() {
-  loading.value = true;
-  try {
-    const data = await getRunningTaskListApi({
-      page: currentPage.value,
-      pageSize: pageSize.value,
-    });
-    const page = normalizeRuntimePage(data);
-    tasks.value = page.records;
-    total.value = page.total;
-
-    if (page.current !== currentPage.value) {
-      syncingFromServer.value = true;
-      currentPage.value = page.current;
-      syncingFromServer.value = false;
-    }
-  } catch {
-    tasks.value = [];
-    total.value = 0;
-  } finally {
-    loading.value = false;
-  }
-}
-
-/**
- * 手动刷新当前页
- */
-function handleRefresh() {
-  void fetchTasks();
-}
+const [Grid, gridApi] = useVbenVxeGrid({
+  class: 'mine-vxe-grid',
+  gridOptions: {
+    columns: useRuntimeColumns(),
+    height: 'auto',
+    keepSource: true,
+    pagerConfig: {
+      pageSize: RUNTIME_PAGE_SIZE,
+      pageSizes: [10, 20, 50],
+    },
+    proxyConfig: {
+      ajax: {
+        query: async ({ page }) => {
+          const data = await getRunningTaskListApi({
+            page: page.currentPage,
+            pageSize: page.pageSize,
+          });
+          return toVxePageResult(normalizeRuntimePage(data));
+        },
+      },
+    },
+    rowConfig: {
+      keyField: 'taskId',
+    },
+    stripe: true,
+    toolbarConfig: {
+      custom: false,
+      export: false,
+      refresh: false,
+      search: false,
+      zoom: false,
+    },
+  } as VxeTableGridOptions<RunningTaskItem>,
+});
 
 /**
  * 跳转运行详情页
@@ -113,89 +107,115 @@ async function handleClose(row: RunningTaskItem) {
     ElMessage.success(
       tip || $t('page.service.mydemand.runtime.close.success'),
     );
-    void fetchTasks();
+    gridApi.query();
   } catch {
     // 错误提示由接口层处理
   } finally {
     closingId.value = null;
   }
 }
-
-watch(pageSize, () => {
-  if (syncingFromServer.value) {
-    return;
-  }
-  if (currentPage.value !== 1) {
-    currentPage.value = 1;
-    return;
-  }
-  void fetchTasks();
-});
-
-watch(currentPage, () => {
-  if (syncingFromServer.value) {
-    return;
-  }
-  void fetchTasks();
-});
-
-onMounted(() => {
-  void fetchTasks();
-});
 </script>
 
 <template>
-  <div class="mine-page">
-    <div class="mine-shell">
-      <div class="mine-shell__bg" aria-hidden="true">
-        <span class="mine-shell__orb mine-shell__orb--a"></span>
-        <span class="mine-shell__orb mine-shell__orb--b"></span>
-        <span class="mine-shell__mesh"></span>
-      </div>
+  <PageListShell
+    :desc="$t('page.service.mydemand.runtime.desc')"
+    :eyebrow="$t('page.service.mydemand.runtime.eyebrow')"
+    :title="$t('page.service.mydemand.runtime.title')"
+  >
 
-      <div class="mine-shell__inner">
-        <header class="mine-shell__head">
-          <div>
-            <p class="mine-shell__eyebrow">
-              {{ $t('page.service.mydemand.runtime.eyebrow') }}
-            </p>
-            <h2>{{ $t('page.service.mydemand.runtime.title') }}</h2>
-            <p class="mine-shell__desc">
-              {{ $t('page.service.mydemand.runtime.desc') }}
-            </p>
-          </div>
-          <div class="mine-shell__head-actions">
+    <Grid>
+      <template #table-title></template>
+
+      <template #runStatus="{ row }">
+        <el-tag
+          effect="light"
+          round
+          size="small"
+          :type="getRuntimeStatusTagType(row.runStatus)"
+        >
+          {{
+            displayRuntimeStatusName(
+              row,
+              $t('page.service.mydemand.runtime.valueEmpty'),
+            )
+          }}
+        </el-tag>
+      </template>
+
+      <template #completePercent="{ row }">
+        <div class="runtime-progress">
+          <el-progress
+            :percentage="
+              Math.min(100, Math.max(0, Number(row.completePercent) || 0))
+            "
+            :show-text="false"
+            :stroke-width="10"
+          />
+          <span class="runtime-progress__text">
+            {{
+              formatRuntimePercent(row.completePercent) ||
+              $t('page.service.mydemand.runtime.valueEmpty')
+            }}
+          </span>
+        </div>
+      </template>
+
+      <template #action="{ row }">
+        <el-button link type="primary" @click="handleDetail(row)">
+          {{ $t('page.service.mydemand.runtime.actions.detail') }}
+        </el-button>
+        <el-popconfirm
+          v-if="canCloseRunningTask(row.runStatus)"
+          :cancel-button-text="
+            $t('page.service.mydemand.runtime.close.cancelBtn')
+          "
+          :confirm-button-text="
+            $t('page.service.mydemand.runtime.close.confirmBtn')
+          "
+          :title="
+            $t('page.service.mydemand.runtime.close.confirm', [
+              row.taskName?.trim() ||
+                $t('page.service.mydemand.runtime.valueEmpty'),
+            ])
+          "
+          @confirm="handleClose(row)"
+        >
+          <template #reference>
             <el-button
-              class="mine-shell__action-btn"
-              :icon="Refresh"
-              :loading="loading"
-              @click="handleRefresh"
+              link
+              type="danger"
+              :loading="
+                closingId != null && closingId === resolveRunningTaskId(row)
+              "
             >
-              {{ $t('page.service.mydemand.runtime.refresh') }}
+              {{ $t('page.service.mydemand.runtime.actions.close') }}
             </el-button>
-          </div>
-        </header>
-
-        <TaskTable
-          :closing-id="closingId"
-          :loading="loading"
-          :tasks="tasks"
-          @close="handleClose"
-          @detail="handleDetail"
-        />
-
-        <TaskPager
-          v-if="tasks.length > 0 || loading || total > 0"
-          v-model:page="currentPage"
-          v-model:page-size="pageSize"
-          :disabled="loading"
-          :total="total"
-        />
-      </div>
-    </div>
-  </div>
+          </template>
+        </el-popconfirm>
+      </template>
+    </Grid>
+  </PageListShell>
 </template>
 
 <style lang="scss" scoped>
-@use '../../../../scss/page-shell.scss';
+.runtime-progress {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+
+  :deep(.el-progress) {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__text {
+    flex-shrink: 0;
+    min-width: 42px;
+    font-size: 12px;
+    color: hsl(var(--muted-foreground));
+    text-align: right;
+  }
+}
 </style>

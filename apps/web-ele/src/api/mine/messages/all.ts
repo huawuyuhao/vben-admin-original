@@ -86,12 +86,19 @@ function parseMessageListBody<T>(
  */
 export async function getMessageListApi(params: MessageListParams) {
   const body = await rootRequestClient.get<MessageListResponseBody>(
-    '/mock/message/list',
+    '/pwq-mock/message/list',
     {
       params,
       responseReturn: 'body',
     },
   );
+  // const body = await rootRequestClient.get<MessageListResponseBody>(
+  //   '/mock/message/list',
+  //   {
+  //     params,
+  //     responseReturn: 'body',
+  //   },
+  // );
   // const body = await rootRequestClient.get<MessageListResponseBody>(
   //   '/message/list',
   //   { params, responseReturn: 'body' },
@@ -116,9 +123,14 @@ export async function getMessageListApi(params: MessageListParams) {
 export async function getMessageDetailApi(id: number) {
   const body = await rootRequestClient.get<
     MessageMutationResponse<MessageItem>
-  >(`/mock/message/${id}`, {
+  >(`/pwq-mock/message/${id}`, {
     responseReturn: 'body',
   });
+  // const body = await rootRequestClient.get<
+  //   MessageMutationResponse<MessageItem>
+  // >(`/mock/message/${id}`, {
+  //   responseReturn: 'body',
+  // });
   // const body = await rootRequestClient.get<
   //   MessageMutationResponse<MessageItem>
   // >(`/message/${id}`, {
@@ -137,10 +149,15 @@ export async function getMessageDetailApi(id: number) {
  */
 export async function markMessageReadApi(messageIds: number[]) {
   const body = await rootRequestClient.post<MessageMutationResponse<string>>(
-    '/mock/message/read',
+    '/pwq-mock/message/read',
     messageIds,
     { responseReturn: 'body' },
   );
+  // const body = await rootRequestClient.post<MessageMutationResponse<string>>(
+  //   '/mock/message/read',
+  //   messageIds,
+  //   { responseReturn: 'body' },
+  // );
   // const body = await rootRequestClient.post<MessageMutationResponse<string>>(
   //   '/message/read',
   //   messageIds,
@@ -159,10 +176,15 @@ export async function markMessageReadApi(messageIds: number[]) {
  */
 export async function deleteMessageApi(messageIds: number[]) {
   const body = await rootRequestClient.post<MessageMutationResponse<string>>(
-    '/mock/message/delete',
+    '/pwq-mock/message/delete',
     messageIds,
     { responseReturn: 'body' },
   );
+  // const body = await rootRequestClient.post<MessageMutationResponse<string>>(
+  //   '/mock/message/delete',
+  //   messageIds,
+  //   { responseReturn: 'body' },
+  // );
   // const body = await rootRequestClient.post<MessageMutationResponse<string>>(
   //   '/message/delete',
   //   messageIds,
@@ -182,9 +204,14 @@ export async function deleteMessageApi(messageIds: number[]) {
 export async function getMessageStatisticsApi() {
   const body = await rootRequestClient.get<
     MessageMutationResponse<MessageStatisticsItem[]>
-  >('/mock/message/statistics', {
+  >('/pwq-mock/message/statistics', {
     responseReturn: 'body',
   });
+  // const body = await rootRequestClient.get<
+  //   MessageMutationResponse<MessageStatisticsItem[]>
+  // >('/mock/message/statistics', {
+  //   responseReturn: 'body',
+  // });
   // const body = await rootRequestClient.get<
   //   MessageMutationResponse<MessageStatisticsItem[]>
   // >('/message/statistics', {

@@ -85,12 +85,19 @@ function parseSupplyListBody<T>(
  */
 export async function getSupplyDeviceListApi(params: SupplyDeviceListParams) {
   const body = await rootRequestClient.get<SupplyDeviceListResponseBody>(
-    '/mock/supply/device/list',
+    '/pwq-mock/supply/device/list',
     {
       params,
       responseReturn: 'body',
     },
   );
+  // const body = await rootRequestClient.get<SupplyDeviceListResponseBody>(
+  //   '/mock/supply/device/list',
+  //   {
+  //     params,
+  //     responseReturn: 'body',
+  //   },
+  // );
   // const body = await rootRequestClient.get<SupplyDeviceListResponseBody>(
   //   '/supply/device/list',
   //   { params, responseReturn: 'body' },
@@ -115,12 +122,19 @@ export async function getSupplyDeviceListApi(params: SupplyDeviceListParams) {
  */
 export async function submitSupplyDeviceApi(data: SupplyDeviceSubmitParams) {
   const body = await rootRequestClient.post<SupplyDeviceMutationResponse>(
-    '/mock/supply/device',
+    '/pwq-mock/supply/device',
     data,
     {
       responseReturn: 'body',
     },
   );
+  // const body = await rootRequestClient.post<SupplyDeviceMutationResponse>(
+  //   '/mock/supply/device',
+  //   data,
+  //   {
+  //     responseReturn: 'body',
+  //   },
+  // );
   // const body = await rootRequestClient.post<SupplyDeviceMutationResponse>(
   //   '/supply/device',
   //   data,
@@ -145,12 +159,19 @@ export async function submitSupplyDeviceApi(data: SupplyDeviceSubmitParams) {
  */
 export async function exportSupplyDeviceApi(data?: SupplyDeviceExportParams) {
   const body = await rootRequestClient.post<SupplyDeviceMutationResponse>(
-    '/mock/supply/device/export',
+    '/pwq-mock/supply/device/export',
     data ?? {},
     {
       responseReturn: 'body',
     },
   );
+  // const body = await rootRequestClient.post<SupplyDeviceMutationResponse>(
+  //   '/mock/supply/device/export',
+  //   data ?? {},
+  //   {
+  //     responseReturn: 'body',
+  //   },
+  // );
   // const body = await rootRequestClient.post<SupplyDeviceMutationResponse>(
   //   '/supply/device/export',
   //   data ?? {},

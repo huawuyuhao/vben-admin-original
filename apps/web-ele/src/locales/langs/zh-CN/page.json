@@ -589,7 +589,17 @@
         "title": "我的产品",
         "desc": "集中管理已收藏的算力产品，可取消收藏或立即下单。",
         "empty": "暂无收藏产品",
-        "refresh": "刷新"
+        "refresh": "刷新",
+        "valueEmpty": "—",
+        "fields": {
+          "cover": "封面",
+          "productName": "产品名称",
+          "tags": "标签",
+          "price": "价格",
+          "greenPowerRatio": "绿电占比",
+          "description": "产品简介",
+          "actions": "操作"
+        }
       }
     },
     "messages": {
@@ -1068,7 +1078,7 @@
       "product": {
         "eyebrow": "内容管理 · 算力产品",
         "title": "算力产品管理",
-        "desc": "查看与管理门户算力产品，支持按名称与上下架状态筛选，卡片展示产品概览。",
+        "desc": "查看与管理门户算力产品，支持按名称与上下架状态筛选，表格展示产品概览。",
         "add": "新增产品",
         "edit": "编辑",
         "delete": "删除",
@@ -1077,6 +1087,7 @@
         "searchPlaceholder": "搜索产品名称…",
         "shelfStatusLabel": "上下架状态",
         "empty": "暂无匹配产品",
+        "valueEmpty": "—",
         "viewDetail": "详情",
         "submitAudit": "提交审核",
         "submitAuditSuccess": "「{0}」已提交审核",
@@ -1112,6 +1123,9 @@
         },
         "fields": {
           "productId": "产品 ID",
+          "cover": "封面",
+          "productName": "产品名称",
+          "tags": "标签",
           "description": "产品简介",
           "price": "价格",
           "greenPowerRatio": "绿电占比",
@@ -1120,7 +1134,8 @@
           "auditStatus": "审核状态",
           "enterpriseId": "供给企业 ID",
           "publishTime": "发布时间",
-          "tenantId": "租户编号"
+          "tenantId": "租户编号",
+          "actions": "操作"
         },
         "form": {
           "createTitle": "新增算力产品",
@@ -1196,7 +1211,7 @@
       "case": {
         "eyebrow": "内容管理 · 案例",
         "title": "案例内容管理",
-        "desc": "管理门户案例资讯，支持按标签与类型筛选，卡片展示案例概览并支持新增、编辑与删除。",
+        "desc": "管理门户案例资讯，支持按标签与类型筛选，表格展示案例概览并支持新增、编辑与删除。",
         "add": "新增案例",
         "refresh": "刷新",
         "empty": "暂无匹配案例",
@@ -1250,12 +1265,16 @@
         },
         "fields": {
           "caseId": "案例 ID",
+          "cover": "封面",
+          "title": "标题",
           "caseType": "案例类型",
+          "tags": "标签",
           "viewCount": "浏览量",
           "summary": "摘要",
           "createTime": "创建时间",
           "draftStatus": "是否草稿",
-          "auditStatus": "审核状态"
+          "auditStatus": "审核状态",
+          "actions": "操作"
         },
         "form": {
           "createTitle": "新增案例",
@@ -1303,9 +1322,13 @@
       "searchPlaceholder": "搜索产品名称、简介或标签…",
       "search": "查询",
       "refresh": "刷新",
+      "valueEmpty": "—",
       "sortLabel": "排序方式",
       "sortFieldLabel": "排序字段",
       "sortOrderLabel": "排序方向",
+      "filter": {
+        "keyword": "关键词"
+      },
       "sortField": {
         "price": "价格",
         "greenPowerRatio": "绿电占比"
@@ -1319,6 +1342,16 @@
       "pricePending": "价格面议",
       "greenPower": "绿电占比 {0}",
       "recommendLevel": "荐 {0}",
+      "fields": {
+        "cover": "封面",
+        "productName": "产品名称",
+        "tags": "标签",
+        "price": "价格",
+        "greenPowerRatio": "绿电占比",
+        "recommendLevel": "推荐度",
+        "description": "产品简介",
+        "actions": "操作"
+      },
       "collect": {
         "do": "收藏",
         "cancel": "取消收藏",
@@ -1490,18 +1523,25 @@
     "model": {
       "eyebrow": "门户服务 · 模型",
       "title": "模型服务",
-      "desc": "浏览启用模型卡片，支持搜索、多模型对比、评价与信息模板导出。",
+      "desc": "浏览启用模型，支持搜索、多模型对比、评价与信息模板导出。",
       "searchPlaceholder": "按模型名称搜索…",
       "search": "查询",
       "refresh": "刷新",
+      "valueEmpty": "—",
       "empty": "暂无匹配模型",
       "viewDetail": "查看详情",
       "scorePending": "暂无评分",
       "callPending": "—",
+      "filter": {
+        "keyword": "关键词"
+      },
       "fields": {
+        "cover": "图标",
+        "modelName": "模型名称",
         "score": "评分",
         "callCount": "调用量",
-        "description": "模型简介"
+        "description": "模型简介",
+        "actions": "操作"
       },
       "compare": {
         "select": "对比",
@@ -1574,6 +1614,7 @@
       "empty": "暂无匹配案例",
       "viewDetail": "查看详情",
       "viewPending": "—",
+      "valueEmpty": "—",
       "filter": {
         "tagName": "标签",
         "caseType": "案例类型",
@@ -1585,9 +1626,14 @@
         "smart": "智算"
       },
       "fields": {
+        "cover": "封面",
+        "title": "标题",
+        "caseType": "案例类型",
+        "tags": "标签",
         "viewCount": "浏览量",
         "summary": "摘要",
-        "createTime": "创建时间"
+        "createTime": "创建时间",
+        "actions": "操作"
       },
       "detail": {
         "eyebrow": "门户服务 · 案例详情",

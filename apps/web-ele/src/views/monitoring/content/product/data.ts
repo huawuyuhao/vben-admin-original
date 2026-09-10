@@ -1,11 +1,23 @@
+import type { VbenFormSchema } from '#/adapter/form';
+import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type {
   AdminProductAuditStatus,
   AdminProductEvalStatus,
   AdminProductShelfStatus,
+  AdminProductListParams,
 } from '#/types/monitoring/content/product';
 import type { ProductInfo, ProductListResult } from '#/types/service/product';
 
+import { $t } from '@vben/locales';
 import { isEmpty } from '@vben/utils';
+
+import {
+  formatGreenPowerRatio,
+  formatProductDateTime,
+  formatProductPrice,
+  hasProductImage,
+  splitProductTags,
+} from '#/views/service/product/data';
 
 export {
   formatGreenPowerRatio,
@@ -13,7 +25,7 @@ export {
   formatProductPrice,
   hasProductImage,
   splitProductTags,
-} from '#/views/service/product/data';
+};
 
 /** 产品图片上传 accept */
 export const ADMIN_PRODUCT_IMAGE_ACCEPT = '.jpg,.jpeg,.png';
@@ -51,7 +63,7 @@ export function joinAdminProductTags(
   return text || undefined;
 }
 
-/** 产品列表默认每页条数（3 列 × 2 行） */
+/** 管理端产品列表默认每页条数（卡片网格） */
 export const ADMIN_PRODUCT_PAGE_SIZE = 6;
 
 /** 可选每页条数 */
@@ -93,6 +105,20 @@ export const ADMIN_PRODUCT_EVAL_PASSED = 1;
 /** 评价已屏蔽 */
 export const ADMIN_PRODUCT_EVAL_BLOCKED = 2;
 
+/** 上下架筛选：空串表示全部（表单用字符串，避免 Select 类型漂移） */
+export type AdminProductShelfFilter =
+  | ''
+  | `${typeof ADMIN_PRODUCT_SHELF_OFF}`
+  | `${typeof ADMIN_PRODUCT_SHELF_ON}`;
+
+/** 列表查询表单值 */
+export interface AdminProductGridFormValues {
+  /** 产品名称 */
+  productName?: string;
+  /** 上下架状态 */
+  shelfStatus?: AdminProductShelfFilter;
+}
+
 /**
  * 上下架筛选项
  */
@@ -130,6 +156,169 @@ export const ADMIN_PRODUCT_EVAL_STATUS_FILTER_OPTIONS: AdminProductEvalStatusFil
     { value: ADMIN_PRODUCT_EVAL_BLOCKED, labelKey: 'blocked' },
   ];
 
+/**
+ * 管理端产品查询栏 schema
+ */
+export function useAdminProductGridFormSchema(): VbenFormSchema[] {
+  return [
+    {
+      component: 'Input',
+      componentProps: {
+        clearable: true,
+        placeholder: $t('page.monitoring.content.product.searchPlaceholder'),
+      },
+      fieldName: 'productName',
+      label: $t('page.monitoring.content.product.fields.productName'),
+    },
+    {
+      component: 'Select',
+      componentProps: {
+        clearable: true,
+        options: [
+          {
+            label: $t('page.monitoring.content.product.shelfStatus.on'),
+            value: String(ADMIN_PRODUCT_SHELF_ON),
+          },
+          {
+            label: $t('page.monitoring.content.product.shelfStatus.off'),
+            value: String(ADMIN_PRODUCT_SHELF_OFF),
+          },
+        ],
+        placeholder: $t(
+          'page.monitoring.content.product.shelfStatus.all',
+        ),
+      },
+      fieldName: 'shelfStatus',
+      label: $t('page.monitoring.content.product.shelfStatusLabel'),
+    },
+  ];
+}
+
+/**
+ * 管理端产品列表列配置
+ */
+export function useAdminProductColumns(): VxeTableGridOptions<ProductInfo>['columns'] {
+  const emptyText = $t('page.monitoring.content.product.valueEmpty');
+  return [
+    {
+      align: 'center',
+      cellRender: { name: 'CellImage' },
+      field: 'imageUrl',
+      minWidth: 80,
+      title: $t('page.monitoring.content.product.fields.cover'),
+    },
+    {
+      field: 'productName',
+      minWidth: 150,
+      showOverflow: true,
+      title: $t('page.monitoring.content.product.fields.productName'),
+      formatter: ({ cellValue }) =>
+        displayAdminProductValue(cellValue, emptyText),
+    },
+    {
+      field: 'tags',
+      minWidth: 150,
+      slots: { default: 'tags' },
+      title: $t('page.monitoring.content.product.fields.tags'),
+    },
+    {
+      field: 'price',
+      minWidth: 100,
+      title: $t('page.monitoring.content.product.fields.price'),
+      formatter: ({ cellValue }) =>
+        formatProductPrice(cellValue) ||
+        $t('page.monitoring.content.product.pricePending'),
+    },
+    {
+      field: 'greenPowerRatio',
+      minWidth: 100,
+      title: $t('page.monitoring.content.product.fields.greenPowerRatio'),
+      formatter: ({ cellValue }) =>
+        formatGreenPowerRatio(cellValue) || emptyText,
+    },
+    {
+      align: 'center',
+      cellRender: {
+        name: 'CellTag',
+        options: [
+          {
+            label: $t('page.monitoring.content.product.shelfStatus.on'),
+            type: 'success',
+            value: ADMIN_PRODUCT_SHELF_ON,
+          },
+          {
+            label: $t('page.monitoring.content.product.shelfStatus.off'),
+            type: 'info',
+            value: ADMIN_PRODUCT_SHELF_OFF,
+          },
+        ],
+      },
+      field: 'shelfStatus',
+      minWidth: 100,
+      title: $t('page.monitoring.content.product.fields.shelfStatus'),
+    },
+    {
+      align: 'center',
+      field: 'status',
+      minWidth: 110,
+      slots: { default: 'auditStatus' },
+      title: $t('page.monitoring.content.product.fields.auditStatus'),
+    },
+    {
+      field: 'publishTime',
+      minWidth: 150,
+      title: $t('page.monitoring.content.product.fields.publishTime'),
+      formatter: ({ cellValue }) =>
+        formatProductDateTime(cellValue) || emptyText,
+    },
+    {
+      align: 'center',
+      field: 'action',
+      fixed: 'right',
+      minWidth: 280,
+      slots: { default: 'action' },
+      title: $t('page.monitoring.content.product.fields.actions'),
+    },
+  ];
+}
+
+/**
+ * 将查询表单值转为列表筛选参数（不含分页）
+ * @param formValues 查询表单值
+ * @returns 接口筛选参数
+ */
+export function buildAdminProductFilterParams(
+  formValues?: AdminProductGridFormValues | null,
+): Pick<AdminProductListParams, 'productName' | 'shelfStatus'> {
+  const shelf = formValues?.shelfStatus;
+  let shelfStatus: AdminProductShelfStatus | undefined;
+  if (shelf === String(ADMIN_PRODUCT_SHELF_ON)) {
+    shelfStatus = ADMIN_PRODUCT_SHELF_ON;
+  } else if (shelf === String(ADMIN_PRODUCT_SHELF_OFF)) {
+    shelfStatus = ADMIN_PRODUCT_SHELF_OFF;
+  }
+  return {
+    productName: String(formValues?.productName ?? '').trim() || undefined,
+    shelfStatus,
+  };
+}
+
+/**
+ * 展示字段值；空值用占位符
+ * @param value 原始值
+ * @param emptyText 占位文案
+ * @returns 展示字符串
+ */
+export function displayAdminProductValue(
+  value?: null | number | string,
+  emptyText = '—',
+): string {
+  if (value == null) {
+    return emptyText;
+  }
+  const text = String(value).trim();
+  return text || emptyText;
+}
 /**
  * 过滤含名称的产品条目
  * @param list 接口原始列表

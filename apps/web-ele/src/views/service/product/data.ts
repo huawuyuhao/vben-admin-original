@@ -1,16 +1,20 @@
+import type { VbenFormSchema } from '#/adapter/form';
+import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type {
   ProductId,
   ProductInfo,
+  ProductListParams,
   ProductListResult,
   ProductSortField,
 } from '#/types/service/product';
 
+import { $t } from '@vben/locales';
 import { formatDate, isEmpty } from '@vben/utils';
 
-/** 产品列表默认每页条数（3 列 × 2 行） */
+/** 产品列表默认每页条数（卡片 2 行 × 3 列） */
 export const PRODUCT_PAGE_SIZE = 6;
 
-/** 可选每页条数（供 el-pagination，从 6 起） */
+/** 可选每页条数（供分页器） */
 export const PRODUCT_PAGE_SIZE_OPTIONS = [6, 12, 18];
 
 /** 上架 / 审核通过 */
@@ -48,6 +52,124 @@ export const PRODUCT_SORT_ORDER_OPTIONS: ProductSortOrderOption[] = [
   { value: 'desc', labelKey: 'desc' },
 ];
 
+/** 列表查询表单值 */
+export interface ProductGridFormValues {
+  /** 关键词 */
+  keyword?: string;
+  /** 排序字段 */
+  sortField?: ProductSortField | string;
+  /** 排序方向 */
+  sortOrder?: 'asc' | 'desc' | string;
+}
+
+/**
+ * 产品列表查询栏 schema
+ */
+export function useProductGridFormSchema(): VbenFormSchema[] {
+  return [
+    {
+      component: 'Input',
+      componentProps: {
+        clearable: true,
+        placeholder: $t('page.service.product.searchPlaceholder'),
+      },
+      fieldName: 'keyword',
+      label: $t('page.service.product.filter.keyword'),
+    },
+    {
+      component: 'Select',
+      componentProps: {
+        clearable: true,
+        options: PRODUCT_SORT_FIELD_OPTIONS.map((opt) => ({
+          label: $t(`page.service.product.sortField.${opt.labelKey}`),
+          value: opt.value,
+        })),
+        placeholder: $t('page.service.product.sortFieldLabel'),
+      },
+      fieldName: 'sortField',
+      label: $t('page.service.product.sortFieldLabel'),
+    },
+    {
+      component: 'Select',
+      componentProps: {
+        clearable: true,
+        options: PRODUCT_SORT_ORDER_OPTIONS.map((opt) => ({
+          label: $t(`page.service.product.sortOrder.${opt.labelKey}`),
+          value: opt.value,
+        })),
+        placeholder: $t('page.service.product.sortOrderLabel'),
+      },
+      fieldName: 'sortOrder',
+      label: $t('page.service.product.sortOrderLabel'),
+    },
+  ];
+}
+
+/**
+ * 产品列表列配置
+ */
+export function useProductColumns(): VxeTableGridOptions<ProductInfo>['columns'] {
+  const emptyText = $t('page.service.product.valueEmpty');
+  return [
+    {
+      align: 'center',
+      cellRender: { name: 'CellImage' },
+      field: 'imageUrl',
+      minWidth: 80,
+      title: $t('page.service.product.fields.cover'),
+    },
+    {
+      field: 'productName',
+      minWidth: 160,
+      showOverflow: true,
+      title: $t('page.service.product.fields.productName'),
+      formatter: ({ cellValue }) => displayProductValue(cellValue, emptyText),
+    },
+    {
+      field: 'tags',
+      minWidth: 160,
+      slots: { default: 'tags' },
+      title: $t('page.service.product.fields.tags'),
+    },
+    {
+      field: 'price',
+      minWidth: 110,
+      title: $t('page.service.product.fields.price'),
+      formatter: ({ cellValue }) =>
+        formatProductPrice(cellValue) ||
+        $t('page.service.product.pricePending'),
+    },
+    {
+      field: 'greenPowerRatio',
+      minWidth: 110,
+      title: $t('page.service.product.fields.greenPowerRatio'),
+      formatter: ({ cellValue }) =>
+        formatGreenPowerRatio(cellValue) || emptyText,
+    },
+    {
+      field: 'recommendLevel',
+      minWidth: 90,
+      title: $t('page.service.product.fields.recommendLevel'),
+      formatter: ({ cellValue }) => displayProductValue(cellValue, emptyText),
+    },
+    {
+      field: 'description',
+      minWidth: 200,
+      showOverflow: true,
+      title: $t('page.service.product.fields.description'),
+      formatter: ({ cellValue }) => displayProductValue(cellValue, emptyText),
+    },
+    {
+      align: 'center',
+      field: 'action',
+      fixed: 'right',
+      minWidth: 220,
+      slots: { default: 'action' },
+      title: $t('page.service.product.fields.actions'),
+    },
+  ];
+}
+
 /**
  * 组装列表查询的排序参数（字段、方向可独立传递）
  * @param sortField 排序字段
@@ -74,6 +196,24 @@ export function buildProductSortParams(
     result.sortOrder = order;
   }
   return result;
+}
+
+/**
+ * 将查询表单值转为列表筛选参数（不含分页）
+ * @param formValues 查询表单值
+ * @returns 接口筛选参数
+ */
+export function buildProductFilterParams(
+  formValues?: null | ProductGridFormValues,
+): Pick<ProductListParams, 'keyword' | 'sortField' | 'sortOrder'> {
+  const sort = buildProductSortParams(
+    formValues?.sortField,
+    formValues?.sortOrder,
+  );
+  return {
+    keyword: String(formValues?.keyword ?? '').trim() || undefined,
+    ...sort,
+  };
 }
 
 /**
@@ -171,6 +311,23 @@ export function formatProductDateTime(publishTime?: string): string {
  */
 export function hasProductImage(imageUrl?: string): boolean {
   return !isEmpty(imageUrl?.trim());
+}
+
+/**
+ * 展示字段值；空值用占位符
+ * @param value 原始值
+ * @param emptyText 占位文案
+ * @returns 展示字符串
+ */
+export function displayProductValue(
+  value?: null | number | string,
+  emptyText = '—',
+): string {
+  if (value == null) {
+    return emptyText;
+  }
+  const text = String(value).trim();
+  return text || emptyText;
 }
 
 /**

@@ -97,12 +97,20 @@ function parseMyAppListBody<T>(
 export async function getAppTypeOptionsApi(params?: AppTypeOptionsParams) {
   const body = await rootRequestClient.get<
     MyAppMutationResponse<AppTypeOptionItem[]>
-  >('/mock/app/type/options', {
+  >('/pwq-mock/app/type/options', {
     params: {
       keyword: params?.keyword ?? '',
     },
     responseReturn: 'body',
   });
+  // const body = await rootRequestClient.get<
+  //   MyAppMutationResponse<AppTypeOptionItem[]>
+  // >('/mock/app/type/options', {
+  //   params: {
+  //     keyword: params?.keyword ?? '',
+  //   },
+  //   responseReturn: 'body',
+  // });
   // const body = await rootRequestClient.get<
   //   MyAppMutationResponse<AppTypeOptionItem[]>
   // >('/app/type/options', {
@@ -123,12 +131,19 @@ export async function getAppTypeOptionsApi(params?: AppTypeOptionsParams) {
  */
 export async function getMyAppListApi(params: MyAppListParams) {
   const body = await rootRequestClient.get<MyAppListResponseBody<MyAppItem>>(
-    '/mock/my-application/list',
+    '/pwq-mock/my-application/list',
     {
       params,
       responseReturn: 'body',
     },
   );
+  // const body = await rootRequestClient.get<MyAppListResponseBody<MyAppItem>>(
+  //   '/mock/my-application/list',
+  //   {
+  //     params,
+  //     responseReturn: 'body',
+  //   },
+  // );
   // const body = await rootRequestClient.get<MyAppListResponseBody<MyAppItem>>(
   //   '/my-application/list',
   //   { params, responseReturn: 'body' },
@@ -151,10 +166,15 @@ export async function getMyAppListApi(params: MyAppListParams) {
  */
 export async function createMyAppApi(data: MyAppWriteParams) {
   const body = await rootRequestClient.post<MyAppMutationResponse>(
-    '/mock/my-application',
+    '/pwq-mock/my-application',
     data,
     { responseReturn: 'body' },
   );
+  // const body = await rootRequestClient.post<MyAppMutationResponse>(
+  //   '/mock/my-application',
+  //   data,
+  //   { responseReturn: 'body' },
+  // );
   // const body = await rootRequestClient.post<MyAppMutationResponse>(
   //   '/my-application',
   //   data,
@@ -173,10 +193,15 @@ export async function createMyAppApi(data: MyAppWriteParams) {
  */
 export async function updateMyAppApi(id: number, data: MyAppWriteParams) {
   const body = await rootRequestClient.put<MyAppMutationResponse>(
-    `/mock/my-application/${id}`,
+    `/pwq-mock/my-application/${id}`,
     data,
     { responseReturn: 'body' },
   );
+  // const body = await rootRequestClient.put<MyAppMutationResponse>(
+  //   `/mock/my-application/${id}`,
+  //   data,
+  //   { responseReturn: 'body' },
+  // );
   // const body = await rootRequestClient.put<MyAppMutationResponse>(
   //   `/my-application/${id}`,
   //   data,
@@ -194,9 +219,13 @@ export async function updateMyAppApi(id: number, data: MyAppWriteParams) {
  */
 export async function deleteMyAppApi(id: number) {
   const body = await rootRequestClient.delete<MyAppMutationResponse>(
-    `/mock/my-application/${id}`,
+    `/pwq-mock/my-application/${id}`,
     { responseReturn: 'body' },
   );
+  // const body = await rootRequestClient.delete<MyAppMutationResponse>(
+  //   `/mock/my-application/${id}`,
+  //   { responseReturn: 'body' },
+  // );
   // const body = await rootRequestClient.delete<MyAppMutationResponse>(
   //   `/my-application/${id}`,
   //   { responseReturn: 'body' },
@@ -214,13 +243,21 @@ export async function deleteMyAppApi(id: number) {
  */
 export async function toggleMyAppApi(id: number, action: MyAppToggleAction) {
   const body = await rootRequestClient.put<MyAppMutationResponse>(
-    `/mock/my-application/${id}/toggle`,
+    `/pwq-mock/my-application/${id}/toggle`,
     {},
     {
       params: { action },
       responseReturn: 'body',
     },
   );
+  // const body = await rootRequestClient.put<MyAppMutationResponse>(
+  //   `/mock/my-application/${id}/toggle`,
+  //   {},
+  //   {
+  //     params: { action },
+  //     responseReturn: 'body',
+  //   },
+  // );
   // const body = await rootRequestClient.put<MyAppMutationResponse>(
   //   `/my-application/${id}/toggle`,
   //   {},
@@ -239,13 +276,21 @@ export async function toggleMyAppApi(id: number, action: MyAppToggleAction) {
  */
 export async function collectMyAppApi(id: number, action: MyAppCollectAction) {
   const body = await rootRequestClient.put<MyAppMutationResponse>(
-    `/mock/my-application/${id}/collect`,
+    `/pwq-mock/my-application/${id}/collect`,
     {},
     {
       params: { action },
       responseReturn: 'body',
     },
   );
+  // const body = await rootRequestClient.put<MyAppMutationResponse>(
+  //   `/mock/my-application/${id}/collect`,
+  //   {},
+  //   {
+  //     params: { action },
+  //     responseReturn: 'body',
+  //   },
+  // );
   // const body = await rootRequestClient.put<MyAppMutationResponse>(
   //   `/my-application/${id}/collect`,
   //   {},
@@ -265,9 +310,14 @@ export async function collectMyAppApi(id: number, action: MyAppCollectAction) {
 export async function getMyAppVersionListApi(id: number) {
   const body = await rootRequestClient.get<
     MyAppMutationResponse<MyAppVersionItem[]>
-  >(`/mock/my-application/${id}/version`, {
+  >(`/pwq-mock/my-application/${id}/version`, {
     responseReturn: 'body',
   });
+  // const body = await rootRequestClient.get<
+  //   MyAppMutationResponse<MyAppVersionItem[]>
+  // >(`/mock/my-application/${id}/version`, {
+  //   responseReturn: 'body',
+  // });
   // const body = await rootRequestClient.get<
   //   MyAppMutationResponse<MyAppVersionItem[]>
   // >(`/my-application/${id}/version`, { responseReturn: 'body' });
@@ -288,10 +338,15 @@ export async function createMyAppVersionApi(
   data: MyAppVersionWriteParams,
 ) {
   const body = await rootRequestClient.post<MyAppMutationResponse>(
-    `/mock/my-application/${id}/version`,
+    `/pwq-mock/my-application/${id}/version`,
     data,
     { responseReturn: 'body' },
   );
+  // const body = await rootRequestClient.post<MyAppMutationResponse>(
+  //   `/mock/my-application/${id}/version`,
+  //   data,
+  //   { responseReturn: 'body' },
+  // );
   // const body = await rootRequestClient.post<MyAppMutationResponse>(
   //   `/my-application/${id}/version`,
   //   data,
@@ -311,10 +366,15 @@ export async function createMyAppScheduleTaskApi(
   data: MyAppScheduleTaskParams,
 ) {
   const body = await rootRequestClient.post<MyAppMutationResponse>(
-    '/mock/my-application/schedule-task',
+    '/pwq-mock/my-application/schedule-task',
     data,
     { responseReturn: 'body' },
   );
+  // const body = await rootRequestClient.post<MyAppMutationResponse>(
+  //   '/mock/my-application/schedule-task',
+  //   data,
+  //   { responseReturn: 'body' },
+  // );
   // const body = await rootRequestClient.post<MyAppMutationResponse>(
   //   '/my-application/schedule-task',
   //   data,
@@ -334,10 +394,16 @@ export async function createMyAppScheduleTaskApi(
 export async function getMyAppMaterialListApi(params: MyAppMaterialListParams) {
   const body = await rootRequestClient.get<
     MyAppListResponseBody<MyAppMaterialItem>
-  >('/mock/my-application/material/list', {
+  >('/pwq-mock/my-application/material/list', {
     params,
     responseReturn: 'body',
   });
+  // const body = await rootRequestClient.get<
+  //   MyAppListResponseBody<MyAppMaterialItem>
+  // >('/mock/my-application/material/list', {
+  //   params,
+  //   responseReturn: 'body',
+  // });
   // const body = await rootRequestClient.get<
   //   MyAppListResponseBody<MyAppMaterialItem>
   // >('/my-application/material/list', { params, responseReturn: 'body' });
@@ -359,10 +425,15 @@ export async function getMyAppMaterialListApi(params: MyAppMaterialListParams) {
  */
 export async function createMyAppMaterialApi(data: MyAppMaterialWriteParams) {
   const body = await rootRequestClient.post<MyAppMutationResponse>(
-    '/mock/my-application/material',
+    '/pwq-mock/my-application/material',
     data,
     { responseReturn: 'body' },
   );
+  // const body = await rootRequestClient.post<MyAppMutationResponse>(
+  //   '/mock/my-application/material',
+  //   data,
+  //   { responseReturn: 'body' },
+  // );
   // const body = await rootRequestClient.post<MyAppMutationResponse>(
   //   '/my-application/material',
   //   data,
@@ -384,10 +455,15 @@ export async function updateMyAppMaterialApi(
   data: MyAppMaterialWriteParams,
 ) {
   const body = await rootRequestClient.put<MyAppMutationResponse>(
-    `/mock/my-application/material/${id}`,
+    `/pwq-mock/my-application/material/${id}`,
     data,
     { responseReturn: 'body' },
   );
+  // const body = await rootRequestClient.put<MyAppMutationResponse>(
+  //   `/mock/my-application/material/${id}`,
+  //   data,
+  //   { responseReturn: 'body' },
+  // );
   // const body = await rootRequestClient.put<MyAppMutationResponse>(
   //   `/my-application/material/${id}`,
   //   data,
@@ -405,9 +481,13 @@ export async function updateMyAppMaterialApi(
  */
 export async function deleteMyAppMaterialApi(id: number) {
   const body = await rootRequestClient.delete<MyAppMutationResponse>(
-    `/mock/my-application/material/${id}`,
+    `/pwq-mock/my-application/material/${id}`,
     { responseReturn: 'body' },
   );
+  // const body = await rootRequestClient.delete<MyAppMutationResponse>(
+  //   `/mock/my-application/material/${id}`,
+  //   { responseReturn: 'body' },
+  // );
   // const body = await rootRequestClient.delete<MyAppMutationResponse>(
   //   `/my-application/material/${id}`,
   //   { responseReturn: 'body' },
@@ -428,13 +508,20 @@ export async function toggleMyAppMaterialApi(
   action: MyAppToggleAction,
 ) {
   const body = await rootRequestClient.put<MyAppMutationResponse>(
-    `/mock/my-application/material/${id}/toggle`,
+    `/pwq-mock/my-application/material/${id}/toggle`,
     {},
     {
       params: { action },
       responseReturn: 'body',
     },
   );
+  //   `/mock/my-application/material/${id}/toggle`,
+  //   {},
+  //   {
+  //     params: { action },
+  //     responseReturn: 'body',
+  //   },
+  // );
   // const body = await rootRequestClient.put<MyAppMutationResponse>(
   //   `/my-application/material/${id}/toggle`,
   //   {},

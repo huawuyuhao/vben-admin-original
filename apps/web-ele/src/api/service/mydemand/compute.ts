@@ -93,10 +93,16 @@ function parseComputeDemandListBody<T>(
 export async function getComputeDemandListApi(params: ComputeDemandListParams) {
   const body = await rootRequestClient.get<
     ComputeDemandListResponseBody<ComputeDemandItem>
-  >('/mock/demand/list', {
+  >('/pwq-mock/demand/list', {
     params,
     responseReturn: 'body',
   });
+  // const body = await rootRequestClient.get<
+  //   ComputeDemandListResponseBody<ComputeDemandItem>
+  // >('/mock/demand/list', {
+  //   params,
+  //   responseReturn: 'body',
+  // });
   // const body = await rootRequestClient.get<
   //   ComputeDemandListResponseBody<ComputeDemandItem>
   // >('/demand/list', {
@@ -123,7 +129,10 @@ export async function getComputeDemandListApi(params: ComputeDemandListParams) {
 export async function createComputeDemandApi(data: ComputeDemandWriteParams) {
   const body = await rootRequestClient.post<
     ComputeDemandMutationResponse<ComputeDemandCreateResult>
-  >('/mock/demand', data, { responseReturn: 'body' });
+  >('/pwq-mock/demand', data, { responseReturn: 'body' });
+  // const body = await rootRequestClient.post<
+  //   ComputeDemandMutationResponse<ComputeDemandCreateResult>
+  // >('/mock/demand', data, { responseReturn: 'body' });
   // const body = await rootRequestClient.post<
   //   ComputeDemandMutationResponse<ComputeDemandCreateResult>
   // >('/demand', data, { responseReturn: 'body' });
@@ -142,7 +151,10 @@ export async function createComputeDemandApi(data: ComputeDemandWriteParams) {
 export async function getComputeDemandDetailApi(id: number) {
   const body = await rootRequestClient.get<
     ComputeDemandMutationResponse<ComputeDemandItem>
-  >(`/mock/demand/${id}`, { responseReturn: 'body' });
+  >(`/pwq-mock/demand/${id}`, { responseReturn: 'body' });
+  // const body = await rootRequestClient.get<
+  //   ComputeDemandMutationResponse<ComputeDemandItem>
+  // >(`/mock/demand/${id}`, { responseReturn: 'body' });
   // const body = await rootRequestClient.get<
   //   ComputeDemandMutationResponse<ComputeDemandItem>
   // >(`/demand/${id}`, { responseReturn: 'body' });
@@ -163,10 +175,15 @@ export async function updateComputeDemandApi(
   data: ComputeDemandWriteParams,
 ) {
   const body = await rootRequestClient.put<ComputeDemandMutationResponse>(
-    `/mock/demand/${id}`,
+    `/pwq-mock/demand/${id}`,
     data,
     { responseReturn: 'body' },
   );
+  // const body = await rootRequestClient.put<ComputeDemandMutationResponse>(
+  //   `/mock/demand/${id}`,
+  //   data,
+  //   { responseReturn: 'body' },
+  // );
   // const body = await rootRequestClient.put<ComputeDemandMutationResponse>(
   //   `/demand/${id}`,
   //   data,
@@ -184,9 +201,13 @@ export async function updateComputeDemandApi(
  */
 export async function deleteComputeDemandApi(id: number) {
   const body = await rootRequestClient.delete<ComputeDemandMutationResponse>(
-    `/mock/demand/${id}`,
+    `/pwq-mock/demand/${id}`,
     { responseReturn: 'body' },
   );
+  // const body = await rootRequestClient.delete<ComputeDemandMutationResponse>(
+  //   `/mock/demand/${id}`,
+  //   { responseReturn: 'body' },
+  // );
   // const body = await rootRequestClient.delete<ComputeDemandMutationResponse>(
   //   `/demand/${id}`,
   //   { responseReturn: 'body' },
@@ -205,7 +226,10 @@ export async function deleteComputeDemandApi(id: number) {
 export async function copyComputeDemandApi(id: number) {
   const body = await rootRequestClient.post<
     ComputeDemandMutationResponse<ComputeDemandCopyResult>
-  >(`/mock/demand/${id}/copy`, {}, { responseReturn: 'body' });
+  >(`/pwq-mock/demand/${id}/copy`, {}, { responseReturn: 'body' });
+  // const body = await rootRequestClient.post<
+  //   ComputeDemandMutationResponse<ComputeDemandCopyResult>
+  // >(`/mock/demand/${id}/copy`, {}, { responseReturn: 'body' });
   // const body = await rootRequestClient.post<
   //   ComputeDemandMutationResponse<ComputeDemandCopyResult>
   // >(`/demand/${id}/copy`, {}, { responseReturn: 'body' });
@@ -224,7 +248,10 @@ export async function copyComputeDemandApi(id: number) {
 export async function previewComputeDemandResultApi(id: number) {
   const body = await rootRequestClient.get<
     ComputeDemandMutationResponse<ComputeDemandPreviewResult>
-  >(`/mock/demand/${id}/result/preview`, { responseReturn: 'body' });
+  >(`/pwq-mock/demand/${id}/result/preview`, { responseReturn: 'body' });
+  // const body = await rootRequestClient.get<
+  //   ComputeDemandMutationResponse<ComputeDemandPreviewResult>
+  // >(`/mock/demand/${id}/result/preview`, { responseReturn: 'body' });
   // const body = await rootRequestClient.get<
   //   ComputeDemandMutationResponse<ComputeDemandPreviewResult>
   // >(`/demand/${id}/result/preview`, { responseReturn: 'body' });
@@ -243,7 +270,10 @@ export async function previewComputeDemandResultApi(id: number) {
 export async function downloadComputeDemandResultApi(id: number) {
   const body = await rootRequestClient.get<
     ComputeDemandMutationResponse<ComputeDemandDownloadResult>
-  >(`/mock/demand/${id}/result/download`, { responseReturn: 'body' });
+  >(`/pwq-mock/demand/${id}/result/download`, { responseReturn: 'body' });
+  // const body = await rootRequestClient.get<
+  //   ComputeDemandMutationResponse<ComputeDemandDownloadResult>
+  // >(`/mock/demand/${id}/result/download`, { responseReturn: 'body' });
   // const body = await rootRequestClient.get<
   //   ComputeDemandMutationResponse<ComputeDemandDownloadResult>
   // >(`/demand/${id}/result/download`, { responseReturn: 'body' });
@@ -265,10 +295,15 @@ export async function exportComputeDemandApi(
 ) {
   const body = await rootRequestClient.post<
     ComputeDemandMutationResponse<ComputeDemandExportResult>
-  >('/mock/demand/export', {}, {
+  >('/pwq-mock/demand/export', {}, {
     params: params ?? {},
     responseReturn: 'body',
   });
+  //   ComputeDemandMutationResponse<ComputeDemandExportResult>
+  // >('/mock/demand/export', {}, {
+  //   params: params ?? {},
+  //   responseReturn: 'body',
+  // });
   // const body = await rootRequestClient.post<
   //   ComputeDemandMutationResponse<ComputeDemandExportResult>
   // >('/demand/export', {}, {

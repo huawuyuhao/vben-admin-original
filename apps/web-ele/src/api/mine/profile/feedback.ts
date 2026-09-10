@@ -85,12 +85,19 @@ function parseFeedbackListBody<T>(
  */
 export async function getFeedbackListApi(params: FeedbackListParams) {
   const body = await rootRequestClient.get<FeedbackListResponseBody>(
-    '/mock/feedback/list',
+    '/pwq-mock/feedback/list',
     {
       params,
       responseReturn: 'body',
     },
   );
+  // const body = await rootRequestClient.get<FeedbackListResponseBody>(
+  //   '/mock/feedback/list',
+  //   {
+  //     params,
+  //     responseReturn: 'body',
+  //   },
+  // );
   // const body = await rootRequestClient.get<FeedbackListResponseBody>(
   //   '/feedback/list',
   //   { params, responseReturn: 'body' },
@@ -114,13 +121,21 @@ export async function getFeedbackListApi(params: FeedbackListParams) {
  */
 export async function submitFeedbackApi(params: FeedbackSubmitParams) {
   const body = await rootRequestClient.post<FeedbackMutationResponse>(
-    '/mock/feedback',
+    '/pwq-mock/feedback',
     {},
     {
       params,
       responseReturn: 'body',
     },
   );
+  // const body = await rootRequestClient.post<FeedbackMutationResponse>(
+  //   '/mock/feedback',
+  //   {},
+  //   {
+  //     params,
+  //     responseReturn: 'body',
+  //   },
+  // );
   // const body = await rootRequestClient.post<FeedbackMutationResponse>(
   //   '/feedback',
   //   {},

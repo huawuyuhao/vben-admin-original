@@ -1,8 +1,6 @@
 <script lang="ts" setup>
-import type {
-  AdminProductId,
-  AdminProductShelfStatus,
-} from '#/types/monitoring/content/product';
+import type { VxeTableGridOptions } from '#/adapter/vxe-table';
+import type { AdminProductId } from '#/types/monitoring/content/product';
 import type { ProductInfo } from '#/types/service/product';
 
 import { ref } from 'vue';
@@ -13,23 +11,41 @@ import { Plus } from '@element-plus/icons-vue';
 import { ElMessage } from 'element-plus';
 
 import {
+  CARD_LIST_VXE_LAYOUTS,
+  toVxeCardPageResult,
+  useVbenVxeGrid,
+} from '#/adapter/vxe-table';
+import {
   deleteAdminProductApi,
+  getAdminProductListApi,
   updateAdminProductShelfApi,
 } from '#/api/monitoring/content/product';
+import PageListShell from '#/views/_shared/components/page-list-shell.vue';
 
-import ContentPageShell from '../home/modules/content-page-shell.vue';
-import { useAdminProductList } from './composables/use-admin-product-list';
-import FilterBar from './modules/filter-bar.vue';
+import {
+  ADMIN_PRODUCT_PAGE_SIZE,
+  ADMIN_PRODUCT_PAGE_SIZE_OPTIONS,
+  type AdminProductGridFormValues,
+  buildAdminProductFilterParams,
+  normalizeAdminProductPage,
+  useAdminProductGridFormSchema,
+} from './data';
 import ProductAuditDialog from './modules/product-audit-dialog.vue';
 import ProductDetailDrawer from './modules/product-detail-drawer.vue';
 import ProductFormDialog from './modules/product-form-dialog.vue';
 import ProductGrid from './modules/product-grid.vue';
-import ProductPager from './modules/product-pager.vue';
 
+/**
+ * 内容管理 · 算力产品管理
+ * 查询栏 / 分页用 useVbenVxeGrid；列表区保持 Element Plus 卡片网格
+ */
 defineOptions({ name: 'MonitoringContentProduct' });
 
-const productName = ref('');
-const shelfStatus = ref<'' | AdminProductShelfStatus>('');
+/** 当前页卡片数据（与 Vxe pager 同步，不走表格 rows） */
+const products = ref<ProductInfo[]>([]);
+/** 列表加载中（骨架 / v-loading） */
+const loading = ref(false);
+
 const detailVisible = ref(false);
 const detailItem = ref<null | ProductInfo>(null);
 
@@ -38,39 +54,65 @@ const shelfActingId = ref<AdminProductId | null>(null);
 const formDialogRef = ref<InstanceType<typeof ProductFormDialog>>();
 const auditDialogRef = ref<InstanceType<typeof ProductAuditDialog>>();
 
-const {
-  applyFilters,
-  currentPage,
-  loading,
-  pageSize,
-  records,
-  refresh,
-  resetFilters,
-  total,
-} = useAdminProductList();
-
-/**
- * 提交筛选查询
- */
-function handleSearch() {
-  applyFilters(productName.value, shelfStatus.value);
-}
-
-/**
- * 重置筛选条件
- */
-function handleReset() {
-  productName.value = '';
-  shelfStatus.value = '';
-  resetFilters();
-}
-
-/**
- * 刷新当前页
- */
-function handleRefresh() {
-  refresh();
-}
+const [Grid, gridApi] = useVbenVxeGrid({
+  class: 'mine-vxe-grid mine-vxe-grid--cards',
+  formOptions: {
+    collapsed: true,
+    collapsedRows: 1,
+    resetButtonOptions: {
+      content: $t('common.reset'),
+    },
+    schema: useAdminProductGridFormSchema(),
+    submitButtonOptions: {
+      content: $t('common.query'),
+    },
+    wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3',
+  },
+  gridOptions: {
+    columns: [],
+    height: 'auto',
+    keepSource: true,
+    layouts: [...CARD_LIST_VXE_LAYOUTS],
+    minHeight: 0,
+    pagerConfig: {
+      pageSize: ADMIN_PRODUCT_PAGE_SIZE,
+      pageSizes: ADMIN_PRODUCT_PAGE_SIZE_OPTIONS,
+    },
+    proxyConfig: {
+      ajax: {
+        query: async ({ page }, formValues?: AdminProductGridFormValues) => {
+          loading.value = true;
+          try {
+            const filters = buildAdminProductFilterParams(formValues);
+            const data = await getAdminProductListApi({
+              page: page.currentPage,
+              pageSize: page.pageSize,
+              ...filters,
+            });
+            const normalized = normalizeAdminProductPage(data);
+            products.value = normalized.records;
+            return toVxeCardPageResult(normalized);
+          } catch {
+            products.value = [];
+            return toVxeCardPageResult({ total: 0 });
+          } finally {
+            loading.value = false;
+          }
+        },
+      },
+    },
+    rowConfig: {
+      keyField: 'productId',
+    },
+    toolbarConfig: {
+      custom: false,
+      export: false,
+      refresh: false,
+      search: false,
+      zoom: false,
+    },
+  } as VxeTableGridOptions<ProductInfo>,
+});
 
 /**
  * 打开产品详情抽屉
@@ -114,7 +156,7 @@ async function handleRemove(item: ProductInfo) {
     ElMessage.success(
       $t('page.monitoring.content.product.deleteSuccess', [item.productName]),
     );
-    refresh();
+    gridApi.query();
   } catch {
     // 错误提示由接口层处理
   }
@@ -124,7 +166,7 @@ async function handleRemove(item: ProductInfo) {
  * 表单保存成功后刷新列表
  */
 function handleFormSuccess() {
-  refresh();
+  gridApi.query();
 }
 
 /**
@@ -138,7 +180,7 @@ async function handleShelfOn(item: ProductInfo) {
     ElMessage.success(
       $t('page.monitoring.content.product.shelfOnSuccess', [item.productName]),
     );
-    refresh();
+    gridApi.query();
   } catch {
     // 错误提示由接口层处理
   } finally {
@@ -157,7 +199,7 @@ async function handleShelfOff(item: ProductInfo) {
     ElMessage.success(
       $t('page.monitoring.content.product.shelfOffSuccess', [item.productName]),
     );
-    refresh();
+    gridApi.query();
   } catch {
     // 错误提示由接口层处理
   } finally {
@@ -167,50 +209,39 @@ async function handleShelfOff(item: ProductInfo) {
 </script>
 
 <template>
-  <ContentPageShell
+  <PageListShell
+    :desc="$t('page.monitoring.content.product.desc')"
     :eyebrow="$t('page.monitoring.content.product.eyebrow')"
     :title="$t('page.monitoring.content.product.title')"
-    :desc="$t('page.monitoring.content.product.desc')"
   >
     <template #actions>
       <el-button
         class="mine-shell__action-btn"
         type="primary"
+        :icon="Plus"
         @click="handleAdd"
       >
-        <el-icon><Plus /></el-icon>
         {{ $t('page.monitoring.content.product.add') }}
       </el-button>
     </template>
 
-    <FilterBar
-      v-model:product-name="productName"
-      v-model:shelf-status="shelfStatus"
-      :refreshing="loading"
-      @refresh="handleRefresh"
-      @reset="handleReset"
-      @search="handleSearch"
-    />
-
-    <ProductGrid
-      :loading="loading"
-      :products="records"
-      :shelf-acting-id="shelfActingId"
-      @detail="handleDetail"
-      @shelf-on="handleShelfOn"
-      @shelf-off="handleShelfOff"
-      @edit="handleEdit"
-      @remove="handleRemove"
-      @submit-audit="handleSubmitAudit"
-    />
-
-    <ProductPager
-      v-if="records.length > 0 || loading || total > 0"
-      v-model:page="currentPage"
-      v-model:page-size="pageSize"
-      :disabled="loading"
-      :total="total"
-    />
+    <Grid>
+      <template #table-title></template>
+      <template #top>
+        <ProductGrid
+          class="admin-product-list-cards"
+          :loading="loading"
+          :products="products"
+          :shelf-acting-id="shelfActingId"
+          @detail="handleDetail"
+          @shelf-on="handleShelfOn"
+          @shelf-off="handleShelfOff"
+          @edit="handleEdit"
+          @remove="handleRemove"
+          @submit-audit="handleSubmitAudit"
+        />
+      </template>
+    </Grid>
 
     <ProductDetailDrawer
       v-model:visible="detailVisible"
@@ -223,5 +254,12 @@ async function handleShelfOff(item: ProductInfo) {
       ref="auditDialogRef"
       @success="handleFormSuccess"
     />
-  </ContentPageShell>
+  </PageListShell>
 </template>
+
+<style lang="scss" scoped>
+.admin-product-list-cards {
+  width: 100%;
+  text-align: left;
+}
+</style>
