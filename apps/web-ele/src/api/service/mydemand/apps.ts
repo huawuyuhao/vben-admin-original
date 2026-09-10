@@ -20,6 +20,7 @@ import type {
 import { ElMessage } from 'element-plus';
 
 import { rootRequestClient } from '#/api/request';
+import { toApiPathId } from '#/utils/api-id';
 
 /**
  * 判断业务码是否成功（与全局拦截器一致：0 / 200）
@@ -191,19 +192,19 @@ export async function createMyAppApi(data: MyAppWriteParams) {
  * @param id 应用 ID
  * @param data 修改参数
  */
-export async function updateMyAppApi(id: number, data: MyAppWriteParams) {
+export async function updateMyAppApi(id: number | string, data: MyAppWriteParams) {
   const body = await rootRequestClient.put<MyAppMutationResponse>(
-    `/pwq-mock/my-application/${id}`,
+    `/pwq-mock/my-application/${toApiPathId(id)}`,
     data,
     { responseReturn: 'body' },
   );
   // const body = await rootRequestClient.put<MyAppMutationResponse>(
-  //   `/mock/my-application/${id}`,
+  //   `/mock/my-application/${toApiPathId(id)}`,
   //   data,
   //   { responseReturn: 'body' },
   // );
   // const body = await rootRequestClient.put<MyAppMutationResponse>(
-  //   `/my-application/${id}`,
+  //   `/my-application/${toApiPathId(id)}`,
   //   data,
   //   { responseReturn: 'body' },
   // );
@@ -217,17 +218,17 @@ export async function updateMyAppApi(id: number, data: MyAppWriteParams) {
  * 正式：DELETE /my-application/{id}
  * @param id 应用 ID
  */
-export async function deleteMyAppApi(id: number) {
+export async function deleteMyAppApi(id: number | string) {
   const body = await rootRequestClient.delete<MyAppMutationResponse>(
-    `/pwq-mock/my-application/${id}`,
+    `/pwq-mock/my-application/${toApiPathId(id)}`,
     { responseReturn: 'body' },
   );
   // const body = await rootRequestClient.delete<MyAppMutationResponse>(
-  //   `/mock/my-application/${id}`,
+  //   `/mock/my-application/${toApiPathId(id)}`,
   //   { responseReturn: 'body' },
   // );
   // const body = await rootRequestClient.delete<MyAppMutationResponse>(
-  //   `/my-application/${id}`,
+  //   `/my-application/${toApiPathId(id)}`,
   //   { responseReturn: 'body' },
   // );
 
@@ -241,9 +242,9 @@ export async function deleteMyAppApi(id: number) {
  * @param id 应用 ID
  * @param action enable-启用 / disable-停用
  */
-export async function toggleMyAppApi(id: number, action: MyAppToggleAction) {
+export async function toggleMyAppApi(id: number | string, action: MyAppToggleAction) {
   const body = await rootRequestClient.put<MyAppMutationResponse>(
-    `/pwq-mock/my-application/${id}/toggle`,
+    `/pwq-mock/my-application/${toApiPathId(id)}/toggle`,
     {},
     {
       params: { action },
@@ -251,7 +252,7 @@ export async function toggleMyAppApi(id: number, action: MyAppToggleAction) {
     },
   );
   // const body = await rootRequestClient.put<MyAppMutationResponse>(
-  //   `/mock/my-application/${id}/toggle`,
+  //   `/mock/my-application/${toApiPathId(id)}/toggle`,
   //   {},
   //   {
   //     params: { action },
@@ -259,7 +260,7 @@ export async function toggleMyAppApi(id: number, action: MyAppToggleAction) {
   //   },
   // );
   // const body = await rootRequestClient.put<MyAppMutationResponse>(
-  //   `/my-application/${id}/toggle`,
+  //   `/my-application/${toApiPathId(id)}/toggle`,
   //   {},
   //   { params: { action }, responseReturn: 'body' },
   // );
@@ -274,9 +275,9 @@ export async function toggleMyAppApi(id: number, action: MyAppToggleAction) {
  * @param id 应用 ID
  * @param action collect-收藏 / uncollect-取消收藏
  */
-export async function collectMyAppApi(id: number, action: MyAppCollectAction) {
+export async function collectMyAppApi(id: number | string, action: MyAppCollectAction) {
   const body = await rootRequestClient.put<MyAppMutationResponse>(
-    `/pwq-mock/my-application/${id}/collect`,
+    `/pwq-mock/my-application/${toApiPathId(id)}/collect`,
     {},
     {
       params: { action },
@@ -284,7 +285,7 @@ export async function collectMyAppApi(id: number, action: MyAppCollectAction) {
     },
   );
   // const body = await rootRequestClient.put<MyAppMutationResponse>(
-  //   `/mock/my-application/${id}/collect`,
+  //   `/mock/my-application/${toApiPathId(id)}/collect`,
   //   {},
   //   {
   //     params: { action },
@@ -292,7 +293,7 @@ export async function collectMyAppApi(id: number, action: MyAppCollectAction) {
   //   },
   // );
   // const body = await rootRequestClient.put<MyAppMutationResponse>(
-  //   `/my-application/${id}/collect`,
+  //   `/my-application/${toApiPathId(id)}/collect`,
   //   {},
   //   { params: { action }, responseReturn: 'body' },
   // );
@@ -307,20 +308,20 @@ export async function collectMyAppApi(id: number, action: MyAppCollectAction) {
  * @param id 应用 ID
  * @returns 版本列表
  */
-export async function getMyAppVersionListApi(id: number) {
+export async function getMyAppVersionListApi(id: number | string) {
   const body = await rootRequestClient.get<
     MyAppMutationResponse<MyAppVersionItem[]>
-  >(`/pwq-mock/my-application/${id}/version`, {
+  >(`/pwq-mock/my-application/${toApiPathId(id)}/version`, {
     responseReturn: 'body',
   });
   // const body = await rootRequestClient.get<
   //   MyAppMutationResponse<MyAppVersionItem[]>
-  // >(`/mock/my-application/${id}/version`, {
+  // >(`/mock/my-application/${toApiPathId(id)}/version`, {
   //   responseReturn: 'body',
   // });
   // const body = await rootRequestClient.get<
   //   MyAppMutationResponse<MyAppVersionItem[]>
-  // >(`/my-application/${id}/version`, { responseReturn: 'body' });
+  // >(`/my-application/${toApiPathId(id)}/version`, { responseReturn: 'body' });
 
   assertMyAppMutationSuccess(body);
   return Array.isArray(body?.data) ? body.data : [];
@@ -334,21 +335,21 @@ export async function getMyAppVersionListApi(id: number) {
  * @param data 版本信息
  */
 export async function createMyAppVersionApi(
-  id: number,
+  id: number | string,
   data: MyAppVersionWriteParams,
 ) {
   const body = await rootRequestClient.post<MyAppMutationResponse>(
-    `/pwq-mock/my-application/${id}/version`,
+    `/pwq-mock/my-application/${toApiPathId(id)}/version`,
     data,
     { responseReturn: 'body' },
   );
   // const body = await rootRequestClient.post<MyAppMutationResponse>(
-  //   `/mock/my-application/${id}/version`,
+  //   `/mock/my-application/${toApiPathId(id)}/version`,
   //   data,
   //   { responseReturn: 'body' },
   // );
   // const body = await rootRequestClient.post<MyAppMutationResponse>(
-  //   `/my-application/${id}/version`,
+  //   `/my-application/${toApiPathId(id)}/version`,
   //   data,
   //   { responseReturn: 'body' },
   // );
@@ -451,21 +452,21 @@ export async function createMyAppMaterialApi(data: MyAppMaterialWriteParams) {
  * @param data 修改参数
  */
 export async function updateMyAppMaterialApi(
-  id: number,
+  id: number | string,
   data: MyAppMaterialWriteParams,
 ) {
   const body = await rootRequestClient.put<MyAppMutationResponse>(
-    `/pwq-mock/my-application/material/${id}`,
+    `/pwq-mock/my-application/material/${toApiPathId(id)}`,
     data,
     { responseReturn: 'body' },
   );
   // const body = await rootRequestClient.put<MyAppMutationResponse>(
-  //   `/mock/my-application/material/${id}`,
+  //   `/mock/my-application/material/${toApiPathId(id)}`,
   //   data,
   //   { responseReturn: 'body' },
   // );
   // const body = await rootRequestClient.put<MyAppMutationResponse>(
-  //   `/my-application/material/${id}`,
+  //   `/my-application/material/${toApiPathId(id)}`,
   //   data,
   //   { responseReturn: 'body' },
   // );
@@ -479,17 +480,17 @@ export async function updateMyAppMaterialApi(
  * 正式：DELETE /my-application/material/{id}
  * @param id 素材 ID
  */
-export async function deleteMyAppMaterialApi(id: number) {
+export async function deleteMyAppMaterialApi(id: number | string) {
   const body = await rootRequestClient.delete<MyAppMutationResponse>(
-    `/pwq-mock/my-application/material/${id}`,
+    `/pwq-mock/my-application/material/${toApiPathId(id)}`,
     { responseReturn: 'body' },
   );
   // const body = await rootRequestClient.delete<MyAppMutationResponse>(
-  //   `/mock/my-application/material/${id}`,
+  //   `/mock/my-application/material/${toApiPathId(id)}`,
   //   { responseReturn: 'body' },
   // );
   // const body = await rootRequestClient.delete<MyAppMutationResponse>(
-  //   `/my-application/material/${id}`,
+  //   `/my-application/material/${toApiPathId(id)}`,
   //   { responseReturn: 'body' },
   // );
 
@@ -504,18 +505,18 @@ export async function deleteMyAppMaterialApi(id: number) {
  * @param action enable-启用 / disable-停用
  */
 export async function toggleMyAppMaterialApi(
-  id: number,
+  id: number | string,
   action: MyAppToggleAction,
 ) {
   const body = await rootRequestClient.put<MyAppMutationResponse>(
-    `/pwq-mock/my-application/material/${id}/toggle`,
+    `/pwq-mock/my-application/material/${toApiPathId(id)}/toggle`,
     {},
     {
       params: { action },
       responseReturn: 'body',
     },
   );
-  //   `/mock/my-application/material/${id}/toggle`,
+  //   `/mock/my-application/material/${toApiPathId(id)}/toggle`,
   //   {},
   //   {
   //     params: { action },
@@ -523,7 +524,7 @@ export async function toggleMyAppMaterialApi(
   //   },
   // );
   // const body = await rootRequestClient.put<MyAppMutationResponse>(
-  //   `/my-application/material/${id}/toggle`,
+  //   `/my-application/material/${toApiPathId(id)}/toggle`,
   //   {},
   //   { params: { action }, responseReturn: 'body' },
   // );

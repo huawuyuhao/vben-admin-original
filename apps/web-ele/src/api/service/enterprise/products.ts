@@ -11,6 +11,7 @@ import type {
 import { ElMessage } from 'element-plus';
 
 import { rootRequestClient } from '#/api/request';
+import { toApiPathId } from '#/utils/api-id';
 
 /**
  * 判断业务码是否成功（与全局拦截器一致：0 / 200）
@@ -160,25 +161,25 @@ export async function createSupplyProductApi(data: SupplyProductWriteParams) {
  * @param data 修改参数
  */
 export async function updateSupplyProductApi(
-  id: number,
+  id: number | string,
   data: SupplyProductWriteParams,
 ) {
   const body = await rootRequestClient.put<SupplyProductMutationResponse>(
-    `/pwq-mock/supply/product/${id}`,
+    `/pwq-mock/supply/product/${toApiPathId(id)}`,
     data,
     {
       responseReturn: 'body',
     },
   );
   // const body = await rootRequestClient.put<SupplyProductMutationResponse>(
-  //   `/mock/supply/product/${id}`,
+  //   `/mock/supply/product/${toApiPathId(id)}`,
   //   data,
   //   {
   //     responseReturn: 'body',
   //   },
   // );
   // const body = await rootRequestClient.put<SupplyProductMutationResponse>(
-  //   `/supply/product/${id}`,
+  //   `/supply/product/${toApiPathId(id)}`,
   //   data,
   //   { responseReturn: 'body' },
   // );
@@ -192,21 +193,21 @@ export async function updateSupplyProductApi(
  * 正式：DELETE /supply/product/{id}
  * @param id 供给产品 ID
  */
-export async function deleteSupplyProductApi(id: number) {
+export async function deleteSupplyProductApi(id: number | string) {
   const body = await rootRequestClient.delete<SupplyProductMutationResponse>(
-    `/pwq-mock/supply/product/${id}`,
+    `/pwq-mock/supply/product/${toApiPathId(id)}`,
     {
       responseReturn: 'body',
     },
   );
   // const body = await rootRequestClient.delete<SupplyProductMutationResponse>(
-  //   `/mock/supply/product/${id}`,
+  //   `/mock/supply/product/${toApiPathId(id)}`,
   //   {
   //     responseReturn: 'body',
   //   },
   // );
   // const body = await rootRequestClient.delete<SupplyProductMutationResponse>(
-  //   `/supply/product/${id}`,
+  //   `/supply/product/${toApiPathId(id)}`,
   //   { responseReturn: 'body' },
   // );
 
@@ -222,11 +223,11 @@ export async function deleteSupplyProductApi(id: number) {
  * @param action 操作类型
  */
 export async function shelfSupplyProductApi(
-  id: number,
+  id: number | string,
   action: SupplyProductShelfAction,
 ) {
   const body = await rootRequestClient.put<SupplyProductMutationResponse>(
-    `/pwq-mock/supply/product/${id}/shelf`,
+    `/pwq-mock/supply/product/${toApiPathId(id)}/shelf`,
     {},
     {
       params: { action },
@@ -234,7 +235,7 @@ export async function shelfSupplyProductApi(
     },
   );
   // const body = await rootRequestClient.put<SupplyProductMutationResponse>(
-  //   `/mock/supply/product/${id}/shelf`,
+  //   `/mock/supply/product/${toApiPathId(id)}/shelf`,
   //   {},
   //   {
   //     params: { action },
@@ -242,7 +243,7 @@ export async function shelfSupplyProductApi(
   //   },
   // );
   // const body = await rootRequestClient.put<SupplyProductMutationResponse>(
-  //   `/supply/product/${id}/shelf`,
+  //   `/supply/product/${toApiPathId(id)}/shelf`,
   //   {},
   //   { params: { action }, responseReturn: 'body' },
   // );
@@ -257,21 +258,21 @@ export async function shelfSupplyProductApi(
  * @param id 供给产品 ID
  * @returns 含 resourceStatus
  */
-export async function getSupplyProductResourceStatusApi(id: number) {
+export async function getSupplyProductResourceStatusApi(id: number | string) {
   const body = await rootRequestClient.get<SupplyProductMutationResponse>(
-    `/pwq-mock/supply/product/${id}/resource-status`,
+    `/pwq-mock/supply/product/${toApiPathId(id)}/resource-status`,
     {
       responseReturn: 'body',
     },
   );
   // const body = await rootRequestClient.get<SupplyProductMutationResponse>(
-  //   `/mock/supply/product/${id}/resource-status`,
+  //   `/mock/supply/product/${toApiPathId(id)}/resource-status`,
   //   {
   //     responseReturn: 'body',
   //   },
   // );
   // const body = await rootRequestClient.get<SupplyProductMutationResponse>(
-  //   `/supply/product/${id}/resource-status`,
+  //   `/supply/product/${toApiPathId(id)}/resource-status`,
   //   { responseReturn: 'body' },
   // );
 

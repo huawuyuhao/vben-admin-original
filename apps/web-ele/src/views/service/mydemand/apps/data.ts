@@ -8,12 +8,18 @@ import type {
   MyAppListResult,
   MyAppMaterialItem,
   MyAppStatus,
+  MyAppVersionItem,
 } from '#/types/service/mydemand/apps';
 
 import { $t } from '@vben/locales';
 import { formatDate, isEmpty } from '@vben/utils';
 
 import { getAppTypeOptionsApi } from '#/api/service/mydemand/apps';
+import {
+  type ApiId,
+  normalizeApiId,
+  sameApiId,
+} from '#/utils/api-id';
 
 /** 我的应用列表默认每页条数（卡片网格） */
 export const APP_PAGE_SIZE = 6;
@@ -258,6 +264,85 @@ export function useAppColumns(): VxeTableGridOptions<MyAppItem>['columns'] {
 }
 
 /**
+ * 应用版本列表列配置（弹窗）
+ */
+export function useAppVersionColumns(): VxeTableGridOptions<MyAppVersionItem>['columns'] {
+  const emptyText = $t('page.service.mydemand.apps.valueEmpty');
+  return [
+    {
+      field: 'versionNo',
+      minWidth: 120,
+      showOverflow: true,
+      title: $t('page.service.mydemand.apps.version.fields.versionNo'),
+      formatter: ({ cellValue }) => displayAppValue(cellValue, emptyText),
+    },
+    {
+      field: 'materialIds',
+      minWidth: 200,
+      showOverflow: true,
+      title: $t('page.service.mydemand.apps.version.fields.materialIds'),
+      formatter: ({ cellValue }) => displayAppValue(cellValue, emptyText),
+    },
+    {
+      field: 'createTime',
+      minWidth: 168,
+      title: $t('page.service.mydemand.apps.version.fields.createTime'),
+      formatter: ({ cellValue }) => formatAppDateTime(cellValue) || emptyText,
+    },
+  ];
+}
+
+/**
+ * 应用素材列表列配置（抽屉）
+ */
+export function useAppMaterialColumns(): VxeTableGridOptions<MyAppMaterialItem>['columns'] {
+  const emptyText = $t('page.service.mydemand.apps.valueEmpty');
+  return [
+    {
+      field: 'materialName',
+      minWidth: 140,
+      showOverflow: true,
+      title: $t('page.service.mydemand.apps.material.fields.materialName'),
+      formatter: ({ cellValue }) => displayAppValue(cellValue, emptyText),
+    },
+    {
+      field: 'description',
+      minWidth: 140,
+      showOverflow: true,
+      title: $t('page.service.mydemand.apps.material.fields.description'),
+      formatter: ({ cellValue }) => displayAppValue(cellValue, emptyText),
+    },
+    {
+      field: 'attachment',
+      minWidth: 240,
+      slots: { default: 'attachment' },
+      title: $t('page.service.mydemand.apps.material.fields.attachment'),
+    },
+    {
+      align: 'center',
+      field: 'status',
+      minWidth: 90,
+      slots: { default: 'status' },
+      title: $t('page.service.mydemand.apps.material.fields.status'),
+    },
+    {
+      field: 'createTime',
+      minWidth: 150,
+      title: $t('page.service.mydemand.apps.material.fields.createTime'),
+      formatter: ({ cellValue }) => formatAppDateTime(cellValue) || emptyText,
+    },
+    {
+      align: 'center',
+      field: 'action',
+      fixed: 'right',
+      minWidth: 200,
+      slots: { default: 'action' },
+      title: $t('page.service.mydemand.apps.material.fields.actions'),
+    },
+  ];
+}
+
+/**
  * 将查询表单值转为列表筛选参数（不含分页）
  * @param formValues 查询表单值
  * @returns 接口筛选参数
@@ -430,7 +515,7 @@ export function displayAppValue(
 export function resolveAppTypeOptionValue(item?: null | {
   typeCode?: null | string;
   typeId?: null | number | string;
-}): number | undefined {
+}): ApiId | undefined {
   if (!item) {
     return undefined;
   }
@@ -438,29 +523,27 @@ export function resolveAppTypeOptionValue(item?: null | {
 }
 
 /**
- * 将类型 ID / 编码转为数字（无法转换时返回 undefined）
+ * 将类型 ID / 编码规范化为业务主键（禁止 Number 强制转换）
  * @param typeId 选项 typeId 或 typeCode
- * @returns 合法数字；无效返回 undefined
+ * @returns 合法主键；无效返回 undefined
  */
-export function resolveAppTypeId(typeId?: null | number | string): number | undefined {
-  const id = Number(typeId);
-  if (!Number.isFinite(id)) {
-    return undefined;
-  }
-  return id;
+export function resolveAppTypeId(
+  typeId?: null | number | string,
+): ApiId | undefined {
+  return normalizeApiId(typeId);
 }
 
 /**
  * 根据列表行的 appType / appTypeName，在类型选项中匹配下拉应选中的 value
- * 优先按类型名称匹配，再按 typeId / typeCode / 数值匹配
+ * 优先按类型名称匹配，再按 typeId / typeCode / 字符串比较
  * @param row 列表行（含 appType、appTypeName）
  * @param options 应用类型下拉选项
- * @returns 与选项 value 一致的数字；无法匹配时回退列表 appType
+ * @returns 与选项 value 一致的主键；无法匹配时回退列表 appType
  */
 export function matchAppTypeSelectValue(
   row?: null | Pick<MyAppItem, 'appType' | 'appTypeName'>,
   options?: AppTypeOptionItem[] | null,
-): number | undefined {
+): ApiId | undefined {
   const list = Array.isArray(options) ? options : [];
   const typeName = row?.appTypeName?.trim();
   const appType = resolveAppTypeId(row?.appType);
@@ -475,7 +558,7 @@ export function matchAppTypeSelectValue(
 
   if (appType != null) {
     const byValue = list.find((item) => {
-      if (resolveAppTypeOptionValue(item) === appType) {
+      if (sameApiId(resolveAppTypeOptionValue(item), appType)) {
         return true;
       }
       const idText = String(item.typeId ?? '').trim();
@@ -553,12 +636,8 @@ export function isAppCollected(flag?: null | number): boolean {
  */
 export function resolveMyAppId(
   item?: null | Pick<MyAppItem, 'appId'>,
-): number | undefined {
-  const id = Number(item?.appId);
-  if (!Number.isFinite(id) || id <= 0) {
-    return undefined;
-  }
-  return id;
+): ApiId | undefined {
+  return normalizeApiId(item?.appId);
 }
 
 /**
@@ -568,12 +647,8 @@ export function resolveMyAppId(
  */
 export function resolveMaterialId(
   item?: null | Pick<MyAppMaterialItem, 'materialId'>,
-): number | undefined {
-  const id = Number(item?.materialId);
-  if (!Number.isFinite(id) || id <= 0) {
-    return undefined;
-  }
-  return id;
+): ApiId | undefined {
+  return normalizeApiId(item?.materialId);
 }
 
 /**

@@ -11,6 +11,8 @@ import type {
 import { $t } from '@vben/locales';
 import { formatDate, isEmpty } from '@vben/utils';
 
+import { type ApiId, normalizeApiId } from '#/utils/api-id';
+
 /** 消息列表默认每页条数 */
 export const MESSAGE_PAGE_SIZE = 10;
 
@@ -260,12 +262,8 @@ export function isMessageUnread(isRead?: number): boolean {
  * @param item 消息条目
  * @returns 合法 ID；无效返回 null
  */
-export function resolveMessageId(item?: MessageItem | null): null | number {
-  const id = Number(item?.messageId);
-  if (!Number.isFinite(id) || id <= 0) {
-    return null;
-  }
-  return id;
+export function resolveMessageId(item?: MessageItem | null): ApiId | null {
+  return normalizeApiId(item?.messageId) ?? null;
 }
 
 /**

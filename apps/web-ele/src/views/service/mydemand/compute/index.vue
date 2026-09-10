@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type {
+import { parseRouteApiId } from '#/utils/api-id';
   ComputeDemandExportParams,
   ComputeDemandItem,
 } from '#/types/service/mydemand/compute';
@@ -254,13 +255,13 @@ async function handleExport() {
  * 兼容旧入口 query：跳转到新建/编辑页后清掉列表上的 query
  */
 async function handleEntryQuery() {
-  const demandId = Number(route.query.demandId ?? route.query.id);
+  const demandId = parseRouteApiId(route.query.demandId ?? route.query.id);
   const needCreate =
     route.query.create === '1' || Boolean(route.query.productId);
   const resubmit =
     route.query.resubmit === '1' || route.query.resubmit === 'true';
 
-  if (Number.isFinite(demandId) && demandId > 0) {
+  if (demandId != null) {
     await router.replace({
       path: '/service/mydemand/compute/create',
       query: {

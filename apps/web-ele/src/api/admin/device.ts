@@ -13,6 +13,7 @@ import type {
 import { ElMessage } from 'element-plus';
 
 import { rootRequestClient } from '#/api/request';
+import { toApiPathId } from '#/utils/api-id';
 
 /**
  * 判断业务码是否成功（与全局拦截器一致：0 / 200）
@@ -141,15 +142,15 @@ export async function getDeviceListApi(params: DeviceListParams) {
  * @param id 设备 ID
  * @returns 设备详情
  */
-export async function getDeviceDetailApi(id: number) {
+export async function getDeviceDetailApi(id: number | string) {
   const body = await rootRequestClient.get<DeviceDetailResponseBody>(
-    `/mock/device/${id}`,
+    `/mock/device/${toApiPathId(id)}`,
     {
       responseReturn: 'body',
     },
   );
   // const body = await rootRequestClient.get<DeviceDetailResponseBody>(
-  //   `/device/${id}`,
+  //   `/device/${toApiPathId(id)}`,
   //   { responseReturn: 'body' },
   // );
 
@@ -187,7 +188,7 @@ export async function createDeviceApi(data: DeviceWriteParams) {
   assertDeviceMutationSuccess(body);
   const result = body?.data;
   if (result && typeof result === 'object') {
-    return result as { deviceId?: number; key?: number };
+    return result as { deviceId?: number | string; key?: number | string };
   }
   return undefined;
 }
@@ -200,16 +201,16 @@ export async function createDeviceApi(data: DeviceWriteParams) {
  * @param id 设备 ID
  * @param data 修改参数
  */
-export async function updateDeviceApi(id: number, data: DeviceWriteParams) {
+export async function updateDeviceApi(id: number | string, data: DeviceWriteParams) {
   const body = await rootRequestClient.put<DeviceMutationResponse>(
-    `/mock/device/${id}`,
+    `/mock/device/${toApiPathId(id)}`,
     data,
     {
       responseReturn: 'body',
     },
   );
   // const body = await rootRequestClient.put<DeviceMutationResponse>(
-  //   `/device/${id}`,
+  //   `/device/${toApiPathId(id)}`,
   //   data,
   //   { responseReturn: 'body' },
   // );
@@ -223,15 +224,15 @@ export async function updateDeviceApi(id: number, data: DeviceWriteParams) {
  * 正式：DELETE /device/{id}
  * @param id 设备 ID
  */
-export async function deleteDeviceApi(id: number) {
+export async function deleteDeviceApi(id: number | string) {
   const body = await rootRequestClient.delete<DeviceMutationResponse>(
-    `/mock/device/${id}`,
+    `/mock/device/${toApiPathId(id)}`,
     {
       responseReturn: 'body',
     },
   );
   // const body = await rootRequestClient.delete<DeviceMutationResponse>(
-  //   `/device/${id}`,
+  //   `/device/${toApiPathId(id)}`,
   //   { responseReturn: 'body' },
   // );
 

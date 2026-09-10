@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { NotificationItem } from '@vben/layouts';
+import { type ApiId, normalizeApiId, sameApiId } from '#/utils/api-id';
 
 import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -94,8 +95,8 @@ const headerDetailDialogRef =
  * @param item 通知项
  */
 function openHeaderMessageDetail(item: NotificationItem) {
-  const id = Number(item.id);
-  if (!Number.isFinite(id) || id <= 0) {
+  const id = normalizeApiId(item.id);
+  if (id == null) {
     return;
   }
   void headerDetailDialogRef.value?.open({
@@ -127,10 +128,8 @@ const {
  * 顶栏详情打开未读消息后：标记已读并刷新铃铛状态
  * @param messageId 消息 ID
  */
-async function handleHeaderDetailRead(messageId: number) {
-  const item = notifications.value.find(
-    (row) => Number(row.id) === messageId,
-  );
+async function handleHeaderDetailRead(messageId: ApiId) {
+  const item = notifications.value.find((row) => sameApiId(row.id, messageId));
   if (item) {
     await handleRead(item);
     return;

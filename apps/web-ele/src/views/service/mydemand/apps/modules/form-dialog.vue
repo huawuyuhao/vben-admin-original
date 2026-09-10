@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { FormInstance, FormRules } from 'element-plus';
+import { type ApiId } from '#/utils/api-id';
 
 import type { MyAppItem } from '#/types/service/mydemand/apps';
 
@@ -39,7 +40,7 @@ const formRef = ref<FormInstance>();
 const form = reactive({
   appName: '',
   appVersion: '',
-  appType: undefined as number | undefined,
+  appType: undefined as ApiId | undefined,
   appStatus: APP_STATUS_ON as number,
 });
 
@@ -188,7 +189,7 @@ async function handleSubmit() {
   const payload = {
     appName: form.appName.trim(),
     appVersion: form.appVersion.trim(),
-    appType: Number(form.appType),
+    appType: form.appType,
     appStatus:
       Number(form.appStatus) === APP_STATUS_OFF
         ? APP_STATUS_OFF

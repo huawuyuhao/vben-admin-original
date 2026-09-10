@@ -177,23 +177,22 @@ views/login/
 
 ### 原则
 
-- 表单、输入、选择、按钮、表格、分页、对话框、抽屉、消息提示、空状态、骨架屏、卡片、标签、图片、上传等，**一律优先** `el-*` 组件（文档：[Element Plus](https://element-plus.org/zh-CN/component/overview.html)）。
+- 表单、输入、选择、按钮、对话框、抽屉、消息提示、空状态、骨架屏、卡片、标签、图片、上传等，**一律优先** `el-*` 组件（文档：[Element Plus](https://element-plus.org/zh-CN/component/overview.html)）。
+- **业务数据列表**（含页面与弹窗 / 抽屉内的查询表、分页表）**不走** `el-table` / 手写 `el-pagination`，见下文「优先 Vxe Table」。
 - 卡片式容器优先 `el-card`（可用 `header` / `footer` 插槽、`shadow`、`body-style`），不要再用自定义白盒 + 圆角边框冒充卡片。
 - 反馈类优先 `ElMessage` / `ElMessageBox` / `ElNotification` / `el-empty` / `el-skeleton` / `v-loading`，不要自写 Toast、空态块、加载转圈。
 - 仅当 EP **确实没有**对应能力，或任务明确要求自定义视觉时，才允许手写；并尽量保持与现有页（如 `mine-shell`）风格一致。
 
 ```vue
-<!-- ✅ 推荐 -->
+<!-- ✅ 推荐：非列表交互用 EP -->
 <el-card shadow="hover">
   <template #header>{{ $t('page.service.product.title') }}</template>
-  <el-empty v-if="!list.length" :description="$t('page.service.product.empty')" />
-  <el-pagination v-else v-model:current-page="page" :total="total" />
+  <el-empty :description="$t('page.service.product.empty')" />
 </el-card>
 
-<!-- ❌ 禁止：EP 已有卡片 / 空态 / 分页时仍手写壳子 -->
+<!-- ❌ 禁止：EP 已有卡片 / 空态时仍手写壳子 -->
 <div class="my-card">
   <div class="my-empty">暂无数据</div>
-  <div class="my-pager">...</div>
 </div>
 ```
 
@@ -202,6 +201,25 @@ views/login/
 - **组件**：全局可用，模板中直接写 `<el-button>` 等，无需在页面再 `import { ElButton }`（`ElMessage` 等命令式 API 仍需从 `element-plus` 导入）。
 - **样式**：已在 `bootstrap.ts` 全量引入；**禁止**再在业务页按需 `import 'element-plus/es/components/*/style/css'`。
 - 应用层对 EP 的微调放在 `@vben/styles/ele`（或局部 `scoped` 覆盖），不要复制一套平行 UI 库。
+
+## 管理端 / 业务列表（优先 Vxe Table）
+
+业务**列表**（含查询栏、表格列、分页、行内操作）**一律优先使用** `useVbenVxeGrid`（`#/adapter/vxe-table`），无论是**独立页面**还是**弹窗 / 抽屉内的列表**。页面壳可用 `PageListShell` / `mine-vxe-grid`；弹窗内列表同样挂 `mine-vxe-grid`（不必套 PageListShell）。
+
+### 原则
+
+- 新做或重做的管理端 / 门户**数据列表**（页面与弹窗），默认走 Vxe：`formOptions` 查询栏 + `columns` + `pagerConfig` + `proxyConfig`。
+- 卡片网格列表若仍需卡片视觉，可用 `CARD_LIST_VXE_LAYOUTS` + `#top` 渲染卡片，但查询 / 分页仍走 Vxe（参考 `/service/product`）。
+- **非列表**交互（表单字段、上传、Message / MessageBox、空态、骨架屏、步骤条等）仍**优先 Element Plus**。
+- **禁止**再用 `el-table` + 手写 `el-pagination` / 自定义筛选栏实现业务列表（含弹窗内评价列表、版本列表、素材列表等）。
+
+## 接口主键 ID（数字 / 字符串兼容）
+
+后端 OpenAPI 常把 path / query 的 `id` 标成 `integer`，实际可能是**雪花字符串**。应用层约定：
+
+- 类型统一用 `ApiId`（`number | string`），见 `apps/web-ele/src/utils/api-id.ts`。
+- 拼 URL 时用 `toApiPathId(id)`，**禁止**对可能超长的 ID 做 `Number(id)`。
+- 新增 / 修改 API 函数签名：`id: ApiId`（或业务别名），不要只写 `id: number`。
 
 ## 国际化（i18n）
 

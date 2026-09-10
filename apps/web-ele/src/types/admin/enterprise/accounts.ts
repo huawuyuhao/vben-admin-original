@@ -21,7 +21,7 @@ export interface SubAccountItem {
   /** 租户编号 */
   tenantId?: string;
   /** 子账号 ID */
-  subAccountId?: number;
+  subAccountId?: number | string;
   /** 企业 ID */
   enterpriseId?: number;
   /** 用户名 */
@@ -157,7 +157,7 @@ export interface SubAccountMutationResponse {
     | null
     | string
     | SubAccountExportResult
-    | { key?: number; subAccountId?: number };
+    | { key?: number | string; subAccountId?: number | string };
 }
 
 /**

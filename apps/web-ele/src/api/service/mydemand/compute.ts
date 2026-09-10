@@ -16,6 +16,7 @@ import type {
 import { ElMessage } from 'element-plus';
 
 import { rootRequestClient } from '#/api/request';
+import { toApiPathId } from '#/utils/api-id';
 
 /**
  * 判断业务码是否成功（与全局拦截器一致：0 / 200）
@@ -148,16 +149,16 @@ export async function createComputeDemandApi(data: ComputeDemandWriteParams) {
  * @param id 需求 ID
  * @returns 需求详情
  */
-export async function getComputeDemandDetailApi(id: number) {
+export async function getComputeDemandDetailApi(id: number | string) {
   const body = await rootRequestClient.get<
     ComputeDemandMutationResponse<ComputeDemandItem>
-  >(`/pwq-mock/demand/${id}`, { responseReturn: 'body' });
+  >(`/pwq-mock/demand/${toApiPathId(id)}`, { responseReturn: 'body' });
   // const body = await rootRequestClient.get<
   //   ComputeDemandMutationResponse<ComputeDemandItem>
-  // >(`/mock/demand/${id}`, { responseReturn: 'body' });
+  // >(`/mock/demand/${toApiPathId(id)}`, { responseReturn: 'body' });
   // const body = await rootRequestClient.get<
   //   ComputeDemandMutationResponse<ComputeDemandItem>
-  // >(`/demand/${id}`, { responseReturn: 'body' });
+  // >(`/demand/${toApiPathId(id)}`, { responseReturn: 'body' });
 
   assertComputeDemandMutationSuccess(body);
   return body?.data;
@@ -171,21 +172,21 @@ export async function getComputeDemandDetailApi(id: number) {
  * @param data 修改参数
  */
 export async function updateComputeDemandApi(
-  id: number,
+  id: number | string,
   data: ComputeDemandWriteParams,
 ) {
   const body = await rootRequestClient.put<ComputeDemandMutationResponse>(
-    `/pwq-mock/demand/${id}`,
+    `/pwq-mock/demand/${toApiPathId(id)}`,
     data,
     { responseReturn: 'body' },
   );
   // const body = await rootRequestClient.put<ComputeDemandMutationResponse>(
-  //   `/mock/demand/${id}`,
+  //   `/mock/demand/${toApiPathId(id)}`,
   //   data,
   //   { responseReturn: 'body' },
   // );
   // const body = await rootRequestClient.put<ComputeDemandMutationResponse>(
-  //   `/demand/${id}`,
+  //   `/demand/${toApiPathId(id)}`,
   //   data,
   //   { responseReturn: 'body' },
   // );
@@ -199,17 +200,17 @@ export async function updateComputeDemandApi(
  * 正式：DELETE /demand/{id}
  * @param id 需求 ID
  */
-export async function deleteComputeDemandApi(id: number) {
+export async function deleteComputeDemandApi(id: number | string) {
   const body = await rootRequestClient.delete<ComputeDemandMutationResponse>(
-    `/pwq-mock/demand/${id}`,
+    `/pwq-mock/demand/${toApiPathId(id)}`,
     { responseReturn: 'body' },
   );
   // const body = await rootRequestClient.delete<ComputeDemandMutationResponse>(
-  //   `/mock/demand/${id}`,
+  //   `/mock/demand/${toApiPathId(id)}`,
   //   { responseReturn: 'body' },
   // );
   // const body = await rootRequestClient.delete<ComputeDemandMutationResponse>(
-  //   `/demand/${id}`,
+  //   `/demand/${toApiPathId(id)}`,
   //   { responseReturn: 'body' },
   // );
 
@@ -223,16 +224,16 @@ export async function deleteComputeDemandApi(id: number) {
  * @param id 源需求 ID
  * @returns 新需求 ID / 编号
  */
-export async function copyComputeDemandApi(id: number) {
+export async function copyComputeDemandApi(id: number | string) {
   const body = await rootRequestClient.post<
     ComputeDemandMutationResponse<ComputeDemandCopyResult>
-  >(`/pwq-mock/demand/${id}/copy`, {}, { responseReturn: 'body' });
+  >(`/pwq-mock/demand/${toApiPathId(id)}/copy`, {}, { responseReturn: 'body' });
   // const body = await rootRequestClient.post<
   //   ComputeDemandMutationResponse<ComputeDemandCopyResult>
-  // >(`/mock/demand/${id}/copy`, {}, { responseReturn: 'body' });
+  // >(`/mock/demand/${toApiPathId(id)}/copy`, {}, { responseReturn: 'body' });
   // const body = await rootRequestClient.post<
   //   ComputeDemandMutationResponse<ComputeDemandCopyResult>
-  // >(`/demand/${id}/copy`, {}, { responseReturn: 'body' });
+  // >(`/demand/${toApiPathId(id)}/copy`, {}, { responseReturn: 'body' });
 
   assertComputeDemandMutationSuccess(body);
   return body?.data;
@@ -245,16 +246,16 @@ export async function copyComputeDemandApi(id: number) {
  * @param id 需求 ID
  * @returns 预览内容
  */
-export async function previewComputeDemandResultApi(id: number) {
+export async function previewComputeDemandResultApi(id: number | string) {
   const body = await rootRequestClient.get<
     ComputeDemandMutationResponse<ComputeDemandPreviewResult>
-  >(`/pwq-mock/demand/${id}/result/preview`, { responseReturn: 'body' });
+  >(`/pwq-mock/demand/${toApiPathId(id)}/result/preview`, { responseReturn: 'body' });
   // const body = await rootRequestClient.get<
   //   ComputeDemandMutationResponse<ComputeDemandPreviewResult>
-  // >(`/mock/demand/${id}/result/preview`, { responseReturn: 'body' });
+  // >(`/mock/demand/${toApiPathId(id)}/result/preview`, { responseReturn: 'body' });
   // const body = await rootRequestClient.get<
   //   ComputeDemandMutationResponse<ComputeDemandPreviewResult>
-  // >(`/demand/${id}/result/preview`, { responseReturn: 'body' });
+  // >(`/demand/${toApiPathId(id)}/result/preview`, { responseReturn: 'body' });
 
   assertComputeDemandMutationSuccess(body);
   return body?.data;
@@ -267,16 +268,16 @@ export async function previewComputeDemandResultApi(id: number) {
  * @param id 需求 ID
  * @returns 下载链接
  */
-export async function downloadComputeDemandResultApi(id: number) {
+export async function downloadComputeDemandResultApi(id: number | string) {
   const body = await rootRequestClient.get<
     ComputeDemandMutationResponse<ComputeDemandDownloadResult>
-  >(`/pwq-mock/demand/${id}/result/download`, { responseReturn: 'body' });
+  >(`/pwq-mock/demand/${toApiPathId(id)}/result/download`, { responseReturn: 'body' });
   // const body = await rootRequestClient.get<
   //   ComputeDemandMutationResponse<ComputeDemandDownloadResult>
-  // >(`/mock/demand/${id}/result/download`, { responseReturn: 'body' });
+  // >(`/mock/demand/${toApiPathId(id)}/result/download`, { responseReturn: 'body' });
   // const body = await rootRequestClient.get<
   //   ComputeDemandMutationResponse<ComputeDemandDownloadResult>
-  // >(`/demand/${id}/result/download`, { responseReturn: 'body' });
+  // >(`/demand/${toApiPathId(id)}/result/download`, { responseReturn: 'body' });
 
   assertComputeDemandMutationSuccess(body);
   return body?.data;

@@ -1311,6 +1311,138 @@
             "tags": "Tags"
           }
         }
+      },
+      "model": {
+        "eyebrow": "Content · Model services",
+        "title": "Model service management",
+        "desc": "Manage portal model services. Filter by name, category and status; cards show overview with create, edit, reviews and delete.",
+        "add": "Add model",
+        "empty": "No matching models",
+        "valueEmpty": "—",
+        "scorePending": "No score yet",
+        "callPending": "—",
+        "viewDetail": "Details",
+        "detailTitle": "Model details",
+        "deleteTitle": "Delete confirmation",
+        "deleteConfirm": "Delete model “{0}”? This cannot be undone.",
+        "deleteSuccess": "Deleted “{0}”",
+        "actions": {
+          "detail": "Details",
+          "edit": "Edit",
+          "delete": "Delete"
+        },
+        "filter": {
+          "keyword": "Keyword",
+          "keywordPlaceholder": "Search by model name…",
+          "modelCategory": "Category",
+          "categoryAll": "All categories",
+          "status": "Status",
+          "statusAll": "All statuses"
+        },
+        "category": {
+          "train": "Training",
+          "infer": "Inference"
+        },
+        "status": {
+          "on": "Enabled",
+          "off": "Disabled",
+          "unknown": "—"
+        },
+        "fields": {
+          "modelId": "Model ID",
+          "iconUrl": "Icon",
+          "modelName": "Model name",
+          "modelCategory": "Category",
+          "sceneTag": "Scene tag",
+          "score": "Score",
+          "callCount": "Calls",
+          "collectCount": "Favorites",
+          "description": "Description",
+          "paramsJson": "Parameters",
+          "status": "Status",
+          "createTime": "Created at",
+          "updateTime": "Updated at",
+          "tenantId": "Tenant ID",
+          "actions": "Actions"
+        },
+        "form": {
+          "createTitle": "Add model service",
+          "editTitle": "Edit model service",
+          "invalidId": "Invalid model ID",
+          "loadDetailFail": "Failed to load model detail",
+          "modelNameRequired": "Please enter the model name",
+          "modelNamePlaceholder": "Enter model name",
+          "descriptionPlaceholder": "Enter description",
+          "categoryPlaceholder": "Select category",
+          "sceneTagPlaceholder": "Enter scene tag",
+          "paramsJsonPlaceholder": "Enter model parameters as JSON",
+          "imageHint": "JPG / JPEG / PNG only, one image, max 5MB",
+          "imageLimit": "Only one image is allowed",
+          "imageTypeInvalid": "Only JPG / JPEG / PNG are allowed",
+          "imageSizeInvalid": "Image must be 5MB or smaller",
+          "uploadFail": "Image upload failed",
+          "dragDropText": "Drop file here, or",
+          "dragDropClick": "click to upload",
+          "createSuccess": "Created successfully",
+          "editSuccess": "Saved successfully",
+          "cancel": "Cancel",
+          "submit": "Save",
+          "fields": {
+            "modelName": "Model name",
+            "iconUrl": "Icon",
+            "description": "Description",
+            "score": "Score",
+            "callCount": "Calls",
+            "collectCount": "Favorites",
+            "modelCategory": "Category",
+            "sceneTag": "Scene tag",
+            "paramsJson": "Parameters",
+            "status": "Status"
+          }
+        },
+        "eval": {
+          "manage": "Reviews",
+          "cardAction": "Reviews",
+          "title": "Model service reviews",
+          "titleForModel": "Reviews · {0}",
+          "statusLabel": "Audit status",
+          "modelIdLabel": "Model ID",
+          "modelIdPlaceholder": "Optional, filter by model ID",
+          "search": "Search",
+          "reset": "Reset",
+          "refresh": "Refresh",
+          "empty": "No reviews",
+          "pass": "Approve",
+          "reject": "Reject",
+          "block": "Block",
+          "delete": "Delete",
+          "passConfirm": "Approve this review?",
+          "rejectConfirm": "Reject this review?",
+          "blockConfirm": "Block this review? It will be hidden on the portal.",
+          "deleteConfirm": "Delete this review? This cannot be undone.",
+          "passSuccess": "Review approved",
+          "rejectSuccess": "Review rejected",
+          "blockSuccess": "Review blocked",
+          "deleteSuccess": "Review deleted",
+          "lockedModelHint": "Filtered by model; model ID cannot be changed",
+          "status": {
+            "all": "All",
+            "pending": "Pending",
+            "passed": "Approved",
+            "rejected": "Rejected",
+            "unknown": "—"
+          },
+          "fields": {
+            "evalId": "Review ID",
+            "modelId": "Model ID",
+            "userName": "User",
+            "score": "Score",
+            "content": "Content",
+            "auditStatus": "Audit status",
+            "createTime": "Created at",
+            "actions": "Actions"
+          }
+        }
       }
     }
   },

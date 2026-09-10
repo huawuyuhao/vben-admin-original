@@ -30,11 +30,14 @@ import {
   formatFee,
   type OrderStepIndex,
   parsePositiveId,
+  resolveOrderApiId,
 } from './data';
 import StepAdvanced from './modules/step-advanced.vue';
 import StepBasic from './modules/step-basic.vue';
 import StepConfirm from './modules/step-confirm.vue';
 import StepNetwork from './modules/step-network.vue';
+
+import { type ApiId } from '#/utils/api-id';
 
 /**
  * 门户服务 · 产品下单（需求配置四步向导）
@@ -51,8 +54,8 @@ const feeLoading = ref(false);
 const savingDraft = ref(false);
 const submitting = ref(false);
 
-const demandId = ref<null | number>(null);
-const productId = ref<null | number>(null);
+const demandId = ref<ApiId | null>(null);
+const productId = ref<ApiId | null>(null);
 
 const selectedSpec = ref<null | ProductSpecItem>(null);
 const selectedImage = ref<null | ProductImageItem>(null);
@@ -269,8 +272,8 @@ async function handleSaveDraft() {
   savingDraft.value = true;
   try {
     const data = await saveDemandConfigDraftApi(payload);
-    const nextId = Number(data?.demandId);
-    if (Number.isFinite(nextId) && nextId > 0) {
+    const nextId = resolveOrderApiId(data?.demandId);
+    if (nextId != null) {
       demandId.value = nextId;
       await router.replace({
         path: '/service/product/order',
@@ -330,14 +333,11 @@ async function handleSubmit() {
   submitting.value = true;
   try {
     const data = await submitDemandConfigApi(payload);
-    const nextId = Number(data?.demandId);
+    const nextId = resolveOrderApiId(data?.demandId);
     ElMessage.success($t('page.service.product.order.submitSuccess'));
     await router.push({
       path: '/service/mydemand/compute',
-      query:
-        Number.isFinite(nextId) && nextId > 0
-          ? { highlight: String(nextId) }
-          : undefined,
+      query: nextId != null ? { highlight: String(nextId) } : undefined,
     });
   } catch {
     // 错误提示由请求拦截器处理

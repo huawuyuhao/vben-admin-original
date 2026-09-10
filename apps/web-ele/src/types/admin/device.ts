@@ -15,7 +15,7 @@ export interface DeviceTypeListResponseBody {
  */
 export interface DeviceOptionItem {
   /** 设备 ID（下拉 value） */
-  deviceId: number;
+  deviceId: number | string;
   /** 设备编号 */
   deviceCode?: string;
   /** 设备名称（下拉 label） */
@@ -42,7 +42,7 @@ export type DeviceOnlineStatus = 0 | 1;
  */
 export interface DeviceItem {
   /** 设备 ID */
-  deviceId?: number;
+  deviceId?: number | string;
   /** 企业 ID */
   enterpriseId?: number;
   /** 设备类型（服务器 / GPU 等） */
@@ -207,7 +207,7 @@ export interface DeviceMutationResponse {
     | DeviceItem
     | string
     | {
-        deviceId?: number;
+        deviceId?: number | string;
         key?: number;
       };
 }

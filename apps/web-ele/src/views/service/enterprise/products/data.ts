@@ -11,6 +11,8 @@ import type {
 import { $t } from '@vben/locales';
 import { formatDate, isEmpty } from '@vben/utils';
 
+import { type ApiId, normalizeApiId } from '#/utils/api-id';
+
 /** 算力产品列表默认每页条数 */
 export const PRODUCT_PAGE_SIZE = 10;
 
@@ -308,12 +310,8 @@ export function isProductOnShelf(status?: null | number): boolean {
  */
 export function resolveSupplyProductId(
   item?: null | Pick<SupplyProductItem, 'supplyProductId'>,
-): number | undefined {
-  const id = Number(item?.supplyProductId);
-  if (!Number.isFinite(id) || id <= 0) {
-    return undefined;
-  }
-  return id;
+): ApiId | undefined {
+  return normalizeApiId(item?.supplyProductId);
 }
 
 /**

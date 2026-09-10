@@ -1,5 +1,11 @@
 import type { DemandDiskPayload } from '#/types/service/product/order';
 
+import {
+  type ApiId,
+  normalizeApiId,
+  parseRouteApiId,
+} from '#/utils/api-id';
+
 /** 下单向导步骤：0 基础 / 1 镜像网络 / 2 高级 / 3 确认 */
 export type OrderStepIndex = 0 | 1 | 2 | 3;
 
@@ -45,17 +51,21 @@ export const DEFAULT_SYSTEM_DISK: DemandDiskPayload = {
 };
 
 /**
- * 解析路由中的正整数 ID
+ * 解析路由中的业务主键（兼容数字 / 雪花字符串，禁止 Number 强制转换）
  * @param raw 路由 query / param 原始值
- * @returns 有效正整数，否则 null
+ * @returns 有效主键，否则 null
  */
-export function parsePositiveId(raw: unknown): null | number {
-  const value = Array.isArray(raw) ? raw[0] : raw;
-  const num = Number(value);
-  if (!Number.isFinite(num) || num <= 0) {
-    return null;
-  }
-  return Math.trunc(num);
+export function parsePositiveId(raw: unknown): ApiId | null {
+  return parseRouteApiId(raw) ?? null;
+}
+
+/**
+ * 规范化接口返参中的业务主键
+ * @param raw 原始 ID
+ * @returns 有效主键，否则 null
+ */
+export function resolveOrderApiId(raw?: ApiId | null): ApiId | null {
+  return normalizeApiId(raw) ?? null;
 }
 
 /**

@@ -9,7 +9,7 @@ export const ENTERPRISE_AUTH_ID_KEY = 'portal-enterprise-auth-id';
 /** 认证材料上传字段 */
 export type CertFileKey = 'businessLicense' | 'idCardBack' | 'idCardFront';
 
-/** 企业认证申请表单（与提交接口字段对齐；enterpriseId 提交时转 number） */
+/** 企业认证申请表单（与提交接口字段对齐；enterpriseId 以字符串编辑，提交时 normalizeApiId） */
 export interface EnterpriseCertForm {
   /** 企业 ID（表单字符串，提交转 int64） */
   enterpriseId: string;
@@ -55,7 +55,7 @@ export const CERT_FILE_MAX_MB = 10;
 
 /**
  * 创建空的认证申请表单
- * @param enterpriseId 可选默认企业 ID（表单内用字符串，提交时转 number）
+ * @param enterpriseId 可选默认企业 ID（表单内用字符串，提交时 normalizeApiId）
  * @returns 表单初值
  */
 export function createCertForm(enterpriseId = ''): EnterpriseCertForm {

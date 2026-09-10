@@ -1,18 +1,20 @@
 <script lang="ts" setup>
 import type { FormInstance, FormRules } from 'element-plus';
 
+import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type {
   MyAppItem,
   MyAppMaterialItem,
   MyAppVersionItem,
 } from '#/types/service/mydemand/apps';
 
-import { computed, reactive, ref, watch } from 'vue';
+import { computed, nextTick, reactive, ref, watch } from 'vue';
 
 import { $t } from '@vben/locales';
 
 import { ElMessage } from 'element-plus';
 
+import { toVxePageResult, useVbenVxeGrid } from '#/adapter/vxe-table';
 import {
   createMyAppVersionApi,
   getMyAppMaterialListApi,
@@ -20,12 +22,11 @@ import {
 } from '#/api/service/mydemand/apps';
 
 import {
-  displayAppValue,
-  formatAppDateTime,
   isAppEnabled,
   joinMaterialIds,
   normalizeMaterialPage,
   resolveMyAppId,
+  useAppVersionColumns,
 } from '../data';
 
 defineOptions({ name: 'MyDemandAppsVersionDialog' });
@@ -33,17 +34,13 @@ defineOptions({ name: 'MyDemandAppsVersionDialog' });
 /** 弹窗可见 */
 const visible = ref(false);
 /** 当前应用 ID */
-const appId = ref<null | number>(null);
+const appId = ref<null | number | string>(null);
 /** 当前应用名称 */
 const appName = ref('');
-/** 版本列表加载中 */
-const loading = ref(false);
 /** 素材选项加载中 */
 const materialLoading = ref(false);
 /** 提交中 */
 const submitting = ref(false);
-/** 版本列表 */
-const versions = ref<MyAppVersionItem[]>([]);
 /** 可选素材（仅启用） */
 const materialOptions = ref<MyAppMaterialItem[]>([]);
 /** 表单引用 */
@@ -51,7 +48,7 @@ const formRef = ref<FormInstance>();
 
 const form = reactive({
   versionNo: '',
-  materialIdList: [] as number[],
+  materialIdList: [] as Array<number | string>,
 });
 
 /** 弹窗标题（含应用名） */
@@ -71,6 +68,42 @@ const rules = computed<FormRules>(() => ({
   ],
 }));
 
+const [Grid, gridApi] = useVbenVxeGrid({
+  class: 'mine-vxe-grid',
+  gridOptions: {
+    columns: useAppVersionColumns(),
+    height: 'auto',
+    keepSource: true,
+    maxHeight: 360,
+    pagerConfig: {
+      enabled: false,
+    },
+    proxyConfig: {
+      ajax: {
+        query: async () => {
+          if (appId.value == null) {
+            return toVxePageResult({ records: [], total: 0 });
+          }
+          const list = await getMyAppVersionListApi(appId.value);
+          const records = Array.isArray(list) ? list : [];
+          return toVxePageResult({ records, total: records.length });
+        },
+      },
+    },
+    rowConfig: {
+      keyField: 'versionId',
+    },
+    stripe: true,
+    toolbarConfig: {
+      custom: false,
+      export: false,
+      refresh: false,
+      search: false,
+      zoom: false,
+    },
+  } as VxeTableGridOptions<MyAppVersionItem>,
+});
+
 /**
  * 重置新增表单
  */
@@ -78,25 +111,6 @@ function resetForm() {
   form.versionNo = '';
   form.materialIdList = [];
   formRef.value?.clearValidate();
-}
-
-/**
- * 拉取版本列表
- */
-async function fetchVersions() {
-  if (appId.value == null) {
-    versions.value = [];
-    return;
-  }
-
-  loading.value = true;
-  try {
-    versions.value = await getMyAppVersionListApi(appId.value);
-  } catch {
-    versions.value = [];
-  } finally {
-    loading.value = false;
-  }
 }
 
 /**
@@ -140,8 +154,6 @@ function open(row: MyAppItem) {
   appName.value = row.appName?.trim() || String(id);
   resetForm();
   visible.value = true;
-  void fetchVersions();
-  void fetchMaterialOptions();
 }
 
 /**
@@ -151,14 +163,17 @@ function handleClose() {
   visible.value = false;
 }
 
-watch(visible, (open) => {
-  if (!open) {
-    appId.value = null;
-    appName.value = '';
-    versions.value = [];
-    materialOptions.value = [];
-    resetForm();
+watch(visible, async (open) => {
+  if (open) {
+    await nextTick();
+    void gridApi.query();
+    void fetchMaterialOptions();
+    return;
   }
+  appId.value = null;
+  appName.value = '';
+  materialOptions.value = [];
+  resetForm();
 });
 
 /**
@@ -178,7 +193,7 @@ async function handleSubmit() {
     });
     ElMessage.success($t('page.service.mydemand.apps.version.createSuccess'));
     resetForm();
-    void fetchVersions();
+    void gridApi.query();
   } catch {
     // 错误提示由接口层处理
   } finally {
@@ -243,7 +258,7 @@ defineExpose({ open });
               v-for="item in materialOptions"
               :key="item.materialId"
               :label="item.materialName || String(item.materialId)"
-              :value="Number(item.materialId)"
+              :value="item.materialId"
             />
           </el-select>
           <p
@@ -262,54 +277,10 @@ defineExpose({ open });
       </el-form>
     </el-card>
 
-    <el-card class="version-dialog__list-card" shadow="never" v-loading="loading">
-      <el-table
-        :data="versions"
-        stripe
-        :empty-text="$t('page.service.mydemand.apps.version.empty')"
-      >
-        <el-table-column
-          :label="$t('page.service.mydemand.apps.version.fields.versionNo')"
-          min-width="120"
-          prop="versionNo"
-          show-overflow-tooltip
-        >
-          <template #default="{ row }">
-            {{
-              displayAppValue(
-                row.versionNo,
-                $t('page.service.mydemand.apps.valueEmpty'),
-              )
-            }}
-          </template>
-        </el-table-column>
-        <el-table-column
-          :label="$t('page.service.mydemand.apps.version.fields.materialIds')"
-          min-width="200"
-          prop="materialIds"
-          show-overflow-tooltip
-        >
-          <template #default="{ row }">
-            {{
-              displayAppValue(
-                row.materialIds,
-                $t('page.service.mydemand.apps.valueEmpty'),
-              )
-            }}
-          </template>
-        </el-table-column>
-        <el-table-column
-          :label="$t('page.service.mydemand.apps.version.fields.createTime')"
-          width="168"
-        >
-          <template #default="{ row }">
-            {{
-              formatAppDateTime(row.createTime) ||
-              $t('page.service.mydemand.apps.valueEmpty')
-            }}
-          </template>
-        </el-table-column>
-      </el-table>
+    <el-card class="version-dialog__list-card" shadow="never">
+      <Grid>
+        <template #table-title></template>
+      </Grid>
     </el-card>
 
     <template #footer>
@@ -352,7 +323,7 @@ defineExpose({ open });
 
   &__list-card {
     :deep(.el-card__body) {
-      padding: 0;
+      padding: 12px;
     }
   }
 }

@@ -1,4 +1,5 @@
 import type { NotificationItem } from '@vben/layouts';
+import { type ApiId, normalizeApiId } from '#/utils/api-id';
 
 import type { MessageItem } from '#/types/mine/messages/all';
 
@@ -35,12 +36,8 @@ function isMessageUnread(isRead?: number): boolean {
  * @param item 消息条目
  * @returns 合法 ID；无效返回 null
  */
-function resolveMessageId(item?: MessageItem | null): null | number {
-  const id = Number(item?.messageId);
-  if (!Number.isFinite(id) || id <= 0) {
-    return null;
-  }
-  return id;
+function resolveMessageId(item?: MessageItem | null): ApiId | null {
+  return normalizeApiId(item?.messageId) ?? null;
 }
 
 /**
@@ -167,16 +164,17 @@ export function useHeaderNotifications(options: {
         const seen = new Set(
           records
             .map((row) => resolveMessageId(row))
-            .filter((id): id is number => id != null),
+            .filter((id): id is ApiId => id != null)
+            .map((id) => String(id)),
         );
         for (const row of latestPage.records ?? []) {
           const id = resolveMessageId(row);
-          if (id != null && seen.has(id)) {
+          if (id != null && seen.has(String(id))) {
             continue;
           }
           records.push(row);
           if (id != null) {
-            seen.add(id);
+            seen.add(String(id));
           }
           if (records.length >= HEADER_MESSAGE_LIMIT) {
             break;
@@ -199,8 +197,8 @@ export function useHeaderNotifications(options: {
    * @param item 通知项
    */
   async function handleRead(item: NotificationItem) {
-    const id = Number(item.id);
-    if (!Number.isFinite(id) || id <= 0 || item.isRead) {
+    const id = normalizeApiId(item.id);
+    if (id == null || item.isRead) {
       return;
     }
     try {
@@ -216,8 +214,8 @@ export function useHeaderNotifications(options: {
    * @param item 通知项
    */
   async function handleRemove(item: NotificationItem) {
-    const id = Number(item.id);
-    if (!Number.isFinite(id) || id <= 0) {
+    const id = normalizeApiId(item.id);
+    if (id == null) {
       return;
     }
     try {
@@ -254,8 +252,8 @@ export function useHeaderNotifications(options: {
    */
   async function handleClear() {
     const ids = notifications.value
-      .map((item) => Number(item.id))
-      .filter((id) => Number.isFinite(id) && id > 0);
+      .map((item) => normalizeApiId(item.id))
+      .filter((id): id is ApiId => id != null);
     if (ids.length === 0) {
       notifications.value = [];
       return;

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { FormInstance, FormRules } from 'element-plus';
+import { type ApiId, normalizeApiId } from '#/utils/api-id';
 
 import type { SubAccountItem, SubAccountStatus } from '#/types/admin/enterprise/accounts';
 
@@ -31,7 +32,7 @@ const emit = defineEmits<{
 /** 弹窗可见 */
 const visible = ref(false);
 /** 编辑中的子账号 ID；新增时为空 */
-const editingId = ref<null | number>(null);
+const editingId = ref<ApiId | null>(null);
 /** 提交中 */
 const submitting = ref(false);
 /** 表单引用 */
@@ -179,8 +180,8 @@ function openCreate() {
  * @param row 列表行
  */
 function openEdit(row: SubAccountItem) {
-  const id = Number(row.subAccountId);
-  if (!Number.isFinite(id) || id <= 0) {
+  const id = normalizeApiId(row.subAccountId);
+  if (id == null) {
     ElMessage.warning($t('page.admin.enterprise.accounts.form.invalidId'));
     return;
   }

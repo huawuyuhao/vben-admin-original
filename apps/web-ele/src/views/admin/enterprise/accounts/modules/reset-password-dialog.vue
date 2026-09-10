@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { FormInstance, FormRules } from 'element-plus';
+import { type ApiId, normalizeApiId } from '#/utils/api-id';
 
 import type { SubAccountItem } from '#/types/admin/enterprise/accounts';
 
@@ -18,7 +19,7 @@ defineOptions({ name: 'AdminEnterpriseAccountsResetPasswordDialog' });
 /** 弹窗可见 */
 const visible = ref(false);
 /** 当前子账号 ID */
-const accountId = ref<null | number>(null);
+const accountId = ref<ApiId | null>(null);
 /** 展示用用户名 */
 const accountName = ref('');
 /** 提交中 */
@@ -107,8 +108,8 @@ function resetForm() {
  * @param row 列表行
  */
 function open(row: SubAccountItem) {
-  const id = Number(row.subAccountId);
-  if (!Number.isFinite(id) || id <= 0) {
+  const id = normalizeApiId(row.subAccountId);
+  if (id == null) {
     ElMessage.warning($t('page.admin.enterprise.accounts.form.invalidId'));
     return;
   }

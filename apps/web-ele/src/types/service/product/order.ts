@@ -32,7 +32,7 @@ export interface SpecListParams {
  */
 export interface ProductSpecItem {
   specId: number;
-  productId?: number;
+  productId?: number | string;
   specCode?: string;
   architecture?: string;
   specType?: string;
@@ -181,9 +181,9 @@ export interface DemandFeeResult {
  * POST /demand/config/draft | /demand/config/submit
  */
 export interface DemandConfigPayload {
-  demandId?: number;
+  demandId?: number | string;
   demandName?: string;
-  productId?: number;
+  productId?: number | string;
   specId: number;
   quantity?: number;
   imageId?: number;
@@ -199,17 +199,17 @@ export interface DemandConfigPayload {
  * 保存 / 提交返回
  */
 export interface DemandConfigSaveResult {
-  demandId?: number;
+  demandId?: number | string;
 }
 
 /**
  * 需求主记录（回显）
  */
 export interface DemandRecordBrief {
-  demandId?: number;
+  demandId?: number | string;
   demandNo?: string;
   demandName?: string;
-  productId?: number;
+  productId?: number | string;
   specId?: number;
   status?: number;
 }
@@ -219,7 +219,7 @@ export interface DemandRecordBrief {
  */
 export interface DemandConfigBrief {
   configId?: number;
-  demandId?: number;
+  demandId?: number | string;
   specId?: number;
   quantity?: number;
   imageId?: number;
@@ -238,7 +238,7 @@ export interface DemandConfigBrief {
  */
 export interface DemandDiskItem extends DemandDiskPayload {
   diskId?: number;
-  demandId?: number;
+  demandId?: number | string;
   iops?: number;
   bandwidthMib?: number;
   performanceDesc?: string;
@@ -250,7 +250,7 @@ export interface DemandDiskItem extends DemandDiskPayload {
  */
 export interface DemandApplicationItem {
   id?: number;
-  demandId?: number;
+  demandId?: number | string;
   applicationId: number;
   appSource?: number;
 }

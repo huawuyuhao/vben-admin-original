@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { MessageItem } from '#/types/mine/messages/all';
+import { type ApiId } from '#/utils/api-id';
 
 import { ref } from 'vue';
 
@@ -22,7 +23,7 @@ defineOptions({ name: 'MineMessagesDetailDialog' });
 
 const emit = defineEmits<{
   /** 详情打开后若曾为未读，通知父级刷新 */
-  read: [messageId: number];
+  read: [messageId: ApiId];
 }>();
 
 /** 弹窗可见 */

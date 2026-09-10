@@ -1,7 +1,8 @@
 <script lang="ts" setup>
+import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { ModelInfo } from '#/types/service/model';
 
-import { computed, ref, watch } from 'vue';
+import { nextTick, ref, watch } from 'vue';
 
 import { $t } from '@vben/locales';
 
@@ -13,14 +14,16 @@ import {
   Star,
 } from '@element-plus/icons-vue';
 
+import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import { compareModelsApi } from '#/api/service/model';
 
 import {
-  formatModelCallCount,
-  formatModelParamValue,
-  formatModelScore,
+  buildModelCompareRows,
   hasModelIcon,
-  parseModelParamsJson,
+  type ModelCompareBaseRowType,
+  type ModelCompareRow,
+  modelCompareColProp,
+  useModelCompareColumns,
 } from '../data';
 
 defineOptions({ name: 'ServiceModelCompareDialog' });
@@ -37,91 +40,27 @@ const loading = ref(false);
 /** 对比结果 */
 const models = ref<ModelInfo[]>([]);
 
-/** 基础行类型：评分 / 调用量 / 简介 */
-type BaseRowType = 'callCount' | 'description' | 'score';
-
-interface CompareRow {
-  /** 行类型（基础行有图标） */
-  kind: 'base' | 'param';
-  /** 基础行类型 */
-  baseType?: BaseRowType;
-  /** 参数原始键（参数行） */
-  rawKey?: string;
-  /** 参数项展示文案 */
-  paramLabel: string;
-  /** 各模型单元格值 */
-  [key: `m_${number}` | string]: unknown;
-}
-
-/**
- * 按模型 ID 取列 prop
- * @param modelId 模型 ID
- * @returns 列字段名
- */
-function modelColProp(modelId: number): string {
-  return `m_${modelId}`;
-}
-
-/** 横向对比表格行：基础信息 + 参数 */
-const tableRows = computed<CompareRow[]>(() => {
-  const list = models.value;
-  if (!list.length) {
-    return [];
-  }
-
-  const emptyText = $t('page.service.model.detail.valueEmpty');
-
-  const baseDefs: Array<{
-    baseType: BaseRowType;
-    label: string;
-    values: (m: ModelInfo) => string;
-  }> = [
-    {
-      baseType: 'score',
-      label: $t('page.service.model.fields.score'),
-      values: (m) => formatModelScore(m.score) || emptyText,
+const [Grid, gridApi] = useVbenVxeGrid({
+  class: 'mine-vxe-grid model-compare-dialog__grid',
+  gridOptions: {
+    border: true,
+    columns: useModelCompareColumns([]),
+    data: [],
+    emptyText: $t('page.service.model.compare.empty'),
+    height: 'auto',
+    keepSource: true,
+    pagerConfig: {
+      enabled: false,
     },
-    {
-      baseType: 'callCount',
-      label: $t('page.service.model.fields.callCount'),
-      values: (m) => formatModelCallCount(m.callCount) || emptyText,
+    stripe: true,
+    toolbarConfig: {
+      custom: false,
+      export: false,
+      refresh: false,
+      search: false,
+      zoom: false,
     },
-    {
-      baseType: 'description',
-      label: $t('page.service.model.fields.description'),
-      values: (m) => m.description?.trim() || emptyText,
-    },
-  ];
-
-  const baseRows: CompareRow[] = baseDefs.map((def) => ({
-    kind: 'base',
-    baseType: def.baseType,
-    paramLabel: def.label,
-    ...Object.fromEntries(
-      list.map((m) => [modelColProp(m.modelId), def.values(m)]),
-    ),
-  }));
-
-  const keySet = new Set<string>();
-  const parsedList = list.map((m) => {
-    const params = parseModelParamsJson(m.paramsJson);
-    Object.keys(params).forEach((k) => keySet.add(k));
-    return params;
-  });
-
-  const paramRows: CompareRow[] = [...keySet].sort().map((key) => ({
-    kind: 'param',
-    rawKey: key,
-    paramLabel: key,
-    ...Object.fromEntries(
-      list.map((m, index) => [
-        modelColProp(m.modelId),
-        formatModelParamValue(parsedList[index]?.[key]) || emptyText,
-      ]),
-    ),
-  }));
-
-  return [...baseRows, ...paramRows];
+  } as VxeTableGridOptions<ModelCompareRow>,
 });
 
 /**
@@ -129,7 +68,7 @@ const tableRows = computed<CompareRow[]>(() => {
  * @param type 基础行类型
  * @returns Element Plus 图标
  */
-function baseRowIcon(type?: BaseRowType) {
+function baseRowIcon(type?: ModelCompareBaseRowType) {
   switch (type) {
     case 'callCount': {
       return Odometer;
@@ -147,25 +86,43 @@ function baseRowIcon(type?: BaseRowType) {
 }
 
 /**
- * 拉取对比数据
+ * 拉取对比数据并刷新本地表格
  */
 async function fetchCompare() {
   if (!props.modelIds.length) {
     models.value = [];
+    gridApi.setGridOptions({
+      columns: useModelCompareColumns([]),
+      data: [],
+    });
     return;
   }
+
   loading.value = true;
+  gridApi.setLoading(true);
   try {
-    models.value = await compareModelsApi(props.modelIds);
+    const list = await compareModelsApi(props.modelIds);
+    models.value = list;
+    await nextTick();
+    gridApi.setGridOptions({
+      columns: useModelCompareColumns(list),
+      data: buildModelCompareRows(list),
+    });
   } catch {
     models.value = [];
+    gridApi.setGridOptions({
+      columns: useModelCompareColumns([]),
+      data: [],
+    });
   } finally {
     loading.value = false;
+    gridApi.setLoading(false);
   }
 }
 
-watch(visible, (open) => {
+watch(visible, async (open) => {
   if (open) {
+    await nextTick();
     void fetchCompare();
   }
 });
@@ -193,85 +150,69 @@ watch(visible, (open) => {
         </span>
       </div>
 
-      <el-empty
-        v-if="!loading && models.length === 0"
-        :description="$t('page.service.model.compare.empty')"
-      />
+      <Grid>
+        <template #table-title></template>
 
-      <el-table
-        v-else
-        :data="tableRows"
-        border
-        stripe
-        class="model-compare-dialog__table"
-      >
-        <el-table-column
-          prop="paramLabel"
-          :label="$t('page.service.model.compare.paramKey')"
-          fixed="left"
-          min-width="168"
-        >
-          <template #default="{ row }">
-            <div class="model-compare-dialog__param">
-              <el-icon class="model-compare-dialog__param-icon">
-                <component
-                  :is="
-                    row.kind === 'base'
-                      ? baseRowIcon(row.baseType)
-                      : DataAnalysis
-                  "
-                />
-              </el-icon>
-              <span :title="row.paramLabel">{{ row.paramLabel }}</span>
-            </div>
-          </template>
-        </el-table-column>
+        <template #paramLabel="{ row }">
+          <div class="model-compare-dialog__param">
+            <el-icon class="model-compare-dialog__param-icon">
+              <component
+                :is="
+                  row.kind === 'base' ? baseRowIcon(row.baseType) : DataAnalysis
+                "
+              />
+            </el-icon>
+            <span :title="row.paramLabel">{{ row.paramLabel }}</span>
+          </div>
+        </template>
 
-        <el-table-column
+        <template
           v-for="item in models"
-          :key="item.modelId"
-          :prop="modelColProp(item.modelId)"
-          min-width="200"
+          :key="`h-${item.modelId}`"
+          #[`header_${modelCompareColProp(item.modelId)}`]
         >
-          <template #header>
-            <div class="model-compare-dialog__model-head">
-              <div
-                class="model-compare-dialog__model-icon"
-                :class="{
-                  'model-compare-dialog__model-icon--empty': !hasModelIcon(
-                    item.iconUrl,
-                  ),
-                }"
-              >
-                <el-image
-                  v-if="hasModelIcon(item.iconUrl)"
-                  :src="item.iconUrl"
-                  fit="cover"
-                />
-                <span v-else>{{ item.modelName.slice(0, 1) }}</span>
-              </div>
-              <span
-                class="model-compare-dialog__model-name"
-                :title="item.modelName"
-              >
-                {{ item.modelName }}
-              </span>
-            </div>
-          </template>
-          <template #default="{ row }">
+          <div class="model-compare-dialog__model-head">
             <div
-              class="model-compare-dialog__cell"
+              class="model-compare-dialog__model-icon"
               :class="{
-                'model-compare-dialog__cell--desc':
-                  row.baseType === 'description',
+                'model-compare-dialog__model-icon--empty': !hasModelIcon(
+                  item.iconUrl,
+                ),
               }"
-              :title="String(row[modelColProp(item.modelId)] ?? '')"
             >
-              {{ row[modelColProp(item.modelId)] }}
+              <el-image
+                v-if="hasModelIcon(item.iconUrl)"
+                :src="item.iconUrl"
+                fit="cover"
+              />
+              <span v-else>{{ item.modelName.slice(0, 1) }}</span>
             </div>
-          </template>
-        </el-table-column>
-      </el-table>
+            <span
+              class="model-compare-dialog__model-name"
+              :title="item.modelName"
+            >
+              {{ item.modelName }}
+            </span>
+          </div>
+        </template>
+
+        <template
+          v-for="item in models"
+          :key="`c-${item.modelId}`"
+          #[modelCompareColProp(item.modelId)]="{ row }"
+        >
+          <div
+            class="model-compare-dialog__cell"
+            :class="{
+              'model-compare-dialog__cell--desc':
+                row.baseType === 'description',
+            }"
+            :title="String(row[modelCompareColProp(item.modelId)] ?? '')"
+          >
+            {{ row[modelCompareColProp(item.modelId)] }}
+          </div>
+        </template>
+      </Grid>
     </div>
   </el-dialog>
 </template>
@@ -320,22 +261,13 @@ watch(visible, (open) => {
     color: hsl(var(--muted-foreground));
   }
 
-  &__table {
-    width: 100%;
-
-    :deep(.el-table__header th) {
+  &__grid {
+    :deep(.vxe-table--header th) {
       background: hsl(var(--primary) / 6%);
     }
 
-    :deep(.el-table__body td) {
+    :deep(.vxe-body--column) {
       vertical-align: top;
-    }
-
-    /* 取消表格内部滚动，整表随内容撑开 */
-    :deep(.el-table__body-wrapper),
-    :deep(.el-scrollbar__wrap) {
-      max-height: none !important;
-      overflow: visible !important;
     }
   }
 

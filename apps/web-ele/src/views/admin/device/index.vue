@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { DeviceItem } from '#/types/admin/device';
+import { normalizeApiId } from '#/utils/api-id';
 
 import { onMounted, ref, watch } from 'vue';
 
@@ -164,8 +165,8 @@ function handleDetail(row: DeviceItem) {
  * @param row 列表行
  */
 async function handleDelete(row: DeviceItem) {
-  const id = Number(row.deviceId);
-  if (!Number.isFinite(id) || id <= 0) {
+  const id = normalizeApiId(row.deviceId);
+  if (id == null) {
     ElMessage.warning($t('page.admin.device.form.invalidId'));
     return;
   }

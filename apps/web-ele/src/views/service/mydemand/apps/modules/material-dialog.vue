@@ -6,12 +6,13 @@ import type {
   UploadUserFile,
 } from 'element-plus';
 
+import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type {
   MyAppItem,
   MyAppMaterialItem,
 } from '#/types/service/mydemand/apps';
 
-import { computed, reactive, ref, watch } from 'vue';
+import { computed, nextTick, reactive, ref, watch } from 'vue';
 
 import { $t } from '@vben/locales';
 import { isEmpty } from '@vben/utils';
@@ -26,6 +27,7 @@ import {
 } from '@element-plus/icons-vue';
 import { ElMessage } from 'element-plus';
 
+import { toVxePageResult, useVbenVxeGrid } from '#/adapter/vxe-table';
 import { uploadImageApi } from '#/api/common';
 import {
   createMyAppMaterialApi,
@@ -38,8 +40,6 @@ import {
 import {
   APP_STATUS_OFF,
   APP_STATUS_ON,
-  displayAppValue,
-  formatAppDateTime,
   getAppStatusI18nKey,
   getAppStatusTagType,
   getMaterialFileName,
@@ -55,6 +55,7 @@ import {
   parseMaterialAttachmentUrls,
   resolveMaterialId,
   resolveMyAppId,
+  useAppMaterialColumns,
 } from '../data';
 
 defineOptions({ name: 'MyDemandAppsMaterialDialog' });
@@ -62,28 +63,16 @@ defineOptions({ name: 'MyDemandAppsMaterialDialog' });
 /** 抽屉可见 */
 const visible = ref(false);
 /** 当前应用 ID */
-const appId = ref<null | number>(null);
+const appId = ref<null | number | string>(null);
 /** 当前应用名称 */
 const appName = ref('');
-/** 列表加载中 */
-const loading = ref(false);
-/** 列表数据 */
-const materials = ref<MyAppMaterialItem[]>([]);
-/** 总条数 */
-const total = ref(0);
-/** 当前页 */
-const currentPage = ref(1);
-/** 每页条数 */
-const pageSize = ref(MATERIAL_PAGE_SIZE);
-/** 跳过由服务端回写触发的重复请求 */
-const syncingFromServer = ref(false);
 /** 正在启停的素材 ID */
-const togglingId = ref<null | number>(null);
+const togglingId = ref<null | number | string>(null);
 
 /** 表单弹窗可见 */
 const formVisible = ref(false);
 /** 编辑中的素材 ID */
-const editingMaterialId = ref<null | number>(null);
+const editingMaterialId = ref<null | number | string>(null);
 /** 表单提交中 */
 const submitting = ref(false);
 /** 附件上传中 */
@@ -135,6 +124,46 @@ const rules = computed<FormRules>(() => ({
   ],
 }));
 
+const [Grid, gridApi] = useVbenVxeGrid({
+  class: 'mine-vxe-grid',
+  gridOptions: {
+    columns: useAppMaterialColumns(),
+    height: 'auto',
+    keepSource: true,
+    maxHeight: 520,
+    pagerConfig: {
+      pageSize: MATERIAL_PAGE_SIZE,
+      pageSizes: MATERIAL_PAGE_SIZE_OPTIONS,
+    },
+    proxyConfig: {
+      ajax: {
+        query: async ({ page }) => {
+          if (appId.value == null) {
+            return toVxePageResult({ records: [], total: 0 });
+          }
+          const data = await getMyAppMaterialListApi({
+            page: page.currentPage,
+            pageSize: page.pageSize,
+            appId: appId.value,
+          });
+          return toVxePageResult(normalizeMaterialPage(data));
+        },
+      },
+    },
+    rowConfig: {
+      keyField: 'materialId',
+    },
+    stripe: true,
+    toolbarConfig: {
+      custom: false,
+      export: false,
+      refresh: false,
+      search: false,
+      zoom: false,
+    },
+  } as VxeTableGridOptions<MyAppMaterialItem>,
+});
+
 /**
  * 重置素材表单
  */
@@ -161,40 +190,6 @@ function fillMaterialForm(row: MyAppMaterialItem) {
 }
 
 /**
- * 拉取素材列表
- */
-async function fetchMaterials() {
-  if (appId.value == null) {
-    materials.value = [];
-    total.value = 0;
-    return;
-  }
-
-  loading.value = true;
-  try {
-    const data = await getMyAppMaterialListApi({
-      page: currentPage.value,
-      pageSize: pageSize.value,
-      appId: appId.value,
-    });
-    const page = normalizeMaterialPage(data);
-    materials.value = page.records;
-    total.value = page.total;
-
-    if (page.current !== currentPage.value) {
-      syncingFromServer.value = true;
-      currentPage.value = page.current;
-      syncingFromServer.value = false;
-    }
-  } catch {
-    materials.value = [];
-    total.value = 0;
-  } finally {
-    loading.value = false;
-  }
-}
-
-/**
  * 打开素材管理抽屉
  * @param row 应用行
  */
@@ -206,10 +201,7 @@ function open(row: MyAppItem) {
   }
   appId.value = id;
   appName.value = row.appName?.trim() || String(id);
-  currentPage.value = 1;
-  pageSize.value = MATERIAL_PAGE_SIZE;
   visible.value = true;
-  void fetchMaterials();
 }
 
 /**
@@ -219,35 +211,18 @@ function handleClose() {
   visible.value = false;
 }
 
-watch(visible, (open) => {
-  if (!open) {
-    appId.value = null;
-    appName.value = '';
-    materials.value = [];
-    total.value = 0;
-    formVisible.value = false;
-    editingMaterialId.value = null;
-    resetMaterialForm();
-    closeImagePreview();
-  }
-});
-
-watch(pageSize, () => {
-  if (!visible.value || syncingFromServer.value) {
+watch(visible, async (open) => {
+  if (open) {
+    await nextTick();
+    await gridApi.reload();
     return;
   }
-  if (currentPage.value !== 1) {
-    currentPage.value = 1;
-    return;
-  }
-  void fetchMaterials();
-});
-
-watch(currentPage, () => {
-  if (!visible.value || syncingFromServer.value) {
-    return;
-  }
-  void fetchMaterials();
+  appId.value = null;
+  appName.value = '';
+  formVisible.value = false;
+  editingMaterialId.value = null;
+  resetMaterialForm();
+  closeImagePreview();
 });
 
 /**
@@ -378,7 +353,7 @@ async function handleMaterialSubmit() {
       );
     }
     handleFormClose();
-    void fetchMaterials();
+    void gridApi.query();
   } catch {
     // 错误提示由接口层处理
   } finally {
@@ -402,7 +377,7 @@ async function handleDeleteMaterial(row: MyAppMaterialItem) {
   try {
     await deleteMyAppMaterialApi(id);
     ElMessage.success($t('page.service.mydemand.apps.material.deleteSuccess'));
-    void fetchMaterials();
+    void gridApi.query();
   } catch {
     // 错误提示由接口层处理
   }
@@ -433,12 +408,23 @@ async function handleToggleMaterial(row: MyAppMaterialItem) {
           : 'page.service.mydemand.apps.material.enableSuccess',
       ),
     );
-    void fetchMaterials();
+    void gridApi.query();
   } catch {
     // 错误提示由接口层处理
   } finally {
     togglingId.value = null;
   }
+}
+
+/**
+ * 判断启停按钮是否处于当前行加载中
+ * @param row 素材行
+ */
+function isToggling(row: MyAppMaterialItem): boolean {
+  if (togglingId.value == null || row.materialId == null) {
+    return false;
+  }
+  return String(togglingId.value) === String(row.materialId);
 }
 
 /**
@@ -485,183 +471,104 @@ defineExpose({ open });
     :title="drawerTitle"
     @close="handleClose"
   >
-    <div class="material-drawer__toolbar">
-      <el-button :icon="Refresh" :loading="loading" @click="fetchMaterials">
-        {{ $t('page.service.mydemand.apps.material.refresh') }}
-      </el-button>
-      <el-button type="primary" :icon="Plus" @click="openCreateMaterial">
-        {{ $t('page.service.mydemand.apps.material.add') }}
-      </el-button>
-    </div>
+    <Grid>
+      <template #table-title></template>
 
-    <el-table
-      v-loading="loading"
-      class="material-drawer__table"
-      :data="materials"
-      stripe
-      :empty-text="$t('page.service.mydemand.apps.material.empty')"
-    >
-      <el-table-column
-        :label="$t('page.service.mydemand.apps.material.fields.materialName')"
-        min-width="140"
-        prop="materialName"
-        show-overflow-tooltip
-      >
-        <template #default="{ row }">
+      <template #toolbar-actions>
+        <div class="material-drawer__toolbar">
+          <el-button :icon="Refresh" @click="gridApi.query()">
+            {{ $t('page.service.mydemand.apps.material.refresh') }}
+          </el-button>
+          <el-button type="primary" :icon="Plus" @click="openCreateMaterial">
+            {{ $t('page.service.mydemand.apps.material.add') }}
+          </el-button>
+        </div>
+      </template>
+
+      <template #attachment="{ row }">
+        <div
+          v-if="parseMaterialAttachmentUrls(row).length > 0"
+          class="material-drawer__files"
+        >
+          <button
+            v-for="url in parseMaterialAttachmentUrls(row)"
+            :key="url"
+            class="material-drawer__file"
+            type="button"
+            @click="previewAttachment(url, parseMaterialAttachmentUrls(row))"
+          >
+            <el-icon>
+              <Picture v-if="isMaterialImageUrl(url)" />
+              <Document v-else />
+            </el-icon>
+            <span :title="getMaterialFileName(url)">
+              {{ getMaterialFileName(url) }}
+            </span>
+            <el-icon class="material-drawer__file-view"><View /></el-icon>
+          </button>
+        </div>
+        <span v-else class="material-drawer__empty-file">
+          {{ $t('page.service.mydemand.apps.material.noAttachment') }}
+        </span>
+      </template>
+
+      <template #status="{ row }">
+        <el-tag
+          effect="light"
+          round
+          size="small"
+          :type="getAppStatusTagType(row.status)"
+        >
           {{
-            displayAppValue(
-              row.materialName,
-              $t('page.service.mydemand.apps.valueEmpty'),
+            $t(
+              `page.service.mydemand.apps.status.${getAppStatusI18nKey(row.status)}`,
             )
           }}
-        </template>
-      </el-table-column>
+        </el-tag>
+      </template>
 
-      <el-table-column
-        :label="$t('page.service.mydemand.apps.material.fields.description')"
-        min-width="140"
-        prop="description"
-        show-overflow-tooltip
-      >
-        <template #default="{ row }">
+      <template #action="{ row }">
+        <el-button link type="primary" @click="openEditMaterial(row)">
+          {{ $t('page.service.mydemand.apps.material.edit') }}
+        </el-button>
+        <el-button
+          link
+          type="primary"
+          :loading="isToggling(row)"
+          @click="handleToggleMaterial(row)"
+        >
           {{
-            displayAppValue(
-              row.description,
-              $t('page.service.mydemand.apps.valueEmpty'),
-            )
+            isAppEnabled(row.status)
+              ? $t('page.service.mydemand.apps.material.disable')
+              : $t('page.service.mydemand.apps.material.enable')
           }}
-        </template>
-      </el-table-column>
-
-      <el-table-column
-        :label="$t('page.service.mydemand.apps.material.fields.attachment')"
-        min-width="240"
-      >
-        <template #default="{ row }">
-          <div
-            v-if="parseMaterialAttachmentUrls(row).length > 0"
-            class="material-drawer__files"
-          >
-            <button
-              v-for="url in parseMaterialAttachmentUrls(row)"
-              :key="url"
-              class="material-drawer__file"
-              type="button"
-              @click="previewAttachment(url, parseMaterialAttachmentUrls(row))"
-            >
-              <el-icon>
-                <Picture v-if="isMaterialImageUrl(url)" />
-                <Document v-else />
-              </el-icon>
-              <span :title="getMaterialFileName(url)">
-                {{ getMaterialFileName(url) }}
-              </span>
-              <el-icon class="material-drawer__file-view"><View /></el-icon>
-            </button>
-          </div>
-          <span v-else class="material-drawer__empty-file">
-            {{ $t('page.service.mydemand.apps.material.noAttachment') }}
-          </span>
-        </template>
-      </el-table-column>
-
-      <el-table-column
-        align="center"
-        :label="$t('page.service.mydemand.apps.material.fields.status')"
-        width="90"
-      >
-        <template #default="{ row }">
-          <el-tag
-            effect="light"
-            round
-            size="small"
-            :type="getAppStatusTagType(row.status)"
-          >
-            {{
-              $t(
-                `page.service.mydemand.apps.status.${getAppStatusI18nKey(row.status)}`,
-              )
-            }}
-          </el-tag>
-        </template>
-      </el-table-column>
-
-      <el-table-column
-        :label="$t('page.service.mydemand.apps.material.fields.createTime')"
-        width="150"
-      >
-        <template #default="{ row }">
-          {{
-            formatAppDateTime(row.createTime) ||
-            $t('page.service.mydemand.apps.valueEmpty')
-          }}
-        </template>
-      </el-table-column>
-
-      <el-table-column
-        align="center"
-        fixed="right"
-        :label="$t('page.service.mydemand.apps.material.fields.actions')"
-        width="200"
-      >
-        <template #default="{ row }">
-          <el-button link type="primary" @click="openEditMaterial(row)">
-            {{ $t('page.service.mydemand.apps.material.edit') }}
-          </el-button>
-          <el-button
-            link
-            type="primary"
-            :loading="togglingId === row.materialId"
-            @click="handleToggleMaterial(row)"
-          >
-            {{
-              isAppEnabled(row.status)
-                ? $t('page.service.mydemand.apps.material.disable')
-                : $t('page.service.mydemand.apps.material.enable')
-            }}
-          </el-button>
-          <el-popconfirm
-            width="240"
-            confirm-button-type="danger"
-            :cancel-button-text="
-              $t('page.service.mydemand.apps.material.deleteCancelBtn')
-            "
-            :confirm-button-text="
-              $t('page.service.mydemand.apps.material.deleteConfirmBtn')
-            "
-            :title="
-              $t('page.service.mydemand.apps.material.deleteConfirm', [
-                row.materialName?.trim() ||
-                  String(row.materialId ?? '') ||
-                  $t('page.service.mydemand.apps.valueEmpty'),
-              ])
-            "
-            @confirm="handleDeleteMaterial(row)"
-          >
-            <template #reference>
-              <el-button link type="danger">
-                {{ $t('page.service.mydemand.apps.material.delete') }}
-              </el-button>
-            </template>
-          </el-popconfirm>
-        </template>
-      </el-table-column>
-    </el-table>
-
-    <div
-      v-if="materials.length > 0 || loading || total > 0"
-      class="material-drawer__pager"
-    >
-      <el-pagination
-        v-model:current-page="currentPage"
-        v-model:page-size="pageSize"
-        background
-        layout="total, sizes, prev, pager, next"
-        :disabled="loading"
-        :page-sizes="MATERIAL_PAGE_SIZE_OPTIONS"
-        :total="total"
-      />
-    </div>
+        </el-button>
+        <el-popconfirm
+          width="240"
+          confirm-button-type="danger"
+          :cancel-button-text="
+            $t('page.service.mydemand.apps.material.deleteCancelBtn')
+          "
+          :confirm-button-text="
+            $t('page.service.mydemand.apps.material.deleteConfirmBtn')
+          "
+          :title="
+            $t('page.service.mydemand.apps.material.deleteConfirm', [
+              row.materialName?.trim() ||
+                String(row.materialId ?? '') ||
+                $t('page.service.mydemand.apps.valueEmpty'),
+            ])
+          "
+          @confirm="handleDeleteMaterial(row)"
+        >
+          <template #reference>
+            <el-button link type="danger">
+              {{ $t('page.service.mydemand.apps.material.delete') }}
+            </el-button>
+          </template>
+        </el-popconfirm>
+      </template>
+    </Grid>
 
     <el-dialog
       v-model="formVisible"
@@ -848,18 +755,6 @@ defineExpose({ open });
     flex-wrap: wrap;
     gap: 10px;
     justify-content: flex-end;
-    margin-bottom: 16px;
-  }
-
-  &__table {
-    width: 100%;
-  }
-
-  &__pager {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    margin-top: 16px;
   }
 
   &__files {

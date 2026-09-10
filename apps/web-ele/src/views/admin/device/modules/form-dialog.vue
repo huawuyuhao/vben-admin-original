@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { FormInstance, FormRules } from 'element-plus';
+import { type ApiId, normalizeApiId } from '#/utils/api-id';
 
 import type { DeviceItem, DeviceOnlineStatus } from '#/types/admin/device';
 
@@ -33,7 +34,7 @@ const emit = defineEmits<{
 /** 弹窗可见 */
 const visible = ref(false);
 /** 编辑中的设备 ID；新增时为空 */
-const editingId = ref<null | number>(null);
+const editingId = ref<ApiId | null>(null);
 /** 提交中 */
 const submitting = ref(false);
 /** 详情加载中（编辑回填） */
@@ -200,8 +201,8 @@ function openCreate() {
  * @param row 列表行
  */
 async function openEdit(row: DeviceItem) {
-  const id = Number(row.deviceId);
-  if (!Number.isFinite(id) || id <= 0) {
+  const id = normalizeApiId(row.deviceId);
+  if (id == null) {
     ElMessage.warning($t('page.admin.device.form.invalidId'));
     return;
   }

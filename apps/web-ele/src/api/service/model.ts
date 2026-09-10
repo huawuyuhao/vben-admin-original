@@ -12,6 +12,7 @@ import type {
 import { ElMessage } from 'element-plus';
 
 import { rootRequestClient } from '#/api/request';
+import { type ApiId, toApiPathId } from '#/utils/api-id';
 
 /**
  * 判断业务码是否成功（与全局拦截器一致：0 / 200）
@@ -112,24 +113,26 @@ export async function getModelListApi(params: ModelListParams) {
  * @param id 模型 ID
  * @returns 模型详细信息（含 paramsJson）
  */
-export async function getModelDetailApi(id: number) {
-  return rootRequestClient.get<ModelInfo>(`/pwq-mock/model/${id}`);
-  // return rootRequestClient.get<ModelInfo>(`/mock/model/${id}`);
-  // return rootRequestClient.get<ModelInfo>(`/model/${id}`);
+export async function getModelDetailApi(id: ApiId) {
+  return rootRequestClient.get<ModelInfo>(
+    `/pwq-mock/model/${toApiPathId(id)}`,
+  );
+  // return rootRequestClient.get<ModelInfo>(`/mock/model/${toApiPathId(id)}`);
+  // return rootRequestClient.get<ModelInfo>(`/model/${toApiPathId(id)}`);
 }
 
 /**
  * 模型参数对比
  * 开发态走 Apifox Mock：POST /mock/model/compare
  * 正式接口：POST /model/compare
- * 入参走请求体：{ modelIds: number[] }（最多 5 个）
+ * 入参走请求体：{ modelIds: ApiId[] }（最多 5 个；兼容数字与字符串）
  * @param modelIds 模型 ID 列表
  * @returns 对比模型列表（含 paramsJson）
  */
-export async function compareModelsApi(modelIds: number[]) {
+export async function compareModelsApi(modelIds: ApiId[]) {
   const ids = modelIds
-    .map((id) => Number(id))
-    .filter((id) => Number.isFinite(id) && id > 0)
+    .map((id) => String(id).trim())
+    .filter((id) => id.length > 0)
     .slice(0, 5);
 
   const body = await rootRequestClient.post<ModelCompareResponseBody>(

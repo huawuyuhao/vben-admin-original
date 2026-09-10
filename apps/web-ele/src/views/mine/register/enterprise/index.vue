@@ -11,6 +11,7 @@ import {
   getEnterpriseCertProgressApi,
   submitEnterpriseCertApi,
 } from '#/api/mine/register/enterprise';
+import { normalizeApiId } from '#/utils/api-id';
 
 import {
   buildAuthStatusMeta,
@@ -64,13 +65,12 @@ function applyProgress(status?: number | string, remark?: string) {
 }
 
 /**
- * 将缓存 / 入参解析为认证 ID（integer）
+ * 将缓存 / 入参解析为认证 ID（兼容数字 / 雪花字符串）
  * @param id 原始 ID
- * @returns 合法 integer，否则 NaN
+ * @returns 合法主键，否则 undefined
  */
-function parseAuthId(id?: number | string): number {
-  const num = Number(id);
-  return Number.isFinite(num) && Number.isInteger(num) ? num : Number.NaN;
+function parseAuthId(id?: number | string): ReturnType<typeof normalizeApiId> {
+  return normalizeApiId(id);
 }
 
 /**
@@ -82,7 +82,7 @@ async function fetchProgress(id?: number | string) {
   progressLoading.value = true;
   try {
     const data = await getEnterpriseCertProgressApi(
-      Number.isNaN(queryId) ? undefined : { authId: queryId },
+      queryId == null ? undefined : { authId: queryId },
     );
     applyProgress(data?.authStatus, data?.auditRemark);
   } catch {
@@ -101,12 +101,8 @@ async function handleSubmit(payload: EnterpriseCertForm) {
     ElMessage.warning($t('page.mine.register.enterprise.message.readonlyHint'));
     return;
   }
-  const enterpriseId = Number(payload.enterpriseId);
-  if (
-    !Number.isFinite(enterpriseId) ||
-    !Number.isInteger(enterpriseId) ||
-    enterpriseId <= 0
-  ) {
+  const enterpriseId = normalizeApiId(payload.enterpriseId);
+  if (enterpriseId == null) {
     ElMessage.warning(
       $t('page.mine.register.enterprise.form.enterpriseIdInvalid'),
     );
@@ -123,7 +119,7 @@ async function handleSubmit(payload: EnterpriseCertForm) {
       businessLicense: payload.businessLicense,
     });
     const nextAuthId = parseAuthId(result?.key);
-    if (Number.isNaN(nextAuthId)) {
+    if (nextAuthId == null) {
       ElMessage.error($t('page.mine.register.enterprise.message.noAuthId'));
       return;
     }

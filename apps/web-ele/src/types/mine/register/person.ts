@@ -25,7 +25,7 @@ export interface PersonalCertParams {
  */
 export interface PersonalCertResult {
   /** 认证 ID（进度接口 authId） */
-  key: number;
+  key: number | string;
 }
 
 /**
@@ -33,7 +33,7 @@ export interface PersonalCertResult {
  */
 export interface PersonalCertProgressParams {
   /** 认证 ID（提交接口返回的 key；可选，缺省由后端按登录用户解析） */
-  authId?: number;
+  authId?: number | string;
 }
 
 /**

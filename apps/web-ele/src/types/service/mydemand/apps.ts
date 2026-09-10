@@ -26,13 +26,13 @@ export type MyAppCollectAction = 'collect' | 'uncollect';
  */
 export interface MyAppItem {
   /** 应用 ID */
-  appId?: number;
+  appId?: number | string;
   /** 应用名称 */
   appName?: string;
   /** 应用版本 */
   appVersion?: string;
-  /** 应用类型（整型字典） */
-  appType?: number;
+  /** 应用类型（字典值；兼容数字 / 字符串） */
+  appType?: number | string;
   /** 应用类型名称（列表直接渲染） */
   appTypeName?: string;
   /** 应用状态（0-停用 1-启用） */
@@ -67,7 +67,7 @@ export interface MyAppListParams {
   /** 应用名称（可选，模糊搜索） */
   appName?: string;
   /** 应用类型（可选） */
-  appType?: number;
+  appType?: number | string;
   /** 应用状态（可选） */
   appStatus?: MyAppStatus;
   /** 是否收藏（可选） */
@@ -84,7 +84,7 @@ export interface MyAppWriteParams {
   /** 应用版本 */
   appVersion: string;
   /** 应用类型 */
-  appType: number;
+  appType: number | string;
   /** 应用状态（0-停用 1-启用） */
   appStatus?: MyAppStatus | number;
   /** 是否收藏（0-否 1-是） */
@@ -99,7 +99,7 @@ export interface MyAppVersionItem {
   /** 版本 ID */
   versionId?: number;
   /** 应用 ID */
-  appId?: number;
+  appId?: number | string;
   /** 版本号 */
   versionNo?: string;
   /** 关联素材 ID（多个用逗号分隔） */
@@ -127,7 +127,7 @@ export interface MyAppVersionWriteParams {
  */
 export interface MyAppScheduleTaskParams {
   /** 应用 ID */
-  appId: number;
+  appId: number | string;
   /** Cron 表达式 */
   cronExpression: string;
   /** 状态（0-停用 1-启用） */
@@ -140,7 +140,7 @@ export interface MyAppScheduleTaskParams {
  */
 export interface MyAppMaterialItem {
   /** 素材 ID */
-  materialId?: number;
+  materialId?: number | string;
   /** 素材名称 */
   materialName?: string;
   /** 素材描述 */
@@ -152,7 +152,7 @@ export interface MyAppMaterialItem {
   /** 素材状态（0-停用 1-启用） */
   status?: MyAppStatus | number;
   /** 应用 ID */
-  appId?: number;
+  appId?: number | string;
   /** 创建时间 */
   createTime?: string;
   /** 更新时间 */
@@ -169,7 +169,7 @@ export interface MyAppMaterialListParams {
   /** 每页条数 */
   pageSize: number;
   /** 应用 ID */
-  appId: number;
+  appId: number | string;
 }
 
 /**
@@ -186,7 +186,7 @@ export interface MyAppMaterialWriteParams {
   /** 素材状态（0-停用 1-启用） */
   status?: MyAppStatus | number;
   /** 应用 ID */
-  appId: number;
+  appId: number | string;
 }
 
 /**

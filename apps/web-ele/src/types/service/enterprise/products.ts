@@ -20,7 +20,7 @@ export type SupplyProductShelfAction = 'shelf' | 'unshelf';
  */
 export interface SupplyProductItem {
   /** 供给产品 ID */
-  supplyProductId?: number;
+  supplyProductId?: number | string;
   /** 企业 ID */
   enterpriseId?: number;
   /** 产品名称 */

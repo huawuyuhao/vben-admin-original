@@ -10,7 +10,7 @@ export type ComputeDemandStatus = 0 | 1 | 2 | 3 | 4 | 5;
  */
 export interface ComputeDemandItem {
   /** 需求 ID */
-  demandId?: number;
+  demandId?: number | string;
   /** 需求编号（系统自动生成唯一） */
   demandNo?: string;
   /** 需求名称 */
@@ -24,7 +24,7 @@ export interface ComputeDemandItem {
   /** 企业 ID */
   enterpriseId?: number;
   /** 关联应用 ID */
-  applicationId?: number;
+  applicationId?: number | string;
   /** 需求状态 */
   status?: ComputeDemandStatus | number;
   /** 提交时间 */
@@ -78,7 +78,7 @@ export interface ComputeDemandWriteParams {
   /** 资源规格 */
   resourceSpec?: string;
   /** 关联应用 ID */
-  applicationId?: number;
+  applicationId?: number | string;
   /** 需求状态（重新提交时传 1-待审核） */
   status?: ComputeDemandStatus | number;
 }
@@ -91,7 +91,7 @@ export interface ComputeDemandCreateResult {
   /** 需求编号 */
   demandNo?: string;
   /** 需求 ID */
-  demandId?: number;
+  demandId?: number | string;
 }
 
 /**

@@ -15,6 +15,7 @@ import type {
 import { ElMessage } from 'element-plus';
 
 import { rootRequestClient } from '#/api/request';
+import { toApiPathId } from '#/utils/api-id';
 
 /**
  * 判断业务码是否成功（与全局拦截器一致：0 / 200）
@@ -151,11 +152,11 @@ export async function createSubAccountApi(params: SubAccountCreateParams) {
  * @param params 修改参数
  */
 export async function updateSubAccountApi(
-  id: number,
+  id: number | string,
   params: SubAccountUpdateParams,
 ) {
   const body = await rootRequestClient.put<SubAccountMutationResponse>(
-    `/mock/enterprise/sub-account/${id}`,
+    `/mock/enterprise/sub-account/${toApiPathId(id)}`,
     undefined,
     {
       params,
@@ -163,7 +164,7 @@ export async function updateSubAccountApi(
     },
   );
   // const body = await rootRequestClient.put<SubAccountMutationResponse>(
-  //   `/enterprise/sub-account/${id}`,
+  //   `/enterprise/sub-account/${toApiPathId(id)}`,
   //   undefined,
   //   { params, responseReturn: 'body' },
   // );
@@ -177,15 +178,15 @@ export async function updateSubAccountApi(
  * 正式：DELETE /enterprise/sub-account/{id}
  * @param id 子账号 ID
  */
-export async function deleteSubAccountApi(id: number) {
+export async function deleteSubAccountApi(id: number | string) {
   const body = await rootRequestClient.delete<SubAccountMutationResponse>(
-    `/mock/enterprise/sub-account/${id}`,
+    `/mock/enterprise/sub-account/${toApiPathId(id)}`,
     {
       responseReturn: 'body',
     },
   );
   // const body = await rootRequestClient.delete<SubAccountMutationResponse>(
-  //   `/enterprise/sub-account/${id}`,
+  //   `/enterprise/sub-account/${toApiPathId(id)}`,
   //   { responseReturn: 'body' },
   // );
 
@@ -201,11 +202,11 @@ export async function deleteSubAccountApi(id: number) {
  * @param params 权限参数
  */
 export async function assignSubAccountPermissionApi(
-  id: number,
+  id: number | string,
   params: SubAccountPermissionParams,
 ) {
   const body = await rootRequestClient.put<SubAccountMutationResponse>(
-    `/mock/enterprise/sub-account/${id}/permission`,
+    `/mock/enterprise/sub-account/${toApiPathId(id)}/permission`,
     undefined,
     {
       params,
@@ -213,7 +214,7 @@ export async function assignSubAccountPermissionApi(
     },
   );
   // const body = await rootRequestClient.put<SubAccountMutationResponse>(
-  //   `/enterprise/sub-account/${id}/permission`,
+  //   `/enterprise/sub-account/${toApiPathId(id)}/permission`,
   //   undefined,
   //   { params, responseReturn: 'body' },
   // );
@@ -230,11 +231,11 @@ export async function assignSubAccountPermissionApi(
  * @param params 新密码
  */
 export async function resetSubAccountPasswordApi(
-  id: number,
+  id: number | string,
   params: SubAccountResetPasswordParams,
 ) {
   const body = await rootRequestClient.post<SubAccountMutationResponse>(
-    `/mock/enterprise/sub-account/${id}/reset-password`,
+    `/mock/enterprise/sub-account/${toApiPathId(id)}/reset-password`,
     undefined,
     {
       params,
@@ -242,7 +243,7 @@ export async function resetSubAccountPasswordApi(
     },
   );
   // const body = await rootRequestClient.post<SubAccountMutationResponse>(
-  //   `/enterprise/sub-account/${id}/reset-password`,
+  //   `/enterprise/sub-account/${toApiPathId(id)}/reset-password`,
   //   undefined,
   //   { params, responseReturn: 'body' },
   // );

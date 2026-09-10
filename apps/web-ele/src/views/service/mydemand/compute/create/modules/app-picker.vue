@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { MyAppItem } from '#/types/service/mydemand/apps';
+import { type ApiId, normalizeApiId, sameApiId } from '#/utils/api-id';
 
 import { computed, onMounted, ref, watch } from 'vue';
 
@@ -20,7 +21,7 @@ import {
 defineOptions({ name: 'MyDemandComputeAppPicker' });
 
 /** 当前选中的应用 ID */
-const selectedId = defineModel<number | undefined>('modelValue');
+const selectedId = defineModel<ApiId | undefined>('modelValue');
 
 /** 已选应用缓存（跨页保留展示信息） */
 const selectedApp = ref<MyAppItem | null>(null);
@@ -66,8 +67,8 @@ function syncSelectedFromRecords(records: MyAppItem[]) {
   if (selectedId.value == null) {
     return;
   }
-  const matched = records.find(
-    (item) => Number(item.appId) === Number(selectedId.value),
+  const matched = records.find((item) =>
+    sameApiId(item.appId, selectedId.value),
   );
   if (matched) {
     selectedApp.value = matched;
@@ -137,11 +138,11 @@ function handleReset() {
  * @param app 应用条目
  */
 function handleSelect(app: MyAppItem) {
-  const id = Number(app.appId);
-  if (!Number.isFinite(id) || id <= 0) {
+  const id = normalizeApiId(app.appId);
+  if (id == null) {
     return;
   }
-  if (selectedId.value === id) {
+  if (sameApiId(selectedId.value, id)) {
     selectedId.value = undefined;
     selectedApp.value = null;
     return;
@@ -164,9 +165,7 @@ function handleClear() {
  * @returns 选中返回 true
  */
 function isSelected(app: MyAppItem): boolean {
-  return (
-    selectedId.value != null && Number(app.appId) === Number(selectedId.value)
-  );
+  return selectedId.value != null && sameApiId(app.appId, selectedId.value);
 }
 
 watch(pageSize, () => {
@@ -192,7 +191,7 @@ watch(selectedId, (id) => {
     selectedApp.value = null;
     return;
   }
-  if (Number(selectedApp.value?.appId) === Number(id)) {
+  if (sameApiId(selectedApp.value?.appId, id)) {
     return;
   }
   syncSelectedFromRecords(apps.value);

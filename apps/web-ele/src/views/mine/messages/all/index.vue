@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { MessageItem } from '#/types/mine/messages/all';
+import { type ApiId, parseRouteApiId } from '#/utils/api-id';
 
 import { nextTick, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -124,7 +125,7 @@ function syncSelectedIds() {
     (gridApi.grid?.getCheckboxRecords?.() as MessageItem[] | undefined) ?? [];
   selectedIds.value = rows
     .map((row) => resolveMessageId(row))
-    .filter((id): id is number => id != null);
+    .filter((id): id is ApiId => id != null);
 }
 
 /**
@@ -166,7 +167,7 @@ function handleDetail(row: MessageItem) {
  * 查看未读详情后标记已读并刷新
  * @param messageId 消息 ID
  */
-async function handleDetailRead(messageId: number) {
+async function handleDetailRead(messageId: ApiId) {
   try {
     await markMessageReadApi([messageId]);
     void refreshAll();
@@ -240,8 +241,8 @@ async function handleDelete() {
  * 处理顶栏通知跳转携带的 messageId，打开详情后清掉 query
  */
 async function handleEntryQuery() {
-  const messageId = Number(route.query.messageId);
-  if (!Number.isFinite(messageId) || messageId <= 0) {
+  const messageId = parseRouteApiId(route.query.messageId);
+  if (messageId == null) {
     return;
   }
   await nextTick();

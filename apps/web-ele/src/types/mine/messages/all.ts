@@ -16,7 +16,7 @@ export type MessageReadStatus = 0 | 1;
  */
 export interface MessageItem {
   /** 消息 ID */
-  messageId?: number;
+  messageId?: number | string;
   /** 消息类型 */
   messageType?: MessageType | number;
   /** 消息标题 */

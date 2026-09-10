@@ -9,7 +9,7 @@ export type EnterpriseAuthStatus = number | string;
  */
 export interface EnterpriseCertParams {
   /** 企业 ID */
-  enterpriseId: number;
+  enterpriseId: number | string;
   /** 法人姓名 */
   legalPersonName: string;
   /** 身份证号 */
@@ -27,7 +27,7 @@ export interface EnterpriseCertParams {
  */
 export interface EnterpriseCertResult {
   /** 认证 ID（进度接口 authId） */
-  key: number;
+  key: number | string;
 }
 
 /**
@@ -36,7 +36,7 @@ export interface EnterpriseCertResult {
  */
 export interface EnterpriseCertProgressParams {
   /** 认证 ID（提交接口返回的 key；可选，缺省由后端按登录用户解析） */
-  authId?: number;
+  authId?: number | string;
 }
 
 /**

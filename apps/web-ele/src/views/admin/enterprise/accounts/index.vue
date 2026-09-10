@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { SubAccountItem } from '#/types/admin/enterprise/accounts';
+import { normalizeApiId } from '#/utils/api-id';
 
 import { onMounted, ref, watch } from 'vue';
 
@@ -176,8 +177,8 @@ function handleResetPassword(row: SubAccountItem) {
  * @param row 列表行
  */
 async function handleDelete(row: SubAccountItem) {
-  const id = Number(row.subAccountId);
-  if (!Number.isFinite(id) || id <= 0) {
+  const id = normalizeApiId(row.subAccountId);
+  if (id == null) {
     ElMessage.warning($t('page.admin.enterprise.accounts.form.invalidId'));
     return;
   }

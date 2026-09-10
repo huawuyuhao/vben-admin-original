@@ -337,3 +337,127 @@ export function exportModelInfoTemplate(
     source: new Blob([csv], { type: 'text/csv;charset=utf-8;' }),
   });
 }
+
+/** 对比矩阵基础行类型 */
+export type ModelCompareBaseRowType = 'callCount' | 'description' | 'score';
+
+/** 对比矩阵行 */
+export interface ModelCompareRow {
+  /** 行类型（基础行有图标） */
+  kind: 'base' | 'param';
+  /** 基础行类型 */
+  baseType?: ModelCompareBaseRowType;
+  /** 参数原始键（参数行） */
+  rawKey?: string;
+  /** 参数项展示文案 */
+  paramLabel: string;
+  /** 各模型单元格值 */
+  [key: `m_${number}` | string]: unknown;
+}
+
+/**
+ * 按模型 ID 取对比列 field
+ * @param modelId 模型 ID
+ * @returns 列字段名
+ */
+export function modelCompareColProp(modelId: number | string): string {
+  return `m_${modelId}`;
+}
+
+/**
+ * 构建模型对比矩阵行（基础信息 + 参数）
+ * @param list 对比模型列表
+ * @returns 表格行
+ */
+export function buildModelCompareRows(list: ModelInfo[]): ModelCompareRow[] {
+  if (!list.length) {
+    return [];
+  }
+
+  const emptyText = $t('page.service.model.detail.valueEmpty');
+
+  const baseDefs: Array<{
+    baseType: ModelCompareBaseRowType;
+    label: string;
+    values: (m: ModelInfo) => string;
+  }> = [
+    {
+      baseType: 'score',
+      label: $t('page.service.model.fields.score'),
+      values: (m) => formatModelScore(m.score) || emptyText,
+    },
+    {
+      baseType: 'callCount',
+      label: $t('page.service.model.fields.callCount'),
+      values: (m) => formatModelCallCount(m.callCount) || emptyText,
+    },
+    {
+      baseType: 'description',
+      label: $t('page.service.model.fields.description'),
+      values: (m) => m.description?.trim() || emptyText,
+    },
+  ];
+
+  const baseRows: ModelCompareRow[] = baseDefs.map((def) => ({
+    kind: 'base',
+    baseType: def.baseType,
+    paramLabel: def.label,
+    ...Object.fromEntries(
+      list.map((m) => [modelCompareColProp(m.modelId), def.values(m)]),
+    ),
+  }));
+
+  const keySet = new Set<string>();
+  const parsedList = list.map((m) => {
+    const params = parseModelParamsJson(m.paramsJson);
+    Object.keys(params).forEach((k) => keySet.add(k));
+    return params;
+  });
+
+  const paramRows: ModelCompareRow[] = [...keySet].sort().map((key) => ({
+    kind: 'param',
+    rawKey: key,
+    paramLabel: key,
+    ...Object.fromEntries(
+      list.map((m, index) => [
+        modelCompareColProp(m.modelId),
+        formatModelParamValue(parsedList[index]?.[key]) || emptyText,
+      ]),
+    ),
+  }));
+
+  return [...baseRows, ...paramRows];
+}
+
+/**
+ * 构建模型对比矩阵列配置
+ * @param list 对比模型列表
+ * @returns Vxe 列
+ */
+export function useModelCompareColumns(
+  list: ModelInfo[],
+): VxeTableGridOptions<ModelCompareRow>['columns'] {
+  const columns: VxeTableGridOptions<ModelCompareRow>['columns'] = [
+    {
+      field: 'paramLabel',
+      fixed: 'left',
+      minWidth: 168,
+      slots: { default: 'paramLabel' },
+      title: $t('page.service.model.compare.paramKey'),
+    },
+  ];
+
+  for (const item of list) {
+    const field = modelCompareColProp(item.modelId);
+    columns!.push({
+      field,
+      minWidth: 200,
+      slots: {
+        default: field,
+        header: `header_${field}`,
+      },
+    });
+  }
+
+  return columns;
+}

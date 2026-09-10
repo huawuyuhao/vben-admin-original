@@ -11,6 +11,12 @@ import type {
 import { $t } from '@vben/locales';
 import { formatDate, isEmpty, isHttpUrl } from '@vben/utils';
 
+import {
+  type ApiId,
+  normalizeApiId,
+  parseRouteApiId,
+} from '#/utils/api-id';
+
 /** 算力需求列表默认每页条数 */
 export const COMPUTE_PAGE_SIZE = 10;
 
@@ -283,9 +289,20 @@ export function normalizeComputePage(data?: ComputeDemandListResult | null): {
  */
 export function resolveComputeDemandId(
   row?: ComputeDemandItem | null,
-): null | number {
-  const id = Number(row?.demandId);
-  return Number.isFinite(id) && id > 0 ? id : null;
+): ApiId | null {
+  return normalizeApiId(row?.demandId) ?? null;
+}
+
+/**
+ * 解析新建/编辑页路由中的需求 ID（兼容 id / demandId）
+ * @param query 路由 query
+ * @returns 合法 ID；无效时 null
+ */
+export function parseComputeCreateDemandId(query: {
+  demandId?: unknown;
+  id?: unknown;
+}): ApiId | null {
+  return parseRouteApiId(query.id ?? query.demandId) ?? null;
 }
 
 /**
@@ -456,20 +473,6 @@ export function normalizeComputeAppPage(
     current: Math.max(1, Number(data?.current) || 1),
     size: Math.max(1, Number(data?.size) || COMPUTE_APP_PICKER_PAGE_SIZE),
   };
-}
-
-/**
- * 解析新建/编辑页路由中的需求 ID（兼容 id / demandId）
- * @param query 路由 query
- * @returns 合法 ID；无效时 null
- */
-export function parseComputeCreateDemandId(query: {
-  demandId?: unknown;
-  id?: unknown;
-}): null | number {
-  const raw = query.id ?? query.demandId;
-  const id = Number(raw);
-  return Number.isFinite(id) && id > 0 ? id : null;
 }
 
 /**

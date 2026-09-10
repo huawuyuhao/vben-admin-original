@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { FormInstance, FormRules } from 'element-plus';
+import { type ApiId, normalizeApiId } from '#/utils/api-id';
 
 import type { ComputeDemandItem } from '#/types/service/mydemand/compute';
 
@@ -35,7 +36,7 @@ const route = useRoute();
 const router = useRouter();
 
 /** 编辑中的需求 ID；新增时为空 */
-const editingId = ref<null | number>(null);
+const editingId = ref<ApiId | null>(null);
 /** 是否重新提交模式 */
 const resubmitMode = ref(false);
 /** 提交中 */
@@ -49,7 +50,7 @@ const form = reactive({
   demandName: '',
   demandType: undefined as number | undefined,
   resourceSpec: '',
-  applicationId: undefined as number | undefined,
+  applicationId: undefined as ApiId | undefined,
 });
 
 /** 是否编辑模式 */
@@ -106,10 +107,7 @@ function fillForm(row: ComputeDemandItem) {
       ? Number(row.demandType)
       : undefined;
   form.resourceSpec = row.resourceSpec?.trim() || '';
-  form.applicationId =
-    row.applicationId != null && Number.isFinite(Number(row.applicationId))
-      ? Number(row.applicationId)
-      : undefined;
+  form.applicationId = normalizeApiId(row.applicationId);
 }
 
 /**

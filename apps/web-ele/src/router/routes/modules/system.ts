@@ -338,12 +338,23 @@ const routes: RouteRecordRaw[] = [
                 },
               },
               {
+                name: 'ContentModelService',
+                path: '/monitoring/content/model',
+                component: () =>
+                  import('#/views/monitoring/content/model/index.vue'),
+                meta: {
+                  icon: 'ep:box',
+                  order: 4,
+                  title: '模型服务管理',
+                },
+              },
+              {
                 name: 'ContentModelCard',
                 path: '/monitoring/content/model-card',
                 component: () => import('#/views/basic/content/model-card.vue'),
                 meta: {
                   icon: 'ep:grid',
-                  order: 4,
+                  order: 5,
                   title: '应用模型卡片管理',
                 },
               },
@@ -353,7 +364,7 @@ const routes: RouteRecordRaw[] = [
                 component: () => import('#/views/basic/content/faq.vue'),
                 meta: {
                   icon: 'ep:question-filled',
-                  order: 5,
+                  order: 6,
                   title: '常见问题管理',
                 },
               },
@@ -363,7 +374,7 @@ const routes: RouteRecordRaw[] = [
                 component: () => import('#/views/basic/content/announce.vue'),
                 meta: {
                   icon: 'ep:bell',
-                  order: 6,
+                  order: 7,
                   title: '活动公告管理',
                 },
               },
@@ -373,7 +384,7 @@ const routes: RouteRecordRaw[] = [
                 component: () => import('#/views/basic/content/partner.vue'),
                 meta: {
                   icon: 'ep:office-building',
-                  order: 7,
+                  order: 8,
                   title: '合作伙伴展示管理',
                 },
               },
@@ -383,7 +394,7 @@ const routes: RouteRecordRaw[] = [
                 component: () => import('#/views/basic/content/legal.vue'),
                 meta: {
                   icon: 'ep:document-checked',
-                  order: 8,
+                  order: 9,
                   title: '法律条款与协议管理',
                 },
               },
@@ -393,7 +404,7 @@ const routes: RouteRecordRaw[] = [
                 component: () => import('#/views/basic/content/audit.vue'),
                 meta: {
                   icon: 'ep:finished',
-                  order: 9,
+                  order: 10,
                   title: '门户内容审核管理',
                 },
               },
@@ -403,7 +414,7 @@ const routes: RouteRecordRaw[] = [
                 component: () => import('#/views/basic/content/contract.vue'),
                 meta: {
                   icon: 'ep:notebook',
-                  order: 10,
+                  order: 11,
                   title: '算力合同',
                 },
               },
@@ -414,7 +425,7 @@ const routes: RouteRecordRaw[] = [
                   import('#/views/basic/content/settlement.vue'),
                 meta: {
                   icon: 'ep:coin',
-                  order: 11,
+                  order: 12,
                   title: '算力结算',
                 },
               },

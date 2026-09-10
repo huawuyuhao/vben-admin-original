@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { DeviceItem } from '#/types/admin/device';
+import { normalizeApiId } from '#/utils/api-id';
 
 import { ref } from 'vue';
 
@@ -31,8 +32,8 @@ const detail = ref<DeviceItem | null>(null);
  * @param row 列表行（兜底展示）
  */
 async function open(row: DeviceItem) {
-  const id = Number(row.deviceId);
-  if (!Number.isFinite(id) || id <= 0) {
+  const id = normalizeApiId(row.deviceId);
+  if (id == null) {
     ElMessage.warning($t('page.admin.device.form.invalidId'));
     return;
   }

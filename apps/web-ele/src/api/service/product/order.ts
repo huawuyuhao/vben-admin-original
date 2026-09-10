@@ -17,6 +17,7 @@ import type {
 import { ElMessage } from 'element-plus';
 
 import { rootRequestClient } from '#/api/request';
+import { type ApiId, toApiPathId } from '#/utils/api-id';
 
 /**
  * 判断业务码是否成功（与全局拦截器一致：0 / 200）
@@ -266,14 +267,14 @@ export async function submitDemandConfigApi(params: DemandConfigPayload) {
  * @param demandId 需求 ID
  * @returns 主记录 + 配置 + 磁盘 + 应用
  */
-export async function getDemandConfigDetailApi(demandId: number) {
+export async function getDemandConfigDetailApi(demandId: ApiId) {
   return rootRequestClient.get<DemandConfigDetail>(
-    `/pwq-mock/demand/config/${demandId}`,
+    `/pwq-mock/demand/config/${toApiPathId(demandId)}`,
   );
   // return rootRequestClient.get<DemandConfigDetail>(
-  //   `/mock/demand/config/${demandId}`,
+  //   `/mock/demand/config/${toApiPathId(demandId)}`,
   // );
   // return rootRequestClient.get<DemandConfigDetail>(
-  //   `/demand/config/${demandId}`,
+  //   `/demand/config/${toApiPathId(demandId)}`,
   // );
 }

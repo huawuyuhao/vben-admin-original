@@ -2,6 +2,9 @@ import type { VbenFormSchema } from '#/adapter/form';
 import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type {
   AdminProductAuditStatus,
+  AdminProductEvalItem,
+  AdminProductEvalListParams,
+  AdminProductEvalListResult,
   AdminProductEvalStatus,
   AdminProductShelfStatus,
   AdminProductListParams,
@@ -117,6 +120,14 @@ export interface AdminProductGridFormValues {
   productName?: string;
   /** 上下架状态 */
   shelfStatus?: AdminProductShelfFilter;
+}
+
+/** 评价列表查询表单值 */
+export interface AdminProductEvalGridFormValues {
+  /** 产品 ID */
+  productId?: string;
+  /** 评价状态（空表示全部） */
+  status?: '' | AdminProductEvalStatus;
 }
 
 /**
@@ -280,6 +291,178 @@ export function useAdminProductColumns(): VxeTableGridOptions<ProductInfo>['colu
       title: $t('page.monitoring.content.product.fields.actions'),
     },
   ];
+}
+
+/**
+ * 管理端产品评价查询栏 schema
+ * @param options.productIdDisabled 是否锁定产品 ID 输入
+ */
+export function useAdminProductEvalFormSchema(options?: {
+  productIdDisabled?: boolean;
+}): VbenFormSchema[] {
+  const productIdDisabled = !!options?.productIdDisabled;
+  return [
+    {
+      component: 'Input',
+      componentProps: {
+        clearable: !productIdDisabled,
+        disabled: productIdDisabled,
+        placeholder: $t(
+          'page.monitoring.content.product.eval.productIdPlaceholder',
+        ),
+      },
+      fieldName: 'productId',
+      label: $t('page.monitoring.content.product.eval.productIdLabel'),
+    },
+    {
+      component: 'Select',
+      componentProps: {
+        clearable: true,
+        options: ADMIN_PRODUCT_EVAL_STATUS_FILTER_OPTIONS.filter(
+          (opt) => opt.value !== '',
+        ).map((opt) => ({
+          label: $t(
+            `page.monitoring.content.product.eval.status.${opt.labelKey}`,
+          ),
+          value: opt.value,
+        })),
+        placeholder: $t('page.monitoring.content.product.eval.status.all'),
+      },
+      fieldName: 'status',
+      label: $t('page.monitoring.content.product.eval.statusLabel'),
+    },
+  ];
+}
+
+/**
+ * 管理端产品评价表格列配置
+ * @param options.showProductId 是否展示产品 ID 列（从卡片进入锁定时隐藏）
+ */
+export function useAdminProductEvalColumns(options?: {
+  showProductId?: boolean;
+}): VxeTableGridOptions<AdminProductEvalItem>['columns'] {
+  const emptyText = $t('page.monitoring.content.product.valueEmpty');
+  const showProductId = options?.showProductId !== false;
+  const columns: VxeTableGridOptions<AdminProductEvalItem>['columns'] = [
+    {
+      field: 'evalId',
+      minWidth: 140,
+      showOverflow: true,
+      title: $t('page.monitoring.content.product.eval.fields.evalId'),
+      formatter: ({ cellValue }) =>
+        displayAdminProductValue(cellValue, emptyText),
+    },
+  ];
+
+  if (showProductId) {
+    columns.push({
+      field: 'productId',
+      minWidth: 120,
+      showOverflow: true,
+      title: $t('page.monitoring.content.product.eval.fields.productId'),
+      formatter: ({ cellValue }) =>
+        displayAdminProductValue(cellValue, emptyText),
+    });
+  }
+
+  columns.push(
+    {
+      field: 'userId',
+      minWidth: 100,
+      showOverflow: true,
+      title: $t('page.monitoring.content.product.eval.fields.userId'),
+      formatter: ({ cellValue }) =>
+        displayAdminProductValue(cellValue, emptyText),
+    },
+    {
+      align: 'center',
+      field: 'score',
+      minWidth: 140,
+      slots: { default: 'score' },
+      title: $t('page.monitoring.content.product.eval.fields.score'),
+    },
+    {
+      field: 'content',
+      minWidth: 200,
+      showOverflow: true,
+      title: $t('page.monitoring.content.product.eval.fields.content'),
+      formatter: ({ cellValue }) =>
+        displayAdminProductValue(cellValue, emptyText),
+    },
+    {
+      align: 'center',
+      field: 'status',
+      minWidth: 100,
+      slots: { default: 'status' },
+      title: $t('page.monitoring.content.product.eval.fields.status'),
+    },
+    {
+      field: 'createTime',
+      minWidth: 160,
+      showOverflow: true,
+      title: $t('page.monitoring.content.product.eval.fields.createTime'),
+      formatter: ({ cellValue }) =>
+        formatProductDateTime(cellValue) || emptyText,
+    },
+    {
+      align: 'center',
+      field: 'action',
+      fixed: 'right',
+      minWidth: 160,
+      slots: { default: 'action' },
+      title: $t('page.monitoring.content.product.eval.fields.actions'),
+    },
+  );
+
+  return columns;
+}
+
+/**
+ * 将评价查询表单值转为接口筛选参数（不含分页）
+ * @param formValues 查询表单值
+ * @param lockedProductId 锁定的产品 ID（有值时优先生效）
+ * @returns 接口筛选参数
+ */
+export function buildAdminProductEvalFilterParams(
+  formValues?: AdminProductEvalGridFormValues | null,
+  lockedProductId?: null | number | string,
+): Pick<AdminProductEvalListParams, 'productId' | 'status'> {
+  const lockedText =
+    lockedProductId === null || lockedProductId === undefined
+      ? ''
+      : String(lockedProductId).trim();
+  const productIdText =
+    lockedText || String(formValues?.productId ?? '').trim();
+  const statusRaw = formValues?.status;
+
+  return {
+    productId: productIdText || undefined,
+    status:
+      statusRaw === '' || statusRaw === undefined || statusRaw === null
+        ? undefined
+        : statusRaw,
+  };
+}
+
+/**
+ * 归一化产品评价分页结果
+ * @param data 接口分页结果
+ * @returns records + total + current + size
+ */
+export function normalizeAdminProductEvalPage(
+  data?: AdminProductEvalListResult | null,
+): {
+  current: number;
+  records: AdminProductEvalItem[];
+  size: number;
+  total: number;
+} {
+  return {
+    records: Array.isArray(data?.records) ? data!.records : [],
+    total: Math.max(0, Number(data?.total) || 0),
+    current: Math.max(1, Number(data?.current) || 1),
+    size: Math.max(1, Number(data?.size) || ADMIN_PRODUCT_EVAL_PAGE_SIZE),
+  };
 }
 
 /**

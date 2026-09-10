@@ -87,8 +87,7 @@ const rules = computed<FormRules<EnterpriseCertForm>>(() => ({
           callback();
           return;
         }
-        const id = Number(text);
-        if (!Number.isFinite(id) || !Number.isInteger(id) || id <= 0) {
+        if (text === '0') {
           callback(
             new Error(
               $t('page.mine.register.enterprise.form.enterpriseIdInvalid'),

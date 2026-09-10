@@ -10,6 +10,7 @@ import type {
 import { ElMessage } from 'element-plus';
 
 import { rootRequestClient } from '#/api/request';
+import { toApiPathId } from '#/utils/api-id';
 
 /**
  * 判断业务码是否成功（与全局拦截器一致：0 / 200）
@@ -120,20 +121,20 @@ export async function getMessageListApi(params: MessageListParams) {
  * @param id 消息 ID
  * @returns 消息详情
  */
-export async function getMessageDetailApi(id: number) {
+export async function getMessageDetailApi(id: number | string) {
   const body = await rootRequestClient.get<
     MessageMutationResponse<MessageItem>
-  >(`/pwq-mock/message/${id}`, {
+  >(`/pwq-mock/message/${toApiPathId(id)}`, {
     responseReturn: 'body',
   });
   // const body = await rootRequestClient.get<
   //   MessageMutationResponse<MessageItem>
-  // >(`/mock/message/${id}`, {
+  // >(`/mock/message/${toApiPathId(id)}`, {
   //   responseReturn: 'body',
   // });
   // const body = await rootRequestClient.get<
   //   MessageMutationResponse<MessageItem>
-  // >(`/message/${id}`, {
+  // >(`/message/${toApiPathId(id)}`, {
   //   responseReturn: 'body',
   // });
 
@@ -147,7 +148,7 @@ export async function getMessageDetailApi(id: number) {
  * 正式：POST /message/read
  * @param messageIds 消息 ID 列表
  */
-export async function markMessageReadApi(messageIds: number[]) {
+export async function markMessageReadApi(messageIds: Array<number | string>) {
   const body = await rootRequestClient.post<MessageMutationResponse<string>>(
     '/pwq-mock/message/read',
     messageIds,
@@ -174,7 +175,7 @@ export async function markMessageReadApi(messageIds: number[]) {
  * 正式：POST /message/delete
  * @param messageIds 消息 ID 列表
  */
-export async function deleteMessageApi(messageIds: number[]) {
+export async function deleteMessageApi(messageIds: Array<number | string>) {
   const body = await rootRequestClient.post<MessageMutationResponse<string>>(
     '/pwq-mock/message/delete',
     messageIds,
